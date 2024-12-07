@@ -1,8 +1,9 @@
+#pragma once
+
 #include <iostream>
 #include <vector>
-
 #include "common.cpp"
-#include "Tetromino.cpp"
+#include "tetromino.cpp"
 
 using namespace std;
 
