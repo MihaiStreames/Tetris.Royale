@@ -1,36 +1,24 @@
 #pragma once
 
-#include <iostream>
 #include <vector>
-#include "common.cpp"
-#include "tetromino.cpp"
-
-using namespace std;
+#include "common.hpp"
+#include "tetromino.hpp"
 
 class TetrisFactory {
-    vector<PieceType> possiblePieces = {
-        PieceType.I,
-        PieceType.O,
-        PieceType.T,
-        PieceType.S,
-        PieceType.Z,
-        PieceType.J,
-        .L
-}
-
-    vector<Tetromino> pool;
+    std::vector<PieceType> possiblePieces = {I,O,T,S,Z,J,L};
+    std::vector<Tetromino> pool;
 
 public:
-    void setPossiblePieces(vector<PlaceType> newPossiblePieces) { possiblePieces = newPossiblePieces; }
-    vector<PlaceType> getPossiblePieces() { return possiblePieces; }
+    void setPossiblePieces(const std::vector<PieceType>& newPossiblePieces) { possiblePieces = newPossiblePieces; }
+    std::vector<PieceType> getPossiblePieces() const { return possiblePieces; }
 
-    void setPool(vector<Tetromino> newPool) { pool = newPool; }
-    vector<Tetromino> getPool() { return pool; }
+    void setPool(const std::vector<Tetromino>& newPool) { pool = newPool; }
+    std::vector<Tetromino> getPool() const { return pool; }
 
     void fillPool();
-    void pushPiece(Tetromino tetromino);
+    void pushPiece(const Tetromino& tetromino) { pool.push_back(tetromino); }
     Tetromino popPiece();
-    Tetromino whatIsNextPiece();
-    bool isPoolEmpty();
-    int getPoolSize();
+    Tetromino whatIsNextPiece() const;
+    bool isPoolEmpty() const { return pool.empty(); }
+    int getPoolSize() const { return static_cast<int>(pool.size()); }
 };

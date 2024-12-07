@@ -1,21 +1,20 @@
 #pragma once
 
-#include <iostream>
 #include <map>
 #include <SFML/Window/Keyboard.hpp>
-#include <common.hpp>
-
-using namespace std;
+#include "common.hpp"
 
 class Controller {
-private:
-    map<sf::Keyboard::Key,Action> inputMap;
-    map<sf::Keyboard::Key,int> invertedKeysCooldown;
+    std::map<sf::Keyboard::Key, Action> inputMap;
+    std::map<sf::Keyboard::Key,int> invertedKeysCooldown;
     int coolDown;
 
 public:
     Controller();
-    void setupController(Config config);
+    void setupController();
     Action getInput() const;
     void invertedKeys();
+
+    int getCoolDown() const { return coolDown; }
+    void setCoolDown(const int val) { coolDown = val; }
 };

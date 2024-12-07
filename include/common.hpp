@@ -1,3 +1,5 @@
+#pragma once
+
 struct Position2D {
     int x;
     int y;
@@ -14,22 +16,12 @@ enum PieceType {
 };
 
 enum Action {
-    Move,
-    Rotation,
+    None,
+    MoveLeft,
+    MoveRight,
+    MoveDown,
+    RotateLeft,
+    RotateRight,
     InStandFall,
-    UseBag,
-    NULL
-};
-
-enum Move {
-    Left,
-    Right,
-    Down,
-    NULL
-};
-
-enum Rotation {
-    Left,
-    Right,
-    NULL
+    UseBag
 };

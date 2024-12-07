@@ -1,14 +1,13 @@
 #pragma once
 
-#include <gameMatrix.hpp>
-#include <tetrominoFactory.hpp>
-#include <bag.hpp>
-#include <controller.hpp>
+#include "gameMatrix.hpp"
+#include "tetrisFactory.hpp"
+#include "bag.hpp"
+#include "controller.hpp"
 
 class TetrisGame {
-private:
     GameMatrix gameMatrix;
-    TetrominoFactory factory;
+    TetrisFactory factory;
     Bag bag;
     Controller controller;
     int score;
@@ -17,14 +16,14 @@ private:
     int totalLinesCleared;
 
 public:
-    TetrisGame(int score, int frameCount, int level, int totalLinesCleared);
+    TetrisGame(int gWidth, int gHeight, int gScore, int fc, int lvl, int totLinesCleared);
 
-    void incrementLevel(int level=1);
-    void incrementFrameCount(int frameCount=1);
-    void calculateScore(int totalLinesCleared);
+    void incrementLevel(const int lvl=1) { level += lvl; }
+    void incrementFrameCount(const int fc=1) { frameCount += fc; }
+    void calculateScore(int linesCleared);
 
-    int getScore() const noexcept;
-    int getFrameCount() const noexcept;
-    int getLevel() const;
-    int getTotalLinesCleared() const;
+    int getScore() const noexcept { return score; }
+    int getFrameCount() const noexcept { return frameCount; }
+    int getLevel() const noexcept { return level; }
+    int getTotalLinesCleared() const noexcept { return totalLinesCleared; }
 };

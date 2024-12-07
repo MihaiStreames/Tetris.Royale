@@ -1,36 +1,37 @@
 #pragma once
 
 #include <vector>
-#include "tetromino.hpp" 
-#include "common.hpp"    
+#include "tetromino.hpp"
 
 class GameMatrix {
-private:
     Tetromino* currentTetromino;
-    int width;                                 
-    int height;                                
-    std::vector<std::vector<int>> board;       // Matrice de jeu (0 = vide, 1 = occupé)
+    int width;
+    int height;
+    std::vector<std::vector<int>> board;
 
 public:
-    GameMatrix(int width, int height);
+    GameMatrix(int wMatrix, int hMatrix);
 
-    void generateBoardbyDimension();
-    bool isColliding(const Tetromino& tetromino) const;   
-    bool trySpawnPiece(Tetromino& tetromino);              // Genere une nv piece
-    bool tryPlacePiece(const Tetromino& tetromino);        
+    void generateBoardByDimension() { board = std::vector(height, std::vector(width, 0)); }
+    bool isColliding(const Tetromino& tetromino) const;
+    bool trySpawnPiece(Tetromino& tetromino);
+    bool tryPlacePiece(const Tetromino& tetromino);
 
-    bool canMove(const Tetromino& tetromino, Move move) const;
-    bool canRotate(const Tetromino& tetromino, Rotation rotation) const; 
-    bool tryMoveCurrent(const Tetromino& tetromino, Move move); 
-    bool tryRotateCurrent(const Tetromino& tetromino);     
-    bool tryMakeCurrentPieceFall();                        
-    
-    int getRowstoObstacle(const Tetromino& tetromino) const; 
-    
-    bool isLineFull(int line) const;                       // Vérifie si une ligne est complète
-    void clearSingleLine(int line);                        
-    int makeLineFull(int line);                            
-    int clearFullLines();                                  
+    bool canMove(const Tetromino& tetromino, int dx, int dy) const;
+    bool tryMoveCurrent(int dx, int dy) const;
 
-    const std::vector<std::vector<int>>& getBoard() const; // Retourne la matrice de jeu
+    bool canRotate(const Tetromino& tetromino, bool clockwise) const;
+    bool tryRotateCurrent(bool clockwise) const;
+
+    bool tryMakeCurrentPieceFall() const { return tryMoveCurrent(0, 1); }
+
+    int getRowstoObstacle(const Tetromino& tetromino) const;
+
+    bool isLineFull(int line) const;
+    void clearSingleLine(int line);
+    int clearFullLines();
+
+    const std::vector<std::vector<int>>& getBoard() const { return board; }
+    int getWidth() const { return width; }
+    int getHeight() const { return height; }
 };

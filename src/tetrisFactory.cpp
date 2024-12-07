@@ -1,50 +1,43 @@
-#include <iostream>
-#include <vector>
 #include <random>
 #include <algorithm>
-
+#include <stdexcept>
 #include "tetrisFactory.hpp"
-#include "Tetromino.cpp"
-#include "common.cpp"
-
-using namespace std;
 
 void TetrisFactory::fillPool() {
     if (pool.size() == 1) {
-        Tetromino firstPiece = pool[0];
-        vector<PieceType> newPool = {PieceType.I, PieceType.O, PieceType.T,
-                                        PieceType.S, PieceType.Z, PieceType.J, PieceType.L}; // askip sa marche pas
+        const Tetromino firstPiece = pool[0];
+        std::vector newPool = {I,O,T,S,Z,J,L};
 
-        for (int i = 0; i < 7; i++) {
-            if (newPool[i] == firstPiece) {
+        for (int i = 0; i < static_cast<int>(newPool.size()); i++) {
+            if (newPool[i] == firstPiece.getPieceType()) {
                 newPool.erase(newPool.begin() + i);
                 break;
             }
         }
 
-        // shuffle
-        random_device random;
-        mt19937 rng(random());
-        shuffle(newPool.begin(), newPool.end(), rng);
+        std::random_device rd;
+        std::mt19937 rng(rd());
+        std::ranges::shuffle(newPool, rng);
 
-        newPool.push_back(firstPiece); // je sais pas si sa doit etre la derniere ou la premiere
+        newPool.push_back(firstPiece.getPieceType());
+        pool.clear();
 
-        pool = newPool;
+        for (auto p : newPool) {
+            pool.emplace_back(Position2D{0,0}, p);
+        }
     }
 }
 
-void TetrisFactory::pushPiece(Tetromino tetromino) { pool.push_back(tetromino); }
+Tetromino TetrisFactory::popPiece() {
+    if (pool.empty()) throw std::runtime_error("Pool is empty");
 
-Tetromino TetrisFactory::popPiece() { return pool.pop(); }
-
-Tetromino TetrisFactory::whatIsNextPiece() { return pool[pool.size() - 1]; }
-
-bool TetrisFactory::isPoolEmpty() {
-    if (pool.size() > 0) {
-        return false;
-    } else {
-        return true;
-    }
+    Tetromino piece = pool.back();
+    pool.pop_back();
+    return piece;
 }
 
-int TetrisFactory::getPoolSize() {return pool.size(); }
+Tetromino TetrisFactory::whatIsNextPiece() const {
+    if (pool.empty()) throw std::runtime_error("Pool is empty");
+
+    return pool.back();
+}
