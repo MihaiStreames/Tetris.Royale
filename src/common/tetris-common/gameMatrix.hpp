@@ -14,16 +14,19 @@ public:
     : currentTetromino(nullptr), width(wMatrix), height(hMatrix), board(hMatrix, std::vector(wMatrix, 0)) { }
 
     void generateBoardByDimension() { board = std::vector(height, std::vector(width, 0)); }
+
     [[nodiscard]] bool isColliding(const Tetromino& tetromino) const {
         const auto& shape = tetromino.getShape();
-        const auto&[x, y] = tetromino.getPosition();
+        const auto& pos = tetromino.getPosition();
+        const int x = pos.x;
+        const int y = pos.y;
 
         for (int i = 0; i < static_cast<int>(shape.size()); ++i) {
             for (int j = 0; j < static_cast<int>(shape[i].size()); ++j) {
                 if (shape[i][j] == 1) {
-                    const int boardX = j + j;
+                    const int boardX = x + j;
 
-                    if (const int boardY = i + i; boardX < 0 || boardX >= width || boardY < 0 || boardY >= height || board[boardY][boardX] == 1) {
+                    if (const int boardY = y + i; boardX < 0 || boardX >= width || boardY < 0 || boardY >= height || board[boardY][boardX] == 1) {
                         return true;
                     }
                 }
@@ -32,6 +35,7 @@ public:
 
         return false;
     }
+
     bool trySpawnPiece(Tetromino& tetromino) {
         currentTetromino = &tetromino;
         if (!isColliding(tetromino)) return true;
@@ -41,13 +45,17 @@ public:
     
     bool tryPlacePiece(const Tetromino& tetromino) {
         const auto& shape = tetromino.getShape();
-        const auto&[x, y] = tetromino.getPosition();
+        const auto& pos = tetromino.getPosition();
+        const int x = pos.x;
+        const int y = pos.y;
+
+        if (isColliding(tetromino)) return false;
 
         for (int i = 0; i < static_cast<int>(shape.size()); ++i) {
             for (int j = 0; j < static_cast<int>(shape[i].size()); ++j) {
                 if (shape[i][j] == 1) {
-                    const int boardX = j + j;
-                    const int boardY = i + i;
+                    const int boardX = x + j;
+                    const int boardY = y + i;
                     board[boardY][boardX] = 1;
                 }
             }
@@ -137,6 +145,32 @@ public:
         }
 
         return linesCleared;
+    }
+
+    tetroMat getBoardWithCurrentPiece() const {
+        tetroMat ret = board;
+
+        // If there's a current tetromino, overlay it onto the copied board
+        if (currentTetromino) {
+            const auto& shape = currentTetromino->getShape();
+            const auto& pos = currentTetromino->getPosition();
+            // Convert piece type to an int value. For variety, offset by +1 so empty=0, piece starts at 1
+            const int pieceVal = static_cast<int>(currentTetromino->getPieceType()) + 1;
+
+            for (int i = 0; i < static_cast<int>(shape.size()); ++i) {
+                for (int j = 0; j < static_cast<int>(shape[i].size()); ++j) {
+                    if (shape[i][j] == 1) {
+                        const int boardX = pos.x + j;
+
+                        if (const int boardY = pos.y + i; boardX >= 0 && boardX < width && boardY >= 0 && boardY < height) {
+                            ret[boardY][boardX] = pieceVal;
+                        }
+                    }
+                }
+            }
+        }
+
+        return ret;
     }
 
     [[nodiscard]] const tetroMat& getBoard() const { return board; }

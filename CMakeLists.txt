@@ -18,7 +18,7 @@ add_library(TetrisRoyale_Common ${COMMON_SRC_FILES})
 target_include_directories(TetrisRoyale_Common PUBLIC "src/common")
 
 # Terminal executable setup (using FTXUI)
-find_package(ftxui REQUIRED)
+find_package(ftxui 5 COMPONENTS component dom screen REQUIRED)
 
 file(GLOB_RECURSE TERMINAL_SRC_FILES "src/terminal/*.hpp" "src/terminal/main.cpp")
 add_executable(TetrisRoyale_Terminal ${TERMINAL_SRC_FILES})
