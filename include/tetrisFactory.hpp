@@ -4,21 +4,23 @@
 #include "common.hpp"
 #include "tetromino.hpp"
 
+using tetroVec = std::vector<Tetromino>;
+
 class TetrisFactory {
-    std::vector<PieceType> possiblePieces = {I,O,T,S,Z,J,L};
-    std::vector<Tetromino> pool;
+    pieceVec possiblePieces = {I,O,T,S,Z,J,L};
+    tetroVec pool;
 
 public:
-    void setPossiblePieces(const std::vector<PieceType>& newPossiblePieces) { possiblePieces = newPossiblePieces; }
-    std::vector<PieceType> getPossiblePieces() const { return possiblePieces; }
+    void setPossiblePieces(const pieceVec& newPossiblePieces) { possiblePieces = newPossiblePieces; }
+    [[nodiscard]] pieceVec getPossiblePieces() const { return possiblePieces; }
 
-    void setPool(const std::vector<Tetromino>& newPool) { pool = newPool; }
-    std::vector<Tetromino> getPool() const { return pool; }
+    void setPool(const tetroVec& newPool) { pool = newPool; }
+    [[nodiscard]] tetroVec getPool() const { return pool; }
 
     void fillPool();
     void pushPiece(const Tetromino& tetromino) { pool.push_back(tetromino); }
     Tetromino popPiece();
-    Tetromino whatIsNextPiece() const;
-    bool isPoolEmpty() const { return pool.empty(); }
-    int getPoolSize() const { return static_cast<int>(pool.size()); }
+    [[nodiscard]] Tetromino whatIsNextPiece() const;
+    [[nodiscard]] bool isPoolEmpty() const { return pool.empty(); }
+    [[nodiscard]] int getPoolSize() const { return static_cast<int>(pool.size()); }
 };

@@ -1,6 +1,6 @@
 #include "tetromino.hpp"
 
-std::vector<std::vector<int>> Tetromino::generateShapeByType(const PieceType type) {
+tetroMat Tetromino::generateShapeByType(const PieceType type) {
     // Minimal example shapes
     switch (type) {
         case I: return {{1,1,1,1}};
@@ -42,16 +42,16 @@ Position2D Tetromino::getMovePosition(const Action move) const {
     return newPos;
 }
 
-std::vector<std::vector<int>> Tetromino::getRotateShape(const Rotation rotation) const {
+tetroMat Tetromino::getRotateShape(const Action rotation) const {
     const int n = static_cast<int>(shape.size());
     std::vector rotatedShape(n, std::vector(n,0));
 
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
-            if (rotation == RightRotation) {
+            if (rotation == RotateRight) {
                 rotatedShape[j][n - 1 - i] = shape[i][j];
             }
-            else if (rotation == LeftRotation) {
+            else if (rotation == RotateLeft) {
                 rotatedShape[n - 1 - j][i] = shape[i][j];
             }
         }

@@ -9,7 +9,8 @@ class Bag {
 public:
     Bag();
     ~Bag();
+
     Tetromino retrievePiece();
-    bool isEmpty() const { return storedPiece == nullptr; }
+    [[nodiscard]] bool isEmpty() const { return storedPiece == nullptr; }
     void storePiece(const Tetromino& piece);
 };

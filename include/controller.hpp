@@ -1,20 +1,23 @@
 #pragma once
 
 #include <map>
-#include <SFML/Window/Keyboard.hpp>
+#include <ftxui/component/event.hpp>
 #include "common.hpp"
 
 class Controller {
-    std::map<sf::Keyboard::Key, Action> inputMap;
-    std::map<sf::Keyboard::Key,int> invertedKeysCooldown;
+    std::map<ftxui::Event, Action>  inputMap;
+    std::map<ftxui::Event, int>     invertedKeysCooldown;
     int coolDown;
+    ftxui::Event currentEvent;
 
 public:
     Controller();
     void setupController();
-    Action getInput() const;
+    [[nodiscard]] Action getInput() const;
     void invertedKeys();
 
-    int getCoolDown() const { return coolDown; }
-    void setCoolDown(const int val) { coolDown = val; }
+    [[nodiscard]] int getCoolDown() const   { return coolDown; }
+    void setCoolDown(const int val)         { coolDown = val; }
+
+    void setEvent(const ftxui::Event& evt)  { currentEvent = evt; }
 };

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 struct Position2D {
     int x;
     int y;
@@ -25,3 +27,6 @@ enum Action {
     InStandFall,
     UseBag
 };
+
+using tetroMat = std::vector<std::vector<int>>;
+using pieceVec = std::vector<PieceType>;
