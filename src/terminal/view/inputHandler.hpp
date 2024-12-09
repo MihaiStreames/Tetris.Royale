@@ -5,24 +5,25 @@
 #include "tetris-common/types.hpp"
 
 class inputHandler {
-    std::map<ftxui::Event, Action>  inputMap;
-    std::map<ftxui::Event, int>     cooldownedKeys;
-    int coolDown;
-    ftxui::Event currentEvent;
+    std::map<Event, Action>  inputMap;
+    std::map<Event, int>     cooldownedKeys;
+    int cooldown;
+    Event currentEvent;
 
     static constexpr int SHORT_COOLDOWN = 5;
     static constexpr int LONG_COOLDOWN  = 10;
 
 public:
-    inputHandler() : coolDown(0), currentEvent(ftxui::Event::Custom) { setupController(); }
+    inputHandler() : cooldown(0), currentEvent(Event::Custom) { setupController(); }
 
     void setupController() {
-        inputMap[ftxui::Event::ArrowLeft]       = MoveLeft;
-        inputMap[ftxui::Event::ArrowRight]      = MoveRight;
-        inputMap[ftxui::Event::ArrowDown]       = MoveDown;
-        inputMap[ftxui::Event::Character('q')]  = RotateRight;
-        inputMap[ftxui::Event::Character('e')]  = RotateLeft;
-        inputMap[ftxui::Event::Character('b')]  = UseBag;
+        inputMap[Event::ArrowLeft]       = MoveLeft;
+        inputMap[Event::ArrowRight]      = MoveRight;
+        inputMap[Event::ArrowDown]       = MoveDown;
+        inputMap[Event::Character(' ')]  = InstantFall;
+        inputMap[Event::Character('q')]  = RotateRight;
+        inputMap[Event::Character('e')]  = RotateLeft;
+        inputMap[Event::Character('b')]  = UseBag;
     }
 
     static int getActionCooldown(const Action a) {
@@ -30,6 +31,7 @@ public:
             case MoveLeft:
             case MoveRight:
             case MoveDown:
+            case InstantFall:
                 return SHORT_COOLDOWN;
             case RotateLeft:
             case RotateRight:
@@ -40,11 +42,11 @@ public:
         }
     }
 
-    void putKeyInCooldown(const ftxui::Event& evt, const Action a) { cooldownedKeys[evt] = getActionCooldown(a); }
+    void putKeyInCooldown(const Event& evt, const Action a) { cooldownedKeys[evt] = getActionCooldown(a); }
 
     // Decrease cooldowns each frame
     void handleCooldown() {
-        std::vector<ftxui::Event> finished;
+        std::vector<Event> finished;
         for (auto& [evt, cd] : cooldownedKeys) {
             if (cd > 0) {
                 cd--;
@@ -55,7 +57,7 @@ public:
             }
         }
 
-        for (auto evt: finished) {
+        for (const auto& evt: finished) {
             cooldownedKeys.erase(evt);
         }
     }
@@ -84,13 +86,13 @@ public:
 
     // Swap the actions for left and right
     void invertKeys() {
-        const Action leftAction = inputMap[ftxui::Event::ArrowLeft];
-        inputMap[ftxui::Event::ArrowLeft] = inputMap[ftxui::Event::ArrowRight];
-        inputMap[ftxui::Event::ArrowRight] = leftAction;
+        const Action leftAction      = inputMap[Event::ArrowLeft];
+        inputMap[Event::ArrowLeft]   = inputMap[Event::ArrowRight];
+        inputMap[Event::ArrowRight]  = leftAction;
     }
 
-    [[nodiscard]] int getCoolDown() const   { return coolDown; }
-    void setCoolDown(const int val)         { coolDown = val; }
+    [[nodiscard]] int getCoolDown() const   { return cooldown; }
+    void setCoolDown(const int val)         { cooldown = val; }
 
-    void setEvent(const ftxui::Event& evt)  { currentEvent = evt; }
+    void setEvent(const Event& evt)  { currentEvent = evt; }
 };

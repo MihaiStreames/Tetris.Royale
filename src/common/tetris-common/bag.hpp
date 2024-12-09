@@ -21,8 +21,11 @@ public:
         throw std::runtime_error("Bag is empty.");
     }
 
+    [[nodiscard]] const Tetromino* peekPiece() const { return storedPiece.get(); }
+
     [[nodiscard]] bool isEmpty() const { return storedPiece == nullptr; }
-    void setUsable() { isUsable = true; }
+    [[nodiscard]] bool usable() const { return isUsable; }
+    void setUsable(const bool flag) { isUsable = flag; }
 
     void storePiece(const Tetromino& piece) {
         if (isUsable && isEmpty()) {

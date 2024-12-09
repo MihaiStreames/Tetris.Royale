@@ -24,7 +24,7 @@ enum Action {
     MoveDown,
     RotateLeft,
     RotateRight,
-    InStandFall,
+    InstantFall,
     UseBag
 };
 

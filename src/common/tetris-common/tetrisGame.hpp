@@ -14,6 +14,8 @@ class TetrisGame {
     int level;
     int totalLinesCleared;
 
+    bool gameOver = false;
+
     static constexpr int LINES_TO_LEVELUP = 10;
 
     inline static const std::map<int,int> SPEED_TABLE = {
@@ -28,6 +30,9 @@ class TetrisGame {
 public:
     TetrisGame(const int gWidth, const int gHeight, const int gScore = 0, const int fc = 0, const int lvl = 0, const int totLinesCleared = 0)
    : gameMatrix(gWidth, gHeight), score(gScore), frameCount(fc), level(lvl), totalLinesCleared(totLinesCleared) {}
+
+    [[nodiscard]] bool isGameOver() const { return gameOver; }
+    void setGameOver(const bool flag) { gameOver = flag; }
 
     GameMatrix& getGameMatrix() { return gameMatrix; }
     TetrisFactory& getFactory() { return factory; }
@@ -52,7 +57,7 @@ public:
     void setTotalLinesCleared(const int lines)              { totalLinesCleared = lines; }
     void incrementLinesCleared(const int q)                 { totalLinesCleared += q; }
 
-    bool shouldApplyGravity() const {
+    [[nodiscard]] bool shouldApplyGravity() const {
         const int frame = getFrameCount();
         const int lvl = getLevel();
         int frame_quantum = 1;
@@ -62,7 +67,7 @@ public:
         return frame % frame_quantum == 0 && frame >= frame_quantum;
     }
 
-    bool shouldLevelUp() const { return getTotalLinesCleared() / LINES_TO_LEVELUP != getLevel(); }
+    [[nodiscard]] bool shouldLevelUp() const { return getTotalLinesCleared() / LINES_TO_LEVELUP != getLevel(); }
 
     void updateLevelAfterLineClear() {
         if (shouldLevelUp()) {

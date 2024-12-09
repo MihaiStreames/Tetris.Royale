@@ -1,25 +1,24 @@
 #pragma once
 
 #include <vector>
+#include <optional>
 #include "tetromino.hpp"
 
 class GameMatrix {
-    Tetromino* currentTetromino;
+    std::optional<Tetromino> currentTetromino;
     int width;
     int height;
     tetroMat board;
 
 public:
     GameMatrix(const int wMatrix, const int hMatrix)
-    : currentTetromino(nullptr), width(wMatrix), height(hMatrix), board(hMatrix, std::vector(wMatrix, 0)) { }
+    : currentTetromino(std::nullopt), width(wMatrix), height(hMatrix), board(hMatrix, std::vector(wMatrix, 0)) { }
 
     void generateBoardByDimension() { board = std::vector(height, std::vector(width, 0)); }
 
     [[nodiscard]] bool isColliding(const Tetromino& tetromino) const {
         const auto& shape = tetromino.getShape();
-        const auto& pos = tetromino.getPosition();
-        const int x = pos.x;
-        const int y = pos.y;
+        const auto&[x, y] = tetromino.getPosition();
 
         for (int i = 0; i < static_cast<int>(shape.size()); ++i) {
             for (int j = 0; j < static_cast<int>(shape[i].size()); ++j) {
@@ -36,20 +35,20 @@ public:
         return false;
     }
 
-    bool trySpawnPiece(Tetromino& tetromino) {
-        currentTetromino = &tetromino;
-        if (!isColliding(tetromino)) return true;
-        currentTetromino = nullptr;
+    bool trySpawnPiece(Tetromino piece) {
+        if (!isColliding(piece)) {
+            currentTetromino = piece;
+            return true;
+        }
+
         return false;
     }
-    
-    bool tryPlacePiece(const Tetromino& tetromino) {
-        const auto& shape = tetromino.getShape();
-        const auto& pos = tetromino.getPosition();
-        const int x = pos.x;
-        const int y = pos.y;
 
+    bool tryPlacePiece(const Tetromino& tetromino) {
         if (isColliding(tetromino)) return false;
+
+        const auto& shape = tetromino.getShape();
+        const auto&[x, y] = tetromino.getPosition();
 
         for (int i = 0; i < static_cast<int>(shape.size()); ++i) {
             for (int j = 0; j < static_cast<int>(shape[i].size()); ++j) {
@@ -61,8 +60,13 @@ public:
             }
         }
 
-        currentTetromino = nullptr;
+        currentTetromino.reset();
         return true;
+    }
+
+    bool tryPlaceCurrentPiece() {
+        if (!currentTetromino) return false;
+        return tryPlacePiece(*currentTetromino);
     }
 
     [[nodiscard]] bool canMove(const Tetromino& tetromino, const int dx, const int dy) const {
@@ -71,9 +75,9 @@ public:
         moved.setPosition(newPos);
         return !isColliding(moved);
     }
-    
-    [[nodiscard]] bool tryMoveCurrent(const int dx, const int dy) const {
-        if (currentTetromino && canMove(*currentTetromino, dx, dy)) {
+
+    [[nodiscard]] bool tryMoveCurrent(const int dx, const int dy) {
+        if (currentTetromino.has_value() && canMove(currentTetromino.value(), dx, dy)) {
             const Position2D newPos = {currentTetromino->getPosition().x + dx, currentTetromino->getPosition().y + dy};
             currentTetromino->setPosition(newPos);
             return true;
@@ -88,20 +92,20 @@ public:
         rotated.setShape(shape);
         return !isColliding(rotated);
     }
-    
-    [[nodiscard]] bool tryRotateCurrent(const bool clockwise) const {
-        if (currentTetromino && canRotate(*currentTetromino, clockwise)) {
+
+    [[nodiscard]] bool tryRotateCurrent(const bool clockwise) {
+        if (currentTetromino.has_value() && canRotate(currentTetromino.value(), clockwise)) {
             const auto shape = currentTetromino->getRotateShape(clockwise ? RotateRight : RotateLeft);
             currentTetromino->setShape(shape);
             return true;
         }
-        
+
         return false;
     }
 
-    [[nodiscard]] bool tryMakeCurrentPieceFall() const { return tryMoveCurrent(0, 1); }
+    [[nodiscard]] bool tryMakeCurrentPieceFall() { return tryMoveCurrent(0, 1); }
 
-    [[nodiscard]] int getRowstoObstacle(const Tetromino& tetromino) const {
+    [[nodiscard]] int getRowsToObstacle(const Tetromino& tetromino) const {
         Tetromino temp = tetromino;
         int rowsToObstacle = 0;
 
@@ -121,8 +125,8 @@ public:
 
         return true;
     }
-    
-    void clearSingleLine(const int line){
+
+    void clearSingleLine(const int line) {
         for (int x = 0; x < width; ++x) {
             board[line][x] = 0;
         }
@@ -147,22 +151,22 @@ public:
         return linesCleared;
     }
 
-    tetroMat getBoardWithCurrentPiece() const {
+    [[nodiscard]] tetroMat getBoardWithCurrentPiece() const {
         tetroMat ret = board;
 
         // If there's a current tetromino, overlay it onto the copied board
-        if (currentTetromino) {
-            const auto& shape = currentTetromino->getShape();
-            const auto& pos = currentTetromino->getPosition();
-            // Convert piece type to an int value. For variety, offset by +1 so empty=0, piece starts at 1
-            const int pieceVal = static_cast<int>(currentTetromino->getPieceType()) + 1;
+        if (currentTetromino.has_value()) {
+            const Tetromino& piece = currentTetromino.value();
+            const auto& shape = piece.getShape();
+            const auto&[x, y] = piece.getPosition();
+            const int pieceVal = static_cast<int>(piece.getPieceType()) + 1;
 
             for (int i = 0; i < static_cast<int>(shape.size()); ++i) {
+                const int boardY = y + i;
                 for (int j = 0; j < static_cast<int>(shape[i].size()); ++j) {
+                    const int boardX = x + j;
                     if (shape[i][j] == 1) {
-                        const int boardX = pos.x + j;
-
-                        if (const int boardY = pos.y + i; boardX >= 0 && boardX < width && boardY >= 0 && boardY < height) {
+                        if (boardX >= 0 && boardX < width && boardY >= 0 && boardY < height) {
                             ret[boardY][boardX] = pieceVal;
                         }
                     }
@@ -172,6 +176,10 @@ public:
 
         return ret;
     }
+
+    Tetromino* getCurrent() { return currentTetromino.has_value() ? &currentTetromino.value() : nullptr; }
+    [[nodiscard]] const Tetromino* getCurrent() const { return currentTetromino.has_value() ? &currentTetromino.value() : nullptr; }
+    void deleteCurrent() { currentTetromino.reset(); }
 
     [[nodiscard]] const tetroMat& getBoard() const { return board; }
     [[nodiscard]] int getWidth() const  { return width; }
