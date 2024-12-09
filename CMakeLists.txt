@@ -8,6 +8,14 @@ cmake_minimum_required(VERSION 3.30)
 project(TetrisRoyale LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 
+include(FetchContent)
+set(FETCHCONTENT_UPDATES_DISCONNECTED TRUE)
+FetchContent_Declare(ftxui
+  GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
+  GIT_TAG main # Important: Specify a version or a commit hash here.
+)
+FetchContent_MakeAvailable(ftxui)
+
 # Compiler warnings and optimization flags
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -O2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow -Wformat=2 -Wfloat-equal -Wconversion -Wlogical-op -Wshift-overflow=2 -Wduplicated-cond -Wcast-qual -Wcast-align -Wnull-dereference -Wold-style-cast -Wuseless-cast -Wdouble-promotion -Wzero-as-null-pointer-constant -Wstrict-null-sentinel -Wswitch-enum -Wswitch-default -Wunreachable-code -Wundef")
@@ -18,7 +26,7 @@ add_library(TetrisRoyale_Common ${COMMON_SRC_FILES})
 target_include_directories(TetrisRoyale_Common PUBLIC "src/common")
 
 # Terminal executable setup (using FTXUI)
-find_package(ftxui 5 COMPONENTS component dom screen REQUIRED)
+find_package(ftxui 5 COMPONENTS screen dom component REQUIRED)
 
 file(GLOB_RECURSE TERMINAL_SRC_FILES "src/terminal/*.hpp" "src/terminal/main.cpp")
 add_executable(TetrisRoyale_Terminal ${TERMINAL_SRC_FILES})

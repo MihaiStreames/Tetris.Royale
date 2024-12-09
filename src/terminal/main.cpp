@@ -1,5 +1,5 @@
-#include <ftxui/component/component.hpp>       // for Renderer, etc.
-#include <ftxui/component/screen_interactive.hpp> // for ScreenInteractive
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/screen_interactive.hpp>
 #include "tetris-common/tetrisGame.hpp"
 #include "view/tui.hpp"
 
