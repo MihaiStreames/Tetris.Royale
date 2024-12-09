@@ -107,7 +107,7 @@ private:
     }
 
     [[nodiscard]] Element renderScore() const {
-        const std::string scoreText = ">> " + std::to_string(tetrisGame.getScore());
+        const std::string scoreText = std::to_string(tetrisGame.getScore());
         Element scoreElement = text(scoreText) | bold | color(Color::White) | center;
 
         return window(text("SCORE") | bold | color(Color::White), vbox({ scoreElement }));

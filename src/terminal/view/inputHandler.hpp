@@ -10,8 +10,8 @@ class inputHandler {
     int cooldown;
     Event currentEvent;
 
-    static constexpr int SHORT_COOLDOWN = 5;
-    static constexpr int LONG_COOLDOWN  = 10;
+    static constexpr int SHORT_COOLDOWN = 1;
+    static constexpr int LONG_COOLDOWN  = 5;
 
 public:
     inputHandler() : cooldown(0), currentEvent(Event::Custom) { setupController(); }
@@ -28,15 +28,14 @@ public:
 
     static int getActionCooldown(const Action a) {
         switch (a) {
-            case MoveLeft:
-            case MoveRight:
-            case MoveDown:
-            case InstantFall:
-                return SHORT_COOLDOWN;
             case RotateLeft:
             case RotateRight:
             case UseBag:
                 return LONG_COOLDOWN;
+            case MoveLeft:
+            case MoveRight:
+            case MoveDown:
+            case InstantFall:
             default:
                 return SHORT_COOLDOWN;
         }
