@@ -6,72 +6,29 @@
 
 class inputHandler {
     std::map<Event, Action>  inputMap;
-    std::map<Event, int>     cooldownedKeys;
-    int cooldown;
     Event currentEvent;
 
-    static constexpr int SHORT_COOLDOWN = 1;
-    static constexpr int LONG_COOLDOWN  = 5;
-
 public:
-    inputHandler() : cooldown(0), currentEvent(Event::Custom) { setupController(); }
+    inputHandler() : currentEvent(Event::Custom) { setupController(); }
 
     void setupController() {
-        inputMap[Event::ArrowLeft]       = MoveLeft;
-        inputMap[Event::ArrowRight]      = MoveRight;
-        inputMap[Event::ArrowDown]       = MoveDown;
-        inputMap[Event::Character(' ')]  = InstantFall;
-        inputMap[Event::Character('q')]  = RotateRight;
-        inputMap[Event::Character('e')]  = RotateLeft;
-        inputMap[Event::Character('b')]  = UseBag;
-    }
+        inputMap[Event::ArrowLeft]      = MoveLeft;
+        inputMap[Event::ArrowRight]     = MoveRight;
+        inputMap[Event::ArrowDown]      = MoveDown;
 
-    static int getActionCooldown(const Action a) {
-        switch (a) {
-            case RotateLeft:
-            case RotateRight:
-            case UseBag:
-                return LONG_COOLDOWN;
-            case MoveLeft:
-            case MoveRight:
-            case MoveDown:
-            case InstantFall:
-            default:
-                return SHORT_COOLDOWN;
-        }
-    }
+        inputMap[Event::ArrowUp]        = RotateRight;
+        inputMap[Event::Character('q')] = RotateRight;
+        inputMap[Event::Character('e')] = RotateLeft;
 
-    void putKeyInCooldown(const Event& evt, const Action a) { cooldownedKeys[evt] = getActionCooldown(a); }
+        inputMap[Event::Character(' ')] = InstantFall;
 
-    // Decrease cooldowns each frame
-    void handleCooldown() {
-        std::vector<Event> finished;
-        for (auto& [evt, cd] : cooldownedKeys) {
-            if (cd > 0) {
-                cd--;
-            }
-
-            if (cd == 0) {
-                finished.push_back(evt);
-            }
-        }
-
-        for (const auto& evt: finished) {
-            cooldownedKeys.erase(evt);
-        }
+        inputMap[Event::Character('b')] = UseBag;
     }
 
     Action getUserAction() {
         if (const auto it = inputMap.find(currentEvent); it != inputMap.end()) {
-            const auto& evt = it->first;
             const Action a = it->second;
-
-            // Check if in cooldown
-            if (!cooldownedKeys.contains(evt)) {
-                // Not in cooldown, put it in now
-                putKeyInCooldown(evt, a);
-                return a;
-            }
+            return a;
         }
 
         return None;
@@ -79,7 +36,6 @@ public:
 
     Action handleInputs() {
         const Action action = getUserAction();
-        handleCooldown();
         return action;
     }
 
@@ -89,9 +45,6 @@ public:
         inputMap[Event::ArrowLeft]   = inputMap[Event::ArrowRight];
         inputMap[Event::ArrowRight]  = leftAction;
     }
-
-    [[nodiscard]] int getCoolDown() const   { return cooldown; }
-    void setCoolDown(const int val)         { cooldown = val; }
 
     void setEvent(const Event& evt)  { currentEvent = evt; }
 };

@@ -53,7 +53,7 @@ public:
         if (linesCleared >= 1 && linesCleared <= 4) score += tabScore[linesCleared];
     }
 
-    [[nodiscard]] int getTotalLinesCleared() const noexcept { return totalLinesCleared; }
+    [[nodiscard]] int getLinesCleared() const               { return totalLinesCleared; }
     void setTotalLinesCleared(const int lines)              { totalLinesCleared = lines; }
     void incrementLinesCleared(const int q)                 { totalLinesCleared += q; }
 
@@ -67,11 +67,11 @@ public:
         return frame % frame_quantum == 0 && frame >= frame_quantum;
     }
 
-    [[nodiscard]] bool shouldLevelUp() const { return getTotalLinesCleared() / LINES_TO_LEVELUP != getLevel(); }
+    [[nodiscard]] bool shouldLevelUp() const { return getLinesCleared() / LINES_TO_LEVELUP != getLevel(); }
 
     void updateLevelAfterLineClear() {
         if (shouldLevelUp()) {
-            const int newLineBasedLevel = getTotalLinesCleared() / LINES_TO_LEVELUP;
+            const int newLineBasedLevel = getLinesCleared() / LINES_TO_LEVELUP;
             if (const int diff = newLineBasedLevel - getLevel(); diff > 0) incrementLevel(diff);
         }
     }

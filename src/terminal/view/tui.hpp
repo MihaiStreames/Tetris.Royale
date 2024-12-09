@@ -9,23 +9,25 @@
 using namespace ftxui;
 
 class FtxuiView {
-    TetrisGame& tetrisGame;
+    TetrisGame &tetrisGame;
 
 public:
-    explicit FtxuiView(TetrisGame& game) : tetrisGame(game) {}
+    explicit FtxuiView(TetrisGame &game) : tetrisGame(game) {}
 
     [[nodiscard]] Element render() const {
-        return hbox({
-            renderBoard(),
-            separator(),
-            vbox({
-                renderBox("HOLD", renderPiece(tetrisGame.getBag().peekPiece())),
-                separator(),
-                renderBox("NEXT", renderPiece(&tetrisGame.getFactory().whatIsNextPiece())),
-                separator(),
-                renderScore()
-            }),
-        }) | size(HEIGHT, EQUAL, 22);
+        return vbox({
+                   hbox({
+                       renderStats(),
+
+                       renderBoard() | center,
+
+                       vbox({
+                           renderBox("HOLD", renderPiece(tetrisGame.getBag().peekPiece(), 4, 5)) | center,
+                           renderBox("NEXT", renderPiece(&tetrisGame.getFactory().whatIsNextPiece(), 4, 5)) | center,
+                       })
+
+                   }) | center,
+               }) | center;
     }
 
 private:
@@ -43,7 +45,7 @@ private:
     }
 
     [[nodiscard]] Element renderBoard() const {
-        const auto& gm = tetrisGame.getGameMatrix();
+        const auto &gm = tetrisGame.getGameMatrix();
         const auto board = gm.getBoardWithCurrentPiece();
 
         const int width = gm.getWidth();
@@ -65,51 +67,78 @@ private:
             rows.push_back(hbox(std::move(cells)));
         }
 
-        return window(text("BOARD") | bold | color(Color::White), vbox(std::move(rows)));
+        return window(text("BOARD") | bold | color(Color::White),
+            vbox(std::move(rows)));
     }
 
-    static Element renderPiece(const Tetromino* piece) {
-        constexpr int size = 4;
-
+    static Element renderPiece(const Tetromino *piece, int height, int width) {
         if (!piece) {
-            return text("  ");
+            // Render an empty space with specified size
+            std::vector<Element> emptyRows;
+            for (int y = 0; y < height; ++y) {
+                std::vector<Element> cells;
+
+                for (int x = 0; x < width; ++x) {
+                    cells.emplace_back(text("  "));
+                }
+
+                emptyRows.emplace_back(hbox(std::move(cells)));
+            }
+
+            return vbox(std::move(emptyRows));
         }
 
-        std::vector canvas(size, std::vector(size, 0));
+        // Initialize a canvas grid
+        std::vector canvas(height, std::vector(width, 0));
 
         const int pieceTypeVal = piece->getPieceType();
-
-        const auto& shape = piece->getShape();
-        for (int y = 0; y < static_cast<int>(shape.size()) && y < size; ++y) {
-            for (int x = 0; x < static_cast<int>(shape[y].size()) && x < size; ++x) {
+        const auto &shape = piece->getShape();
+        for (int y = 0; y < static_cast<int>(shape.size()) && y < height; ++y) {
+            for (int x = 0; x < static_cast<int>(shape[y].size()) && x < width; ++x) {
                 canvas[y][x] = shape[y][x];
             }
         }
 
         std::vector<Element> pieceRows;
-        for (int y = 0; y < size; ++y) {
+        for (int y = 0; y < height; ++y) {
             std::vector<Element> cells;
 
-            for (int x = 0; x < size; ++x) {
+            for (int x = 0; x < width; ++x) {
                 const int val = canvas[y][x] ? pieceTypeVal : 0;
                 const std::string cellStr = canvas[y][x] ? "██" : "  ";
                 cells.push_back(text(cellStr) | colorForValue(val));
             }
 
-            pieceRows.push_back(hbox(std::move(cells)) | center);
+            pieceRows.emplace_back(hbox(std::move(cells)));
         }
 
-        return vbox(std::move(pieceRows)) | center;
+        return vbox(std::move(pieceRows));
     }
 
-    [[nodiscard]] static Element renderBox(const std::string& title, Element content) {
-        return window(text(title) | bold | color(Color::White), vbox({ std::move(content) }));
+    [[nodiscard]] static Element renderBox(const std::string &title, Element content) {
+        return window(text(title) | bold | color(Color::White),
+            vbox({std::move(content)}))
+        | center;
     }
 
-    [[nodiscard]] Element renderScore() const {
-        const std::string scoreText = std::to_string(tetrisGame.getScore());
-        Element scoreElement = text(scoreText) | bold | color(Color::White) | center;
+    [[nodiscard]] Element renderStats() const {
+        Element scoreElement = hbox({
+            text("Score: ") | color(Color::White),
+            text(std::to_string(tetrisGame.getScore())) | color(Color::Green)
+        });
 
-        return window(text("SCORE") | bold | color(Color::White), vbox({ scoreElement }));
+        Element levelElement = hbox({
+            text("Level: ") | color(Color::White),
+            text(std::to_string(tetrisGame.getLevel())) | color(Color::Green)
+        });
+
+        Element linesElement = hbox({
+            text("Lines: ") | color(Color::White),
+            text(std::to_string(tetrisGame.getLinesCleared())) | color(Color::Green)
+        });
+
+        return window(text("STATS") | bold | color(Color::White),
+            vbox({scoreElement, levelElement, linesElement}))
+        | size(HEIGHT, EQUAL, 3) | size(WIDTH, EQUAL, 16);
     }
 };
