@@ -58,7 +58,11 @@ public:
         } else {
             // Swap with the stored piece
             // Put current piece back into the factory pool
-            game.getFactory().pushPiece(*current);
+            Tetromino resetCurrent = *current;
+            resetCurrent.reset();
+
+            // Push the reset tetromino back into the factory pool
+            game.getFactory().pushPiece(resetCurrent);
             gm.deleteCurrent();
             Tetromino retrieved = bag.retrievePiece();
             handleSpawn(game, retrieved);
