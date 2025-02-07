@@ -58,21 +58,21 @@ void handleClient(beast::tcp_stream& stream) {
 
     // Forward DB reqs to DB server
     const auto target(std::string(req.target()));
-    std::string db_response;
+    std::string DBResponse;
 
     if (target == "/register" || target == "/login" ||
         target == "/update"   || target == "/add_friend" ||
         target.find("/get_player") == 0) {
-        db_response = forwardRequest("127.0.0.1", "8081", target, req.method(), req.body());
+        DBResponse = forwardRequest("127.0.0.1", "8081", target, req.method(), req.body());
 
         } else {
-            db_response = R"({"error": "Unknown DB endpoint"})";
+            DBResponse = R"({"error": "Unknown DB endpoint"})";
         }
 
     // Return the DB server's response back to the client
     http::response<http::string_body> res{http::status::ok, req.version()};
     res.set(http::field::content_type, "application/json");
-    res.body() = db_response;
+    res.body() = DBResponse;
     res.prepare_payload();
     http::write(stream, res, ec);
     if (ec)

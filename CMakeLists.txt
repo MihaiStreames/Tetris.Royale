@@ -41,7 +41,7 @@ add_executable(TetrisRoyale_Server ${SERVER_SRC_FILES})
 target_link_libraries(TetrisRoyale_Server PRIVATE TetrisRoyale_Common)
 
 # DB Server executable
-file(GLOB DB_SERVER_SRC_FILES "src/server/db-server/*.cpp")
+file(GLOB DB_SERVER_SRC_FILES "src/server/db-server/*.cpp" "src/server/db-server/*.hpp")
 add_executable(TetrisRoyale_DB_Server ${DB_SERVER_SRC_FILES})
 target_link_libraries(TetrisRoyale_DB_Server PRIVATE TetrisRoyale_Common crypto)
 
