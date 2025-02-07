@@ -26,7 +26,7 @@ add_library(TetrisRoyale_Common ${COMMON_SRC_FILES})
 target_include_directories(TetrisRoyale_Common PUBLIC "src/common")
 
 # Terminal executable setup (using FTXUI)
-find_package(ftxui 5 COMPONENTS screen dom component REQUIRED)
+# find_package(ftxui 5 COMPONENTS screen dom component REQUIRED)
 
 file(GLOB_RECURSE TERMINAL_SRC_FILES "src/terminal/*.hpp" "src/terminal/main.cpp")
 add_executable(TetrisRoyale_Terminal ${TERMINAL_SRC_FILES})
@@ -35,10 +35,15 @@ target_include_directories(TetrisRoyale_Terminal PRIVATE "src/terminal")
 
 # Placeholder for additional executables
 
-# Server-side executable
-# file(GLOB SERVER_SRC_FILES "src/server/*.cpp")
-# add_executable(TetrisRoyale_Server ${SERVER_SRC_FILES})
-# target_link_libraries(TetrisRoyale_Server PRIVATE TetrisRoyale_Common)
+# Master Server executable
+file(GLOB SERVER_SRC_FILES "src/server/*.cpp")
+add_executable(TetrisRoyale_Server ${SERVER_SRC_FILES})
+target_link_libraries(TetrisRoyale_Server PRIVATE TetrisRoyale_Common)
+
+# DB Server executable
+file(GLOB DB_SERVER_SRC_FILES "src/server/db-server/*.cpp")
+add_executable(TetrisRoyale_DB_Server ${DB_SERVER_SRC_FILES})
+target_link_libraries(TetrisRoyale_DB_Server PRIVATE TetrisRoyale_Common crypto)
 
 # Client-side executable
 # file(GLOB CLIENT_SRC_FILES "src/client/*.cpp")
