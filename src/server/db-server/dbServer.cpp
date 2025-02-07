@@ -8,7 +8,6 @@
 #include <sstream>
 #include <unordered_map>
 #include <iomanip>
-
 #include "dbServer.hpp"
 
 namespace beast = boost::beast;
