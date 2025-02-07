@@ -27,7 +27,7 @@ struct Player {
     std::string name;           // Username (used as key in our DB)
     std::string hashedPassword; // SHA256-hashed password
     std::string friendList;     // Comma-separated list of friend UUIDs
-    int bestScore;              // Best score achieved in infinite mode
+    int bestScore = 0;              // Best score achieved in infinite mode
 };
 
 // In-memory "database" (keyed by username)
@@ -49,8 +49,8 @@ std::string sha256Hash(const std::string& input) {
     std::stringstream ss;
     ss << std::hex << std::setfill('0');
 
-    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++)
-        ss << std::setw(2) << static_cast<int>(hash[i]);
+    for (const unsigned char i : hash)
+        ss << std::setw(2) << static_cast<int>(i);
 
     return ss.str();
 }
@@ -136,7 +136,7 @@ void handleGetRequest(
 {
     // Extract the target and query string
     auto target = std::string(req.target());
-    const auto pos = target.find("?");
+    const auto pos = target.find('?');
     if (pos == std::string::npos) {
         sendErrorResponse(res, http::status::bad_request, "Missing query parameters", req.version());
         return;
@@ -205,7 +205,7 @@ void handleRegister(
     boost::property_tree::ptree resp;
     resp.put("uuid", p.uuid);
     resp.put("name", p.name);
-    resp.put("best_score", p.bestScore);
+    resp.put("bestScore", p.bestScore);
     sendJsonResponse(res, http::status::ok, resp, version);
 }
 
@@ -243,7 +243,7 @@ void handleLogin(
     boost::property_tree::ptree resp;
     resp.put("uuid", p.uuid);
     resp.put("name", p.name);
-    resp.put("best_score", p.bestScore);
+    resp.put("bestScore", p.bestScore);
     sendJsonResponse(res, http::status::ok, resp, version);
 }
 
@@ -304,7 +304,7 @@ void handleUpdate(
     boost::property_tree::ptree resp;
     resp.put("uuid", p.uuid);
     resp.put("name", p.name);
-    resp.put("best_score", p.bestScore);
+    resp.put("bestScore", p.bestScore);
     sendJsonResponse(res, http::status::ok, resp, version);
 }
 

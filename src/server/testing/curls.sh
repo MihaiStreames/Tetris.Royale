@@ -1,8 +1,4 @@
 #!/bin/bash
-# test_db_endpoints.sh
-# This script tests the DB endpoints via the master server (assumed to be running on port 8080).
-
-# Helper function to print a separator.
 separator() {
     echo "------------------------------------------------------------"
 }
