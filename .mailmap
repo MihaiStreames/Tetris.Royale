@@ -1,4 +1,17 @@
 # Si des commits ont été faits avec le nom "simon12" et avec l'addresse mail "simon12@gmail.com", ajouter la ligne suivant pour qu'il soit associé à "Simon Renard" et l'addresse "simon.renard@ulb.be"
-Simon Renard <simon.renard@ulb.be> simon12 <simon12@gmail.com>
-Rares Bors <rares.bors@ulb.be> MihaiStreames <moreliciouscod@gmail.com>
-Babar Ali Umar <ali.babar@ulb.be> ali <babaraliumar23@gmail.com>
+
+Alexis_Reynouard	<alexis.reynouard@ulb.be>
+Ali_Umar_Babar	<ali.babar@ulb.be>
+Ali_Umar_Babar	<ali.babar@ulb.be>	<babaraliumar23@gmail.com>
+Antoine_Berthion	<antoine.berthion@ulb.be>
+Ayman_Benaim	<ayman.benaim@ulb.be>
+Mamadou_Barry	<mamadou.barry5@ulb.be>
+Oleksandra_Omelyanyuk	<oleksandra.omelyanyuk@ulb.be>
+Rares_Bors	<rares.bors@ulb.be>
+Rares_Bors	<rares.bors@ulb.be>	<moreliciouscod@gmail.com>
+Roberto_Rabei	<roberto.rabei@ulb.be>
+Simon_Renard	<simon.renard@ulb.be>
+Simon_Renard	<simon.renard@ulb.be>	<simon12@gmail.com>
+Taha_Es-saâdouni	<taha.essaadouni@ulb.be>
+
+# vim: ts=36 noexpandtab list listchars=tab\:\ -\ 
