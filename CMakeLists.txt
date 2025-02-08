@@ -12,7 +12,7 @@ include(FetchContent)
 set(FETCHCONTENT_UPDATES_DISCONNECTED TRUE)
 FetchContent_Declare(ftxui
   GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
-  GIT_TAG main # Important: Specify a version or a commit hash here.
+  GIT_TAG main
 )
 FetchContent_MakeAvailable(ftxui)
 
@@ -21,25 +21,80 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic -Wall -Wextra -O2")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow -Wformat=2 -Wfloat-equal -Wconversion -Wlogical-op -Wshift-overflow=2 -Wduplicated-cond -Wcast-qual -Wcast-align -Wnull-dereference -Wold-style-cast -Wuseless-cast -Wdouble-promotion -Wzero-as-null-pointer-constant -Wstrict-null-sentinel -Wswitch-enum -Wswitch-default -Wunreachable-code -Wundef")
 
 # Shared common library
-file(GLOB_RECURSE COMMON_SRC_FILES "src/common/tetris.cpp" "src/common/*.hpp")
-add_library(TetrisRoyale_Common ${COMMON_SRC_FILES})
-target_include_directories(TetrisRoyale_Common PUBLIC "src/common")
+file(GLOB_RECURSE COMMON_SRC_FILES
+    "src/common/tetris.cpp"
+    "src/common/*.hpp"
+)
+add_library(TetrisRoyaleCommon ${COMMON_SRC_FILES})
+target_include_directories(TetrisRoyaleCommon PUBLIC "src/common")
 
-# Terminal executable setup (using FTXUI)
-find_package(ftxui 5 COMPONENTS screen dom component REQUIRED)
+# HTTP Server library
+file(GLOB HTTP_SERVER_SRC_FILES
+    "src/server/http-server/*.cpp"
+    "src/server/http-server/*.hpp"
+)
+add_library(TetrisRoyaleHTTP STATIC ${HTTP_SERVER_SRC_FILES})
+target_include_directories(TetrisRoyaleHTTP PUBLIC "src/server/http-server")
+target_link_libraries(TetrisRoyaleHTTP
+    PRIVATE
+        TetrisRoyaleCommon
+)
 
-file(GLOB_RECURSE TERMINAL_SRC_FILES "src/terminal/*.hpp" "src/terminal/main.cpp")
-add_executable(TetrisRoyale_Terminal ${TERMINAL_SRC_FILES})
-target_link_libraries(TetrisRoyale_Terminal PRIVATE TetrisRoyale_Common ftxui::screen ftxui::dom ftxui::component)
-target_include_directories(TetrisRoyale_Terminal PRIVATE "src/terminal")
+# UDP Server library
+file(GLOB UDP_SERVER_SRC_FILES
+    "src/server/udp-server/*.cpp"
+    "src/server/udp-server/*.hpp"
+)
+add_library(TetrisRoyaleUDP STATIC ${UDP_SERVER_SRC_FILES})
+target_include_directories(TetrisRoyaleUDP PUBLIC "src/server/udp-server")
+target_link_libraries(TetrisRoyaleUDP
+    PRIVATE
+        TetrisRoyaleCommon
+)
+
+# DB Server executable
+file(GLOB DB_SERVER_SRC_FILES
+    "src/server/db-server/*.cpp"
+    "src/server/db-server/*.hpp"
+)
+add_executable(TetrisRoyaleDBServer ${DB_SERVER_SRC_FILES})
+target_link_libraries(TetrisRoyaleDBServer
+    PRIVATE
+        TetrisRoyaleCommon
+        TetrisRoyaleHTTP
+        crypto
+)
+
+# Master Server executable
+file(GLOB MASTER_SERVER_SRC_FILES
+    "src/server/master-server/*.cpp"
+    "src/server/master-server/*.hpp"
+    "src/server/server.cpp"
+)
+add_executable(TetrisRoyaleMasterServer ${MASTER_SERVER_SRC_FILES})
+target_link_libraries(TetrisRoyaleMasterServer
+    PRIVATE
+        TetrisRoyaleCommon
+        TetrisRoyaleHTTP
+        TetrisRoyaleUDP
+)
+
+# Terminal executable setup
+file(GLOB_RECURSE TERMINAL_SRC_FILES
+        "src/terminal/*.hpp"
+        "src/terminal/main.cpp"
+)
+add_executable(TetrisRoyaleTerminal ${TERMINAL_SRC_FILES})
+target_link_libraries(TetrisRoyaleTerminal
+        PRIVATE
+        TetrisRoyaleCommon
+        ftxui::screen
+        ftxui::dom
+        ftxui::component
+)
+target_include_directories(TetrisRoyaleTerminal PRIVATE "src/terminal")
 
 # Placeholder for additional executables
-
-# Server-side executable
-# file(GLOB SERVER_SRC_FILES "src/server/*.cpp")
-# add_executable(TetrisRoyale_Server ${SERVER_SRC_FILES})
-# target_link_libraries(TetrisRoyale_Server PRIVATE TetrisRoyale_Common)
-
 # Client-side executable
 # file(GLOB CLIENT_SRC_FILES "src/client/*.cpp")
 # add_executable(TetrisRoyale_Client ${CLIENT_SRC_FILES})
