@@ -1,3 +1,7 @@
 /.idea
-/cmake-build-*
 .vscode
+
+CMakeFiles
+/cmake-build-*
+
+__pycache__
