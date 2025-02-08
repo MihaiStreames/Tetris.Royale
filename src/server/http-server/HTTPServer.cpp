@@ -43,7 +43,7 @@ void TetrisHTTPServer::run() {
 
 void TetrisHTTPServer::stop() {
     if(running_.exchange(false)) {
-        std::cout << "[HTTP] Stopping pyserver on " << address_ << ":" << port_ << std::endl;
+        std::cout << "[HTTP] Stopping server on " << address_ << ":" << port_ << std::endl;
         boost::system::error_code ec;
         acceptor_.close(ec);
         ioc_.stop();

@@ -38,7 +38,7 @@ void TetrisUDPServer::run() {
 
 void TetrisUDPServer::stop() {
     if(running_.exchange(false)) {
-        std::cout << "[UDP] Stopping pyserver on " << address_ << ":" << port_ << std::endl;
+        std::cout << "[UDP] Stopping server on " << address_ << ":" << port_ << std::endl;
         boost::system::error_code ec;
         socket_.close(ec);
         ioc_.stop();

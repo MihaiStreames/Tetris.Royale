@@ -24,11 +24,11 @@ TetrisMasterServer::TetrisMasterServer(
 void TetrisMasterServer::run()
 {
     // Start each server in its own thread
-    httpThread_ = std::thread([this]() {
+    httpThread_ = std::thread([this] {
         TetrisHTTPServer::run();
     });
 
-    udpThread_ = std::thread([this]() {
+    udpThread_ = std::thread([this] {
         TetrisUDPServer::run();
     });
 }
