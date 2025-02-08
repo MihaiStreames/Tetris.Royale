@@ -3,6 +3,7 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <openssl/sha.h>
 #include <sstream>
+#include <iostream>
 #include "DBServer.hpp"
 
 namespace beast = boost::beast;
@@ -374,4 +375,15 @@ bool TetrisDBServer::addFriendUUID(std::string &list, const std::string &uuid) {
     }
 
     return true;
+}
+
+int main() {
+    try {
+        TetrisDBServer dbServer("0.0.0.0", 8081);
+        dbServer.run();
+    }
+    catch(const std::exception& e) {
+        std::cerr << "DBServer error: " << e.what() << std::endl;
+    }
+    return 0; // success
 }
