@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../http-server/HTTPServer.hpp"
-#include "../udp-server/UDPServer.hpp"
+#include "HTTPServer.hpp"
+#include "UDPServer.hpp"
 #include <string>
 #include <boost/beast/http.hpp>
 

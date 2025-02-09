@@ -40,10 +40,10 @@ void TetrisMasterServer::stop()
     TetrisUDPServer::stop();
 
     // Join the threads if they are joinable
-    if(httpThread_.joinable()) {
+    if (httpThread_.joinable()) {
         httpThread_.join();
     }
-    if(udpThread_.joinable()) {
+    if (udpThread_.joinable()) {
         udpThread_.join();
     }
 }
@@ -54,8 +54,8 @@ void TetrisMasterServer::stop()
  * 3) Else => unknown
  */
 void TetrisMasterServer::handleRequest(
-    http::request<http::string_body>    req,
-    http::response<http::string_body>&  res)
+    http::request<http::string_body>   req,
+    http::response<http::string_body>& res)
 {
     namespace http = beast::http;
 
@@ -68,6 +68,8 @@ void TetrisMasterServer::handleRequest(
      || target == "/login"
      || target == "/update"
      || target == "/add_friend"
+     || target == "/send_friend_request"
+     || target == "/remove_friend"
      || target.rfind("/get_player", 0) == 0) // starts with /get_player
     {
         std::string dbResponse = forwardToDBServer(target, verb, body);
@@ -84,8 +86,11 @@ void TetrisMasterServer::handleRequest(
     // Game Endpoints
     if (target == "/create_lobby"
      || target == "/invite"
-     || target == "/spectate"
-     || target.rfind("/lobby_details", 0) == 0)
+     || target == "/join_lobby"
+     || target == "/leave_lobby"
+     || target == "/spectate_lobby"
+     || target == "/start_lobby"
+     || target.rfind("/get_lobby", 0) == 0)
     {
         std::string gameResponse = forwardToGameServer(target, verb, body);
         res.result(http::status::ok);
@@ -119,18 +124,18 @@ void TetrisMasterServer::handleUDPPacket(
 
 // Helpers to forward to DB Server and Game Server
 std::string TetrisMasterServer::forwardToDBServer(
-    const std::string&  target,
-    const http::verb    method,
-    const std::string&  body)
+    const std::string& target,
+    const http::verb   method,
+    const std::string& body)
 {
     // Reuse TetrisHTTPServer::forwardRequest to talk to DB server
     return forwardRequest(dbHost_, dbPort_, target, method, body);
 }
 
 std::string TetrisMasterServer::forwardToGameServer(
-    const std::string&  target,
-    const http::verb    method,
-    const std::string&  body)
+    const std::string& target,
+    const http::verb   method,
+    const std::string& body)
 {
     // Reuse TetrisHTTPServer::forwardRequest to talk to Game server
     return forwardRequest(gameHost_, gamePort_, target, method, body);

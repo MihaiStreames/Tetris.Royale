@@ -12,12 +12,12 @@ TetrisUDPServer::TetrisUDPServer(std::string  address, const unsigned short port
     const asio::ip::udp::endpoint endpoint(asio::ip::make_address(address_), port_);
 
     socket_.open(endpoint.protocol(), errorCode);
-    if(errorCode) {
+    if (errorCode) {
         std::cerr << "[UDP] Error opening socket: " << errorCode.message() << std::endl;
         return;
     }
     socket_.bind(endpoint, errorCode);
-    if(errorCode) {
+    if (errorCode) {
         std::cerr << "[UDP] Error binding socket: " << errorCode.message() << std::endl;
         return;
     }
@@ -37,7 +37,7 @@ void TetrisUDPServer::run() {
 }
 
 void TetrisUDPServer::stop() {
-    if(running_.exchange(false)) {
+    if (running_.exchange(false)) {
         std::cout << "[UDP] Stopping server on " << address_ << ":" << port_ << std::endl;
         boost::system::error_code ec;
         socket_.close(ec);
@@ -46,13 +46,13 @@ void TetrisUDPServer::stop() {
 }
 
 void TetrisUDPServer::doReceive() {
-    if(!running_.load()) return;
+    if (!running_.load()) return;
 
     socket_.async_receive_from(
         asio::buffer(buffer_),
         remoteEndpoint_,
         [this](const boost::system::error_code &errorCode, const std::size_t bytesReceived) {
-            if(!errorCode && bytesReceived > 0) {
+            if (!errorCode && bytesReceived > 0) {
                 const std::string data(buffer_.data(), bytesReceived);
 
                 // Let derived class handle
