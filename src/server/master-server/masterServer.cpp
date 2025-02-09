@@ -70,6 +70,7 @@ void TetrisMasterServer::handleRequest(
      || target == "/add_friend"
      || target == "/send_friend_request"
      || target == "/remove_friend"
+     || target == "/get_leaderboard"
      || target.rfind("/get_player", 0) == 0) // starts with /get_player
     {
         std::string dbResponse = forwardToDBServer(target, verb, body);
