@@ -381,6 +381,8 @@ void TetrisDBServer::handleSendFriendRequest(
 }
 
 // POST /add_friend [Expected: accountID, otherAccountID]
+// "accountID" is the user ACCEPTING the friend request (the receiver)
+// "otherAccountID" is the user who originally sent the request
 void TetrisDBServer::handleAddFriend(
     const boost::property_tree::ptree& pt,
     const unsigned int version,
@@ -406,25 +408,24 @@ void TetrisDBServer::handleAddFriend(
         return;
     }
 
-    Player& p1 = it1->second;
-    Player& p2 = it2->second;
+    Player& p1 = it1->second;  // the receiver, who is calling /add_friend
+    Player& p2 = it2->second;  // the sender, who created the friend request
 
-    // Ensure that p2 actually has a friend request pending from p1
-    if (!containsValue(p2.pendingFriendRequests, acc)) {
+    // Ensure that p1 has a pending request from p2
+    if (!containsValue(p1.pendingFriendRequests, p2.accountID)) {
         boost::property_tree::ptree err;
         err.put("error", "No pending friend request from this user");
         sendJSONResponse(res, status::bad_request, err, version);
         return;
     }
 
-    removeValue(p2.pendingFriendRequests, acc);
+    removeValue(p1.pendingFriendRequests, p2.accountID);
 
-    // Add each other
+    // Add each other as friends
     const bool added1 = addUnique(p1.friends, p2.accountID);
-    bool added2 = addUnique(p2.friends, p1.accountID);
+    const bool added2 = addUnique(p2.friends, p1.accountID);
 
     if (!added1 && !added2) {
-        // They are already friends
         boost::property_tree::ptree err;
         err.put("error", "Already friends");
         sendJSONResponse(res, status::bad_request, err, version);
