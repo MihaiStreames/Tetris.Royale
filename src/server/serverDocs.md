@@ -58,12 +58,12 @@ struct GameStatePacket {
 | `/login`               | POST   | `userName`, `password`                                      | Authenticates a player                       | ✅    |
 | `/register`            | POST   | `userName`, `password`                                      | Registers a new player                       | ✅    |
 | `/update`              | POST   | `accountID`, `newName (optional)`, `newPassword (optional)` | Updates player details                       | ✅    |
-| `/get_leaderboard`     | GET    | None                                                        | Retrieves the leaderboard                    | ❌    |
+| `/get_leaderboard`     | GET    | None                                                        | Retrieves the leaderboard                    | ✅    |
 | `/get_player`          | GET    | `accountID`                                                 | Retrieves player profile                     | ✅    |
 | `/get_friends`         | GET    | `accountID` (can be done via `/get_player`)                 | Fetches the list of friends for a given user | ❓    |
-| `/send_friend_request` | POST   | `accountID`, `otherAccountID`                               | Sends a friend request                       | ❌    |
+| `/send_friend_request` | POST   | `accountID`, `otherAccountID`                               | Sends a friend request                       | ✅    |
 | `/add_friend`          | POST   | `accountID`, `otherAccountID`                               | Adds a player to friend list                 | ✅    |
-| `/remove_Friend`       | POST   | `accountID`, `otherAccountID`                               | Removes a friend relation between two users  | ❌    |
+| `/remove_Friend`       | POST   | `accountID`, `otherAccountID`                               | Removes a friend relation between two users  | ✅    |
 
 #### **Messaging Endpoints (DB Server)**
 | Endpoint          | Method | Parameters                                      | Purpose                                      | Done |
