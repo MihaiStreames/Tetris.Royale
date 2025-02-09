@@ -12,17 +12,17 @@ TetrisHTTPServer::TetrisHTTPServer(std::string  address, const unsigned short po
     const asio::ip::tcp::endpoint endpoint(asio::ip::make_address(address_), port_);
 
     acceptor_.open(endpoint.protocol(), errorCode);
-    if(errorCode) {
+    if (errorCode) {
         std::cerr << "[HTTP] Error opening acceptor: " << errorCode.message() << std::endl;
         return;
     }
     acceptor_.bind(endpoint, errorCode);
-    if(errorCode) {
+    if (errorCode) {
         std::cerr << "[HTTP] Error binding acceptor: " << errorCode.message() << std::endl;
         return;
     }
     acceptor_.listen(asio::socket_base::max_listen_connections, errorCode);
-    if(errorCode) {
+    if (errorCode) {
         std::cerr << "[HTTP] Error listening on acceptor: " << errorCode.message() << std::endl;
         return;
     }
@@ -42,7 +42,7 @@ void TetrisHTTPServer::run() {
 }
 
 void TetrisHTTPServer::stop() {
-    if(running_.exchange(false)) {
+    if (running_.exchange(false)) {
         std::cout << "[HTTP] Stopping server on " << address_ << ":" << port_ << std::endl;
         boost::system::error_code ec;
         acceptor_.close(ec);
@@ -55,7 +55,7 @@ void TetrisHTTPServer::doAccept() {
 
     acceptor_.async_accept(
         [this](const boost::system::error_code &errorCode, tcp::socket socket) {
-            if(!errorCode) {
+            if (!errorCode) {
                 // Launch a new session in its own thread
                 std::thread(&TetrisHTTPServer::doSession, this, std::move(socket)).detach();
             }
@@ -69,13 +69,13 @@ void TetrisHTTPServer::doSession(tcp::socket socket) {
     beast::error_code ec;
     beast::flat_buffer buffer;
 
-    for(;;) {
+    for (;;) {
         http::request<http::string_body> req;
         http::read(socket, buffer, req, ec);
 
-        if(ec == http::error::end_of_stream) break; // Remote closed
+        if (ec == http::error::end_of_stream) break; // Remote closed
 
-        if(ec) {
+        if (ec) {
             std::cerr << "[HTTP] Read error: " << ec.message() << std::endl;
             break;
         }
@@ -89,12 +89,12 @@ void TetrisHTTPServer::doSession(tcp::socket socket) {
 
         // Send the response
         http::write(socket, res, ec);
-        if(ec) {
+        if (ec) {
             std::cerr << "[HTTP] Write error: " << ec.message() << std::endl;
             break;
         }
 
-        if(res.need_eof()) break;
+        if (res.need_eof()) break;
     }
 
     socket.shutdown(tcp::socket::shutdown_send, ec);

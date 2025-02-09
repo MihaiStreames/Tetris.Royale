@@ -1,4 +1,4 @@
-#include "master-server/masterServer.hpp"
+#include "masterServer.hpp"
 #include <iostream>
 
 int main() {

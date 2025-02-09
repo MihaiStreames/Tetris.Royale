@@ -29,35 +29,21 @@ add_library(TetrisRoyaleCommon ${COMMON_SRC_FILES})
 target_include_directories(TetrisRoyaleCommon PUBLIC "src/common")
 
 # HTTP Server library
-file(GLOB HTTP_SERVER_SRC_FILES
-    "src/server/http-server/*.cpp"
-    "src/server/http-server/*.hpp"
-)
+file(GLOB HTTP_SERVER_SRC_FILES "src/server/http-server/*.cpp")
 add_library(TetrisRoyaleHTTP STATIC ${HTTP_SERVER_SRC_FILES})
-target_include_directories(TetrisRoyaleHTTP PUBLIC "src/server/http-server")
-target_link_libraries(TetrisRoyaleHTTP
-    PRIVATE
-        TetrisRoyaleCommon
-)
+target_include_directories(TetrisRoyaleHTTP PUBLIC "include/server/http-server")
+target_link_libraries(TetrisRoyaleHTTP PRIVATE TetrisRoyaleCommon)
 
 # UDP Server library
-file(GLOB UDP_SERVER_SRC_FILES
-    "src/server/udp-server/*.cpp"
-    "src/server/udp-server/*.hpp"
-)
+file(GLOB UDP_SERVER_SRC_FILES "src/server/udp-server/*.cpp")
 add_library(TetrisRoyaleUDP STATIC ${UDP_SERVER_SRC_FILES})
-target_include_directories(TetrisRoyaleUDP PUBLIC "src/server/udp-server")
-target_link_libraries(TetrisRoyaleUDP
-    PRIVATE
-        TetrisRoyaleCommon
-)
+target_include_directories(TetrisRoyaleUDP PUBLIC "include/server/udp-server")
+target_link_libraries(TetrisRoyaleUDP PRIVATE TetrisRoyaleCommon)
 
 # DB Server executable
-file(GLOB DB_SERVER_SRC_FILES
-    "src/server/db-server/*.cpp"
-    "src/server/db-server/*.hpp"
-)
+file(GLOB DB_SERVER_SRC_FILES "src/server/db-server/*.cpp")
 add_executable(TetrisRoyaleDBServer ${DB_SERVER_SRC_FILES})
+target_include_directories(TetrisRoyaleDBServer PUBLIC "include/server/db-server")
 target_link_libraries(TetrisRoyaleDBServer
     PRIVATE
         TetrisRoyaleCommon
@@ -68,9 +54,9 @@ target_link_libraries(TetrisRoyaleDBServer
 # Master Server executable
 file(GLOB MASTER_SERVER_SRC_FILES
     "src/server/master-server/*.cpp"
-    "src/server/master-server/*.hpp"
     "src/server/server.cpp"
 )
+target_include_directories(TetrisRoyaleUDP PUBLIC "include/server/master-server")
 add_executable(TetrisRoyaleMasterServer ${MASTER_SERVER_SRC_FILES})
 target_link_libraries(TetrisRoyaleMasterServer
     PRIVATE
