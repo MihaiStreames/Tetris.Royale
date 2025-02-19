@@ -1,9 +1,11 @@
+#pragma once
+
 #include "tetrisGame.hpp"
 
 class ClassicDuelGame : public TetrisGame{
 
 public:
     void sendInfo() {
-        
+
     }
 };

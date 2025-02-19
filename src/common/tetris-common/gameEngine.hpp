@@ -2,8 +2,10 @@
 
 #include <iostream>
 #include "tetrisGame.hpp"
+#include "powerUp.hpp"
 
 class GameEngine {
+    static std::vector< std::unique_ptr<PowerUp> > activePowers;
 public:
     static bool handleAction(TetrisGame& game, const Action action) {
         bool success = true;
@@ -147,7 +149,11 @@ public:
         game.incrementFrameCount();
     }
 
-    // static void handlePowerUps(PowerUps powerUps) {
+    static void handleReverseControlle(bool needToReverse) {
 
-    // }
+    }
+
+    static void handlePowerUp(TetrisGame& game, PowerUp& powerUp) {
+        powerUp.applyEffect(game);
+    }
 };
