@@ -31,33 +31,33 @@ public:
     TetrisGame(const int gWidth, const int gHeight, const int gScore = 0, const int fc = 0, const int lvl = 0, const int totLinesCleared = 0)
    : gameMatrix(gWidth, gHeight), score(gScore), frameCount(fc), level(lvl), totalLinesCleared(totLinesCleared) {}
 
-    [[nodiscard]] bool isGameOver() const { return gameOver; }
-    void setGameOver(const bool flag) { gameOver = flag; }
+    [[nodiscard]] virtual bool isGameOver() const { return gameOver; }
+    virtual void setGameOver(const bool flag) { gameOver = flag; }
 
-    GameMatrix& getGameMatrix() { return gameMatrix; }
-    TetrisFactory& getFactory() { return factory; }
-    Bag& getBag()               { return bag; }
+    virtual GameMatrix& getGameMatrix() { return gameMatrix; }
+    virtual TetrisFactory& getFactory() { return factory; }
+    virtual Bag& getBag()               { return bag; }
 
-    [[nodiscard]] int getFrameCount() const noexcept    { return frameCount; }
-    void setFrameCount(const int fc)                    { frameCount = fc; }
-    void incrementFrameCount(const int fc=1)            { frameCount += fc; }
+    [[nodiscard]] virtual int getFrameCount() const noexcept    { return frameCount; }
+    virtual void setFrameCount(const int fc)                    { frameCount = fc; }
+    virtual void incrementFrameCount(const int fc=1)            { frameCount += fc; }
 
-    [[nodiscard]] int getLevel() const noexcept { return level; }
-    void setLevel(const int lvl)                { level = lvl; }
-    void incrementLevel(const int lvl=1)        { level += lvl; }
+    [[nodiscard]] virtual int getLevel() const noexcept { return level; }
+    virtual void setLevel(const int lvl)                { level = lvl; }
+    virtual void incrementLevel(const int lvl=1)        { level += lvl; }
 
-    [[nodiscard]] int getScore() const noexcept { return score; }
+    [[nodiscard]] virtual int getScore() const noexcept { return score; }
 
-    void calculateScore(const int linesCleared) {
+    virtual void calculateScore(const int linesCleared) {
         static const int tabScore[] = {0, 40, 100, 300, 1200};
         if (linesCleared >= 1 && linesCleared <= 4) score += tabScore[linesCleared];
     }
 
-    [[nodiscard]] int getLinesCleared() const               { return totalLinesCleared; }
+    [[nodiscard]] virtual int getLinesCleared() const               { return totalLinesCleared; }
     void setTotalLinesCleared(const int lines)              { totalLinesCleared = lines; }
     void incrementLinesCleared(const int q)                 { totalLinesCleared += q; }
 
-    [[nodiscard]] bool shouldApplyGravity() const {
+    [[nodiscard]] virtual bool shouldApplyGravity() const {
         const int frame = getFrameCount();
         const int lvl = getLevel();
         int frame_quantum = 1;
@@ -67,9 +67,9 @@ public:
         return frame % frame_quantum == 0 && frame >= frame_quantum;
     }
 
-    [[nodiscard]] bool shouldLevelUp() const { return getLinesCleared() / LINES_TO_LEVELUP != getLevel(); }
+    [[nodiscard]] virtual bool shouldLevelUp() const { return getLinesCleared() / LINES_TO_LEVELUP != getLevel(); }
 
-    void updateLevelAfterLineClear() {
+    virtual void updateLevelAfterLineClear() {
         if (shouldLevelUp()) {
             const int newLineBasedLevel = getLinesCleared() / LINES_TO_LEVELUP;
             if (const int diff = newLineBasedLevel - getLevel(); diff > 0) incrementLevel(diff);

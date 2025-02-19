@@ -28,5 +28,17 @@ enum Action {
     UseBag
 };
 
+enum TypePowerUps {
+    inverted_command,
+    block_command,
+    add_lines,
+    thunder_strike,
+    blocs_1x1,
+    slow_falling_pieces,
+    fast_falling_pieces,
+    light_off,
+    None
+};
+
 using tetroMat = std::vector<std::vector<int>>;
 using pieceVec = std::vector<PieceType>;
