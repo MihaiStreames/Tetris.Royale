@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include "tetrisGame.hpp"
-#include "powerUp.hpp"
 
 class GameEngine {
     static std::vector< std::unique_ptr<PowerUp> > activePowers;
@@ -120,8 +119,6 @@ public:
         handleSpawn(game);  // ensure a piece is always available
 
         if (game.isGameOver()) handleGameOver(game);
-
-        // powerUp.update();
     }
 
     static void handleGameOver(TetrisGame& /*eventually have game*/) {
@@ -147,13 +144,5 @@ public:
         handleGameLogic(game);
 
         game.incrementFrameCount();
-    }
-
-    static void handleReverseControlle(bool needToReverse) {
-
-    }
-
-    static void handlePowerUp(TetrisGame& game, PowerUp& powerUp) {
-        powerUp.applyEffect(game);
     }
 };
