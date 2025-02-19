@@ -182,6 +182,7 @@ public:
     void deleteCurrent() { currentTetromino.reset(); }
 
     [[nodiscard]] const tetroMat& getBoard() const { return board; }
+    [[nodiscard]] tetroMat& getBoard() { return board; }
     [[nodiscard]] int getWidth() const  { return width; }
     [[nodiscard]] int getHeight() const { return height; }
 };

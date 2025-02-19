@@ -1,10 +1,11 @@
 #pragma once
 
 #include <iostream>
+#include <random>
 #include "tetrisGame.hpp"
+#include "classicGame.hpp"
 
 class GameEngine {
-    static std::vector< std::unique_ptr<PowerUp> > activePowers;
 public:
     static bool handleAction(TetrisGame& game, const Action action) {
         bool success = true;
@@ -113,9 +114,33 @@ public:
         }
     }
 
+    static void handleBasicPenalty(ClassicGame& game, const int linesCleared){
+        std::cout<<"in pen";
+        if (linesCleared <= 1 ) return;
+
+        const std::vector<ClassicGame*>& opponents = game.getOpponents();
+
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<size_t> dist(0, opponents.size() - 1);
+        ClassicGame* randomOpponent = opponents[dist(gen)];
+
+        int linesToAdd;
+        if (linesCleared < 4){
+            linesToAdd = linesCleared -1;
+        } else {
+            linesToAdd = 4;
+        }
+        std::cout<<"shoudl get added";
+        randomOpponent->addPenaltyLines(linesToAdd);
+    }
+
     static void handleGameLogic(TetrisGame& game) {
         const int linesCleared = game.getGameMatrix().clearFullLines();
         handleScore(game, linesCleared);
+        if (auto* classicGame = dynamic_cast<ClassicGame*>(&game)) { // If classic game -> send basic penalty if needed
+            handleBasicPenalty(*classicGame, linesCleared);
+        }
         handleSpawn(game);  // ensure a piece is always available
 
         if (game.isGameOver()) handleGameOver(game);

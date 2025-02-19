@@ -40,6 +40,7 @@ private:
             case 5: return  color(Color::Red);
             case 6: return  color(Color::Cyan);
             case 7: return  color(Color::Blue);
+            case 8: return  color(Color::GrayDark);
             default: return color(Color::White);
         }
     }

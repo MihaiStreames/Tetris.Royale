@@ -37,7 +37,7 @@ enum TypePowerUps {
     slow_falling_pieces,
     fast_falling_pieces,
     light_off,
-    None
+    NonePowerUp
 };
 
 using tetroMat = std::vector<std::vector<int>>;

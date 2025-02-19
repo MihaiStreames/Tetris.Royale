@@ -1,12 +1,37 @@
 #pragma once
 
+#include <cstdlib>
 #include "tetrisGame.hpp"
 
-class ClassicDuelGame : public TetrisGame{
+class ClassicGame : public TetrisGame{
     bool gameOver = false;
+    std::vector<ClassicGame*> opponents;
 
 public:
-    void addLines() {
+
+    virtual std::vector<ClassicGame*> getOpponents() { return opponents;}
+
+    virtual void addPenaltyLines(int linesToAdd){
+        GameMatrix& matrix = getGameMatrix();
+        tetroMat& board = matrix.getBoard();
+        
+        // If the pushed lines have tetrominos -> game over
+        for (int i = 0; i < linesToAdd; ++i){
+            for (int cell : getGameMatrix().getBoard()[i]){
+                if (cell){
+                    setGameOver(true);
+                    return;
+                }
+            }
+        }
+        board.erase(board.begin(), board.begin() + linesToAdd);
+        int holePosition = rand() % matrix.getWidth();
+
+        for (int i = 0; i < linesToAdd; ++i) {
+            std::vector<int> newLine(matrix.getWidth(), 8);
+            newLine[holePosition] = 0;
+            board.push_back(newLine);
+        }
     }
 
     void sendInfo() {
@@ -18,8 +43,5 @@ public:
 
     void setGameOver(const bool flag) {
         gameOver = flag;
-        if (playerCount == 1) {
-            
-        }
     }
 };

@@ -4,6 +4,7 @@
 #include "gameMatrix.hpp"
 #include "tetrisFactory.hpp"
 #include "bag.hpp"
+#include <iostream>
 
 class TetrisGame {
     GameMatrix gameMatrix;
