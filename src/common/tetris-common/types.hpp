@@ -14,8 +14,7 @@ enum PieceType {
     I,
     Z,
     S,
-    T,
-    Single
+    T
 };
 
 enum Action {
@@ -26,18 +25,20 @@ enum Action {
     RotateLeft,
     RotateRight,
     InstantFall,
-    UseBag
+    UseBag,
+    Malus,
+    Bonus
 };
 
 enum TypePowerUps {
     inverted_command,
     block_command,
+    
     thunder_strike,
     blocs_1x1,
     slow_falling_pieces,
     fast_falling_pieces,
-    light_off,
-    NonePowerUp
+    light_off
 };
 
 using tetroMat = std::vector<std::vector<int>>;
