@@ -11,6 +11,7 @@ protected:
     TetrisFactory factory;
     Bag bag;
     int score;
+    int energy;
     int frameCount;
     int level;
     int totalLinesCleared;
@@ -35,9 +36,11 @@ public:
 
     [[nodiscard]] virtual bool isGameOver() const { return gameOver; }
     virtual void setGameOver(const bool flag) { gameOver = flag; }
-    virtual bool setReverseControls(const bool flag) { reverseControls = flag; }
+    virtual void setReverseControls(const bool flag) { reverseControls = flag; }
+    virtual void setEnergy(int setEnergy) { energy = setEnergy; }
 
     virtual GameMatrix& getGameMatrix() { return gameMatrix; }
+    virtual int getEnergy() { return energy; }
     virtual TetrisFactory& getFactory() { return factory; }
     virtual Bag& getBag()               { return bag; }
     virtual bool getReverseControls() { return reverseControls; }
@@ -55,6 +58,12 @@ public:
     virtual void calculateScore(const int linesCleared) {
         static const int tabScore[] = {0, 40, 100, 300, 1200};
         if (linesCleared >= 1 && linesCleared <= 4) score += tabScore[linesCleared];
+    }
+
+    virtual void calculateEnergy(const int linesCleared) {
+        static const int tabEnergy[] = {0, 5, 20, 30, 50};
+        if (linesCleared >= 1 && linesCleared <= 4)
+            score += tabEnergy[linesCleared];
     }
 
     [[nodiscard]] virtual int getLinesCleared() const               { return totalLinesCleared; }
@@ -79,4 +88,15 @@ public:
             if (const int diff = newLineBasedLevel - getLevel(); diff > 0) incrementLevel(diff);
         }
     }
+
+    // Pour qu'on puisse appeler les methodes sans forcement savoir de quel mode de jeu ils viennent
+    // A modifier, ce n'est pas une bonne pratique !!!
+    virtual void inverted_command() {}
+    virtual void block_command() {}
+    virtual void thunder_strike() {}
+    virtual void fast_falling_pieces() {}
+    virtual void light_off() {}
+
+    virtual void blocs_1x1(){}
+    virtual void slow_falling_pieces(){}
 };

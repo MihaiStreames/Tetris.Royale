@@ -7,8 +7,8 @@
 
 class GameEngine {
 private:
-    static std::vector<TypePowerUps> bonusVector = {blocs_1x1, slow_falling_pieces};
-    static std::vector<TypePowerUps> malusVector = {inverted_command, block_command, thunder_strike, fast_falling_pieces, light_off};
+    std::vector<TypePowerUps> bonusVector = {inverted_command, block_command, thunder_strike, fast_falling_pieces, light_off};
+    std::vector<TypePowerUps> malusVector = {blocs_1x1, slow_falling_pieces};
 
 public:
     static bool handleAction(TetrisGame& game, const Action action) {
@@ -41,6 +41,7 @@ public:
                 break;
             case Malus:
                 success = handleMalus(game);
+                break;
             case Bonus:
                 success = handleBonus(game);
                 break;
@@ -127,6 +128,7 @@ public:
         const int linesCleared = game.getGameMatrix().clearFullLines();
         handleScore(game, linesCleared);
         handleSpawn(game);  // ensure a piece is always available
+        handleEnergy(game, linesCleared);
 
         if (game.isGameOver()) handleGameOver(game);
     }
@@ -143,6 +145,11 @@ public:
         if (game.shouldLevelUp()) game.updateLevelAfterLineClear();
     }
 
+    static void handleEnergy(TetrisGame &game, const int linesCleared)
+    {
+        game.calculateEnergy(linesCleared);
+    }
+
     // The action should be passed from outside
     static void handlingRoutine(TetrisGame& game, const Action action) {
         handleAction(game, action);
@@ -156,12 +163,7 @@ public:
         game.incrementFrameCount();
     }
 
-    static void handlePowerUps(TetrisGame& game, PowerUp& powerUp) {
-        powerUp.applyEffect(game);
-
-    }
-
-    static void handleBonus(TetrisGame &game)
+    static bool handleBonus(TetrisGame &game)
     {
         TypePowerUps randomBonus = bonusVector[rand() % 2];
 
@@ -172,10 +174,16 @@ public:
         case slow_falling_pieces:
             game.slow_falling_pieces();
             break;
+        default:
+            std::cerr << "Unexpected Power up";
+            return false;
+            break;
         }
+
+        return true;
     }
 
-    static void handleMalus(TetrisGame &game)
+    static bool handleMalus(TetrisGame &game)
     {
         TypePowerUps randomMalus = malusVector[rand() % 5];
 
@@ -195,6 +203,13 @@ public:
         case light_off:
             game.light_off();
             break;
+        default:
+            std::cerr << "Unexpected Power up";
+            return false;
+            break;
         }
+
+        return true;
     }
+
 };
