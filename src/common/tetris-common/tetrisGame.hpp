@@ -76,4 +76,16 @@ public:
             if (const int diff = newLineBasedLevel - getLevel(); diff > 0) incrementLevel(diff);
         }
     }
+
+    //AJOUT TEMP POUR TEST 
+    // Malus Method
+    void inverted_command() = 0;
+    void block_command() = 0;
+    void thunder_strike() = 0;
+    void fast_falling_pieces() = 0;
+    void light_off() = 0;
+
+    // Bonuses Method
+    void blocs_1x1() = 0;
+    void slow_falling_pieces() = 0;
 };

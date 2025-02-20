@@ -1,11 +1,15 @@
 #pragma once
 
+#include <vector>
+#include <memory>
 #include <iostream>
-#include <random>
 #include "tetrisGame.hpp"
-#include "classicGame.hpp"
 
 class GameEngine {
+private:
+    static std::vector<TypePowerUps> bonusVector = {blocs_1x1, slow_falling_pieces};
+    static std::vector<TypePowerUps> malusVector = {inverted_command, block_command, thunder_strike, fast_falling_pieces, light_off};
+
 public:
     static bool handleAction(TetrisGame& game, const Action action) {
         bool success = true;
@@ -34,7 +38,12 @@ public:
                 break;
             case UseBag:
                 success = handleBag(game);
-                break;     
+                break;
+            case Malus:
+                success = handleMalus(game);
+            case Bonus:
+                success = handleBonus(game);
+                break;
             case None:
             default:
                 // No action
@@ -114,36 +123,14 @@ public:
         }
     }
 
-    static void handleBasicPenalty(ClassicGame& game, const int linesCleared){
-        std::cout<<"in pen";
-        if (linesCleared <= 1 ) return;
-
-        const std::vector<ClassicGame*>& opponents = game.getOpponents();
-
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<size_t> dist(0, opponents.size() - 1);
-        ClassicGame* randomOpponent = opponents[dist(gen)];
-
-        int linesToAdd;
-        if (linesCleared < 4){
-            linesToAdd = linesCleared -1;
-        } else {
-            linesToAdd = 4;
-        }
-        std::cout<<"shoudl get added";
-        randomOpponent->addPenaltyLines(linesToAdd);
-    }
-
     static void handleGameLogic(TetrisGame& game) {
         const int linesCleared = game.getGameMatrix().clearFullLines();
         handleScore(game, linesCleared);
-        if (auto* classicGame = dynamic_cast<ClassicGame*>(&game)) { // If classic game -> send basic penalty if needed
-            handleBasicPenalty(*classicGame, linesCleared);
-        }
         handleSpawn(game);  // ensure a piece is always available
 
         if (game.isGameOver()) handleGameOver(game);
+
+        // powerUp.update();
     }
 
     static void handleGameOver(TetrisGame& /*eventually have game*/) {
@@ -151,7 +138,7 @@ public:
         exit(0); // TODO: later
     }
 
-     static void handleScore(TetrisGame& game, const int linesCleared) {
+    static void handleScore(TetrisGame& game, const int linesCleared) {
         game.incrementLinesCleared(linesCleared);
         game.calculateScore(linesCleared);
 
@@ -169,5 +156,48 @@ public:
         handleGameLogic(game);
 
         game.incrementFrameCount();
+    }
+
+    static void handlePowerUps(TetrisGame& game, PowerUp& powerUp) {
+        powerUp.applyEffect(game);
+
+    }
+
+    static void handleBonus(TetrisGame &game)
+    {
+        TypePowerUps randomBonus = bonusVector[rand() % 2];
+
+        switch (randomBonus){
+        case blocs_1x1:
+            game.blocs_1x1();
+            break;
+        case slow_falling_pieces:
+            game.slow_falling_pieces();
+            break;
+        }
+    }
+
+    
+    static void handleMalus(TetrisGame &game)
+    {
+        TypePowerUps randomMalus = malusVector[rand() % 5];
+
+        switch (randomMalus){
+        case inverted_command:
+            game.inverted_command();
+            break;
+        case block_command:
+            game.block_command();
+            break;
+        case thunder_strike:
+            game.thunder_strike();
+            break;
+        case fast_falling_pieces:
+            game.fast_falling_pieces();
+            break;
+        case light_off:
+            game.light_off();
+            break;
+        }
     }
 };
