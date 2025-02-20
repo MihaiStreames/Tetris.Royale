@@ -129,8 +129,6 @@ public:
         handleSpawn(game);  // ensure a piece is always available
 
         if (game.isGameOver()) handleGameOver(game);
-
-        // powerUp.update();
     }
 
     static void handleGameOver(TetrisGame& /*eventually have game*/) {
@@ -157,7 +155,12 @@ public:
 
         game.incrementFrameCount();
     }
-    
+
+    static void handlePowerUps(TetrisGame& game, PowerUp& powerUp) {
+        powerUp.applyEffect(game);
+
+    }
+
     static void handleBonus(TetrisGame &game)
     {
         TypePowerUps randomBonus = bonusVector[rand() % 2];
@@ -171,7 +174,6 @@ public:
             break;
         }
     }
-
 
     static void handleMalus(TetrisGame &game)
     {

@@ -4,9 +4,9 @@
 #include "gameMatrix.hpp"
 #include "tetrisFactory.hpp"
 #include "bag.hpp"
-#include <iostream>
 
 class TetrisGame {
+protected:
     GameMatrix gameMatrix;
     TetrisFactory factory;
     Bag bag;
@@ -16,6 +16,7 @@ class TetrisGame {
     int totalLinesCleared;
 
     bool gameOver = false;
+    bool reverseControls = false;
 
     static constexpr int LINES_TO_LEVELUP = 10;
 
@@ -34,10 +35,12 @@ public:
 
     [[nodiscard]] virtual bool isGameOver() const { return gameOver; }
     virtual void setGameOver(const bool flag) { gameOver = flag; }
+    virtual bool setReverseControls(const bool flag) { reverseControls = flag; }
 
     virtual GameMatrix& getGameMatrix() { return gameMatrix; }
     virtual TetrisFactory& getFactory() { return factory; }
     virtual Bag& getBag()               { return bag; }
+    virtual bool getReverseControls() { return reverseControls; }
 
     [[nodiscard]] virtual int getFrameCount() const noexcept    { return frameCount; }
     virtual void setFrameCount(const int fc)                    { frameCount = fc; }
@@ -76,16 +79,4 @@ public:
             if (const int diff = newLineBasedLevel - getLevel(); diff > 0) incrementLevel(diff);
         }
     }
-
-    //AJOUT TEMP POUR TEST 
-    // Malus Method
-    void inverted_command() = 0;
-    void block_command() = 0;
-    void thunder_strike() = 0;
-    void fast_falling_pieces() = 0;
-    void light_off() = 0;
-
-    // Bonuses Method
-    void blocs_1x1() = 0;
-    void slow_falling_pieces() = 0;
 };

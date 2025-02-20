@@ -14,7 +14,8 @@ enum PieceType {
     I,
     Z,
     S,
-    T
+    T,
+    Single
 };
 
 enum Action {
@@ -33,12 +34,12 @@ enum Action {
 enum TypePowerUps {
     inverted_command,
     block_command,
-    
     thunder_strike,
-    blocs_1x1,
-    slow_falling_pieces,
     fast_falling_pieces,
-    light_off
+    light_off,
+    
+    blocs_1x1,
+    slow_falling_pieces
 };
 
 using tetroMat = std::vector<std::vector<int>>;

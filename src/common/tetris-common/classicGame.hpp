@@ -3,9 +3,10 @@
 #include <cstdlib>
 #include "tetrisGame.hpp"
 
-class ClassicGame : public TetrisGame{
-    bool gameOver = false;
-    std::vector<ClassicGame*> opponents;
+class ClassicGame : public TetrisGame
+{
+    // J'ai retiré le gameOver puisqu'on y a acces depuis son parent
+    std::vector<ClassicGame *> opponents;
 
 public:
 
@@ -32,9 +33,6 @@ public:
             newLine[holePosition] = 0;
             board.push_back(newLine);
         }
-    }
-
-    void sendInfo() {
     }
 
     // permet de switch l'affichage entre les opposants
