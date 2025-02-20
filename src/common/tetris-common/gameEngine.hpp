@@ -34,7 +34,7 @@ public:
                 break;
             case UseBag:
                 success = handleBag(game);
-                break;
+                break;     
             case None:
             default:
                 // No action
