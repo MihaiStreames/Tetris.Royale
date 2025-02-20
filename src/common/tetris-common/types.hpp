@@ -42,5 +42,8 @@ enum TypePowerUps {
     slow_falling_pieces
 };
 
+std::vector<TypePowerUps> bonusVector = {inverted_command, block_command, thunder_strike, fast_falling_pieces, light_off};
+std::vector<TypePowerUps> malusVector = {blocs_1x1, slow_falling_pieces};
+
 using tetroMat = std::vector<std::vector<int>>;
 using pieceVec = std::vector<PieceType>;
