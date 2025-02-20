@@ -14,7 +14,8 @@ enum PieceType {
     I,
     Z,
     S,
-    T
+    T,
+    Single
 };
 
 enum Action {
@@ -31,7 +32,6 @@ enum Action {
 enum TypePowerUps {
     inverted_command,
     block_command,
-    add_lines,
     thunder_strike,
     blocs_1x1,
     slow_falling_pieces,

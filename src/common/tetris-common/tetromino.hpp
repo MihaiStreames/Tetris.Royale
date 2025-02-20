@@ -135,6 +135,7 @@ protected:
             case J: return {{1, 0, 0},
                             {1, 1, 1},
                             {0, 0, 0}};
+            case Single: return {{1}};
             default:
                 // Fallback shape if needed.
                 return {{1}};
