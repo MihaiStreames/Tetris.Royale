@@ -36,11 +36,21 @@ public:
                 success = handleBag(game);
                 break;
             case Malus:
-                success = handleMalus(game);
+                if(game.getEnergy() >= 100){
+                    game.setEnergy(0);
+                    success = handleMalus(game);
+                }
+                else {success = false;}
                 break;
+                
             case Bonus:
-                success = handleBonus(game);
+                if(game.getEnergy() >= 100){
+                    game.setEnergy(0);
+                    success = handleBonus(game);
+                }
+                else {success = false;}
                 break;
+
             case None:
             default:
                 // No action

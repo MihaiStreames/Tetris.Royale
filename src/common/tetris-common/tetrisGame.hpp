@@ -11,7 +11,7 @@ protected:
     TetrisFactory factory;
     Bag bag;
     int score;
-    int energy;
+    int energy = 0;
     int frameCount;
     int level;
     int totalLinesCleared;
@@ -61,9 +61,9 @@ public:
     }
 
     virtual void calculateEnergy(const int linesCleared) {
-        static const int tabEnergy[] = {0, 5, 20, 30, 50};
-        if (linesCleared >= 1 && linesCleared <= 4)
-            score += tabEnergy[linesCleared];
+        static const int tabEnergy[] = {0, 10, 30, 40, 60, 100};
+        if (linesCleared >= 1 && linesCleared <= 5)
+            energy += tabEnergy[linesCleared];
     }
 
     [[nodiscard]] virtual int getLinesCleared() const               { return totalLinesCleared; }
@@ -91,7 +91,10 @@ public:
 
     // Pour qu'on puisse appeler les methodes sans forcement savoir de quel mode de jeu ils viennent
     // A modifier, ce n'est pas une bonne pratique !!!
-    virtual void inverted_command() {}
+    virtual void inverted_command() {
+        reverseControls = !reverseControls;
+    }
+
     virtual void block_command() {}
     virtual void thunder_strike() {}
     virtual void fast_falling_pieces() {}

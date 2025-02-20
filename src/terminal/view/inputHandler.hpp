@@ -32,6 +32,9 @@ public:
         inputMap[Event::Character(' ')] = InstantFall;
 
         inputMap[Event::Character('b')] = UseBag;
+
+        inputMap[Event::Character('m')] = Malus;
+        inputMap[Event::Character('l')] = Bonus;
     }
 
     Action getUserAction() {
