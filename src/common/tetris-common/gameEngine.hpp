@@ -179,7 +179,8 @@ public:
 
     static bool handleBonus(TetrisGame &game)
     {
-        TypePowerUps randomBonus = bonusVector[rand() % 2];
+        int sizeBonusVector = malusVector.size();
+        TypePowerUps randomBonus = bonusVector[rand() % sizeBonusVector];
 
         switch (randomBonus){
             case blocs_1x1:
@@ -199,7 +200,8 @@ public:
 
     static bool handleMalus(TetrisGame &game)
     {
-        TypePowerUps randomMalus = malusVector[rand() % 1];
+        int sizeMalusVector = malusVector.size();
+        TypePowerUps randomMalus = malusVector[rand() % sizeMalusVector];
 
         switch (randomMalus){
             case inverted_command:

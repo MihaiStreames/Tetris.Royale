@@ -47,7 +47,7 @@ std::vector<TypePowerUps> malusVector = {block_command,inverted_command, thunder
 std::vector<TypePowerUps> bonusVector = {blocs_1x1, slow_falling_pieces};
 
 // test avec inverseCommand : rajouter les autres malus une fois le reste implementé
-// block_command, fast_falling_pieces, light_off
+// fast_falling_pieces, light_off
 
 using tetroMat = std::vector<std::vector<int>>;
 using pieceVec = std::vector<PieceType>;
