@@ -16,6 +16,7 @@ protected:
     int frameCount;
     int level;
     int totalLinesCleared;
+    int slowDownFactor = 0; // trouver une meilleur soution
 
     bool gameOver = false;
     bool blockCommand = false; // voir s'il n y a pas une meilleur solution
@@ -84,7 +85,7 @@ public:
         const int lvl = getLevel();
         int frame_quantum = 1;
 
-        if (const auto it = SPEED_TABLE.find(lvl); it != SPEED_TABLE.end()) frame_quantum = it->second;
+        if (const auto it = SPEED_TABLE.find(lvl - slowDownFactor); it != SPEED_TABLE.end()) frame_quantum = it->second;
 
         return frame % frame_quantum == 0 && frame >= frame_quantum;
     }
@@ -151,8 +152,11 @@ public:
 
     virtual void blocs_1x1() {}
     virtual void slow_falling_pieces() {
-        // faire un truc qui ressemble a incrementFrameCount -> decrementeFrameCount
-            // ou mettre -n dans incrementFrameCount(-n) -> n a bien choisir 
-        incrementFrameCount(-1);
+        if (level > 0) {
+            slowDownFactor++;
+            if (level - slowDownFactor < 0) { // verifier si c est correct
+                slowDownFactor = 0;
+            }
+        }
     }
 };
