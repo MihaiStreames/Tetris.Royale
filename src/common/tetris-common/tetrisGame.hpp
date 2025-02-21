@@ -17,6 +17,7 @@ protected:
     int totalLinesCleared;
 
     bool gameOver = false;
+    bool blockCommand = false; // voir s'il n y a pas une meilleur solution
     bool reverseControls = false;
 
     static constexpr int LINES_TO_LEVELUP = 10;
@@ -38,12 +39,14 @@ public:
     virtual void setGameOver(const bool flag) { gameOver = flag; }
     virtual void setReverseControls(const bool flag) { reverseControls = flag; }
     virtual void setEnergy(int setEnergy) { energy = setEnergy; }
+    virtual void setBlockCommand(bool flag) { blockCommand = flag; }
 
     virtual GameMatrix& getGameMatrix() { return gameMatrix; }
     virtual int getEnergy() { return energy; }
     virtual TetrisFactory& getFactory() { return factory; }
     virtual Bag& getBag()               { return bag; }
     virtual bool getReverseControls() { return reverseControls; }
+    virtual bool getBlockCommand() { return blockCommand; }
 
     [[nodiscard]] virtual int getFrameCount() const noexcept    { return frameCount; }
     virtual void setFrameCount(const int fc)                    { frameCount = fc; }
@@ -134,7 +137,10 @@ public:
         }
     }
 
-    virtual void block_command() {}
+    virtual void block_command() {
+        blockCommand = !blockCommand;
+    }
+
     virtual void fast_falling_pieces() {}
     virtual void light_off() {}
 

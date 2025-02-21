@@ -51,6 +51,10 @@ public:
                 else {success = false;}
                 break;
 
+            case BlockControls:
+                // no action
+                break;
+
             case None:
             default:
                 // No action
@@ -158,7 +162,11 @@ public:
 
     // The action should be passed from outside
     static void handlingRoutine(TetrisGame& game, const Action action) {
-        handleAction(game, action);
+        if (game.getBlockCommand()) {
+            handleAction(game, BlockControls);
+        } else {
+            handleAction(game, action);
+        }
 
         if (!handleFallingPiece(game)) {
             handlePlacingPiece(game);
@@ -174,16 +182,16 @@ public:
         TypePowerUps randomBonus = bonusVector[rand() % 2];
 
         switch (randomBonus){
-        case blocs_1x1:
-            game.blocs_1x1();
-            break;
-        case slow_falling_pieces:
-            game.slow_falling_pieces();
-            break;
-        default:
-            std::cerr << "Unexpected Power up";
-            return false;
-            break;
+            case blocs_1x1:
+                game.blocs_1x1();
+                break;
+            case slow_falling_pieces:
+                game.slow_falling_pieces();
+                break;
+            default:
+                std::cerr << "Unexpected Power up";
+                return false;
+                break;
         }
 
         return true;
@@ -194,25 +202,25 @@ public:
         TypePowerUps randomMalus = malusVector[rand() % 1];
 
         switch (randomMalus){
-        case inverted_command:
-            game.inverted_command();
-            break;
-        case block_command:
-            game.block_command();
-            break;
-        case thunder_strike:
-            game.thunder_strike();
-            break;
-        case fast_falling_pieces:
-            game.fast_falling_pieces();
-            break;
-        case light_off:
-            game.light_off();
-            break;
-        default:
-            std::cerr << "Unexpected Power up";
-            return false;
-            break;
+            case inverted_command:
+                game.inverted_command();
+                break;
+            case block_command:
+                game.block_command();
+                break;
+            case thunder_strike:
+                game.thunder_strike();
+                break;
+            case fast_falling_pieces:
+                game.fast_falling_pieces();
+                break;
+            case light_off:
+                game.light_off();
+                break;
+            default:
+                std::cerr << "Unexpected Power up";
+                return false;
+                break;
         }
 
         return true;
