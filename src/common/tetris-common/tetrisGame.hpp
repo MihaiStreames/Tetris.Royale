@@ -11,6 +11,7 @@ protected:
     TetrisFactory factory;
     Bag bag;
     int score;
+    int reverseControlTimeCount = 0; // permet de compter cb de piece sont tombé
     int energy = 0;
     int frameCount;
     int level;
@@ -19,6 +20,7 @@ protected:
     bool gameOver = false;
     bool blockCommand = false; // voir s'il n y a pas une meilleur solution
     bool reverseControls = false;
+    bool activeReverseControl = false; // -- 
 
     static constexpr int LINES_TO_LEVELUP = 10;
 
@@ -37,9 +39,10 @@ public:
 
     [[nodiscard]] virtual bool isGameOver() const { return gameOver; }
     virtual void setGameOver(const bool flag) { gameOver = flag; }
-    virtual void setReverseControls(const bool flag) { reverseControls = flag; }
     virtual void setEnergy(int setEnergy) { energy = setEnergy; }
     virtual void setBlockCommand(bool flag) { blockCommand = flag; }
+    virtual void setReverseControlTimeCount(int nbr) { reverseControlTimeCount += nbr; }
+    virtual void setActiveReverseControl(bool flag) { activeReverseControl = flag; }
 
     virtual GameMatrix& getGameMatrix() { return gameMatrix; }
     virtual int getEnergy() { return energy; }
@@ -47,6 +50,8 @@ public:
     virtual Bag& getBag()               { return bag; }
     virtual bool getReverseControls() { return reverseControls; }
     virtual bool getBlockCommand() { return blockCommand; }
+    virtual int getReverseControlTimeCount() { return reverseControlTimeCount; }
+    virtual bool getActiveReverseControl() { return activeReverseControl; }
 
     [[nodiscard]] virtual int getFrameCount() const noexcept    { return frameCount; }
     virtual void setFrameCount(const int fc)                    { frameCount = fc; }
@@ -95,8 +100,8 @@ public:
 
     // Pour qu'on puisse appeler les methodes sans forcement savoir de quel mode de jeu ils viennent
     // A modifier, ce n'est pas une bonne pratique !!!
-    virtual void inverted_command() {
-        reverseControls = !reverseControls;
+    virtual void inverted_command(bool flag) {
+        reverseControls = flag;
     }
 
     virtual void thunder_strike()
@@ -144,6 +149,10 @@ public:
     virtual void fast_falling_pieces() {}
     virtual void light_off() {}
 
-    virtual void blocs_1x1(){}
-    virtual void slow_falling_pieces(){}
+    virtual void blocs_1x1() {}
+    virtual void slow_falling_pieces() {
+        // faire un truc qui ressemble a incrementFrameCount -> decrementeFrameCount
+            // ou mettre -n dans incrementFrameCount(-n) -> n a bien choisir 
+        incrementFrameCount(-1);
+    }
 };

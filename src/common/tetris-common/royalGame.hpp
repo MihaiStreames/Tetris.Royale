@@ -7,10 +7,9 @@ private:
     
 public:
     // Malus Method
-    void inverted_command() override
+    void inverted_command(bool flag) override
     {
-        reverseControls = !reverseControls;
-        // Time (30sec)
+        reverseControls = flag;
     }
 
     void block_command() override

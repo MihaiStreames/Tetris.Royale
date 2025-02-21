@@ -51,11 +51,7 @@ public:
                 else {success = false;}
                 break;
 
-            case BlockControls:
-                // no action
-                break;
-
-            case None:
+            case None: // contient egalement le blockCommand (va ici si le pouvoir est activer)                
             default:
                 // No action
                 break;
@@ -110,6 +106,21 @@ public:
         if (placed) {
             // After placing a piece, the bag becomes usable again
             game.getBag().setUsable(true);
+
+            // --- 
+            if (game.getBlockCommand()) {
+                game.block_command();
+            }
+
+            // ---
+            if (game.getActiveReverseControl()) {
+                game.setReverseControlTimeCount(1);
+                if (game.getReverseControlTimeCount() == 3) {
+                    game.inverted_command(true);
+                    game.setReverseControlTimeCount(-3);
+                    game.setActiveReverseControl(false);
+                }
+            }
         }
 
         return placed;
@@ -163,7 +174,7 @@ public:
     // The action should be passed from outside
     static void handlingRoutine(TetrisGame& game, const Action action) {
         if (game.getBlockCommand()) {
-            handleAction(game, BlockControls);
+            handleAction(game, None);
         } else {
             handleAction(game, action);
         }
@@ -179,8 +190,7 @@ public:
 
     static bool handleBonus(TetrisGame &game)
     {
-        int sizeBonusVector = malusVector.size();
-        TypePowerUps randomBonus = bonusVector[rand() % sizeBonusVector];
+        TypePowerUps randomBonus = bonusVector[rand() % bonusVector.size()];
 
         switch (randomBonus){
             case blocs_1x1:
@@ -200,12 +210,12 @@ public:
 
     static bool handleMalus(TetrisGame &game)
     {
-        int sizeMalusVector = malusVector.size();
-        TypePowerUps randomMalus = malusVector[rand() % sizeMalusVector];
+        TypePowerUps randomMalus = malusVector[rand() % malusVector.size()];
 
         switch (randomMalus){
             case inverted_command:
-                game.inverted_command();
+                game.inverted_command(true);
+                game.setActiveReverseControl(true);
                 break;
             case block_command:
                 game.block_command();

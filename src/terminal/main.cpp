@@ -53,7 +53,7 @@ int main() {
                 std::lock_guard lock(mtx);
                 if(game.getReverseControls()){
                     ih.invertKeys();
-                    game.setReverseControls(false);
+                    game.inverted_command(false); // --
                 }
                 const Action action = ih.handleInputs();
                 GameEngine::handlingRoutine(game, action);
