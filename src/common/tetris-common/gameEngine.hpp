@@ -191,7 +191,7 @@ public:
 
     static bool handleMalus(TetrisGame &game)
     {
-        TypePowerUps randomMalus = malusVector[rand() % 5];
+        TypePowerUps randomMalus = malusVector[rand() % 1];
 
         switch (randomMalus){
         case inverted_command:

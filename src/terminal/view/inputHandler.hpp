@@ -12,14 +12,6 @@ public:
     inputHandler() : currentEvent(Event::Custom) { setupController(); }
 
     void setupController() {
-        // if (!tetrisGame.getIsInvCmd()) {
-        //     inputMap[Event::ArrowLeft]      = MoveLeft;
-        //     inputMap[Event::ArrowRight]     = MoveRight;
-        // } else {
-        //     inputMap[Event::ArrowRight]      = MoveLeft;
-        //     inputMap[Event::ArrowLeft]     = MoveRight;
-        // }
-        
         inputMap[Event::ArrowLeft]      = MoveLeft;
         inputMap[Event::ArrowRight]     = MoveRight;
 

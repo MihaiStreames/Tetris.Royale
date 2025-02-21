@@ -61,7 +61,8 @@ public:
     }
 
     virtual void calculateEnergy(const int linesCleared) {
-        static const int tabEnergy[] = {0, 10, 30, 40, 60, 100};
+        // casser une ligne donne 100 energies pour les tests (à changer à 10-15)
+        static const int tabEnergy[] = {0, 100, 30, 40, 60, 100};
         if (linesCleared >= 1 && linesCleared <= 5)
             energy += tabEnergy[linesCleared];
     }
@@ -95,8 +96,45 @@ public:
         reverseControls = !reverseControls;
     }
 
+    virtual void thunder_strike()
+    {
+        // Choisir une colonne qui sera frappée par la foudre
+        int col = rand() % gameMatrix.getWidth();
+
+        // -1 = colonne ou se trouve aucune brique
+        int impactRow = -1;
+
+        tetroMat& board = gameMatrix.getBoard();
+
+        for (int y = 0; y < gameMatrix.getHeight(); ++y)
+        {
+            if (board[y][col] == 1)
+            { // Trouve la première brique
+                impactRow = y;
+                break;
+            }
+        }
+
+        // Si aucun bloc touché, on ne fait rien
+        if (impactRow == -1)
+            return;
+
+        // Détruire la zone 2x2 autour de l'impact
+        for (int dy = 0; dy < 2; ++dy)
+        {
+            for (int dx = 0; dx < 2; ++dx)
+            {
+                int x = col + dx;
+                int y = impactRow + dy;
+                if (x < gameMatrix.getWidth() && y < gameMatrix.getHeight())
+                {                    
+                    board[y][x] = 0;
+                }
+            }
+        }
+    }
+
     virtual void block_command() {}
-    virtual void thunder_strike() {}
     virtual void fast_falling_pieces() {}
     virtual void light_off() {}
 
