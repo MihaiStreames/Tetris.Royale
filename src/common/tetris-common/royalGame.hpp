@@ -57,12 +57,7 @@ public:
     }
 
     void fast_falling_pieces() override {
-        if (level < 30) {
-            speedFactor--;
-            if (level + speedFactor > 30) { // verifier si c est correct
-                speedFactor = 29;
-            }
-        }
+        // ...
     }
 
     void light_off() override {}
