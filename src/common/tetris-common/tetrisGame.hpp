@@ -37,6 +37,7 @@ protected:
 public:
     TetrisGame(const int gWidth, const int gHeight, const int gScore = 0, const int fc = 0, const int lvl = 0, const int totLinesCleared = 0)
    : gameMatrix(gWidth, gHeight), score(gScore), frameCount(fc), level(lvl), totalLinesCleared(totLinesCleared) {}
+   virtual ~TetrisGame() {}
 
     [[nodiscard]] virtual bool isGameOver() const { return gameOver; }
     virtual void setGameOver(const bool flag) { gameOver = flag; }
@@ -99,67 +100,17 @@ public:
         }
     }
 
-    // Pour qu'on puisse appeler les methodes sans forcement savoir de quel mode de jeu ils viennent
-    // A modifier, ce n'est pas une bonne pratique !!!
-    virtual void inverted_command(bool flag) {
-        reverseControls = flag;
-    }
+    // Malus Method
+    virtual void inverted_command(bool flag) { std::cerr << "You tried to acces power-ups via TetrisGame"; }
 
-    virtual void thunder_strike()
-    {
-        // Choisir une colonne qui sera frappée par la foudre
-        int col = rand() % gameMatrix.getWidth();
+    virtual void block_command() { std::cerr << "You tried to acces power-ups via TetrisGame"; }
 
-        // -1 = colonne ou se trouve aucune brique
-        int impactRow = -1;
+    virtual void thunder_strike() { std::cerr << "You tried to acces power-ups via TetrisGame"; }
+    virtual void fast_falling_pieces() { std::cerr << "You tried to acces power-ups via TetrisGame"; }
+    virtual void light_off() { std::cerr << "You tried to acces power-ups via TetrisGame"; }
+    virtual void addPenaltyLines(int linesToAdd) { std::cerr << "You tried to acces power-ups via TetrisGame"; } 
 
-        tetroMat& board = gameMatrix.getBoard();
-
-        for (int y = 0; y < gameMatrix.getHeight(); ++y)
-        {
-            if (board[y][col] == 1)
-            { // Trouve la première brique
-                impactRow = y;
-                break;
-            }
-        }
-
-        // Si aucun bloc touché, on ne fait rien
-        if (impactRow == -1)
-            return;
-
-        // Détruire la zone 2x2 autour de l'impact
-        for (int dy = 0; dy < 2; ++dy)
-        {
-            for (int dx = 0; dx < 2; ++dx)
-            {
-                int x = col + dx;
-                int y = impactRow + dy;
-                if (x < gameMatrix.getWidth() && y < gameMatrix.getHeight())
-                {                    
-                    board[y][x] = 0;
-                }
-            }
-        }
-    }
-
-    virtual void block_command() {
-        blockCommand = !blockCommand;
-    }
-
-    virtual void fast_falling_pieces() {
-        // ... 
-    }
-
-    virtual void light_off() {}
-
-    virtual void blocs_1x1() {}
-    virtual void slow_falling_pieces() {
-        if (level > 0) {
-            speedFactor--;
-            if (level + speedFactor < 0) { // verifier si c est correct
-                speedFactor = 0;
-            }
-        }
-    }
+    // Bonus Method
+    virtual void blocs_1x1() { std::cerr << "You tried to acces power-ups via TetrisGame"; }
+    virtual void slow_falling_pieces() { std::cerr << "You tried to acces power-ups via TetrisGame"; }
 };

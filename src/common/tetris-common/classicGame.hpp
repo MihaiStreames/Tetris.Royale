@@ -9,6 +9,9 @@ class ClassicGame : public TetrisGame
     std::vector<ClassicGame *> opponents;
 
 public:
+    ClassicGame(const int gWidth, const int gHeight, const int gScore = 0, const int fc = 0, const int lvl = 0, const int totLinesCleared = 0): 
+    TetrisGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared) {}
+    ~ClassicGame() {}
 
     virtual std::vector<ClassicGame*> getOpponents() { return opponents;}
 

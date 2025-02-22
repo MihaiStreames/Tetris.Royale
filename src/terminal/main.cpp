@@ -5,6 +5,8 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 #include "tetris-common/tetrisGame.hpp"
+#include "tetris-common/classicGame.hpp"
+#include "tetris-common/royalGame.hpp"
 #include "tetris-common/gameEngine.hpp"
 #include "view/tui.hpp"
 #include "view/inputHandler.hpp"
@@ -12,7 +14,8 @@
 using namespace ftxui;
 
 int main() {
-    TetrisGame game(10, 22);
+    RoyalGame royal_game{10, 22};
+    TetrisGame& game = royal_game;
     const FtxuiView view(game);
     inputHandler ih;
 

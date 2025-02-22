@@ -204,7 +204,6 @@ public:
                 return false;
                 break;
         }
-
         return true;
     }
 
@@ -234,7 +233,6 @@ public:
                 return false;
                 break;
         }
-
         return true;
     }
 

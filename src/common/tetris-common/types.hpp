@@ -43,7 +43,7 @@ enum TypePowerUps {
 };
 
 std::vector<TypePowerUps> malusVector = {block_command, inverted_command, thunder_strike};
-std::vector<TypePowerUps> bonusVector = {slow_falling_pieces}; // {blocs_1x1, slow_falling_pieces};
+std::vector<TypePowerUps> bonusVector = {blocs_1x1, slow_falling_pieces};
 
 // test avec inverseCommand : rajouter les autres malus une fois le reste implementé
 // fast_falling_pieces, light_off
