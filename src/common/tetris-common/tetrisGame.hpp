@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <iostream>
 #include "gameMatrix.hpp"
 #include "tetrisFactory.hpp"
 #include "bag.hpp"

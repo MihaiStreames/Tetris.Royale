@@ -62,7 +62,12 @@ public:
 
     void light_off() override {}
 
-    void blocs_1x1() override {}
+    void blocs_1x1() override {
+        for (int i = 0; i < 2; ++i){
+            factory.pushPiece(Tetromino({0,0}, Single));
+        }
+    }
+
     void slow_falling_pieces() override {
         if (level > 0) {
             speedFactor--;
