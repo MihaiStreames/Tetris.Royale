@@ -57,7 +57,7 @@ public:
     }
 
     void fast_falling_pieces() override {
-        // ...
+        speedFactor++;
     }
 
     void light_off() override {}
