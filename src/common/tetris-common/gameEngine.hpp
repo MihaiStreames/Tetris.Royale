@@ -179,6 +179,12 @@ public:
             handleAction(game, action);
         }
 
+        if (game.getDarkMode() && game.getDarkModeTimer() == game.getFrameCount())
+        {
+            game.setDarkMode(false);
+            game.setDarkModeTimer(0);
+        }
+
         if (!handleFallingPiece(game)) {
             handlePlacingPiece(game);
         }

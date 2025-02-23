@@ -18,11 +18,15 @@ protected:
     int level;
     int totalLinesCleared;
     int speedFactor = 0; // positif -> plus vite et negatif -> moins vite
+    int darkModeTimer;
+
 
     bool gameOver = false;
     bool blockCommand = false; // voir s'il n y a pas une meilleur solution
     bool reverseControls = false;
     bool activeReverseControl = false; // -- 
+    bool isDarkMode = false;
+
 
     static constexpr int LINES_TO_LEVELUP = 10;
 
@@ -46,6 +50,8 @@ public:
     virtual void setBlockCommand(bool flag) { blockCommand = flag; }
     virtual void setReverseControlTimeCount(int nbr) { reverseControlTimeCount += nbr; }
     virtual void setActiveReverseControl(bool flag) { activeReverseControl = flag; }
+    virtual void setDarkMode(bool flag) { isDarkMode = flag; }
+    virtual void setDarkModeTimer(int time) { darkModeTimer = time; }
 
     virtual GameMatrix& getGameMatrix() { return gameMatrix; }
     virtual int getEnergy() { return energy; }
@@ -55,6 +61,8 @@ public:
     virtual bool getBlockCommand() { return blockCommand; }
     virtual int getReverseControlTimeCount() { return reverseControlTimeCount; }
     virtual bool getActiveReverseControl() { return activeReverseControl; }
+    virtual bool getDarkMode() { return isDarkMode; }
+    virtual int getDarkModeTimer() { return darkModeTimer; }
 
     [[nodiscard]] virtual int getFrameCount() const noexcept    { return frameCount; }
     virtual void setFrameCount(const int fc)                    { frameCount = fc; }

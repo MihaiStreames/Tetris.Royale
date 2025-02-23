@@ -36,17 +36,17 @@ enum TypePowerUps {
     block_command,
     thunder_strike,
     fast_falling_pieces,
-    light_off,
+    darkMode,
     
     blocs_1x1,
     slow_falling_pieces
 };
 
-std::vector<TypePowerUps> malusVector = {block_command, inverted_command, thunder_strike};
+std::vector<TypePowerUps> malusVector = {block_command, inverted_command, thunder_strike, darkMode};
 std::vector<TypePowerUps> bonusVector = {blocs_1x1, slow_falling_pieces};
 
 // test avec inverseCommand : rajouter les autres malus une fois le reste implementé
-// fast_falling_pieces, light_off
+// fast_falling_piece
 
 using tetroMat = std::vector<std::vector<int>>;
 using pieceVec = std::vector<PieceType>;

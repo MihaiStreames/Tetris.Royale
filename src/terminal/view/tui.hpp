@@ -47,7 +47,8 @@ private:
 
     [[nodiscard]] Element renderBoard() const {
         const auto &gm = tetrisGame.getGameMatrix();
-        const auto board = gm.getBoardWithCurrentPiece();
+        const auto board = tetrisGame.getDarkMode() ? tetroMat(gm.getHeight(), std::vector<int>(gm.getWidth(), 0)) : gm.getBoardWithCurrentPiece();
+
 
         const int width = gm.getWidth();
         const int height = gm.getHeight();

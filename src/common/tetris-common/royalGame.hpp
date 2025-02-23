@@ -60,7 +60,10 @@ public:
         speedFactor++;
     }
 
-    void light_off() override {}
+    void darkMode() override {
+        setDarkModeTimer(getFrameCount() + 600);
+        setDarkMode(true);
+    }
 
     void blocs_1x1() override {
         for (int i = 0; i < 2; ++i){
