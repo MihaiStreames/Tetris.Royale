@@ -116,7 +116,7 @@ public:
 
     virtual void thunder_strike() { std::cerr << "You tried to acces power-ups via TetrisGame"; }
     virtual void fast_falling_pieces() { std::cerr << "You tried to acces power-ups via TetrisGame"; }
-    virtual void light_off() { std::cerr << "You tried to acces power-ups via TetrisGame"; }
+    virtual void darkMode() { std::cerr << "You tried to acces power-ups via TetrisGame"; }
     virtual void addPenaltyLines(int linesToAdd) { std::cerr << "You tried to acces power-ups via TetrisGame"; } 
 
     // Bonus Method

@@ -231,8 +231,8 @@ public:
             case fast_falling_pieces:
                 game.fast_falling_pieces();
                 break;
-            case light_off:
-                game.light_off();
+            case darkMode:
+                game.darkMode();
                 break;
             default:
                 std::cerr << "Unexpected Power up";
