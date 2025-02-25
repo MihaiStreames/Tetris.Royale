@@ -41,7 +41,7 @@ private:
             case 6: return  color(Color::Cyan);
             case 7: return  color(Color::Blue);
             case 8: return  color(Color::GrayDark);
-            default: return color(Color::White);
+            default: return color(Color::Default);
         }
     }
 
@@ -69,7 +69,7 @@ private:
             rows.push_back(hbox(std::move(cells)));
         }
 
-        return window(text("BOARD") | bold | color(Color::White),
+        return window(text("BOARD") | bold | color(Color::Default),
             vbox(std::move(rows)));
     }
 
@@ -118,28 +118,28 @@ private:
     }
 
     [[nodiscard]] static Element renderBox(const std::string &title, Element content) {
-        return window(text(title) | bold | color(Color::White),
+        return window(text(title) | bold | color(Color::Default),
             vbox({std::move(content)}))
         | center;
     }
 
     [[nodiscard]] Element renderStats() const {
         Element scoreElement = hbox({
-            text("Score: ") | color(Color::White),
+            text("Score: ") | color(Color::Default),
             text(std::to_string(tetrisGame.getScore())) | color(Color::Green)
         });
 
         Element levelElement = hbox({
-            text("Level: ") | color(Color::White),
+            text("Level: ") | color(Color::Default),
             text(std::to_string(tetrisGame.getLevel())) | color(Color::Green)
         });
 
         Element linesElement = hbox({
-            text("Lines: ") | color(Color::White),
+            text("Lines: ") | color(Color::Default),
             text(std::to_string(tetrisGame.getLinesCleared())) | color(Color::Green)
         });
 
-        return window(text("STATS") | bold | color(Color::White),
+        return window(text("STATS") | bold | color(Color::Default),
             vbox({scoreElement, levelElement, linesElement}))
         | size(HEIGHT, EQUAL, 3) | size(WIDTH, EQUAL, 16);
     }
