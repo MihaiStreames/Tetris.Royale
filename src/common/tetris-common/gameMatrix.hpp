@@ -25,7 +25,7 @@ public:
                 if (shape[i][j] == 1) {
                     const int boardX = x + j;
 
-                    if (const int boardY = y + i; boardX < 0 || boardX >= width || boardY < 0 || boardY >= height || board[boardY][boardX] == 1) {
+                    if (const int boardY = y + i; boardX < 0 || boardX >= width || boardY < 0 || boardY >= height || board[boardY][boardX] != 0) {
                         return true;
                     }
                 }
@@ -55,7 +55,7 @@ public:
                 if (shape[i][j] == 1) {
                     const int boardX = x + j;
                     const int boardY = y + i;
-                    board[boardY][boardX] = 1;
+                    board[boardY][boardX] = static_cast<int>(tetromino.getPieceType()) + 1;
                 }
             }
         }
