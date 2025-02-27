@@ -8,6 +8,8 @@
 #include "tetris-common/classicGame.hpp"
 #include "tetris-common/royalGame.hpp"
 #include "tetris-common/gameEngine.hpp"
+#include "tetris-common/classicEngine.hpp"
+#include "tetris-common/royalEngine.hpp"
 #include "view/tui.hpp"
 #include "view/inputHandler.hpp"
 
@@ -16,6 +18,7 @@ using namespace ftxui;
 int main() {
     RoyalGame royal_game{10, 22};
     TetrisGame& game = royal_game;
+    RoyalEngine engine; // je du l ajouter car j ai enlever les static
     const FtxuiView view(game);
     inputHandler ih;
 
@@ -59,7 +62,7 @@ int main() {
                     game.inverted_command(false); // --
                 }
                 const Action action = ih.handleInputs();
-                GameEngine::handlingRoutine(game, action);
+                engine.handlingRoutine(game, action);
             }
 
             screen.Post(Event::Custom);

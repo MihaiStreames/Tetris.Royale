@@ -5,9 +5,12 @@
 #include <iostream>
 #include "tetrisGame.hpp"
 
+// j ai enlevé les static car j ai du faire du polymorphisme
 class GameEngine {
 public:
-    static bool handleAction(TetrisGame& game, const Action action) {
+    GameEngine() {}
+
+    virtual bool handleAction(TetrisGame& game, const Action action) {
         bool success = true;
         auto& gm = game.getGameMatrix();
 
@@ -35,21 +38,6 @@ public:
             case UseBag:
                 success = handleBag(game);
                 break;
-            case Malus:
-                if(game.getEnergy() >= 100){
-                    game.setEnergy(0);
-                    success = handleMalus(game);
-                }
-                else {success = false;}
-                break;
-                
-            case Bonus:
-                if(game.getEnergy() >= 100){
-                    game.setEnergy(0);
-                    success = handleBonus(game);
-                }
-                else {success = false;}
-                break;
 
             case None: // contient egalement le blockCommand (va ici si le pouvoir est activer)                
             default:
@@ -60,7 +48,7 @@ public:
         return success;
     }
 
-    static bool handleBag(TetrisGame& game) {
+    virtual bool handleBag(TetrisGame& game) {
         auto& bag = game.getBag();
         auto& gm = game.getGameMatrix();
 
@@ -90,12 +78,12 @@ public:
         return true;
     }
 
-    static bool handleFallingPiece(TetrisGame& game) {
+    virtual bool handleFallingPiece(TetrisGame& game) {
         if (!game.shouldApplyGravity()) return true;
         return game.getGameMatrix().tryMakeCurrentPieceFall();
     }
 
-    static bool handlePlacingPiece(TetrisGame& game) {
+    virtual bool handlePlacingPiece(TetrisGame& game) {
         auto& gm = game.getGameMatrix();
         const Tetromino* current = gm.getCurrent();
         if (!current) return false;
@@ -106,27 +94,12 @@ public:
         if (placed) {
             // After placing a piece, the bag becomes usable again
             game.getBag().setUsable(true);
-
-            // --- 
-            if (game.getBlockCommand()) {
-                game.block_command();
-            }
-
-            // ---
-            if (game.getActiveReverseControl()) {
-                game.setReverseControlTimeCount(1);
-                if (game.getReverseControlTimeCount() == 3) {
-                    game.inverted_command(true);
-                    game.setReverseControlTimeCount(-3);
-                    game.setActiveReverseControl(false);
-                }
-            }
         }
 
         return placed;
     }
 
-    static void handleSpawn(TetrisGame& game) {
+    virtual void handleSpawn(TetrisGame& game) {
         if (auto& gm = game.getGameMatrix(); !gm.getCurrent()) {
             const Tetromino piece = game.getFactory().popPiece();
             if (const bool success = gm.trySpawnPiece(piece); !success) {
@@ -135,7 +108,7 @@ public:
         }
     }
 
-    static void handleSpawn(TetrisGame &game, Tetromino &piece) {
+    virtual void handleSpawn(TetrisGame &game, Tetromino &piece) {
         if (auto& gm = game.getGameMatrix(); !gm.getCurrent()) {
             if (const bool success = gm.trySpawnPiece(piece); !success) {
                 // If we failed to spawn, the game is over
@@ -145,45 +118,28 @@ public:
         }
     }
 
-    static void handleGameLogic(TetrisGame& game) {
+    virtual void handleGameLogic(TetrisGame& game) {
         const int linesCleared = game.getGameMatrix().clearFullLines();
         handleScore(game, linesCleared);
         handleSpawn(game);  // ensure a piece is always available
-        handleEnergy(game, linesCleared);
 
         if (game.isGameOver()) handleGameOver(game);
     }
 
-    static void handleGameOver(TetrisGame& /*eventually have game*/) {
+    virtual void handleGameOver(TetrisGame& /*eventually have game*/) {
         std::cerr << "Game Over!" << std::endl;
         exit(0); // TODO: later
     }
 
-    static void handleScore(TetrisGame& game, const int linesCleared) {
+    virtual void handleScore(TetrisGame& game, const int linesCleared) {
         game.incrementLinesCleared(linesCleared);
         game.calculateScore(linesCleared);
 
         if (game.shouldLevelUp()) game.updateLevelAfterLineClear();
     }
-
-    static void handleEnergy(TetrisGame &game, const int linesCleared)
-    {
-        game.calculateEnergy(linesCleared);
-    }
-
     // The action should be passed from outside
-    static void handlingRoutine(TetrisGame& game, const Action action) {
-        if (game.getBlockCommand()) {
-            handleAction(game, None);
-        } else {
-            handleAction(game, action);
-        }
-
-        if (game.getDarkMode() && game.getDarkModeTimer() == game.getFrameCount())
-        {
-            game.setDarkMode(false);
-            game.setDarkModeTimer(0);
-        }
+    virtual void handlingRoutine(TetrisGame& game, const Action action) {
+        handleAction(game, action);
 
         if (!handleFallingPiece(game)) {
             handlePlacingPiece(game);
@@ -194,52 +150,10 @@ public:
         game.incrementFrameCount();
     }
 
-    static bool handleBonus(TetrisGame &game)
-    {
-        TypePowerUps randomBonus = bonusVector[rand() % bonusVector.size()];
+    virtual void handleEnergy(TetrisGame &game, const int linesCleared) { std::cerr << "You cannot acces the handleEnergy methode by GameEngine"; }
+    
+    virtual bool handleBonus(TetrisGame &game) { return false; }
 
-        switch (randomBonus){
-            case blocs_1x1:
-                game.blocs_1x1();
-                break;
-            case slow_falling_pieces:
-                game.slow_falling_pieces();
-                break;
-            default:
-                std::cerr << "Unexpected Power up";
-                return false;
-                break;
-        }
-        return true;
-    }
-
-    static bool handleMalus(TetrisGame &game)
-    {
-        TypePowerUps randomMalus = malusVector[rand() % malusVector.size()];
-
-        switch (randomMalus){
-            case inverted_command:
-                game.inverted_command(true);
-                game.setActiveReverseControl(true);
-                break;
-            case block_command:
-                game.block_command();
-                break;
-            case thunder_strike:
-                game.thunder_strike();
-                break;
-            case fast_falling_pieces:
-                game.fast_falling_pieces();
-                break;
-            case darkMode:
-                game.darkMode();
-                break;
-            default:
-                std::cerr << "Unexpected Power up";
-                return false;
-                break;
-        }
-        return true;
-    }
+    virtual bool handleMalus(TetrisGame &game) { return false; }
 
 };
