@@ -106,9 +106,9 @@ private:
             std::vector<Element> cells;
 
             for (int x = 0; x < width; ++x) {
-                const int val = canvas[y][x] ? pieceTypeVal : 0;
+                const int val = canvas[y][x] ? pieceTypeVal : 0; // ------
                 const std::string cellStr = canvas[y][x] ? "██" : "  ";
-                cells.push_back(text(cellStr) | colorForValue(val));
+                cells.push_back(text(cellStr) | colorForValue(val+1)); // voir si il y a pas une meilleur solution
             }
 
             pieceRows.emplace_back(hbox(std::move(cells)));
