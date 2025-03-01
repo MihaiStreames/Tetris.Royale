@@ -4,9 +4,13 @@
 #include "classicGame.hpp"
 
 class ClassicEngine : public GameEngine {
+public:
 
     ClassicEngine(): GameEngine() {}
 
-    // mettre ici les methodes pour l envoi du malus qui ajoute des lignes
+    // trouver un endroit ou faire cette appel
+    void sendToEnemy(int linesCleared, TetrisGame& enemyGame) override {
+        enemyGame.addPenaltyLines(linesCleared);
+    }
 
 };

@@ -149,11 +149,11 @@ public:
 
         game.incrementFrameCount();
     }
-
-    virtual void handleEnergy(TetrisGame &game, const int linesCleared) { std::cerr << "You cannot acces the handleEnergy methode by GameEngine"; }
     
     virtual bool handleBonus(TetrisGame &game) { return false; }
-
     virtual bool handleMalus(TetrisGame &game) { return false; }
+
+    virtual void sendToEnemy(int linesCleared, TetrisGame& enemyGame) { std::cerr << "You cannot acces the sendToEnemy methode by GameEngine"; }
+    virtual void handleEnergy(TetrisGame &game, const int linesCleared) { std::cerr << "You cannot acces the handleEnergy methode by GameEngine"; }
 
 };
