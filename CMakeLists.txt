@@ -22,7 +22,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow -Wformat=2 -Wfloat-equal -Wconv
 
 # Shared common library
 file(GLOB_RECURSE COMMON_SRC_FILES
-    "src/common/tetris.cpp"
+    "src/common/*.cpp"
     "src/common/*.hpp"
 )
 add_library(TetrisRoyaleCommon ${COMMON_SRC_FILES})
@@ -67,7 +67,8 @@ target_include_directories(TetrisRoyaleCommon PUBLIC "src/common")
 
 # Terminal executable setup
 file(GLOB_RECURSE TERMINAL_SRC_FILES
-        "src/terminal/*.hpp"
+        "src/terminal/view/*.hpp"
+        "src/terminal/view/*.cpp"
         "src/terminal/main.cpp"
 )
 add_executable(TetrisRoyaleTerminal ${TERMINAL_SRC_FILES})

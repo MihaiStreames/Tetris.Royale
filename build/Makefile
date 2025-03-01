@@ -246,29 +246,269 @@ component/fast:
 	$(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/build
 .PHONY : component/fast
 
-src/common/tetris.o: src/common/tetris.cpp.o
-.PHONY : src/common/tetris.o
+src/common/bag.o: src/common/bag.cpp.o
+.PHONY : src/common/bag.o
 
 # target to build an object file
-src/common/tetris.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetris.cpp.o
-.PHONY : src/common/tetris.cpp.o
+src/common/bag.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/bag.cpp.o
+.PHONY : src/common/bag.cpp.o
 
-src/common/tetris.i: src/common/tetris.cpp.i
-.PHONY : src/common/tetris.i
+src/common/bag.i: src/common/bag.cpp.i
+.PHONY : src/common/bag.i
 
 # target to preprocess a source file
-src/common/tetris.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetris.cpp.i
-.PHONY : src/common/tetris.cpp.i
+src/common/bag.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/bag.cpp.i
+.PHONY : src/common/bag.cpp.i
 
-src/common/tetris.s: src/common/tetris.cpp.s
-.PHONY : src/common/tetris.s
+src/common/bag.s: src/common/bag.cpp.s
+.PHONY : src/common/bag.s
 
 # target to generate assembly for a file
-src/common/tetris.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetris.cpp.s
-.PHONY : src/common/tetris.cpp.s
+src/common/bag.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/bag.cpp.s
+.PHONY : src/common/bag.cpp.s
+
+src/common/classicEngine.o: src/common/classicEngine.cpp.o
+.PHONY : src/common/classicEngine.o
+
+# target to build an object file
+src/common/classicEngine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/classicEngine.cpp.o
+.PHONY : src/common/classicEngine.cpp.o
+
+src/common/classicEngine.i: src/common/classicEngine.cpp.i
+.PHONY : src/common/classicEngine.i
+
+# target to preprocess a source file
+src/common/classicEngine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/classicEngine.cpp.i
+.PHONY : src/common/classicEngine.cpp.i
+
+src/common/classicEngine.s: src/common/classicEngine.cpp.s
+.PHONY : src/common/classicEngine.s
+
+# target to generate assembly for a file
+src/common/classicEngine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/classicEngine.cpp.s
+.PHONY : src/common/classicEngine.cpp.s
+
+src/common/classicGame.o: src/common/classicGame.cpp.o
+.PHONY : src/common/classicGame.o
+
+# target to build an object file
+src/common/classicGame.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/classicGame.cpp.o
+.PHONY : src/common/classicGame.cpp.o
+
+src/common/classicGame.i: src/common/classicGame.cpp.i
+.PHONY : src/common/classicGame.i
+
+# target to preprocess a source file
+src/common/classicGame.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/classicGame.cpp.i
+.PHONY : src/common/classicGame.cpp.i
+
+src/common/classicGame.s: src/common/classicGame.cpp.s
+.PHONY : src/common/classicGame.s
+
+# target to generate assembly for a file
+src/common/classicGame.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/classicGame.cpp.s
+.PHONY : src/common/classicGame.cpp.s
+
+src/common/gameEngine.o: src/common/gameEngine.cpp.o
+.PHONY : src/common/gameEngine.o
+
+# target to build an object file
+src/common/gameEngine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/gameEngine.cpp.o
+.PHONY : src/common/gameEngine.cpp.o
+
+src/common/gameEngine.i: src/common/gameEngine.cpp.i
+.PHONY : src/common/gameEngine.i
+
+# target to preprocess a source file
+src/common/gameEngine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/gameEngine.cpp.i
+.PHONY : src/common/gameEngine.cpp.i
+
+src/common/gameEngine.s: src/common/gameEngine.cpp.s
+.PHONY : src/common/gameEngine.s
+
+# target to generate assembly for a file
+src/common/gameEngine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/gameEngine.cpp.s
+.PHONY : src/common/gameEngine.cpp.s
+
+src/common/gameMatrix.o: src/common/gameMatrix.cpp.o
+.PHONY : src/common/gameMatrix.o
+
+# target to build an object file
+src/common/gameMatrix.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/gameMatrix.cpp.o
+.PHONY : src/common/gameMatrix.cpp.o
+
+src/common/gameMatrix.i: src/common/gameMatrix.cpp.i
+.PHONY : src/common/gameMatrix.i
+
+# target to preprocess a source file
+src/common/gameMatrix.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/gameMatrix.cpp.i
+.PHONY : src/common/gameMatrix.cpp.i
+
+src/common/gameMatrix.s: src/common/gameMatrix.cpp.s
+.PHONY : src/common/gameMatrix.s
+
+# target to generate assembly for a file
+src/common/gameMatrix.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/gameMatrix.cpp.s
+.PHONY : src/common/gameMatrix.cpp.s
+
+src/common/royalEngine.o: src/common/royalEngine.cpp.o
+.PHONY : src/common/royalEngine.o
+
+# target to build an object file
+src/common/royalEngine.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/royalEngine.cpp.o
+.PHONY : src/common/royalEngine.cpp.o
+
+src/common/royalEngine.i: src/common/royalEngine.cpp.i
+.PHONY : src/common/royalEngine.i
+
+# target to preprocess a source file
+src/common/royalEngine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/royalEngine.cpp.i
+.PHONY : src/common/royalEngine.cpp.i
+
+src/common/royalEngine.s: src/common/royalEngine.cpp.s
+.PHONY : src/common/royalEngine.s
+
+# target to generate assembly for a file
+src/common/royalEngine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/royalEngine.cpp.s
+.PHONY : src/common/royalEngine.cpp.s
+
+src/common/royalGame.o: src/common/royalGame.cpp.o
+.PHONY : src/common/royalGame.o
+
+# target to build an object file
+src/common/royalGame.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/royalGame.cpp.o
+.PHONY : src/common/royalGame.cpp.o
+
+src/common/royalGame.i: src/common/royalGame.cpp.i
+.PHONY : src/common/royalGame.i
+
+# target to preprocess a source file
+src/common/royalGame.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/royalGame.cpp.i
+.PHONY : src/common/royalGame.cpp.i
+
+src/common/royalGame.s: src/common/royalGame.cpp.s
+.PHONY : src/common/royalGame.s
+
+# target to generate assembly for a file
+src/common/royalGame.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/royalGame.cpp.s
+.PHONY : src/common/royalGame.cpp.s
+
+src/common/tetrisFactory.o: src/common/tetrisFactory.cpp.o
+.PHONY : src/common/tetrisFactory.o
+
+# target to build an object file
+src/common/tetrisFactory.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetrisFactory.cpp.o
+.PHONY : src/common/tetrisFactory.cpp.o
+
+src/common/tetrisFactory.i: src/common/tetrisFactory.cpp.i
+.PHONY : src/common/tetrisFactory.i
+
+# target to preprocess a source file
+src/common/tetrisFactory.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetrisFactory.cpp.i
+.PHONY : src/common/tetrisFactory.cpp.i
+
+src/common/tetrisFactory.s: src/common/tetrisFactory.cpp.s
+.PHONY : src/common/tetrisFactory.s
+
+# target to generate assembly for a file
+src/common/tetrisFactory.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetrisFactory.cpp.s
+.PHONY : src/common/tetrisFactory.cpp.s
+
+src/common/tetrisGame.o: src/common/tetrisGame.cpp.o
+.PHONY : src/common/tetrisGame.o
+
+# target to build an object file
+src/common/tetrisGame.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetrisGame.cpp.o
+.PHONY : src/common/tetrisGame.cpp.o
+
+src/common/tetrisGame.i: src/common/tetrisGame.cpp.i
+.PHONY : src/common/tetrisGame.i
+
+# target to preprocess a source file
+src/common/tetrisGame.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetrisGame.cpp.i
+.PHONY : src/common/tetrisGame.cpp.i
+
+src/common/tetrisGame.s: src/common/tetrisGame.cpp.s
+.PHONY : src/common/tetrisGame.s
+
+# target to generate assembly for a file
+src/common/tetrisGame.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetrisGame.cpp.s
+.PHONY : src/common/tetrisGame.cpp.s
+
+src/common/tetromino.o: src/common/tetromino.cpp.o
+.PHONY : src/common/tetromino.o
+
+# target to build an object file
+src/common/tetromino.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetromino.cpp.o
+.PHONY : src/common/tetromino.cpp.o
+
+src/common/tetromino.i: src/common/tetromino.cpp.i
+.PHONY : src/common/tetromino.i
+
+# target to preprocess a source file
+src/common/tetromino.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetromino.cpp.i
+.PHONY : src/common/tetromino.cpp.i
+
+src/common/tetromino.s: src/common/tetromino.cpp.s
+.PHONY : src/common/tetromino.s
+
+# target to generate assembly for a file
+src/common/tetromino.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/tetromino.cpp.s
+.PHONY : src/common/tetromino.cpp.s
+
+src/common/types.o: src/common/types.cpp.o
+.PHONY : src/common/types.o
+
+# target to build an object file
+src/common/types.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/types.cpp.o
+.PHONY : src/common/types.cpp.o
+
+src/common/types.i: src/common/types.cpp.i
+.PHONY : src/common/types.i
+
+# target to preprocess a source file
+src/common/types.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/types.cpp.i
+.PHONY : src/common/types.cpp.i
+
+src/common/types.s: src/common/types.cpp.s
+.PHONY : src/common/types.s
+
+# target to generate assembly for a file
+src/common/types.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleCommon.dir/build.make CMakeFiles/TetrisRoyaleCommon.dir/src/common/types.cpp.s
+.PHONY : src/common/types.cpp.s
 
 src/terminal/main.o: src/terminal/main.cpp.o
 .PHONY : src/terminal/main.o
@@ -294,6 +534,54 @@ src/terminal/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleTerminal.dir/build.make CMakeFiles/TetrisRoyaleTerminal.dir/src/terminal/main.cpp.s
 .PHONY : src/terminal/main.cpp.s
 
+src/terminal/view/inputHandler.o: src/terminal/view/inputHandler.cpp.o
+.PHONY : src/terminal/view/inputHandler.o
+
+# target to build an object file
+src/terminal/view/inputHandler.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleTerminal.dir/build.make CMakeFiles/TetrisRoyaleTerminal.dir/src/terminal/view/inputHandler.cpp.o
+.PHONY : src/terminal/view/inputHandler.cpp.o
+
+src/terminal/view/inputHandler.i: src/terminal/view/inputHandler.cpp.i
+.PHONY : src/terminal/view/inputHandler.i
+
+# target to preprocess a source file
+src/terminal/view/inputHandler.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleTerminal.dir/build.make CMakeFiles/TetrisRoyaleTerminal.dir/src/terminal/view/inputHandler.cpp.i
+.PHONY : src/terminal/view/inputHandler.cpp.i
+
+src/terminal/view/inputHandler.s: src/terminal/view/inputHandler.cpp.s
+.PHONY : src/terminal/view/inputHandler.s
+
+# target to generate assembly for a file
+src/terminal/view/inputHandler.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleTerminal.dir/build.make CMakeFiles/TetrisRoyaleTerminal.dir/src/terminal/view/inputHandler.cpp.s
+.PHONY : src/terminal/view/inputHandler.cpp.s
+
+src/terminal/view/tui.o: src/terminal/view/tui.cpp.o
+.PHONY : src/terminal/view/tui.o
+
+# target to build an object file
+src/terminal/view/tui.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleTerminal.dir/build.make CMakeFiles/TetrisRoyaleTerminal.dir/src/terminal/view/tui.cpp.o
+.PHONY : src/terminal/view/tui.cpp.o
+
+src/terminal/view/tui.i: src/terminal/view/tui.cpp.i
+.PHONY : src/terminal/view/tui.i
+
+# target to preprocess a source file
+src/terminal/view/tui.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleTerminal.dir/build.make CMakeFiles/TetrisRoyaleTerminal.dir/src/terminal/view/tui.cpp.i
+.PHONY : src/terminal/view/tui.cpp.i
+
+src/terminal/view/tui.s: src/terminal/view/tui.cpp.s
+.PHONY : src/terminal/view/tui.s
+
+# target to generate assembly for a file
+src/terminal/view/tui.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/TetrisRoyaleTerminal.dir/build.make CMakeFiles/TetrisRoyaleTerminal.dir/src/terminal/view/tui.cpp.s
+.PHONY : src/terminal/view/tui.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -313,12 +601,48 @@ help:
 	@echo "... component"
 	@echo "... dom"
 	@echo "... screen"
-	@echo "... src/common/tetris.o"
-	@echo "... src/common/tetris.i"
-	@echo "... src/common/tetris.s"
+	@echo "... src/common/bag.o"
+	@echo "... src/common/bag.i"
+	@echo "... src/common/bag.s"
+	@echo "... src/common/classicEngine.o"
+	@echo "... src/common/classicEngine.i"
+	@echo "... src/common/classicEngine.s"
+	@echo "... src/common/classicGame.o"
+	@echo "... src/common/classicGame.i"
+	@echo "... src/common/classicGame.s"
+	@echo "... src/common/gameEngine.o"
+	@echo "... src/common/gameEngine.i"
+	@echo "... src/common/gameEngine.s"
+	@echo "... src/common/gameMatrix.o"
+	@echo "... src/common/gameMatrix.i"
+	@echo "... src/common/gameMatrix.s"
+	@echo "... src/common/royalEngine.o"
+	@echo "... src/common/royalEngine.i"
+	@echo "... src/common/royalEngine.s"
+	@echo "... src/common/royalGame.o"
+	@echo "... src/common/royalGame.i"
+	@echo "... src/common/royalGame.s"
+	@echo "... src/common/tetrisFactory.o"
+	@echo "... src/common/tetrisFactory.i"
+	@echo "... src/common/tetrisFactory.s"
+	@echo "... src/common/tetrisGame.o"
+	@echo "... src/common/tetrisGame.i"
+	@echo "... src/common/tetrisGame.s"
+	@echo "... src/common/tetromino.o"
+	@echo "... src/common/tetromino.i"
+	@echo "... src/common/tetromino.s"
+	@echo "... src/common/types.o"
+	@echo "... src/common/types.i"
+	@echo "... src/common/types.s"
 	@echo "... src/terminal/main.o"
 	@echo "... src/terminal/main.i"
 	@echo "... src/terminal/main.s"
+	@echo "... src/terminal/view/inputHandler.o"
+	@echo "... src/terminal/view/inputHandler.i"
+	@echo "... src/terminal/view/inputHandler.s"
+	@echo "... src/terminal/view/tui.o"
+	@echo "... src/terminal/view/tui.i"
+	@echo "... src/terminal/view/tui.s"
 .PHONY : help
 
 

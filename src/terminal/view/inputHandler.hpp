@@ -2,53 +2,23 @@
 
 #include <map>
 #include <ftxui/component/event.hpp>
-#include "tetris-common/types.hpp"
+#include "../common/types.hpp"
 
 class inputHandler {
-    std::map<Event, Action>  inputMap;
-    Event currentEvent;
+    std::map<ftxui::Event, Action>  inputMap;
+    ftxui::Event currentEvent;
 
 public:
-    inputHandler() : currentEvent(Event::Custom) { setupController(); }
+    inputHandler() : currentEvent(ftxui::Event::Custom) { setupController(); }
 
-    void setupController() {
-        inputMap[Event::ArrowLeft]      = MoveLeft;
-        inputMap[Event::ArrowRight]     = MoveRight;
+    void setupController();
 
-        inputMap[Event::ArrowDown]      = MoveDown;
+    Action getUserAction();
 
-        inputMap[Event::ArrowUp]        = RotateRight;
-        inputMap[Event::Character('q')] = RotateRight;
-        inputMap[Event::Character('e')] = RotateLeft;
-
-        inputMap[Event::Character(' ')] = InstantFall;
-
-        inputMap[Event::Character('b')] = UseBag;
-
-        inputMap[Event::Character('m')] = Malus;
-        inputMap[Event::Character('l')] = Bonus;
-    }
-
-    Action getUserAction() {
-        if (const auto it = inputMap.find(currentEvent); it != inputMap.end()) {
-            const Action a = it->second;
-            return a;
-        }
-
-        return None;
-    }
-
-    Action handleInputs() {
-        const Action action = getUserAction();
-        return action;
-    }
+    Action handleInputs();
 
     // Swap the actions for left and right
-    void invertKeys() {
-        const Action leftAction      = inputMap[Event::ArrowLeft];
-        inputMap[Event::ArrowLeft]   = inputMap[Event::ArrowRight];
-        inputMap[Event::ArrowRight]  = leftAction;
-    }
+    void invertKeys();
 
-    void setEvent(const Event& evt)  { currentEvent = evt; }
+    void setEvent(const ftxui::Event& evt);
 };

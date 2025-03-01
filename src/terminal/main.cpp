@@ -2,30 +2,39 @@
 #include <atomic>
 #include <mutex>
 #include <thread>
+#include <csignal>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
-#include "tetris-common/tetrisGame.hpp"
-#include "tetris-common/classicGame.hpp"
-#include "tetris-common/royalGame.hpp"
-#include "tetris-common/gameEngine.hpp"
-#include "tetris-common/classicEngine.hpp"
-#include "tetris-common/royalEngine.hpp"
+#include "../common/tetrisGame.hpp"
+#include "../common/classicGame.hpp"
+#include "../common/royalGame.hpp"
+#include "../common/gameEngine.hpp"
+#include "../common/classicEngine.hpp"
+#include "../common/royalEngine.hpp"
 #include "view/tui.hpp"
 #include "view/inputHandler.hpp"
 
 using namespace ftxui;
 
+std::atomic<bool> running(true);
+std::mutex mtx;
+ScreenInteractive global_screen = ScreenInteractive::Fullscreen();
+
+void signalHandler(int signal){
+    if (signal == SIGINT){
+        running = false;
+        global_screen.Exit();
+    }
+}
+
 int main() {
+    std::signal(SIGINT, signalHandler);
+
     RoyalGame royal_game{10, 22};
     TetrisGame& game = royal_game;
     RoyalEngine engine; // je du l ajouter car j ai enlever les static
     const FtxuiView view(game);
     inputHandler ih;
-
-    auto screen = ScreenInteractive::Fullscreen();
-
-    std::mutex mtx;
-    std::atomic running(true);
 
     // Renderer component
     const auto renderer = Renderer([&] {
@@ -40,7 +49,7 @@ int main() {
         if (event == Event::Escape) {
             // Exit the game when Escape is pressed
             running = false;
-            screen.Exit();
+            global_screen.Exit();
             return true;
         }
 
@@ -65,18 +74,20 @@ int main() {
                 engine.handlingRoutine(game, action);
             }
 
-            screen.Post(Event::Custom);
+            global_screen.Post(Event::Custom);
 
             next_frame += std::chrono::milliseconds(static_cast<int>(1000.0 / REFRESH_RATE));
             std::this_thread::sleep_until(next_frame);
         }
 
         running = false;
-        screen.Exit();
+        global_screen.Exit();
     });
 
-    screen.Loop(event_component);
+    global_screen.Loop(event_component);
 
+    running = false;
     if (game_thread.joinable()) game_thread.join();
+
     return 0;
 }
