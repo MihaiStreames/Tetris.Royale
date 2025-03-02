@@ -8,7 +8,7 @@ public:
 
     ClassicEngine(): GameEngine() {}
 
-    // trouver un endroit ou faire cette appel
-    void sendToEnemy(int linesCleared, TetrisGame& enemyGame) override;
+    void handleBasicPenalty(ClassicGame& game, const int linesCleared);
 
+    void handleGameLogic(TetrisGame& game) override;
 };

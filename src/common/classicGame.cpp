@@ -1,6 +1,7 @@
 #include "classicGame.hpp"
 
 std::vector<ClassicGame*> ClassicGame::getOpponents() { return opponents;}
+ClassicGame* ClassicGame::getTarget() { return target; }
 
 void ClassicGame::addPenaltyLines(int linesToAdd){
     GameMatrix& matrix = getGameMatrix();
@@ -26,5 +27,10 @@ void ClassicGame::addPenaltyLines(int linesToAdd){
 }
 
 void ClassicGame::changePlayerView() {
-    // ...
+     if (targetIndex < opponents.size()) {
+        targetIndex += 1;
+    } else {
+        targetIndex = 0;
+    }
+    target = opponents[targetIndex];
 }

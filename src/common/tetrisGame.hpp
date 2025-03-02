@@ -52,7 +52,6 @@ public:
     virtual void setActiveReverseControl(bool flag);
     virtual void setDarkMode(bool flag);
     virtual void setDarkModeTimer(int time);
-
     virtual GameMatrix& getGameMatrix();
     virtual int getEnergy();
     virtual TetrisFactory& getFactory();

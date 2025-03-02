@@ -13,7 +13,7 @@ public:
 
     void handleGameLogic(TetrisGame& game) override;
 
-   void handleEnergy(TetrisGame &game, const int linesCleared) override;
+    void handleEnergy(TetrisGame &game, const int linesCleared) override;
 
     void handlingRoutine(TetrisGame& game, const Action action) override;
 
