@@ -10,8 +10,8 @@ using namespace ftxui;
                    renderBoard() | center,
 
                    vbox({
-                       renderBox("HOLD", renderPiece(tetrisGame.getBag().peekPiece(), 4, 5)) | center,
-                       renderBox("NEXT", renderPiece(&tetrisGame.getFactory().whatIsNextPiece(), 4, 5)) | center,
+                        renderBox("HOLD", renderPiece(tetrisGame.getHoldPiece(), 4, 5)) | center,
+                        renderBox("NEXT", renderPiece(&tetrisGame.getNextPiece(), 4, 5)) | center,
                    })
 
                }) | center,

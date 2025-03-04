@@ -56,6 +56,10 @@ public:
     virtual int getEnergy();
     virtual TetrisFactory& getFactory();
     virtual Bag& getBag();
+
+    [[nodiscard]] const Tetromino* getHoldPiece() const;
+    [[nodiscard]] Tetromino& getNextPiece();
+
     virtual bool getReverseControls();
     virtual bool getBlockCommand();
     virtual int getReverseControlTimeCount();

@@ -13,6 +13,10 @@ GameMatrix& TetrisGame::getGameMatrix() { return gameMatrix; }
 int TetrisGame::getEnergy() { return energy; }
 TetrisFactory& TetrisGame::getFactory() { return factory; }
 Bag& TetrisGame::getBag()               { return bag; }
+
+[[nodiscard]] const Tetromino *TetrisGame::getHoldPiece() const { return bag.peekPiece();}
+[[nodiscard]] Tetromino &TetrisGame::getNextPiece(){ return factory.whatIsNextPiece();}
+
 bool TetrisGame::getReverseControls() { return reverseControls; }
 bool TetrisGame::getBlockCommand() { return blockCommand; }
 int TetrisGame::getReverseControlTimeCount() { return reverseControlTimeCount; }
