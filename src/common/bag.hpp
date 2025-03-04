@@ -22,7 +22,6 @@ public:
     // Returns a const pointer to the stored Tetromino, or nullptr if the bag is empty.
     [[nodiscard]] const Tetromino* peekPiece() const;
 
-    // Checks if the bag is currently empty.
     [[nodiscard]] bool isEmpty() const;
 
     // Checks if the bag is usable for storing or swapping Tetrominos.

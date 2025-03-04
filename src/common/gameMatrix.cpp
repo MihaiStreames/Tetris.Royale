@@ -3,7 +3,7 @@
 void GameMatrix::generateBoardByDimension() { board = std::vector(height, std::vector(width, 0)); }
 
 [[nodiscard]] bool GameMatrix::isColliding(const Tetromino& tetromino) const {
-    const auto& shape = tetromino.getShape();
+    const tetroMat& shape = tetromino.getShape();
     const auto&[x, y] = tetromino.getPosition();
 
     for (int i = 0; i < static_cast<int>(shape.size()); ++i) {
@@ -33,7 +33,7 @@ bool GameMatrix::trySpawnPiece(Tetromino piece) {
 bool GameMatrix::tryPlacePiece(const Tetromino& tetromino) {
     if (isColliding(tetromino)) return false;
 
-    const auto& shape = tetromino.getShape();
+    const tetroMat& shape = tetromino.getShape();
     const auto&[x, y] = tetromino.getPosition();
 
     for (int i = 0; i < static_cast<int>(shape.size()); ++i) {
@@ -74,14 +74,14 @@ bool GameMatrix::tryPlaceCurrentPiece() {
 
 [[nodiscard]] bool GameMatrix::canRotate(const Tetromino& tetromino, const bool clockwise) const {
     Tetromino rotated = tetromino;
-    const auto shape = rotated.getRotateShape(clockwise ? RotateRight : RotateLeft);
+    const tetroMat shape = rotated.getRotateShape(clockwise ? RotateRight : RotateLeft);
     rotated.setShape(shape);
     return !isColliding(rotated);
 }
 
 [[nodiscard]] bool GameMatrix::tryRotateCurrent(const bool clockwise) {
     if (currentTetromino.has_value() && canRotate(currentTetromino.value(), clockwise)) {
-        const auto shape = currentTetromino->getRotateShape(clockwise ? RotateRight : RotateLeft);
+        const tetroMat shape = currentTetromino->getRotateShape(clockwise ? RotateRight : RotateLeft);
         currentTetromino->setShape(shape);
         return true;
     }
@@ -143,7 +143,7 @@ int GameMatrix::clearFullLines() {
     // If there's a current tetromino, overlay it onto the copied board
     if (currentTetromino.has_value()) {
         const Tetromino& piece = currentTetromino.value();
-        const auto& shape = piece.getShape();
+        const tetroMat& shape = piece.getShape();
         const auto&[x, y] = piece.getPosition();
         const int pieceVal = static_cast<int>(piece.getPieceType()) + 1;
 

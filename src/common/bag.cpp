@@ -1,10 +1,10 @@
 #include "bag.hpp"
 
 Tetromino Bag::retrievePiece() {
-    if (!isEmpty()) { // Check if the bag contains a piece.
+    if (!isEmpty()) { 
         Tetromino piece = *storedPiece; // Copy the stored piece.
         storedPiece.reset(); // Clear the stored piece from the bag.
-        return piece; // Return the retrieved Tetromino.
+        return piece; 
     }
 
     throw std::runtime_error("Bag is empty."); // Throw an error if the bag is empty.
@@ -19,8 +19,8 @@ Tetromino Bag::retrievePiece() {
 void Bag::setUsable(const bool flag) { isUsable = flag; }
 
 void Bag::storePiece(const Tetromino& piece) {
-    if (isUsable && isEmpty()) { // Ensure the bag is usable and empty.
-        storedPiece = std::make_unique<Tetromino>(piece); // Store a copy of the Tetromino.
+    if (isUsable && isEmpty()) { 
+        storedPiece = std::make_unique<Tetromino>(piece); 
         storedPiece->reset(); // Reset the Tetromino to its default state.
     }
 }
