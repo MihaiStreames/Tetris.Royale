@@ -12,7 +12,7 @@ wget -L "${BOOST_URL}"
 tar xvf boost-1.87.0-b2-nodocs.tar.gz
 
 # Navigate into the extracted folder
-cd "${BOOST_DIR}"
+cd "${BOOST_DIR}" || exit
 
 # Bootstrap with local installation path
 ./bootstrap.sh --prefix="${INSTALL_DIR}"
