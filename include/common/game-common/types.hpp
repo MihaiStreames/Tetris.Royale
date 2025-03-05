@@ -32,14 +32,13 @@ enum Action {
 };
 
 enum TypePowerUps {
-    inverted_command,
-    block_command,
-    thunder_strike,
-    fast_falling_pieces,
+    invertedControls,
+    blockControls,
+    thunderStrike,
+    fastPieces,
     darkMode,
-    
-    blocs_1x1,
-    slow_falling_pieces
+    singleBlocks,
+    slowPieces
 };
 
 extern std::vector<TypePowerUps> malusVector;

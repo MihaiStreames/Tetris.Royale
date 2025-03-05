@@ -4,7 +4,7 @@
 #include <vector>
 #include <string>
 #include <ftxui/dom/elements.hpp>
-#include "../common/tetrisGame.hpp"
+#include "tetrisGame.hpp"
 
 class FtxuiView {
     TetrisGame &tetrisGame;

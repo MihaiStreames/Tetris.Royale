@@ -28,7 +28,7 @@ void ClassicEngine::handleBasicPenalty(ClassicGame& game, const int linesCleared
 }
 
 
-void ClassicEngine::handleGameLogic(TetrisGame& game) {
+void ClassicEngine::handleGameLogic(RoyalGame &game) {
 
     // clear the lines and calculate the score for the player
     const int linesCleared = game.getGameMatrix().clearFullLines();

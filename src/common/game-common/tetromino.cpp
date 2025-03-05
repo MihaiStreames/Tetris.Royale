@@ -6,18 +6,10 @@ bool Tetromino::operator==(const Tetromino& other) const {
             shape == other.shape;
 }
 
-[[nodiscard]] Position2D Tetromino::getPosition() const    { return position; }
-[[nodiscard]] PieceType Tetromino::getPieceType() const    { return pieceType; }
-[[nodiscard]] const tetroMat& Tetromino::getShape() const  { return shape; }
-
 void Tetromino::setPieceType(const PieceType newType) {
     pieceType = newType;
     shape = generateShapeByType(newType);
 }
-
-void Tetromino::setPosition(const Position2D& newPosition) { position = newPosition; }
-
-void Tetromino::setShape(const tetroMat& newShape)         { shape = newShape; }
 
 [[nodiscard]] Position2D Tetromino::getMovePosition(const Action move) const {
     Position2D newPos = position;
@@ -33,13 +25,13 @@ void Tetromino::setShape(const tetroMat& newShape)         { shape = newShape; }
 }
 
 [[nodiscard]] tetroMat Tetromino::getRotateShape(const Action rotation) const {
-    // If no rotation or invalid action for rotation, return current shape.
+    // If no rotation or invalid action for rotation, return current shape
     if (rotation != RotateLeft && rotation != RotateRight) return shape;
 
     const int n = static_cast<int>(shape.size());
     if (n == 0) return shape;
 
-    tetroMat rotatedShape(n, std::vector(n, 0)); // Create a matrix for the rotated shape.
+    tetroMat rotatedShape(n, std::vector(n, 0)); // Create a matrix for the rotated shape
 
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -54,7 +46,7 @@ void Tetromino::setShape(const tetroMat& newShape)         { shape = newShape; }
     return rotatedShape;
 }
 
-// Resets the tetromino to its default position (0, 0) and shape based on its type.
+// Resets the tetromino to its default position (0, 0) and shape based on its type
 void Tetromino::reset() {
     position = {0, 0};
     shape = generateShapeByType(pieceType);
@@ -64,21 +56,21 @@ void Tetromino::reset() {
     const std::optional<Position2D> topLeft,
     const std::optional<tetroMat> &shapeOverride) const
 {
-    auto [x, y] = topLeft.has_value() ? topLeft.value() : position; // Use provided top-left position if available.
-    const tetroMat& usedShape = shapeOverride.has_value() ? shapeOverride.value() : shape; // Use provided shape if available.
+    auto [x, y] = topLeft.has_value() ? topLeft.value() : position;
+    const tetroMat& usedShape = shapeOverride.has_value() ? shapeOverride.value() : shape;
 
     std::vector<Position2D> coords;
     for (int rel_y = 0; rel_y < static_cast<int>(usedShape.size()); ++rel_y) {
         for (int rel_x = 0; rel_x < static_cast<int>(usedShape[rel_y].size()); ++rel_x) {
-            if (usedShape[rel_y][rel_x] != 0) { // Check if the cell is part of the tetromino.
-                const int abs_x = x + rel_x; // Calculate absolute x-coordinate.
-                const int abs_y = y + rel_y; // Calculate absolute y-coordinate.
-                coords.push_back(Position2D{abs_x, abs_y}); // Add the coordinate to the list.
+            if (usedShape[rel_y][rel_x] != 0) { // Check if the cell is part of the tetromino
+                const int abs_x = x + rel_x;
+                const int abs_y = y + rel_y;
+                coords.push_back(Position2D{abs_x, abs_y}); // Add the coordinate to the list
             }
         }
     }
 
-    return coords; // Return the list of absolute coordinates.
+    return coords;
 }
 
 tetroMat Tetromino::generateShapeByType(const PieceType type) {
@@ -106,7 +98,6 @@ tetroMat Tetromino::generateShapeByType(const PieceType type) {
                         {0, 0, 0}};
         case Single: return {{1}};
         default:
-            // Fallback shape if needed.
             return {{1}};
     }
 }

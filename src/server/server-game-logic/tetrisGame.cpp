@@ -4,8 +4,8 @@
 void TetrisGame::setGameOver(const bool flag) { gameOver = flag; }
 void TetrisGame::setEnergy(int setEnergy) { energy = setEnergy; }
 void TetrisGame::setBlockCommand(bool flag) { blockCommand = flag; }
-void TetrisGame::setReverseControlTimeCount(int nbr) { reverseControlTimeCount += nbr; }
-void TetrisGame::setActiveReverseControl(bool flag) { activeReverseControl = flag; }
+void TetrisGame::setReversePieceCount(int nbr) { reverseControlTimeCount += nbr; }
+void TetrisGame::setReverseFlag(bool flag) { activeReverseControl = flag; }
 void TetrisGame::setDarkMode(bool flag) { isDarkMode = flag; }
 void TetrisGame::setDarkModeTimer(int time) { darkModeTimer = time; }
 
@@ -18,9 +18,9 @@ Bag& TetrisGame::getBag()               { return bag; }
 [[nodiscard]] Tetromino &TetrisGame::getNextPiece(){ return factory.whatIsNextPiece();}
 
 bool TetrisGame::getReverseControls() { return reverseControls; }
-bool TetrisGame::getBlockCommand() { return blockCommand; }
+bool TetrisGame::getBlockFlag() { return blockCommand; }
 int TetrisGame::getReverseControlTimeCount() { return reverseControlTimeCount; }
-bool TetrisGame::getActiveReverseControl() { return activeReverseControl; }
+bool TetrisGame::getReverseFlag() { return activeReverseControl; }
 bool TetrisGame::getDarkMode() { return isDarkMode; }
 int TetrisGame::getDarkModeTimer() { return darkModeTimer; }
 
@@ -77,15 +77,15 @@ void TetrisGame::updateLevelAfterLineClear() {
 // ? handle function ?
 
 // Malus Method
-void TetrisGame::inverted_command(bool flag) { std::cerr << "You tried to access power-ups via TetrisGame"; }
+void TetrisGame::setInvertedFlag(bool flag) { std::cerr << "You tried to access power-ups via TetrisGame"; }
 
-void TetrisGame::block_command() { std::cerr << "You tried to access power-ups via TetrisGame"; }
+void TetrisGame::blockControls() { std::cerr << "You tried to access power-ups via TetrisGame"; }
 
-void TetrisGame::thunder_strike() { std::cerr << "You tried to access power-ups via TetrisGame"; }
-void TetrisGame::fast_falling_pieces() { std::cerr << "You tried to access power-ups via TetrisGame"; }
+void TetrisGame::thunderStrike() { std::cerr << "You tried to access power-ups via TetrisGame"; }
+void TetrisGame::fastPieces() { std::cerr << "You tried to access power-ups via TetrisGame"; }
 void TetrisGame::darkMode() { std::cerr << "You tried to access power-ups via TetrisGame"; }
 void TetrisGame::addPenaltyLines(int linesToAdd) { std::cerr << "You tried to access power-ups via TetrisGame"; } 
 
 // Bonus Method
-void TetrisGame::blocs_1x1() { std::cerr << "You tried to access power-ups via TetrisGame"; }
-void TetrisGame::slow_falling_pieces() { std::cerr << "You tried to access power-ups via TetrisGame"; }
+void TetrisGame::pushSingleBlock() { std::cerr << "You tried to access power-ups via TetrisGame"; }
+void TetrisGame::slowPieces() { std::cerr << "You tried to access power-ups via TetrisGame"; }

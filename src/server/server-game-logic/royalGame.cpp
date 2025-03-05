@@ -1,13 +1,13 @@
 #include "royalGame.hpp"
 
-void RoyalGame::inverted_command(bool flag) {
+void RoyalGame::setInvertedFlag(const bool flag) {
     reverseControls = flag;
 }
 
-void RoyalGame::thunder_strike() {
+void RoyalGame::thunderStrike() {
 
     // find some column to destroy
-    int col = rand() % gameMatrix.getWidth();
+    const int col = rand() % gameMatrix.getWidth();
     tetroMat& board = gameMatrix.getBoard();
 
 
@@ -36,10 +36,10 @@ void RoyalGame::thunder_strike() {
 
         for (int dx = 0; dx < 2; ++dx) {
 
-            int x = col + dx;
-            int y = impactRow + dy;
+            const int x = col + dx;
+            const int y = impactRow + dy;
 
-            if (x < gameMatrix.getWidth() && y < gameMatrix.getHeight()) {                    
+            if (x < gameMatrix.getWidth() && y < gameMatrix.getHeight()) {
                 board[y][x] = 0;
             }
 
@@ -49,13 +49,13 @@ void RoyalGame::thunder_strike() {
 
 }
 
-void RoyalGame::block_command() {
+void RoyalGame::blockControls() {
 
     blockCommand = !blockCommand;
 
 }
 
-void RoyalGame::fast_falling_pieces() {
+void RoyalGame::fastPieces() {
 
     speedFactor++;
 
@@ -69,7 +69,7 @@ void RoyalGame::darkMode() {
     
 }
 
-void RoyalGame::blocs_1x1() {
+void RoyalGame::pushSingleBlock() {
 
     // !! this should be a CONSTANT at the very least, or some logic in the gameMatrix class
     // !! this is a magic number (2)
@@ -82,7 +82,7 @@ void RoyalGame::blocs_1x1() {
 
 }
 
-void RoyalGame::slow_falling_pieces() {
+void RoyalGame::slowPieces() {
 
     // ?? why level 0 check here?
     if (level > 0) {

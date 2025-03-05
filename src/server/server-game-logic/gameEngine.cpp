@@ -1,7 +1,7 @@
 #include "gameEngine.hpp"
 
 
-bool GameEngine::handleAction(TetrisGame& game, const Action action) {
+bool GameEngine::handleAction(RoyalGame &game, const Action action) {
 
     bool success = true;
     auto& gm = game.getGameMatrix();
@@ -93,7 +93,7 @@ bool GameEngine::handleFallingPiece(TetrisGame& game) {
     return game.getGameMatrix().tryMakeCurrentPieceFall();
 }
 
-bool GameEngine::handlePlacingPiece(TetrisGame& game) {
+bool GameEngine::handlePlacingPiece(RoyalGame &game) {
     
     auto& gm = game.getGameMatrix();
     const Tetromino* current = gm.getCurrent();
@@ -138,7 +138,7 @@ void GameEngine::handleSpawn(TetrisGame &game, Tetromino &piece) {
 
 }
 
-void GameEngine::handleGameLogic(TetrisGame& game) {
+void GameEngine::handleGameLogic(RoyalGame &game) {
 
     const int linesCleared = game.getGameMatrix().clearFullLines();
     handleScore(game, linesCleared);
@@ -163,7 +163,7 @@ void GameEngine::handleScore(TetrisGame& game, const int linesCleared) {
 
 }
 
-void GameEngine::handlingRoutine(TetrisGame& game, const Action action) {
+void GameEngine::handlingRoutine(RoyalGame &game, const Action action) {
 
     handleAction(game, action);
 
@@ -176,13 +176,3 @@ void GameEngine::handlingRoutine(TetrisGame& game, const Action action) {
     game.incrementFrameCount();
 
 }
-
-
-// interface methods for bonus/malus
-bool GameEngine::handleBonus(TetrisGame &game) { return false; }
-bool GameEngine::handleMalus(TetrisGame &game) { return false; }
-
-
-void GameEngine::sendToEnemy(int linesCleared, TetrisGame& enemyGame) { std::cerr << "You cannot access the sendToEnemy method by GameEngine"; }
-void GameEngine::handleEnergy(TetrisGame &game, const int linesCleared) { std::cerr << "You cannot access the handleEnergy method by GameEngine"; }
-

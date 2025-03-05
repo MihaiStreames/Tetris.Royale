@@ -1,7 +1,7 @@
 #include "royalEngine.hpp"
 
 
-bool RoyalEngine::handleAction(TetrisGame& game, const Action action) {
+bool RoyalEngine::handleAction(RoyalGame &game, const Action action) {
     
     bool success = true;
     auto& gm = game.getGameMatrix();
@@ -75,7 +75,7 @@ bool RoyalEngine::handleAction(TetrisGame& game, const Action action) {
 
 }
 
-bool RoyalEngine::handlePlacingPiece(TetrisGame& game) {
+bool RoyalEngine::handlePlacingPiece(RoyalGame &game) {
     
     auto& gm = game.getGameMatrix();
     const Tetromino* current = gm.getCurrent();
@@ -95,22 +95,20 @@ bool RoyalEngine::handlePlacingPiece(TetrisGame& game) {
         game.getBag().setUsable(true);
 
         // !! this need to use a boolean flag
-        if (game.getBlockCommand()) {
-            game.block_command();
+        if (game.getBlockFlag()) {
+            game.blockControls();
         }
 
-        if (game.getActiveReverseControl()) {
+        if (game.getReverseFlag()) {
 
-            // !! what is this? what's the timer goal?
             // !! also 3 is a magic number, should be a constant
-            // !! the names should also be more descriptive (set -> increment and timecount != timer)
-            game.setReverseControlTimeCount(1);
+            game.setReversePieceCount(1);
 
             if (game.getReverseControlTimeCount() == 3) {
 
-                game.inverted_command(true);
-                game.setReverseControlTimeCount(-3);
-                game.setActiveReverseControl(false);
+                game.setInvertedFlag(true);
+                game.setReversePieceCount(-3);
+                game.setReverseFlag(false);
 
             }
 
@@ -123,7 +121,7 @@ bool RoyalEngine::handlePlacingPiece(TetrisGame& game) {
 
 }
 
-void RoyalEngine::handleGameLogic(TetrisGame& game) {
+void RoyalEngine::handleGameLogic(RoyalGame &game) {
 
     const int linesCleared = game.getGameMatrix().clearFullLines();
     handleScore(game, linesCleared);
@@ -134,14 +132,10 @@ void RoyalEngine::handleGameLogic(TetrisGame& game) {
 
 }
 
-void RoyalEngine::handleEnergy(TetrisGame &game, const int linesCleared) {
-    game.calculateEnergy(linesCleared);
-}
-
-void RoyalEngine::handlingRoutine(TetrisGame& game, const Action action) {
+void RoyalEngine::handlingRoutine(RoyalGame &game, const Action action) {
     
 
-    handleAction(game, game.getBlockCommand() ? None : action);
+    handleAction(game, game.getBlockFlag() ? None : action);
 
     // ?? dark mode logic, need to be checked later
     if (game.getDarkMode() && game.getDarkModeTimer() == game.getFrameCount()) {
@@ -155,22 +149,19 @@ void RoyalEngine::handlingRoutine(TetrisGame& game, const Action action) {
 
 }
 
-bool RoyalEngine::handleBonus(TetrisGame &game)  {
-
-    TypePowerUps randomBonus = bonusVector[rand() % bonusVector.size()];
-
+bool RoyalEngine::handleBonus(RoyalGame &game)  {
     // power ups, self inflicted
 
-    switch (randomBonus){
+    switch (bonusVector[rand() % bonusVector.size()]){
 
         // fill the pool with 1x1 blocs
-        case blocs_1x1:
-            game.blocs_1x1();
+        case singleBlocks:
+            game.pushSingleBlock();
             break;
 
         // makes the pieces fall slower
-        case slow_falling_pieces:
-            game.slow_falling_pieces();
+        case slowPieces:
+            game.slowPieces();
             break;
         
         default:
@@ -183,27 +174,24 @@ bool RoyalEngine::handleBonus(TetrisGame &game)  {
 
 }
 
-bool RoyalEngine::handleMalus(TetrisGame &game)  {
+bool RoyalEngine::handleMalus(RoyalGame &game)  {
+    switch (malusVector[rand() % malusVector.size()]){
 
-    TypePowerUps randomMalus = malusVector[rand() % malusVector.size()];
-
-    switch (randomMalus){
-
-        case inverted_command:
-            game.inverted_command(true);
-            game.setActiveReverseControl(true);
+        case invertedControls:
+            game.setInvertedFlag(true);
+            game.setReverseFlag(true);
             break;
 
-        case block_command:
-            game.block_command();
+        case blockControls:
+            game.blockControls();
             break;
 
-        case thunder_strike:
-            game.thunder_strike();
+        case thunderStrike:
+            game.thunderStrike();
             break;
 
-        case fast_falling_pieces:
-            game.fast_falling_pieces();
+        case fastPieces:
+            game.fastPieces();
             break;
 
         case darkMode:

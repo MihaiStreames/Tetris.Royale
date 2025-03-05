@@ -3,22 +3,22 @@
 #include "gameEngine.hpp"
 #include "royalGame.hpp"
 
-class RoyalEngine : public GameEngine {
+class RoyalEngine final : public GameEngine {
 
 public:
 
-    RoyalEngine(): GameEngine() {}
+    RoyalEngine() {}
 
-    bool handleAction(TetrisGame& game, const Action action) override;
-    bool handlePlacingPiece(TetrisGame& game) override;
+    bool handleAction(RoyalGame &game, Action action) override;
+    bool handlePlacingPiece(RoyalGame &game) override;
 
-    void handleGameLogic(TetrisGame& game) override;
+    void handleGameLogic(RoyalGame &game) override;
 
-    void handleEnergy(TetrisGame &game, const int linesCleared) override;
-    void handlingRoutine(TetrisGame& game, const Action action) override;
+    static void handleEnergy(RoyalGame &game, const int linesCleared) { game.calculateEnergy(linesCleared); }
+    void handlingRoutine(RoyalGame &game, Action action) override;
 
-    bool handleBonus(TetrisGame &game) override;
-    bool handleMalus(TetrisGame &game) override;
+    bool handleBonus(RoyalGame &game) override;
+    bool handleMalus(RoyalGame &game) override;
 
 };
 

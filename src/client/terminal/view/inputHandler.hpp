@@ -2,7 +2,7 @@
 
 #include <map>
 #include <ftxui/component/event.hpp>
-#include "../common/types.hpp"
+#include "types.hpp"
 
 class inputHandler {
     std::map<ftxui::Event, Action>  inputMap;

@@ -57,8 +57,8 @@ public:
     virtual void setGameOver(const bool flag);
     virtual void setEnergy(int setEnergy);
     virtual void setBlockCommand(bool flag);
-    virtual void setReverseControlTimeCount(int nbr);
-    virtual void setActiveReverseControl(bool flag);
+    virtual void setReversePieceCount(int nbr);
+    virtual void setReverseFlag(bool flag);
     virtual void setDarkMode(bool flag);
     virtual void setDarkModeTimer(int time);
     virtual GameMatrix& getGameMatrix();
@@ -70,9 +70,9 @@ public:
     [[nodiscard]] Tetromino& getNextPiece();
 
     virtual bool getReverseControls();
-    virtual bool getBlockCommand();
+    virtual bool getBlockFlag();
     virtual int getReverseControlTimeCount();
-    virtual bool getActiveReverseControl();
+    virtual bool getReverseFlag();
     virtual bool getDarkMode();
     virtual int getDarkModeTimer();
 
@@ -101,17 +101,17 @@ public:
     virtual void updateLevelAfterLineClear();
 
     // Malus Method
-    virtual void inverted_command(bool flag);
+    virtual void setInvertedFlag(bool flag);
 
-    virtual void block_command();
+    virtual void blockControls();
 
-    virtual void thunder_strike();
-    virtual void fast_falling_pieces();
+    virtual void thunderStrike();
+    virtual void fastPieces();
     virtual void darkMode();
     virtual void addPenaltyLines(int linesToAdd);
 
     // Bonus Method
-    virtual void blocs_1x1();
-    virtual void slow_falling_pieces();
+    virtual void pushSingleBlock();
+    virtual void slowPieces();
 };
 

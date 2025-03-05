@@ -4,13 +4,13 @@
 #include "classicGame.hpp"
 
 
-class ClassicEngine : public GameEngine {
+class ClassicEngine final : public GameEngine {
 
 public:
 
-    ClassicEngine(): GameEngine() {}
-    void handleBasicPenalty(ClassicGame& game, const int linesCleared);
-    void handleGameLogic(TetrisGame& game) override;
+    ClassicEngine() {}
+    void handleBasicPenalty(ClassicGame& game, int linesCleared);
+    void handleGameLogic(RoyalGame &game) override;
 
 };
 

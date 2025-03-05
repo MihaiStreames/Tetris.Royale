@@ -5,12 +5,12 @@
 #include <csignal>
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
-#include "../common/tetrisGame.hpp"
-#include "../common/classicGame.hpp"
-#include "../common/royalGame.hpp"
-#include "../common/gameEngine.hpp"
-#include "../common/classicEngine.hpp"
-#include "../common/royalEngine.hpp"
+#include "tetrisGame.hpp"
+#include "classicGame.hpp"
+#include "royalGame.hpp"
+#include "gameEngine.hpp"
+#include "classicEngine.hpp"
+#include "royalEngine.hpp"
 #include "view/tui.hpp"
 #include "view/inputHandler.hpp"
 
@@ -30,9 +30,8 @@ void signalHandler(int signal){
 int main() {
     std::signal(SIGINT, signalHandler);
 
-    RoyalGame royal_game{10, 22};
-    TetrisGame& game = royal_game;
-    RoyalEngine engine; // je du l ajouter car j ai enlever les static
+    RoyalGame game{10, 22};
+    RoyalEngine engine;
     const FtxuiView view(game);
     inputHandler ih;
 
@@ -68,7 +67,7 @@ int main() {
                 std::lock_guard lock(mtx);
                 if(game.getReverseControls()){
                     ih.invertKeys();
-                    game.inverted_command(false); // --
+                    game.setInvertedFlag(false); // --
                 }
                 const Action action = ih.handleInputs();
                 engine.handlingRoutine(game, action);

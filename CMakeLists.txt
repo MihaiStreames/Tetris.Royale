@@ -50,7 +50,11 @@ file(GLOB_RECURSE COMMON_SRC_FILES
         "include/common/game-common/*.hpp"
 )
 add_library(TetrisRoyaleCommon STATIC ${COMMON_SRC_FILES})
-target_include_directories(TetrisRoyaleCommon PUBLIC "include/common")
+target_include_directories(TetrisRoyaleCommon
+        PUBLIC
+        "include/common"
+        "include/common/game-common"
+)
 
 # Server game logic library
 file(GLOB_RECURSE SERVER_LOGIC_SRC_FILES
@@ -58,7 +62,11 @@ file(GLOB_RECURSE SERVER_LOGIC_SRC_FILES
         "include/server/server-game-logic/*.hpp"
 )
 add_library(TetrisRoyaleServerLogic STATIC ${SERVER_LOGIC_SRC_FILES})
-target_include_directories(TetrisRoyaleServerLogic PUBLIC "include/server")
+target_include_directories(TetrisRoyaleServerLogic
+        PUBLIC
+        "include/server"
+        "include/server/server-game-logic"
+)
 target_link_libraries(TetrisRoyaleServerLogic PRIVATE TetrisRoyaleCommon)
 
 # Terminal executable setup

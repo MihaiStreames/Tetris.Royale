@@ -3,43 +3,44 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+
+#include "royalGame.hpp"
 #include "tetrisGame.hpp"
 
 
-
 class GameEngine {
-
 public:
-    
-    GameEngine() {}
+    virtual ~GameEngine() = default;
 
-    virtual bool handleAction(TetrisGame& game, const Action action);
+    GameEngine() {
+    }
 
-    virtual bool handleBag(TetrisGame& game);
+    virtual bool handleAction(RoyalGame &game, Action action);
 
-    virtual bool handleFallingPiece(TetrisGame& game);
+    virtual bool handleBag(TetrisGame &game);
 
-    virtual bool handlePlacingPiece(TetrisGame& game);
+    virtual bool handleFallingPiece(TetrisGame &game);
 
-    virtual void handleSpawn(TetrisGame& game);
+    virtual bool handlePlacingPiece(RoyalGame &game);
+
+    virtual void handleSpawn(TetrisGame &game);
 
     virtual void handleSpawn(TetrisGame &game, Tetromino &piece);
 
-    virtual void handleGameLogic(TetrisGame& game) ;
+    virtual void handleGameLogic(RoyalGame &game);
 
-    virtual void handleGameOver(TetrisGame& /*eventually have game*/);
+    virtual void handleGameOver(TetrisGame & /*eventually have game*/);
 
-    virtual void handleScore(TetrisGame& game, const int linesCleared);
+    virtual void handleScore(TetrisGame &game, int linesCleared);
 
-    virtual void handlingRoutine(TetrisGame& game, const Action action);
-    
-    virtual bool handleBonus(TetrisGame &game);
+    virtual void handlingRoutine(RoyalGame &game, Action action);
 
-    virtual bool handleMalus(TetrisGame &game);
+    virtual bool handleBonus(RoyalGame &game) { return false; }
 
-    virtual void sendToEnemy(int linesCleared, TetrisGame& enemyGame);
+    virtual bool handleMalus(RoyalGame &game) { return false; }
 
-    virtual void handleEnergy(TetrisGame &game, const int linesCleared);
+    static void sendToEnemy() { std::cerr << "You cannot access sendToEnemy from GameEngine"; }
 
+    static void handleEnergy() { std::cerr << "You cannot access handleEnergy from GameEngine"; }
 };
 

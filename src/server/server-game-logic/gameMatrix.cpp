@@ -1,7 +1,5 @@
 #include "gameMatrix.hpp"
 
-void GameMatrix::generateBoardByDimension() { board = std::vector(height, std::vector(width, 0)); }
-
 [[nodiscard]] bool GameMatrix::isColliding(const Tetromino& tetromino) const {
     const tetroMat& shape = tetromino.getShape();
     const auto&[x, y] = tetromino.getPosition();
@@ -89,8 +87,6 @@ bool GameMatrix::tryPlaceCurrentPiece() {
     return false;
 }
 
-[[nodiscard]] bool GameMatrix::tryMakeCurrentPieceFall() { return tryMoveCurrent(0, 1); }
-
 [[nodiscard]] int GameMatrix::getRowsToObstacle(const Tetromino& tetromino) const {
     Tetromino temp = tetromino;
     int rowsToObstacle = 0;
@@ -162,12 +158,3 @@ int GameMatrix::clearFullLines() {
 
     return ret;
 }
-
-Tetromino* GameMatrix::getCurrent() { return currentTetromino.has_value() ? &currentTetromino.value() : nullptr; }
-[[nodiscard]] const Tetromino* GameMatrix::getCurrent() const { return currentTetromino.has_value() ? &currentTetromino.value() : nullptr; }
-void GameMatrix::deleteCurrent() { currentTetromino.reset(); }
-
-[[nodiscard]] const tetroMat& GameMatrix::getBoard() const { return board; }
-[[nodiscard]] tetroMat& GameMatrix::getBoard() { return board; }
-[[nodiscard]] int GameMatrix::getWidth() const  { return width; }
-[[nodiscard]] int GameMatrix::getHeight() const { return height; }
