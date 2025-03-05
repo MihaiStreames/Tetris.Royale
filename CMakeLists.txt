@@ -7,6 +7,13 @@ cmake_minimum_required(VERSION 3.22)
 project(TetrisRoyale LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 
+# OpenSSL
+find_package(OpenSSL QUIET)
+if(NOT OpenSSL_FOUND)
+    message(STATUS "OpenSSL not found locally. Please install OpenSSL development libraries.")
+endif()
+
+# FTXUI
 include(FetchContent)
 set(FETCHCONTENT_UPDATES_DISCONNECTED TRUE)
 FetchContent_Declare(ftxui
@@ -16,23 +23,37 @@ FetchContent_Declare(ftxui
 FetchContent_MakeAvailable(ftxui)
 
 # Nlohmann JSON
-# include(FetchContent)
-# FetchContent_Declare(
-#     json
-#     GIT_REPOSITORY https://github.com/nlohmann/json.git
-#     GIT_TAG v3.10.5
-# )
-# set(FETCHCONTENT_QUIET OFF)
-# FetchContent_MakeAvailable(json)
+find_package(nlohmann_json QUIET)
+if(NOT nlohmann_json_FOUND)
+    message(STATUS "nlohmann_json not found locally, fetching using FetchContent...")
 
-# include(FetchContent)
-# FetchContent_Declare(
-#     boost
-#     GIT_REPOSITORY https://github.com/boostorg/boost.git
-#     GIT_TAG boost-1.87.0
-# )
-# set(FETCHCONTENT_QUIET OFF# )
-# FetchContent_MakeAvailable(boost)
+    include(FetchContent)
+    FetchContent_Declare(
+        json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG v3.10.5
+    )
+    FetchContent_MakeAvailable(json)
+
+endif()
+
+# Boost
+find_package(Boost QUIET REQUIRED COMPONENTS filesystem system)
+if(NOT Boost_FOUND)
+    message(STATUS "Boost not found locally, fetching using FetchContent...")
+
+    include(FetchContent)
+    FetchContent_Declare(
+        boost
+        GIT_REPOSITORY https://github.com/boostorg/boost.git
+        GIT_TAG boost-1.87.0
+    )
+    FetchContent_MakeAvailable(boost)
+
+    set(BOOST_INCLUDE_DIR ${boost_SOURCE_DIR})
+else()
+    message(STATUS "Found local Boost installation")
+endif()
 
 # Compiler warnings and optimization flags
 add_compile_options(
