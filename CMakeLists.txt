@@ -22,11 +22,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wshadow -Wformat=2 -Wfloat-equal -Wconv
 
 # Shared common library
 file(GLOB_RECURSE COMMON_SRC_FILES
-    "src/common/*.cpp"
-    "src/common/*.hpp"
+    "src/common/game_common/*.cpp"
+    "include/common/game_common/*.hpp"
 )
+
 add_library(TetrisRoyaleCommon ${COMMON_SRC_FILES})
-target_include_directories(TetrisRoyaleCommon PUBLIC "src/common")
+target_include_directories(TetrisRoyaleCommon PUBLIC "include/common")
 
 # # HTTP Server library
 # file(GLOB HTTP_SERVER_SRC_FILES "src/server/http-server/*.cpp")
@@ -67,9 +68,9 @@ target_include_directories(TetrisRoyaleCommon PUBLIC "src/common")
 
 # Terminal executable setup
 file(GLOB_RECURSE TERMINAL_SRC_FILES
-        "src/terminal/view/*.hpp"
-        "src/terminal/view/*.cpp"
-        "src/terminal/main.cpp"
+        "src/client/terminal/view/*.hpp"
+        "src/client/terminal/view/*.cpp"
+        "src/client/terminal/main.cpp"
 )
 add_executable(TetrisRoyaleTerminal ${TERMINAL_SRC_FILES})
 target_link_libraries(TetrisRoyaleTerminal
@@ -79,7 +80,7 @@ target_link_libraries(TetrisRoyaleTerminal
         ftxui::dom
         ftxui::component
 )
-target_include_directories(TetrisRoyaleTerminal PRIVATE "src/terminal")
+target_include_directories(TetrisRoyaleTerminal PRIVATE "src/client/terminal")
 
 # Placeholder for additional executables
 # Client-side executable
