@@ -16,8 +16,7 @@ public:
         // TODO : targetIndex = 0;
     }
 
-    ~ClassicGame() override {
-    }
+    ~ClassicGame() override = default;
 
     virtual std::vector<ClassicGame *> getOpponents();
 

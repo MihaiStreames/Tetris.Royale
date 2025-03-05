@@ -12,8 +12,7 @@ class GameEngine {
 public:
     virtual ~GameEngine() = default;
 
-    GameEngine() {
-    }
+    GameEngine() = default;
 
     virtual bool handleAction(RoyalGame &game, Action action);
 

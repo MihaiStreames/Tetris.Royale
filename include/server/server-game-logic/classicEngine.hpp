@@ -8,7 +8,7 @@ class ClassicEngine final : public GameEngine {
 
 public:
 
-    ClassicEngine() {}
+    ClassicEngine() = default;
     void handleBasicPenalty(ClassicGame& game, int linesCleared);
     void handleGameLogic(RoyalGame &game) override;
 
