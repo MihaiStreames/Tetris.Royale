@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/bin/cmake
+CMAKE_COMMAND = /usr/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/bin/cmake -E rm -f
+RM = /usr/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/bau/university/ba2/year_project/group-1
+CMAKE_SOURCE_DIR = /mnt/c/Users/antoi/Desktop/test
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/bau/university/ba2/year_project/group-1/build
+CMAKE_BINARY_DIR = /mnt/c/Users/antoi/Desktop/test/build
 
 # Include any dependencies generated for this target.
 include _deps/ftxui-build/CMakeFiles/screen.dir/depend.make
@@ -75,100 +75,100 @@ _deps/ftxui-build/CMakeFiles/screen.dir/codegen:
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/flags.make
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o: _deps/ftxui-src/src/ftxui/screen/box.cpp
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/bau/university/ba2/year_project/group-1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o -c /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/box.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/c/Users/antoi/Desktop/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o"
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o -c /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/box.cpp
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.i"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/box.cpp > CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/box.cpp > CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.i
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.s"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/box.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/box.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.s
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/flags.make
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o: _deps/ftxui-src/src/ftxui/screen/color.cpp
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/bau/university/ba2/year_project/group-1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o -c /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/color.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/c/Users/antoi/Desktop/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o"
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o -c /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/color.cpp
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.i"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/color.cpp > CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/color.cpp > CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.i
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.s"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/color.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/color.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.s
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/flags.make
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o: _deps/ftxui-src/src/ftxui/screen/color_info.cpp
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/bau/university/ba2/year_project/group-1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o -c /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/color_info.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/c/Users/antoi/Desktop/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o"
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o -c /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/color_info.cpp
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.i"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/color_info.cpp > CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/color_info.cpp > CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.i
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.s"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/color_info.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/color_info.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.s
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/flags.make
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o: _deps/ftxui-src/src/ftxui/screen/image.cpp
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/bau/university/ba2/year_project/group-1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o -c /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/image.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/c/Users/antoi/Desktop/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o"
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o -c /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/image.cpp
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.i"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/image.cpp > CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/image.cpp > CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.i
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.s"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/image.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/image.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.s
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/flags.make
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o: _deps/ftxui-src/src/ftxui/screen/screen.cpp
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/bau/university/ba2/year_project/group-1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o -c /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/screen.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/c/Users/antoi/Desktop/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o"
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o -c /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/screen.cpp
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.i"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/screen.cpp > CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/screen.cpp > CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.i
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.s"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/screen.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/screen.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.s
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/flags.make
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o: _deps/ftxui-src/src/ftxui/screen/string.cpp
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/bau/university/ba2/year_project/group-1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o -c /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/string.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/c/Users/antoi/Desktop/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o"
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o -c /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/string.cpp
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.i"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/string.cpp > CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/string.cpp > CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.i
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.s"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/string.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/string.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.s
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/flags.make
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o: _deps/ftxui-src/src/ftxui/screen/terminal.cpp
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o: _deps/ftxui-build/CMakeFiles/screen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/bau/university/ba2/year_project/group-1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o -c /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/terminal.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/mnt/c/Users/antoi/Desktop/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o"
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o -MF CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o.d -o CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o -c /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/terminal.cpp
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.i"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/terminal.cpp > CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/terminal.cpp > CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.i
 
 _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.s"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src/src/ftxui/screen/terminal.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && /usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src/src/ftxui/screen/terminal.cpp -o CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.s
 
 # Object files for target screen
 screen_OBJECTS = \
@@ -192,19 +192,19 @@ _deps/ftxui-build/libftxui-screen.a: _deps/ftxui-build/CMakeFiles/screen.dir/src
 _deps/ftxui-build/libftxui-screen.a: _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o
 _deps/ftxui-build/libftxui-screen.a: _deps/ftxui-build/CMakeFiles/screen.dir/build.make
 _deps/ftxui-build/libftxui-screen.a: _deps/ftxui-build/CMakeFiles/screen.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/bau/university/ba2/year_project/group-1/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX static library libftxui-screen.a"
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && $(CMAKE_COMMAND) -P CMakeFiles/screen.dir/cmake_clean_target.cmake
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/screen.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/mnt/c/Users/antoi/Desktop/test/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Linking CXX static library libftxui-screen.a"
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && $(CMAKE_COMMAND) -P CMakeFiles/screen.dir/cmake_clean_target.cmake
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/screen.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 _deps/ftxui-build/CMakeFiles/screen.dir/build: _deps/ftxui-build/libftxui-screen.a
 .PHONY : _deps/ftxui-build/CMakeFiles/screen.dir/build
 
 _deps/ftxui-build/CMakeFiles/screen.dir/clean:
-	cd /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build && $(CMAKE_COMMAND) -P CMakeFiles/screen.dir/cmake_clean.cmake
+	cd /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build && $(CMAKE_COMMAND) -P CMakeFiles/screen.dir/cmake_clean.cmake
 .PHONY : _deps/ftxui-build/CMakeFiles/screen.dir/clean
 
 _deps/ftxui-build/CMakeFiles/screen.dir/depend:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/bau/university/ba2/year_project/group-1 /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-src /Users/bau/university/ba2/year_project/group-1/build /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build/CMakeFiles/screen.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /mnt/c/Users/antoi/Desktop/test /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-src /mnt/c/Users/antoi/Desktop/test/build /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build/CMakeFiles/screen.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : _deps/ftxui-build/CMakeFiles/screen.dir/depend
 

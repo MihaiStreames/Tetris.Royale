@@ -48,19 +48,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/bin/cmake
+CMAKE_COMMAND = /usr/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/bin/cmake -E rm -f
+RM = /usr/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/bau/university/ba2/year_project/group-1
+CMAKE_SOURCE_DIR = /mnt/c/Users/antoi/Desktop/test
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/bau/university/ba2/year_project/group-1/build
+CMAKE_BINARY_DIR = /mnt/c/Users/antoi/Desktop/test/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /Users/bau/university/ba2/year_project/group-1/build
 # Special rule for the target package
 package: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool..."
-	cd /Users/bau/university/ba2/year_project/group-1/build && /opt/homebrew/bin/cpack --config ./CPackConfig.cmake
+	cd /mnt/c/Users/antoi/Desktop/test/build && /usr/bin/cpack --config ./CPackConfig.cmake
 .PHONY : package
 
 # Special rule for the target package
@@ -78,7 +78,7 @@ package/fast: package
 # Special rule for the target package_source
 package_source:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Run CPack packaging tool for source..."
-	cd /Users/bau/university/ba2/year_project/group-1/build && /opt/homebrew/bin/cpack --config ./CPackSourceConfig.cmake /Users/bau/university/ba2/year_project/group-1/build/CPackSourceConfig.cmake
+	cd /mnt/c/Users/antoi/Desktop/test/build && /usr/bin/cpack --config ./CPackSourceConfig.cmake /mnt/c/Users/antoi/Desktop/test/build/CPackSourceConfig.cmake
 .PHONY : package_source
 
 # Special rule for the target package_source
@@ -87,8 +87,8 @@ package_source/fast: package_source
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/opt/homebrew/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -98,7 +98,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake to regenerate build system..."
-	/opt/homebrew/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/usr/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -117,49 +117,49 @@ list_install_components/fast: list_install_components
 # Special rule for the target install
 install: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
-	/opt/homebrew/bin/cmake -P cmake_install.cmake
+	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install
 
 # Special rule for the target install
 install/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
-	/opt/homebrew/bin/cmake -P cmake_install.cmake
+	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
 # Special rule for the target install/local
 install/local: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
-	/opt/homebrew/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local
 
 # Special rule for the target install/local
 install/local/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
-	/opt/homebrew/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
 
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
-	/opt/homebrew/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip
 
 # Special rule for the target install/strip
 install/strip/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
-	/opt/homebrew/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/bau/university/ba2/year_project/group-1/build/CMakeFiles /Users/bau/university/ba2/year_project/group-1/build/_deps/ftxui-build//CMakeFiles/progress.marks
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/bau/university/ba2/year_project/group-1/build/CMakeFiles 0
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/antoi/Desktop/test/build/CMakeFiles /mnt/c/Users/antoi/Desktop/test/build/_deps/ftxui-build//CMakeFiles/progress.marks
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/antoi/Desktop/test/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/clean
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/clean
 .PHONY : clean
 
 # The main clean target
@@ -168,22 +168,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/preinstall
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/preinstall
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 _deps/ftxui-build/CMakeFiles/screen.dir/rule:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/CMakeFiles/screen.dir/rule
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/CMakeFiles/screen.dir/rule
 .PHONY : _deps/ftxui-build/CMakeFiles/screen.dir/rule
 
 # Convenience name for target.
@@ -192,12 +192,12 @@ screen: _deps/ftxui-build/CMakeFiles/screen.dir/rule
 
 # fast build rule for target.
 screen/fast:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/build
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/build
 .PHONY : screen/fast
 
 # Convenience name for target.
 _deps/ftxui-build/CMakeFiles/dom.dir/rule:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/CMakeFiles/dom.dir/rule
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/CMakeFiles/dom.dir/rule
 .PHONY : _deps/ftxui-build/CMakeFiles/dom.dir/rule
 
 # Convenience name for target.
@@ -206,12 +206,12 @@ dom: _deps/ftxui-build/CMakeFiles/dom.dir/rule
 
 # fast build rule for target.
 dom/fast:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/build
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/build
 .PHONY : dom/fast
 
 # Convenience name for target.
 _deps/ftxui-build/CMakeFiles/component.dir/rule:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/CMakeFiles/component.dir/rule
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 _deps/ftxui-build/CMakeFiles/component.dir/rule
 .PHONY : _deps/ftxui-build/CMakeFiles/component.dir/rule
 
 # Convenience name for target.
@@ -220,7 +220,7 @@ component: _deps/ftxui-build/CMakeFiles/component.dir/rule
 
 # fast build rule for target.
 component/fast:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/build
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/build
 .PHONY : component/fast
 
 src/ftxui/component/animation.o: src/ftxui/component/animation.cpp.o
@@ -228,7 +228,7 @@ src/ftxui/component/animation.o: src/ftxui/component/animation.cpp.o
 
 # target to build an object file
 src/ftxui/component/animation.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.o
 .PHONY : src/ftxui/component/animation.cpp.o
 
 src/ftxui/component/animation.i: src/ftxui/component/animation.cpp.i
@@ -236,7 +236,7 @@ src/ftxui/component/animation.i: src/ftxui/component/animation.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/animation.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.i
 .PHONY : src/ftxui/component/animation.cpp.i
 
 src/ftxui/component/animation.s: src/ftxui/component/animation.cpp.s
@@ -244,7 +244,7 @@ src/ftxui/component/animation.s: src/ftxui/component/animation.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/animation.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/animation.cpp.s
 .PHONY : src/ftxui/component/animation.cpp.s
 
 src/ftxui/component/button.o: src/ftxui/component/button.cpp.o
@@ -252,7 +252,7 @@ src/ftxui/component/button.o: src/ftxui/component/button.cpp.o
 
 # target to build an object file
 src/ftxui/component/button.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/button.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/button.cpp.o
 .PHONY : src/ftxui/component/button.cpp.o
 
 src/ftxui/component/button.i: src/ftxui/component/button.cpp.i
@@ -260,7 +260,7 @@ src/ftxui/component/button.i: src/ftxui/component/button.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/button.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/button.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/button.cpp.i
 .PHONY : src/ftxui/component/button.cpp.i
 
 src/ftxui/component/button.s: src/ftxui/component/button.cpp.s
@@ -268,7 +268,7 @@ src/ftxui/component/button.s: src/ftxui/component/button.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/button.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/button.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/button.cpp.s
 .PHONY : src/ftxui/component/button.cpp.s
 
 src/ftxui/component/catch_event.o: src/ftxui/component/catch_event.cpp.o
@@ -276,7 +276,7 @@ src/ftxui/component/catch_event.o: src/ftxui/component/catch_event.cpp.o
 
 # target to build an object file
 src/ftxui/component/catch_event.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/catch_event.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/catch_event.cpp.o
 .PHONY : src/ftxui/component/catch_event.cpp.o
 
 src/ftxui/component/catch_event.i: src/ftxui/component/catch_event.cpp.i
@@ -284,7 +284,7 @@ src/ftxui/component/catch_event.i: src/ftxui/component/catch_event.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/catch_event.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/catch_event.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/catch_event.cpp.i
 .PHONY : src/ftxui/component/catch_event.cpp.i
 
 src/ftxui/component/catch_event.s: src/ftxui/component/catch_event.cpp.s
@@ -292,7 +292,7 @@ src/ftxui/component/catch_event.s: src/ftxui/component/catch_event.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/catch_event.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/catch_event.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/catch_event.cpp.s
 .PHONY : src/ftxui/component/catch_event.cpp.s
 
 src/ftxui/component/checkbox.o: src/ftxui/component/checkbox.cpp.o
@@ -300,7 +300,7 @@ src/ftxui/component/checkbox.o: src/ftxui/component/checkbox.cpp.o
 
 # target to build an object file
 src/ftxui/component/checkbox.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/checkbox.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/checkbox.cpp.o
 .PHONY : src/ftxui/component/checkbox.cpp.o
 
 src/ftxui/component/checkbox.i: src/ftxui/component/checkbox.cpp.i
@@ -308,7 +308,7 @@ src/ftxui/component/checkbox.i: src/ftxui/component/checkbox.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/checkbox.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/checkbox.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/checkbox.cpp.i
 .PHONY : src/ftxui/component/checkbox.cpp.i
 
 src/ftxui/component/checkbox.s: src/ftxui/component/checkbox.cpp.s
@@ -316,7 +316,7 @@ src/ftxui/component/checkbox.s: src/ftxui/component/checkbox.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/checkbox.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/checkbox.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/checkbox.cpp.s
 .PHONY : src/ftxui/component/checkbox.cpp.s
 
 src/ftxui/component/collapsible.o: src/ftxui/component/collapsible.cpp.o
@@ -324,7 +324,7 @@ src/ftxui/component/collapsible.o: src/ftxui/component/collapsible.cpp.o
 
 # target to build an object file
 src/ftxui/component/collapsible.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/collapsible.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/collapsible.cpp.o
 .PHONY : src/ftxui/component/collapsible.cpp.o
 
 src/ftxui/component/collapsible.i: src/ftxui/component/collapsible.cpp.i
@@ -332,7 +332,7 @@ src/ftxui/component/collapsible.i: src/ftxui/component/collapsible.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/collapsible.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/collapsible.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/collapsible.cpp.i
 .PHONY : src/ftxui/component/collapsible.cpp.i
 
 src/ftxui/component/collapsible.s: src/ftxui/component/collapsible.cpp.s
@@ -340,7 +340,7 @@ src/ftxui/component/collapsible.s: src/ftxui/component/collapsible.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/collapsible.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/collapsible.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/collapsible.cpp.s
 .PHONY : src/ftxui/component/collapsible.cpp.s
 
 src/ftxui/component/component.o: src/ftxui/component/component.cpp.o
@@ -348,7 +348,7 @@ src/ftxui/component/component.o: src/ftxui/component/component.cpp.o
 
 # target to build an object file
 src/ftxui/component/component.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component.cpp.o
 .PHONY : src/ftxui/component/component.cpp.o
 
 src/ftxui/component/component.i: src/ftxui/component/component.cpp.i
@@ -356,7 +356,7 @@ src/ftxui/component/component.i: src/ftxui/component/component.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/component.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component.cpp.i
 .PHONY : src/ftxui/component/component.cpp.i
 
 src/ftxui/component/component.s: src/ftxui/component/component.cpp.s
@@ -364,7 +364,7 @@ src/ftxui/component/component.s: src/ftxui/component/component.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/component.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component.cpp.s
 .PHONY : src/ftxui/component/component.cpp.s
 
 src/ftxui/component/component_options.o: src/ftxui/component/component_options.cpp.o
@@ -372,7 +372,7 @@ src/ftxui/component/component_options.o: src/ftxui/component/component_options.c
 
 # target to build an object file
 src/ftxui/component/component_options.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component_options.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component_options.cpp.o
 .PHONY : src/ftxui/component/component_options.cpp.o
 
 src/ftxui/component/component_options.i: src/ftxui/component/component_options.cpp.i
@@ -380,7 +380,7 @@ src/ftxui/component/component_options.i: src/ftxui/component/component_options.c
 
 # target to preprocess a source file
 src/ftxui/component/component_options.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component_options.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component_options.cpp.i
 .PHONY : src/ftxui/component/component_options.cpp.i
 
 src/ftxui/component/component_options.s: src/ftxui/component/component_options.cpp.s
@@ -388,7 +388,7 @@ src/ftxui/component/component_options.s: src/ftxui/component/component_options.c
 
 # target to generate assembly for a file
 src/ftxui/component/component_options.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component_options.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/component_options.cpp.s
 .PHONY : src/ftxui/component/component_options.cpp.s
 
 src/ftxui/component/container.o: src/ftxui/component/container.cpp.o
@@ -396,7 +396,7 @@ src/ftxui/component/container.o: src/ftxui/component/container.cpp.o
 
 # target to build an object file
 src/ftxui/component/container.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/container.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/container.cpp.o
 .PHONY : src/ftxui/component/container.cpp.o
 
 src/ftxui/component/container.i: src/ftxui/component/container.cpp.i
@@ -404,7 +404,7 @@ src/ftxui/component/container.i: src/ftxui/component/container.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/container.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/container.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/container.cpp.i
 .PHONY : src/ftxui/component/container.cpp.i
 
 src/ftxui/component/container.s: src/ftxui/component/container.cpp.s
@@ -412,7 +412,7 @@ src/ftxui/component/container.s: src/ftxui/component/container.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/container.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/container.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/container.cpp.s
 .PHONY : src/ftxui/component/container.cpp.s
 
 src/ftxui/component/dropdown.o: src/ftxui/component/dropdown.cpp.o
@@ -420,7 +420,7 @@ src/ftxui/component/dropdown.o: src/ftxui/component/dropdown.cpp.o
 
 # target to build an object file
 src/ftxui/component/dropdown.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/dropdown.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/dropdown.cpp.o
 .PHONY : src/ftxui/component/dropdown.cpp.o
 
 src/ftxui/component/dropdown.i: src/ftxui/component/dropdown.cpp.i
@@ -428,7 +428,7 @@ src/ftxui/component/dropdown.i: src/ftxui/component/dropdown.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/dropdown.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/dropdown.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/dropdown.cpp.i
 .PHONY : src/ftxui/component/dropdown.cpp.i
 
 src/ftxui/component/dropdown.s: src/ftxui/component/dropdown.cpp.s
@@ -436,7 +436,7 @@ src/ftxui/component/dropdown.s: src/ftxui/component/dropdown.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/dropdown.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/dropdown.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/dropdown.cpp.s
 .PHONY : src/ftxui/component/dropdown.cpp.s
 
 src/ftxui/component/event.o: src/ftxui/component/event.cpp.o
@@ -444,7 +444,7 @@ src/ftxui/component/event.o: src/ftxui/component/event.cpp.o
 
 # target to build an object file
 src/ftxui/component/event.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/event.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/event.cpp.o
 .PHONY : src/ftxui/component/event.cpp.o
 
 src/ftxui/component/event.i: src/ftxui/component/event.cpp.i
@@ -452,7 +452,7 @@ src/ftxui/component/event.i: src/ftxui/component/event.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/event.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/event.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/event.cpp.i
 .PHONY : src/ftxui/component/event.cpp.i
 
 src/ftxui/component/event.s: src/ftxui/component/event.cpp.s
@@ -460,7 +460,7 @@ src/ftxui/component/event.s: src/ftxui/component/event.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/event.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/event.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/event.cpp.s
 .PHONY : src/ftxui/component/event.cpp.s
 
 src/ftxui/component/hoverable.o: src/ftxui/component/hoverable.cpp.o
@@ -468,7 +468,7 @@ src/ftxui/component/hoverable.o: src/ftxui/component/hoverable.cpp.o
 
 # target to build an object file
 src/ftxui/component/hoverable.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/hoverable.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/hoverable.cpp.o
 .PHONY : src/ftxui/component/hoverable.cpp.o
 
 src/ftxui/component/hoverable.i: src/ftxui/component/hoverable.cpp.i
@@ -476,7 +476,7 @@ src/ftxui/component/hoverable.i: src/ftxui/component/hoverable.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/hoverable.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/hoverable.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/hoverable.cpp.i
 .PHONY : src/ftxui/component/hoverable.cpp.i
 
 src/ftxui/component/hoverable.s: src/ftxui/component/hoverable.cpp.s
@@ -484,7 +484,7 @@ src/ftxui/component/hoverable.s: src/ftxui/component/hoverable.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/hoverable.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/hoverable.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/hoverable.cpp.s
 .PHONY : src/ftxui/component/hoverable.cpp.s
 
 src/ftxui/component/input.o: src/ftxui/component/input.cpp.o
@@ -492,7 +492,7 @@ src/ftxui/component/input.o: src/ftxui/component/input.cpp.o
 
 # target to build an object file
 src/ftxui/component/input.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/input.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/input.cpp.o
 .PHONY : src/ftxui/component/input.cpp.o
 
 src/ftxui/component/input.i: src/ftxui/component/input.cpp.i
@@ -500,7 +500,7 @@ src/ftxui/component/input.i: src/ftxui/component/input.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/input.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/input.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/input.cpp.i
 .PHONY : src/ftxui/component/input.cpp.i
 
 src/ftxui/component/input.s: src/ftxui/component/input.cpp.s
@@ -508,7 +508,7 @@ src/ftxui/component/input.s: src/ftxui/component/input.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/input.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/input.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/input.cpp.s
 .PHONY : src/ftxui/component/input.cpp.s
 
 src/ftxui/component/loop.o: src/ftxui/component/loop.cpp.o
@@ -516,7 +516,7 @@ src/ftxui/component/loop.o: src/ftxui/component/loop.cpp.o
 
 # target to build an object file
 src/ftxui/component/loop.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/loop.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/loop.cpp.o
 .PHONY : src/ftxui/component/loop.cpp.o
 
 src/ftxui/component/loop.i: src/ftxui/component/loop.cpp.i
@@ -524,7 +524,7 @@ src/ftxui/component/loop.i: src/ftxui/component/loop.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/loop.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/loop.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/loop.cpp.i
 .PHONY : src/ftxui/component/loop.cpp.i
 
 src/ftxui/component/loop.s: src/ftxui/component/loop.cpp.s
@@ -532,7 +532,7 @@ src/ftxui/component/loop.s: src/ftxui/component/loop.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/loop.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/loop.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/loop.cpp.s
 .PHONY : src/ftxui/component/loop.cpp.s
 
 src/ftxui/component/maybe.o: src/ftxui/component/maybe.cpp.o
@@ -540,7 +540,7 @@ src/ftxui/component/maybe.o: src/ftxui/component/maybe.cpp.o
 
 # target to build an object file
 src/ftxui/component/maybe.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/maybe.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/maybe.cpp.o
 .PHONY : src/ftxui/component/maybe.cpp.o
 
 src/ftxui/component/maybe.i: src/ftxui/component/maybe.cpp.i
@@ -548,7 +548,7 @@ src/ftxui/component/maybe.i: src/ftxui/component/maybe.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/maybe.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/maybe.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/maybe.cpp.i
 .PHONY : src/ftxui/component/maybe.cpp.i
 
 src/ftxui/component/maybe.s: src/ftxui/component/maybe.cpp.s
@@ -556,7 +556,7 @@ src/ftxui/component/maybe.s: src/ftxui/component/maybe.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/maybe.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/maybe.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/maybe.cpp.s
 .PHONY : src/ftxui/component/maybe.cpp.s
 
 src/ftxui/component/menu.o: src/ftxui/component/menu.cpp.o
@@ -564,7 +564,7 @@ src/ftxui/component/menu.o: src/ftxui/component/menu.cpp.o
 
 # target to build an object file
 src/ftxui/component/menu.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/menu.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/menu.cpp.o
 .PHONY : src/ftxui/component/menu.cpp.o
 
 src/ftxui/component/menu.i: src/ftxui/component/menu.cpp.i
@@ -572,7 +572,7 @@ src/ftxui/component/menu.i: src/ftxui/component/menu.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/menu.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/menu.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/menu.cpp.i
 .PHONY : src/ftxui/component/menu.cpp.i
 
 src/ftxui/component/menu.s: src/ftxui/component/menu.cpp.s
@@ -580,7 +580,7 @@ src/ftxui/component/menu.s: src/ftxui/component/menu.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/menu.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/menu.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/menu.cpp.s
 .PHONY : src/ftxui/component/menu.cpp.s
 
 src/ftxui/component/modal.o: src/ftxui/component/modal.cpp.o
@@ -588,7 +588,7 @@ src/ftxui/component/modal.o: src/ftxui/component/modal.cpp.o
 
 # target to build an object file
 src/ftxui/component/modal.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/modal.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/modal.cpp.o
 .PHONY : src/ftxui/component/modal.cpp.o
 
 src/ftxui/component/modal.i: src/ftxui/component/modal.cpp.i
@@ -596,7 +596,7 @@ src/ftxui/component/modal.i: src/ftxui/component/modal.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/modal.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/modal.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/modal.cpp.i
 .PHONY : src/ftxui/component/modal.cpp.i
 
 src/ftxui/component/modal.s: src/ftxui/component/modal.cpp.s
@@ -604,7 +604,7 @@ src/ftxui/component/modal.s: src/ftxui/component/modal.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/modal.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/modal.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/modal.cpp.s
 .PHONY : src/ftxui/component/modal.cpp.s
 
 src/ftxui/component/radiobox.o: src/ftxui/component/radiobox.cpp.o
@@ -612,7 +612,7 @@ src/ftxui/component/radiobox.o: src/ftxui/component/radiobox.cpp.o
 
 # target to build an object file
 src/ftxui/component/radiobox.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/radiobox.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/radiobox.cpp.o
 .PHONY : src/ftxui/component/radiobox.cpp.o
 
 src/ftxui/component/radiobox.i: src/ftxui/component/radiobox.cpp.i
@@ -620,7 +620,7 @@ src/ftxui/component/radiobox.i: src/ftxui/component/radiobox.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/radiobox.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/radiobox.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/radiobox.cpp.i
 .PHONY : src/ftxui/component/radiobox.cpp.i
 
 src/ftxui/component/radiobox.s: src/ftxui/component/radiobox.cpp.s
@@ -628,7 +628,7 @@ src/ftxui/component/radiobox.s: src/ftxui/component/radiobox.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/radiobox.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/radiobox.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/radiobox.cpp.s
 .PHONY : src/ftxui/component/radiobox.cpp.s
 
 src/ftxui/component/renderer.o: src/ftxui/component/renderer.cpp.o
@@ -636,7 +636,7 @@ src/ftxui/component/renderer.o: src/ftxui/component/renderer.cpp.o
 
 # target to build an object file
 src/ftxui/component/renderer.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/renderer.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/renderer.cpp.o
 .PHONY : src/ftxui/component/renderer.cpp.o
 
 src/ftxui/component/renderer.i: src/ftxui/component/renderer.cpp.i
@@ -644,7 +644,7 @@ src/ftxui/component/renderer.i: src/ftxui/component/renderer.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/renderer.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/renderer.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/renderer.cpp.i
 .PHONY : src/ftxui/component/renderer.cpp.i
 
 src/ftxui/component/renderer.s: src/ftxui/component/renderer.cpp.s
@@ -652,7 +652,7 @@ src/ftxui/component/renderer.s: src/ftxui/component/renderer.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/renderer.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/renderer.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/renderer.cpp.s
 .PHONY : src/ftxui/component/renderer.cpp.s
 
 src/ftxui/component/resizable_split.o: src/ftxui/component/resizable_split.cpp.o
@@ -660,7 +660,7 @@ src/ftxui/component/resizable_split.o: src/ftxui/component/resizable_split.cpp.o
 
 # target to build an object file
 src/ftxui/component/resizable_split.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/resizable_split.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/resizable_split.cpp.o
 .PHONY : src/ftxui/component/resizable_split.cpp.o
 
 src/ftxui/component/resizable_split.i: src/ftxui/component/resizable_split.cpp.i
@@ -668,7 +668,7 @@ src/ftxui/component/resizable_split.i: src/ftxui/component/resizable_split.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/resizable_split.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/resizable_split.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/resizable_split.cpp.i
 .PHONY : src/ftxui/component/resizable_split.cpp.i
 
 src/ftxui/component/resizable_split.s: src/ftxui/component/resizable_split.cpp.s
@@ -676,7 +676,7 @@ src/ftxui/component/resizable_split.s: src/ftxui/component/resizable_split.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/resizable_split.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/resizable_split.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/resizable_split.cpp.s
 .PHONY : src/ftxui/component/resizable_split.cpp.s
 
 src/ftxui/component/screen_interactive.o: src/ftxui/component/screen_interactive.cpp.o
@@ -684,7 +684,7 @@ src/ftxui/component/screen_interactive.o: src/ftxui/component/screen_interactive
 
 # target to build an object file
 src/ftxui/component/screen_interactive.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/screen_interactive.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/screen_interactive.cpp.o
 .PHONY : src/ftxui/component/screen_interactive.cpp.o
 
 src/ftxui/component/screen_interactive.i: src/ftxui/component/screen_interactive.cpp.i
@@ -692,7 +692,7 @@ src/ftxui/component/screen_interactive.i: src/ftxui/component/screen_interactive
 
 # target to preprocess a source file
 src/ftxui/component/screen_interactive.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/screen_interactive.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/screen_interactive.cpp.i
 .PHONY : src/ftxui/component/screen_interactive.cpp.i
 
 src/ftxui/component/screen_interactive.s: src/ftxui/component/screen_interactive.cpp.s
@@ -700,7 +700,7 @@ src/ftxui/component/screen_interactive.s: src/ftxui/component/screen_interactive
 
 # target to generate assembly for a file
 src/ftxui/component/screen_interactive.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/screen_interactive.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/screen_interactive.cpp.s
 .PHONY : src/ftxui/component/screen_interactive.cpp.s
 
 src/ftxui/component/slider.o: src/ftxui/component/slider.cpp.o
@@ -708,7 +708,7 @@ src/ftxui/component/slider.o: src/ftxui/component/slider.cpp.o
 
 # target to build an object file
 src/ftxui/component/slider.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/slider.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/slider.cpp.o
 .PHONY : src/ftxui/component/slider.cpp.o
 
 src/ftxui/component/slider.i: src/ftxui/component/slider.cpp.i
@@ -716,7 +716,7 @@ src/ftxui/component/slider.i: src/ftxui/component/slider.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/slider.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/slider.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/slider.cpp.i
 .PHONY : src/ftxui/component/slider.cpp.i
 
 src/ftxui/component/slider.s: src/ftxui/component/slider.cpp.s
@@ -724,7 +724,7 @@ src/ftxui/component/slider.s: src/ftxui/component/slider.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/slider.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/slider.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/slider.cpp.s
 .PHONY : src/ftxui/component/slider.cpp.s
 
 src/ftxui/component/terminal_input_parser.o: src/ftxui/component/terminal_input_parser.cpp.o
@@ -732,7 +732,7 @@ src/ftxui/component/terminal_input_parser.o: src/ftxui/component/terminal_input_
 
 # target to build an object file
 src/ftxui/component/terminal_input_parser.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/terminal_input_parser.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/terminal_input_parser.cpp.o
 .PHONY : src/ftxui/component/terminal_input_parser.cpp.o
 
 src/ftxui/component/terminal_input_parser.i: src/ftxui/component/terminal_input_parser.cpp.i
@@ -740,7 +740,7 @@ src/ftxui/component/terminal_input_parser.i: src/ftxui/component/terminal_input_
 
 # target to preprocess a source file
 src/ftxui/component/terminal_input_parser.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/terminal_input_parser.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/terminal_input_parser.cpp.i
 .PHONY : src/ftxui/component/terminal_input_parser.cpp.i
 
 src/ftxui/component/terminal_input_parser.s: src/ftxui/component/terminal_input_parser.cpp.s
@@ -748,7 +748,7 @@ src/ftxui/component/terminal_input_parser.s: src/ftxui/component/terminal_input_
 
 # target to generate assembly for a file
 src/ftxui/component/terminal_input_parser.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/terminal_input_parser.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/terminal_input_parser.cpp.s
 .PHONY : src/ftxui/component/terminal_input_parser.cpp.s
 
 src/ftxui/component/util.o: src/ftxui/component/util.cpp.o
@@ -756,7 +756,7 @@ src/ftxui/component/util.o: src/ftxui/component/util.cpp.o
 
 # target to build an object file
 src/ftxui/component/util.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/util.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/util.cpp.o
 .PHONY : src/ftxui/component/util.cpp.o
 
 src/ftxui/component/util.i: src/ftxui/component/util.cpp.i
@@ -764,7 +764,7 @@ src/ftxui/component/util.i: src/ftxui/component/util.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/util.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/util.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/util.cpp.i
 .PHONY : src/ftxui/component/util.cpp.i
 
 src/ftxui/component/util.s: src/ftxui/component/util.cpp.s
@@ -772,7 +772,7 @@ src/ftxui/component/util.s: src/ftxui/component/util.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/util.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/util.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/util.cpp.s
 .PHONY : src/ftxui/component/util.cpp.s
 
 src/ftxui/component/window.o: src/ftxui/component/window.cpp.o
@@ -780,7 +780,7 @@ src/ftxui/component/window.o: src/ftxui/component/window.cpp.o
 
 # target to build an object file
 src/ftxui/component/window.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/window.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/window.cpp.o
 .PHONY : src/ftxui/component/window.cpp.o
 
 src/ftxui/component/window.i: src/ftxui/component/window.cpp.i
@@ -788,7 +788,7 @@ src/ftxui/component/window.i: src/ftxui/component/window.cpp.i
 
 # target to preprocess a source file
 src/ftxui/component/window.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/window.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/window.cpp.i
 .PHONY : src/ftxui/component/window.cpp.i
 
 src/ftxui/component/window.s: src/ftxui/component/window.cpp.s
@@ -796,7 +796,7 @@ src/ftxui/component/window.s: src/ftxui/component/window.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/component/window.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/window.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/component.dir/build.make _deps/ftxui-build/CMakeFiles/component.dir/src/ftxui/component/window.cpp.s
 .PHONY : src/ftxui/component/window.cpp.s
 
 src/ftxui/dom/automerge.o: src/ftxui/dom/automerge.cpp.o
@@ -804,7 +804,7 @@ src/ftxui/dom/automerge.o: src/ftxui/dom/automerge.cpp.o
 
 # target to build an object file
 src/ftxui/dom/automerge.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/automerge.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/automerge.cpp.o
 .PHONY : src/ftxui/dom/automerge.cpp.o
 
 src/ftxui/dom/automerge.i: src/ftxui/dom/automerge.cpp.i
@@ -812,7 +812,7 @@ src/ftxui/dom/automerge.i: src/ftxui/dom/automerge.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/automerge.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/automerge.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/automerge.cpp.i
 .PHONY : src/ftxui/dom/automerge.cpp.i
 
 src/ftxui/dom/automerge.s: src/ftxui/dom/automerge.cpp.s
@@ -820,7 +820,7 @@ src/ftxui/dom/automerge.s: src/ftxui/dom/automerge.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/automerge.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/automerge.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/automerge.cpp.s
 .PHONY : src/ftxui/dom/automerge.cpp.s
 
 src/ftxui/dom/blink.o: src/ftxui/dom/blink.cpp.o
@@ -828,7 +828,7 @@ src/ftxui/dom/blink.o: src/ftxui/dom/blink.cpp.o
 
 # target to build an object file
 src/ftxui/dom/blink.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/blink.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/blink.cpp.o
 .PHONY : src/ftxui/dom/blink.cpp.o
 
 src/ftxui/dom/blink.i: src/ftxui/dom/blink.cpp.i
@@ -836,7 +836,7 @@ src/ftxui/dom/blink.i: src/ftxui/dom/blink.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/blink.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/blink.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/blink.cpp.i
 .PHONY : src/ftxui/dom/blink.cpp.i
 
 src/ftxui/dom/blink.s: src/ftxui/dom/blink.cpp.s
@@ -844,7 +844,7 @@ src/ftxui/dom/blink.s: src/ftxui/dom/blink.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/blink.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/blink.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/blink.cpp.s
 .PHONY : src/ftxui/dom/blink.cpp.s
 
 src/ftxui/dom/bold.o: src/ftxui/dom/bold.cpp.o
@@ -852,7 +852,7 @@ src/ftxui/dom/bold.o: src/ftxui/dom/bold.cpp.o
 
 # target to build an object file
 src/ftxui/dom/bold.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/bold.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/bold.cpp.o
 .PHONY : src/ftxui/dom/bold.cpp.o
 
 src/ftxui/dom/bold.i: src/ftxui/dom/bold.cpp.i
@@ -860,7 +860,7 @@ src/ftxui/dom/bold.i: src/ftxui/dom/bold.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/bold.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/bold.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/bold.cpp.i
 .PHONY : src/ftxui/dom/bold.cpp.i
 
 src/ftxui/dom/bold.s: src/ftxui/dom/bold.cpp.s
@@ -868,7 +868,7 @@ src/ftxui/dom/bold.s: src/ftxui/dom/bold.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/bold.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/bold.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/bold.cpp.s
 .PHONY : src/ftxui/dom/bold.cpp.s
 
 src/ftxui/dom/border.o: src/ftxui/dom/border.cpp.o
@@ -876,7 +876,7 @@ src/ftxui/dom/border.o: src/ftxui/dom/border.cpp.o
 
 # target to build an object file
 src/ftxui/dom/border.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/border.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/border.cpp.o
 .PHONY : src/ftxui/dom/border.cpp.o
 
 src/ftxui/dom/border.i: src/ftxui/dom/border.cpp.i
@@ -884,7 +884,7 @@ src/ftxui/dom/border.i: src/ftxui/dom/border.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/border.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/border.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/border.cpp.i
 .PHONY : src/ftxui/dom/border.cpp.i
 
 src/ftxui/dom/border.s: src/ftxui/dom/border.cpp.s
@@ -892,7 +892,7 @@ src/ftxui/dom/border.s: src/ftxui/dom/border.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/border.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/border.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/border.cpp.s
 .PHONY : src/ftxui/dom/border.cpp.s
 
 src/ftxui/dom/box_helper.o: src/ftxui/dom/box_helper.cpp.o
@@ -900,7 +900,7 @@ src/ftxui/dom/box_helper.o: src/ftxui/dom/box_helper.cpp.o
 
 # target to build an object file
 src/ftxui/dom/box_helper.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/box_helper.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/box_helper.cpp.o
 .PHONY : src/ftxui/dom/box_helper.cpp.o
 
 src/ftxui/dom/box_helper.i: src/ftxui/dom/box_helper.cpp.i
@@ -908,7 +908,7 @@ src/ftxui/dom/box_helper.i: src/ftxui/dom/box_helper.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/box_helper.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/box_helper.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/box_helper.cpp.i
 .PHONY : src/ftxui/dom/box_helper.cpp.i
 
 src/ftxui/dom/box_helper.s: src/ftxui/dom/box_helper.cpp.s
@@ -916,7 +916,7 @@ src/ftxui/dom/box_helper.s: src/ftxui/dom/box_helper.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/box_helper.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/box_helper.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/box_helper.cpp.s
 .PHONY : src/ftxui/dom/box_helper.cpp.s
 
 src/ftxui/dom/canvas.o: src/ftxui/dom/canvas.cpp.o
@@ -924,7 +924,7 @@ src/ftxui/dom/canvas.o: src/ftxui/dom/canvas.cpp.o
 
 # target to build an object file
 src/ftxui/dom/canvas.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/canvas.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/canvas.cpp.o
 .PHONY : src/ftxui/dom/canvas.cpp.o
 
 src/ftxui/dom/canvas.i: src/ftxui/dom/canvas.cpp.i
@@ -932,7 +932,7 @@ src/ftxui/dom/canvas.i: src/ftxui/dom/canvas.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/canvas.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/canvas.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/canvas.cpp.i
 .PHONY : src/ftxui/dom/canvas.cpp.i
 
 src/ftxui/dom/canvas.s: src/ftxui/dom/canvas.cpp.s
@@ -940,7 +940,7 @@ src/ftxui/dom/canvas.s: src/ftxui/dom/canvas.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/canvas.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/canvas.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/canvas.cpp.s
 .PHONY : src/ftxui/dom/canvas.cpp.s
 
 src/ftxui/dom/clear_under.o: src/ftxui/dom/clear_under.cpp.o
@@ -948,7 +948,7 @@ src/ftxui/dom/clear_under.o: src/ftxui/dom/clear_under.cpp.o
 
 # target to build an object file
 src/ftxui/dom/clear_under.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/clear_under.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/clear_under.cpp.o
 .PHONY : src/ftxui/dom/clear_under.cpp.o
 
 src/ftxui/dom/clear_under.i: src/ftxui/dom/clear_under.cpp.i
@@ -956,7 +956,7 @@ src/ftxui/dom/clear_under.i: src/ftxui/dom/clear_under.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/clear_under.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/clear_under.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/clear_under.cpp.i
 .PHONY : src/ftxui/dom/clear_under.cpp.i
 
 src/ftxui/dom/clear_under.s: src/ftxui/dom/clear_under.cpp.s
@@ -964,7 +964,7 @@ src/ftxui/dom/clear_under.s: src/ftxui/dom/clear_under.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/clear_under.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/clear_under.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/clear_under.cpp.s
 .PHONY : src/ftxui/dom/clear_under.cpp.s
 
 src/ftxui/dom/color.o: src/ftxui/dom/color.cpp.o
@@ -972,7 +972,7 @@ src/ftxui/dom/color.o: src/ftxui/dom/color.cpp.o
 
 # target to build an object file
 src/ftxui/dom/color.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/color.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/color.cpp.o
 .PHONY : src/ftxui/dom/color.cpp.o
 
 src/ftxui/dom/color.i: src/ftxui/dom/color.cpp.i
@@ -980,7 +980,7 @@ src/ftxui/dom/color.i: src/ftxui/dom/color.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/color.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/color.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/color.cpp.i
 .PHONY : src/ftxui/dom/color.cpp.i
 
 src/ftxui/dom/color.s: src/ftxui/dom/color.cpp.s
@@ -988,7 +988,7 @@ src/ftxui/dom/color.s: src/ftxui/dom/color.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/color.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/color.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/color.cpp.s
 .PHONY : src/ftxui/dom/color.cpp.s
 
 src/ftxui/dom/composite_decorator.o: src/ftxui/dom/composite_decorator.cpp.o
@@ -996,7 +996,7 @@ src/ftxui/dom/composite_decorator.o: src/ftxui/dom/composite_decorator.cpp.o
 
 # target to build an object file
 src/ftxui/dom/composite_decorator.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/composite_decorator.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/composite_decorator.cpp.o
 .PHONY : src/ftxui/dom/composite_decorator.cpp.o
 
 src/ftxui/dom/composite_decorator.i: src/ftxui/dom/composite_decorator.cpp.i
@@ -1004,7 +1004,7 @@ src/ftxui/dom/composite_decorator.i: src/ftxui/dom/composite_decorator.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/composite_decorator.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/composite_decorator.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/composite_decorator.cpp.i
 .PHONY : src/ftxui/dom/composite_decorator.cpp.i
 
 src/ftxui/dom/composite_decorator.s: src/ftxui/dom/composite_decorator.cpp.s
@@ -1012,7 +1012,7 @@ src/ftxui/dom/composite_decorator.s: src/ftxui/dom/composite_decorator.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/composite_decorator.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/composite_decorator.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/composite_decorator.cpp.s
 .PHONY : src/ftxui/dom/composite_decorator.cpp.s
 
 src/ftxui/dom/dbox.o: src/ftxui/dom/dbox.cpp.o
@@ -1020,7 +1020,7 @@ src/ftxui/dom/dbox.o: src/ftxui/dom/dbox.cpp.o
 
 # target to build an object file
 src/ftxui/dom/dbox.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dbox.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dbox.cpp.o
 .PHONY : src/ftxui/dom/dbox.cpp.o
 
 src/ftxui/dom/dbox.i: src/ftxui/dom/dbox.cpp.i
@@ -1028,7 +1028,7 @@ src/ftxui/dom/dbox.i: src/ftxui/dom/dbox.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/dbox.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dbox.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dbox.cpp.i
 .PHONY : src/ftxui/dom/dbox.cpp.i
 
 src/ftxui/dom/dbox.s: src/ftxui/dom/dbox.cpp.s
@@ -1036,7 +1036,7 @@ src/ftxui/dom/dbox.s: src/ftxui/dom/dbox.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/dbox.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dbox.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dbox.cpp.s
 .PHONY : src/ftxui/dom/dbox.cpp.s
 
 src/ftxui/dom/dim.o: src/ftxui/dom/dim.cpp.o
@@ -1044,7 +1044,7 @@ src/ftxui/dom/dim.o: src/ftxui/dom/dim.cpp.o
 
 # target to build an object file
 src/ftxui/dom/dim.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dim.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dim.cpp.o
 .PHONY : src/ftxui/dom/dim.cpp.o
 
 src/ftxui/dom/dim.i: src/ftxui/dom/dim.cpp.i
@@ -1052,7 +1052,7 @@ src/ftxui/dom/dim.i: src/ftxui/dom/dim.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/dim.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dim.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dim.cpp.i
 .PHONY : src/ftxui/dom/dim.cpp.i
 
 src/ftxui/dom/dim.s: src/ftxui/dom/dim.cpp.s
@@ -1060,7 +1060,7 @@ src/ftxui/dom/dim.s: src/ftxui/dom/dim.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/dim.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dim.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/dim.cpp.s
 .PHONY : src/ftxui/dom/dim.cpp.s
 
 src/ftxui/dom/flex.o: src/ftxui/dom/flex.cpp.o
@@ -1068,7 +1068,7 @@ src/ftxui/dom/flex.o: src/ftxui/dom/flex.cpp.o
 
 # target to build an object file
 src/ftxui/dom/flex.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flex.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flex.cpp.o
 .PHONY : src/ftxui/dom/flex.cpp.o
 
 src/ftxui/dom/flex.i: src/ftxui/dom/flex.cpp.i
@@ -1076,7 +1076,7 @@ src/ftxui/dom/flex.i: src/ftxui/dom/flex.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/flex.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flex.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flex.cpp.i
 .PHONY : src/ftxui/dom/flex.cpp.i
 
 src/ftxui/dom/flex.s: src/ftxui/dom/flex.cpp.s
@@ -1084,7 +1084,7 @@ src/ftxui/dom/flex.s: src/ftxui/dom/flex.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/flex.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flex.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flex.cpp.s
 .PHONY : src/ftxui/dom/flex.cpp.s
 
 src/ftxui/dom/flexbox.o: src/ftxui/dom/flexbox.cpp.o
@@ -1092,7 +1092,7 @@ src/ftxui/dom/flexbox.o: src/ftxui/dom/flexbox.cpp.o
 
 # target to build an object file
 src/ftxui/dom/flexbox.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox.cpp.o
 .PHONY : src/ftxui/dom/flexbox.cpp.o
 
 src/ftxui/dom/flexbox.i: src/ftxui/dom/flexbox.cpp.i
@@ -1100,7 +1100,7 @@ src/ftxui/dom/flexbox.i: src/ftxui/dom/flexbox.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/flexbox.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox.cpp.i
 .PHONY : src/ftxui/dom/flexbox.cpp.i
 
 src/ftxui/dom/flexbox.s: src/ftxui/dom/flexbox.cpp.s
@@ -1108,7 +1108,7 @@ src/ftxui/dom/flexbox.s: src/ftxui/dom/flexbox.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/flexbox.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox.cpp.s
 .PHONY : src/ftxui/dom/flexbox.cpp.s
 
 src/ftxui/dom/flexbox_config.o: src/ftxui/dom/flexbox_config.cpp.o
@@ -1116,7 +1116,7 @@ src/ftxui/dom/flexbox_config.o: src/ftxui/dom/flexbox_config.cpp.o
 
 # target to build an object file
 src/ftxui/dom/flexbox_config.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_config.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_config.cpp.o
 .PHONY : src/ftxui/dom/flexbox_config.cpp.o
 
 src/ftxui/dom/flexbox_config.i: src/ftxui/dom/flexbox_config.cpp.i
@@ -1124,7 +1124,7 @@ src/ftxui/dom/flexbox_config.i: src/ftxui/dom/flexbox_config.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/flexbox_config.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_config.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_config.cpp.i
 .PHONY : src/ftxui/dom/flexbox_config.cpp.i
 
 src/ftxui/dom/flexbox_config.s: src/ftxui/dom/flexbox_config.cpp.s
@@ -1132,7 +1132,7 @@ src/ftxui/dom/flexbox_config.s: src/ftxui/dom/flexbox_config.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/flexbox_config.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_config.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_config.cpp.s
 .PHONY : src/ftxui/dom/flexbox_config.cpp.s
 
 src/ftxui/dom/flexbox_helper.o: src/ftxui/dom/flexbox_helper.cpp.o
@@ -1140,7 +1140,7 @@ src/ftxui/dom/flexbox_helper.o: src/ftxui/dom/flexbox_helper.cpp.o
 
 # target to build an object file
 src/ftxui/dom/flexbox_helper.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_helper.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_helper.cpp.o
 .PHONY : src/ftxui/dom/flexbox_helper.cpp.o
 
 src/ftxui/dom/flexbox_helper.i: src/ftxui/dom/flexbox_helper.cpp.i
@@ -1148,7 +1148,7 @@ src/ftxui/dom/flexbox_helper.i: src/ftxui/dom/flexbox_helper.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/flexbox_helper.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_helper.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_helper.cpp.i
 .PHONY : src/ftxui/dom/flexbox_helper.cpp.i
 
 src/ftxui/dom/flexbox_helper.s: src/ftxui/dom/flexbox_helper.cpp.s
@@ -1156,7 +1156,7 @@ src/ftxui/dom/flexbox_helper.s: src/ftxui/dom/flexbox_helper.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/flexbox_helper.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_helper.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/flexbox_helper.cpp.s
 .PHONY : src/ftxui/dom/flexbox_helper.cpp.s
 
 src/ftxui/dom/focus.o: src/ftxui/dom/focus.cpp.o
@@ -1164,7 +1164,7 @@ src/ftxui/dom/focus.o: src/ftxui/dom/focus.cpp.o
 
 # target to build an object file
 src/ftxui/dom/focus.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/focus.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/focus.cpp.o
 .PHONY : src/ftxui/dom/focus.cpp.o
 
 src/ftxui/dom/focus.i: src/ftxui/dom/focus.cpp.i
@@ -1172,7 +1172,7 @@ src/ftxui/dom/focus.i: src/ftxui/dom/focus.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/focus.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/focus.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/focus.cpp.i
 .PHONY : src/ftxui/dom/focus.cpp.i
 
 src/ftxui/dom/focus.s: src/ftxui/dom/focus.cpp.s
@@ -1180,7 +1180,7 @@ src/ftxui/dom/focus.s: src/ftxui/dom/focus.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/focus.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/focus.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/focus.cpp.s
 .PHONY : src/ftxui/dom/focus.cpp.s
 
 src/ftxui/dom/frame.o: src/ftxui/dom/frame.cpp.o
@@ -1188,7 +1188,7 @@ src/ftxui/dom/frame.o: src/ftxui/dom/frame.cpp.o
 
 # target to build an object file
 src/ftxui/dom/frame.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/frame.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/frame.cpp.o
 .PHONY : src/ftxui/dom/frame.cpp.o
 
 src/ftxui/dom/frame.i: src/ftxui/dom/frame.cpp.i
@@ -1196,7 +1196,7 @@ src/ftxui/dom/frame.i: src/ftxui/dom/frame.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/frame.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/frame.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/frame.cpp.i
 .PHONY : src/ftxui/dom/frame.cpp.i
 
 src/ftxui/dom/frame.s: src/ftxui/dom/frame.cpp.s
@@ -1204,7 +1204,7 @@ src/ftxui/dom/frame.s: src/ftxui/dom/frame.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/frame.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/frame.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/frame.cpp.s
 .PHONY : src/ftxui/dom/frame.cpp.s
 
 src/ftxui/dom/gauge.o: src/ftxui/dom/gauge.cpp.o
@@ -1212,7 +1212,7 @@ src/ftxui/dom/gauge.o: src/ftxui/dom/gauge.cpp.o
 
 # target to build an object file
 src/ftxui/dom/gauge.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gauge.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gauge.cpp.o
 .PHONY : src/ftxui/dom/gauge.cpp.o
 
 src/ftxui/dom/gauge.i: src/ftxui/dom/gauge.cpp.i
@@ -1220,7 +1220,7 @@ src/ftxui/dom/gauge.i: src/ftxui/dom/gauge.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/gauge.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gauge.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gauge.cpp.i
 .PHONY : src/ftxui/dom/gauge.cpp.i
 
 src/ftxui/dom/gauge.s: src/ftxui/dom/gauge.cpp.s
@@ -1228,7 +1228,7 @@ src/ftxui/dom/gauge.s: src/ftxui/dom/gauge.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/gauge.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gauge.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gauge.cpp.s
 .PHONY : src/ftxui/dom/gauge.cpp.s
 
 src/ftxui/dom/graph.o: src/ftxui/dom/graph.cpp.o
@@ -1236,7 +1236,7 @@ src/ftxui/dom/graph.o: src/ftxui/dom/graph.cpp.o
 
 # target to build an object file
 src/ftxui/dom/graph.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/graph.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/graph.cpp.o
 .PHONY : src/ftxui/dom/graph.cpp.o
 
 src/ftxui/dom/graph.i: src/ftxui/dom/graph.cpp.i
@@ -1244,7 +1244,7 @@ src/ftxui/dom/graph.i: src/ftxui/dom/graph.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/graph.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/graph.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/graph.cpp.i
 .PHONY : src/ftxui/dom/graph.cpp.i
 
 src/ftxui/dom/graph.s: src/ftxui/dom/graph.cpp.s
@@ -1252,7 +1252,7 @@ src/ftxui/dom/graph.s: src/ftxui/dom/graph.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/graph.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/graph.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/graph.cpp.s
 .PHONY : src/ftxui/dom/graph.cpp.s
 
 src/ftxui/dom/gridbox.o: src/ftxui/dom/gridbox.cpp.o
@@ -1260,7 +1260,7 @@ src/ftxui/dom/gridbox.o: src/ftxui/dom/gridbox.cpp.o
 
 # target to build an object file
 src/ftxui/dom/gridbox.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gridbox.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gridbox.cpp.o
 .PHONY : src/ftxui/dom/gridbox.cpp.o
 
 src/ftxui/dom/gridbox.i: src/ftxui/dom/gridbox.cpp.i
@@ -1268,7 +1268,7 @@ src/ftxui/dom/gridbox.i: src/ftxui/dom/gridbox.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/gridbox.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gridbox.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gridbox.cpp.i
 .PHONY : src/ftxui/dom/gridbox.cpp.i
 
 src/ftxui/dom/gridbox.s: src/ftxui/dom/gridbox.cpp.s
@@ -1276,7 +1276,7 @@ src/ftxui/dom/gridbox.s: src/ftxui/dom/gridbox.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/gridbox.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gridbox.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/gridbox.cpp.s
 .PHONY : src/ftxui/dom/gridbox.cpp.s
 
 src/ftxui/dom/hbox.o: src/ftxui/dom/hbox.cpp.o
@@ -1284,7 +1284,7 @@ src/ftxui/dom/hbox.o: src/ftxui/dom/hbox.cpp.o
 
 # target to build an object file
 src/ftxui/dom/hbox.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hbox.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hbox.cpp.o
 .PHONY : src/ftxui/dom/hbox.cpp.o
 
 src/ftxui/dom/hbox.i: src/ftxui/dom/hbox.cpp.i
@@ -1292,7 +1292,7 @@ src/ftxui/dom/hbox.i: src/ftxui/dom/hbox.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/hbox.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hbox.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hbox.cpp.i
 .PHONY : src/ftxui/dom/hbox.cpp.i
 
 src/ftxui/dom/hbox.s: src/ftxui/dom/hbox.cpp.s
@@ -1300,7 +1300,7 @@ src/ftxui/dom/hbox.s: src/ftxui/dom/hbox.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/hbox.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hbox.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hbox.cpp.s
 .PHONY : src/ftxui/dom/hbox.cpp.s
 
 src/ftxui/dom/hyperlink.o: src/ftxui/dom/hyperlink.cpp.o
@@ -1308,7 +1308,7 @@ src/ftxui/dom/hyperlink.o: src/ftxui/dom/hyperlink.cpp.o
 
 # target to build an object file
 src/ftxui/dom/hyperlink.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hyperlink.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hyperlink.cpp.o
 .PHONY : src/ftxui/dom/hyperlink.cpp.o
 
 src/ftxui/dom/hyperlink.i: src/ftxui/dom/hyperlink.cpp.i
@@ -1316,7 +1316,7 @@ src/ftxui/dom/hyperlink.i: src/ftxui/dom/hyperlink.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/hyperlink.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hyperlink.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hyperlink.cpp.i
 .PHONY : src/ftxui/dom/hyperlink.cpp.i
 
 src/ftxui/dom/hyperlink.s: src/ftxui/dom/hyperlink.cpp.s
@@ -1324,7 +1324,7 @@ src/ftxui/dom/hyperlink.s: src/ftxui/dom/hyperlink.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/hyperlink.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hyperlink.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/hyperlink.cpp.s
 .PHONY : src/ftxui/dom/hyperlink.cpp.s
 
 src/ftxui/dom/inverted.o: src/ftxui/dom/inverted.cpp.o
@@ -1332,7 +1332,7 @@ src/ftxui/dom/inverted.o: src/ftxui/dom/inverted.cpp.o
 
 # target to build an object file
 src/ftxui/dom/inverted.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/inverted.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/inverted.cpp.o
 .PHONY : src/ftxui/dom/inverted.cpp.o
 
 src/ftxui/dom/inverted.i: src/ftxui/dom/inverted.cpp.i
@@ -1340,7 +1340,7 @@ src/ftxui/dom/inverted.i: src/ftxui/dom/inverted.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/inverted.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/inverted.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/inverted.cpp.i
 .PHONY : src/ftxui/dom/inverted.cpp.i
 
 src/ftxui/dom/inverted.s: src/ftxui/dom/inverted.cpp.s
@@ -1348,7 +1348,7 @@ src/ftxui/dom/inverted.s: src/ftxui/dom/inverted.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/inverted.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/inverted.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/inverted.cpp.s
 .PHONY : src/ftxui/dom/inverted.cpp.s
 
 src/ftxui/dom/linear_gradient.o: src/ftxui/dom/linear_gradient.cpp.o
@@ -1356,7 +1356,7 @@ src/ftxui/dom/linear_gradient.o: src/ftxui/dom/linear_gradient.cpp.o
 
 # target to build an object file
 src/ftxui/dom/linear_gradient.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/linear_gradient.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/linear_gradient.cpp.o
 .PHONY : src/ftxui/dom/linear_gradient.cpp.o
 
 src/ftxui/dom/linear_gradient.i: src/ftxui/dom/linear_gradient.cpp.i
@@ -1364,7 +1364,7 @@ src/ftxui/dom/linear_gradient.i: src/ftxui/dom/linear_gradient.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/linear_gradient.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/linear_gradient.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/linear_gradient.cpp.i
 .PHONY : src/ftxui/dom/linear_gradient.cpp.i
 
 src/ftxui/dom/linear_gradient.s: src/ftxui/dom/linear_gradient.cpp.s
@@ -1372,7 +1372,7 @@ src/ftxui/dom/linear_gradient.s: src/ftxui/dom/linear_gradient.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/linear_gradient.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/linear_gradient.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/linear_gradient.cpp.s
 .PHONY : src/ftxui/dom/linear_gradient.cpp.s
 
 src/ftxui/dom/node.o: src/ftxui/dom/node.cpp.o
@@ -1380,7 +1380,7 @@ src/ftxui/dom/node.o: src/ftxui/dom/node.cpp.o
 
 # target to build an object file
 src/ftxui/dom/node.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node.cpp.o
 .PHONY : src/ftxui/dom/node.cpp.o
 
 src/ftxui/dom/node.i: src/ftxui/dom/node.cpp.i
@@ -1388,7 +1388,7 @@ src/ftxui/dom/node.i: src/ftxui/dom/node.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/node.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node.cpp.i
 .PHONY : src/ftxui/dom/node.cpp.i
 
 src/ftxui/dom/node.s: src/ftxui/dom/node.cpp.s
@@ -1396,7 +1396,7 @@ src/ftxui/dom/node.s: src/ftxui/dom/node.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/node.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node.cpp.s
 .PHONY : src/ftxui/dom/node.cpp.s
 
 src/ftxui/dom/node_decorator.o: src/ftxui/dom/node_decorator.cpp.o
@@ -1404,7 +1404,7 @@ src/ftxui/dom/node_decorator.o: src/ftxui/dom/node_decorator.cpp.o
 
 # target to build an object file
 src/ftxui/dom/node_decorator.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node_decorator.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node_decorator.cpp.o
 .PHONY : src/ftxui/dom/node_decorator.cpp.o
 
 src/ftxui/dom/node_decorator.i: src/ftxui/dom/node_decorator.cpp.i
@@ -1412,7 +1412,7 @@ src/ftxui/dom/node_decorator.i: src/ftxui/dom/node_decorator.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/node_decorator.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node_decorator.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node_decorator.cpp.i
 .PHONY : src/ftxui/dom/node_decorator.cpp.i
 
 src/ftxui/dom/node_decorator.s: src/ftxui/dom/node_decorator.cpp.s
@@ -1420,7 +1420,7 @@ src/ftxui/dom/node_decorator.s: src/ftxui/dom/node_decorator.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/node_decorator.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node_decorator.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/node_decorator.cpp.s
 .PHONY : src/ftxui/dom/node_decorator.cpp.s
 
 src/ftxui/dom/paragraph.o: src/ftxui/dom/paragraph.cpp.o
@@ -1428,7 +1428,7 @@ src/ftxui/dom/paragraph.o: src/ftxui/dom/paragraph.cpp.o
 
 # target to build an object file
 src/ftxui/dom/paragraph.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/paragraph.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/paragraph.cpp.o
 .PHONY : src/ftxui/dom/paragraph.cpp.o
 
 src/ftxui/dom/paragraph.i: src/ftxui/dom/paragraph.cpp.i
@@ -1436,7 +1436,7 @@ src/ftxui/dom/paragraph.i: src/ftxui/dom/paragraph.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/paragraph.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/paragraph.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/paragraph.cpp.i
 .PHONY : src/ftxui/dom/paragraph.cpp.i
 
 src/ftxui/dom/paragraph.s: src/ftxui/dom/paragraph.cpp.s
@@ -1444,7 +1444,7 @@ src/ftxui/dom/paragraph.s: src/ftxui/dom/paragraph.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/paragraph.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/paragraph.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/paragraph.cpp.s
 .PHONY : src/ftxui/dom/paragraph.cpp.s
 
 src/ftxui/dom/reflect.o: src/ftxui/dom/reflect.cpp.o
@@ -1452,7 +1452,7 @@ src/ftxui/dom/reflect.o: src/ftxui/dom/reflect.cpp.o
 
 # target to build an object file
 src/ftxui/dom/reflect.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/reflect.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/reflect.cpp.o
 .PHONY : src/ftxui/dom/reflect.cpp.o
 
 src/ftxui/dom/reflect.i: src/ftxui/dom/reflect.cpp.i
@@ -1460,7 +1460,7 @@ src/ftxui/dom/reflect.i: src/ftxui/dom/reflect.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/reflect.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/reflect.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/reflect.cpp.i
 .PHONY : src/ftxui/dom/reflect.cpp.i
 
 src/ftxui/dom/reflect.s: src/ftxui/dom/reflect.cpp.s
@@ -1468,7 +1468,7 @@ src/ftxui/dom/reflect.s: src/ftxui/dom/reflect.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/reflect.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/reflect.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/reflect.cpp.s
 .PHONY : src/ftxui/dom/reflect.cpp.s
 
 src/ftxui/dom/scroll_indicator.o: src/ftxui/dom/scroll_indicator.cpp.o
@@ -1476,7 +1476,7 @@ src/ftxui/dom/scroll_indicator.o: src/ftxui/dom/scroll_indicator.cpp.o
 
 # target to build an object file
 src/ftxui/dom/scroll_indicator.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/scroll_indicator.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/scroll_indicator.cpp.o
 .PHONY : src/ftxui/dom/scroll_indicator.cpp.o
 
 src/ftxui/dom/scroll_indicator.i: src/ftxui/dom/scroll_indicator.cpp.i
@@ -1484,7 +1484,7 @@ src/ftxui/dom/scroll_indicator.i: src/ftxui/dom/scroll_indicator.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/scroll_indicator.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/scroll_indicator.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/scroll_indicator.cpp.i
 .PHONY : src/ftxui/dom/scroll_indicator.cpp.i
 
 src/ftxui/dom/scroll_indicator.s: src/ftxui/dom/scroll_indicator.cpp.s
@@ -1492,7 +1492,7 @@ src/ftxui/dom/scroll_indicator.s: src/ftxui/dom/scroll_indicator.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/scroll_indicator.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/scroll_indicator.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/scroll_indicator.cpp.s
 .PHONY : src/ftxui/dom/scroll_indicator.cpp.s
 
 src/ftxui/dom/selection.o: src/ftxui/dom/selection.cpp.o
@@ -1500,7 +1500,7 @@ src/ftxui/dom/selection.o: src/ftxui/dom/selection.cpp.o
 
 # target to build an object file
 src/ftxui/dom/selection.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection.cpp.o
 .PHONY : src/ftxui/dom/selection.cpp.o
 
 src/ftxui/dom/selection.i: src/ftxui/dom/selection.cpp.i
@@ -1508,7 +1508,7 @@ src/ftxui/dom/selection.i: src/ftxui/dom/selection.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/selection.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection.cpp.i
 .PHONY : src/ftxui/dom/selection.cpp.i
 
 src/ftxui/dom/selection.s: src/ftxui/dom/selection.cpp.s
@@ -1516,7 +1516,7 @@ src/ftxui/dom/selection.s: src/ftxui/dom/selection.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/selection.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection.cpp.s
 .PHONY : src/ftxui/dom/selection.cpp.s
 
 src/ftxui/dom/selection_style.o: src/ftxui/dom/selection_style.cpp.o
@@ -1524,7 +1524,7 @@ src/ftxui/dom/selection_style.o: src/ftxui/dom/selection_style.cpp.o
 
 # target to build an object file
 src/ftxui/dom/selection_style.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection_style.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection_style.cpp.o
 .PHONY : src/ftxui/dom/selection_style.cpp.o
 
 src/ftxui/dom/selection_style.i: src/ftxui/dom/selection_style.cpp.i
@@ -1532,7 +1532,7 @@ src/ftxui/dom/selection_style.i: src/ftxui/dom/selection_style.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/selection_style.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection_style.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection_style.cpp.i
 .PHONY : src/ftxui/dom/selection_style.cpp.i
 
 src/ftxui/dom/selection_style.s: src/ftxui/dom/selection_style.cpp.s
@@ -1540,7 +1540,7 @@ src/ftxui/dom/selection_style.s: src/ftxui/dom/selection_style.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/selection_style.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection_style.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/selection_style.cpp.s
 .PHONY : src/ftxui/dom/selection_style.cpp.s
 
 src/ftxui/dom/separator.o: src/ftxui/dom/separator.cpp.o
@@ -1548,7 +1548,7 @@ src/ftxui/dom/separator.o: src/ftxui/dom/separator.cpp.o
 
 # target to build an object file
 src/ftxui/dom/separator.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/separator.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/separator.cpp.o
 .PHONY : src/ftxui/dom/separator.cpp.o
 
 src/ftxui/dom/separator.i: src/ftxui/dom/separator.cpp.i
@@ -1556,7 +1556,7 @@ src/ftxui/dom/separator.i: src/ftxui/dom/separator.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/separator.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/separator.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/separator.cpp.i
 .PHONY : src/ftxui/dom/separator.cpp.i
 
 src/ftxui/dom/separator.s: src/ftxui/dom/separator.cpp.s
@@ -1564,7 +1564,7 @@ src/ftxui/dom/separator.s: src/ftxui/dom/separator.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/separator.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/separator.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/separator.cpp.s
 .PHONY : src/ftxui/dom/separator.cpp.s
 
 src/ftxui/dom/size.o: src/ftxui/dom/size.cpp.o
@@ -1572,7 +1572,7 @@ src/ftxui/dom/size.o: src/ftxui/dom/size.cpp.o
 
 # target to build an object file
 src/ftxui/dom/size.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/size.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/size.cpp.o
 .PHONY : src/ftxui/dom/size.cpp.o
 
 src/ftxui/dom/size.i: src/ftxui/dom/size.cpp.i
@@ -1580,7 +1580,7 @@ src/ftxui/dom/size.i: src/ftxui/dom/size.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/size.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/size.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/size.cpp.i
 .PHONY : src/ftxui/dom/size.cpp.i
 
 src/ftxui/dom/size.s: src/ftxui/dom/size.cpp.s
@@ -1588,7 +1588,7 @@ src/ftxui/dom/size.s: src/ftxui/dom/size.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/size.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/size.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/size.cpp.s
 .PHONY : src/ftxui/dom/size.cpp.s
 
 src/ftxui/dom/spinner.o: src/ftxui/dom/spinner.cpp.o
@@ -1596,7 +1596,7 @@ src/ftxui/dom/spinner.o: src/ftxui/dom/spinner.cpp.o
 
 # target to build an object file
 src/ftxui/dom/spinner.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/spinner.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/spinner.cpp.o
 .PHONY : src/ftxui/dom/spinner.cpp.o
 
 src/ftxui/dom/spinner.i: src/ftxui/dom/spinner.cpp.i
@@ -1604,7 +1604,7 @@ src/ftxui/dom/spinner.i: src/ftxui/dom/spinner.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/spinner.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/spinner.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/spinner.cpp.i
 .PHONY : src/ftxui/dom/spinner.cpp.i
 
 src/ftxui/dom/spinner.s: src/ftxui/dom/spinner.cpp.s
@@ -1612,7 +1612,7 @@ src/ftxui/dom/spinner.s: src/ftxui/dom/spinner.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/spinner.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/spinner.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/spinner.cpp.s
 .PHONY : src/ftxui/dom/spinner.cpp.s
 
 src/ftxui/dom/strikethrough.o: src/ftxui/dom/strikethrough.cpp.o
@@ -1620,7 +1620,7 @@ src/ftxui/dom/strikethrough.o: src/ftxui/dom/strikethrough.cpp.o
 
 # target to build an object file
 src/ftxui/dom/strikethrough.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/strikethrough.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/strikethrough.cpp.o
 .PHONY : src/ftxui/dom/strikethrough.cpp.o
 
 src/ftxui/dom/strikethrough.i: src/ftxui/dom/strikethrough.cpp.i
@@ -1628,7 +1628,7 @@ src/ftxui/dom/strikethrough.i: src/ftxui/dom/strikethrough.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/strikethrough.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/strikethrough.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/strikethrough.cpp.i
 .PHONY : src/ftxui/dom/strikethrough.cpp.i
 
 src/ftxui/dom/strikethrough.s: src/ftxui/dom/strikethrough.cpp.s
@@ -1636,7 +1636,7 @@ src/ftxui/dom/strikethrough.s: src/ftxui/dom/strikethrough.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/strikethrough.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/strikethrough.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/strikethrough.cpp.s
 .PHONY : src/ftxui/dom/strikethrough.cpp.s
 
 src/ftxui/dom/table.o: src/ftxui/dom/table.cpp.o
@@ -1644,7 +1644,7 @@ src/ftxui/dom/table.o: src/ftxui/dom/table.cpp.o
 
 # target to build an object file
 src/ftxui/dom/table.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/table.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/table.cpp.o
 .PHONY : src/ftxui/dom/table.cpp.o
 
 src/ftxui/dom/table.i: src/ftxui/dom/table.cpp.i
@@ -1652,7 +1652,7 @@ src/ftxui/dom/table.i: src/ftxui/dom/table.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/table.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/table.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/table.cpp.i
 .PHONY : src/ftxui/dom/table.cpp.i
 
 src/ftxui/dom/table.s: src/ftxui/dom/table.cpp.s
@@ -1660,7 +1660,7 @@ src/ftxui/dom/table.s: src/ftxui/dom/table.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/table.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/table.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/table.cpp.s
 .PHONY : src/ftxui/dom/table.cpp.s
 
 src/ftxui/dom/text.o: src/ftxui/dom/text.cpp.o
@@ -1668,7 +1668,7 @@ src/ftxui/dom/text.o: src/ftxui/dom/text.cpp.o
 
 # target to build an object file
 src/ftxui/dom/text.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/text.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/text.cpp.o
 .PHONY : src/ftxui/dom/text.cpp.o
 
 src/ftxui/dom/text.i: src/ftxui/dom/text.cpp.i
@@ -1676,7 +1676,7 @@ src/ftxui/dom/text.i: src/ftxui/dom/text.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/text.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/text.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/text.cpp.i
 .PHONY : src/ftxui/dom/text.cpp.i
 
 src/ftxui/dom/text.s: src/ftxui/dom/text.cpp.s
@@ -1684,7 +1684,7 @@ src/ftxui/dom/text.s: src/ftxui/dom/text.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/text.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/text.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/text.cpp.s
 .PHONY : src/ftxui/dom/text.cpp.s
 
 src/ftxui/dom/underlined.o: src/ftxui/dom/underlined.cpp.o
@@ -1692,7 +1692,7 @@ src/ftxui/dom/underlined.o: src/ftxui/dom/underlined.cpp.o
 
 # target to build an object file
 src/ftxui/dom/underlined.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined.cpp.o
 .PHONY : src/ftxui/dom/underlined.cpp.o
 
 src/ftxui/dom/underlined.i: src/ftxui/dom/underlined.cpp.i
@@ -1700,7 +1700,7 @@ src/ftxui/dom/underlined.i: src/ftxui/dom/underlined.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/underlined.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined.cpp.i
 .PHONY : src/ftxui/dom/underlined.cpp.i
 
 src/ftxui/dom/underlined.s: src/ftxui/dom/underlined.cpp.s
@@ -1708,7 +1708,7 @@ src/ftxui/dom/underlined.s: src/ftxui/dom/underlined.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/underlined.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined.cpp.s
 .PHONY : src/ftxui/dom/underlined.cpp.s
 
 src/ftxui/dom/underlined_double.o: src/ftxui/dom/underlined_double.cpp.o
@@ -1716,7 +1716,7 @@ src/ftxui/dom/underlined_double.o: src/ftxui/dom/underlined_double.cpp.o
 
 # target to build an object file
 src/ftxui/dom/underlined_double.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined_double.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined_double.cpp.o
 .PHONY : src/ftxui/dom/underlined_double.cpp.o
 
 src/ftxui/dom/underlined_double.i: src/ftxui/dom/underlined_double.cpp.i
@@ -1724,7 +1724,7 @@ src/ftxui/dom/underlined_double.i: src/ftxui/dom/underlined_double.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/underlined_double.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined_double.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined_double.cpp.i
 .PHONY : src/ftxui/dom/underlined_double.cpp.i
 
 src/ftxui/dom/underlined_double.s: src/ftxui/dom/underlined_double.cpp.s
@@ -1732,7 +1732,7 @@ src/ftxui/dom/underlined_double.s: src/ftxui/dom/underlined_double.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/underlined_double.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined_double.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/underlined_double.cpp.s
 .PHONY : src/ftxui/dom/underlined_double.cpp.s
 
 src/ftxui/dom/util.o: src/ftxui/dom/util.cpp.o
@@ -1740,7 +1740,7 @@ src/ftxui/dom/util.o: src/ftxui/dom/util.cpp.o
 
 # target to build an object file
 src/ftxui/dom/util.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/util.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/util.cpp.o
 .PHONY : src/ftxui/dom/util.cpp.o
 
 src/ftxui/dom/util.i: src/ftxui/dom/util.cpp.i
@@ -1748,7 +1748,7 @@ src/ftxui/dom/util.i: src/ftxui/dom/util.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/util.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/util.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/util.cpp.i
 .PHONY : src/ftxui/dom/util.cpp.i
 
 src/ftxui/dom/util.s: src/ftxui/dom/util.cpp.s
@@ -1756,7 +1756,7 @@ src/ftxui/dom/util.s: src/ftxui/dom/util.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/util.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/util.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/util.cpp.s
 .PHONY : src/ftxui/dom/util.cpp.s
 
 src/ftxui/dom/vbox.o: src/ftxui/dom/vbox.cpp.o
@@ -1764,7 +1764,7 @@ src/ftxui/dom/vbox.o: src/ftxui/dom/vbox.cpp.o
 
 # target to build an object file
 src/ftxui/dom/vbox.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/vbox.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/vbox.cpp.o
 .PHONY : src/ftxui/dom/vbox.cpp.o
 
 src/ftxui/dom/vbox.i: src/ftxui/dom/vbox.cpp.i
@@ -1772,7 +1772,7 @@ src/ftxui/dom/vbox.i: src/ftxui/dom/vbox.cpp.i
 
 # target to preprocess a source file
 src/ftxui/dom/vbox.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/vbox.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/vbox.cpp.i
 .PHONY : src/ftxui/dom/vbox.cpp.i
 
 src/ftxui/dom/vbox.s: src/ftxui/dom/vbox.cpp.s
@@ -1780,7 +1780,7 @@ src/ftxui/dom/vbox.s: src/ftxui/dom/vbox.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/dom/vbox.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/vbox.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/dom.dir/build.make _deps/ftxui-build/CMakeFiles/dom.dir/src/ftxui/dom/vbox.cpp.s
 .PHONY : src/ftxui/dom/vbox.cpp.s
 
 src/ftxui/screen/box.o: src/ftxui/screen/box.cpp.o
@@ -1788,7 +1788,7 @@ src/ftxui/screen/box.o: src/ftxui/screen/box.cpp.o
 
 # target to build an object file
 src/ftxui/screen/box.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.o
 .PHONY : src/ftxui/screen/box.cpp.o
 
 src/ftxui/screen/box.i: src/ftxui/screen/box.cpp.i
@@ -1796,7 +1796,7 @@ src/ftxui/screen/box.i: src/ftxui/screen/box.cpp.i
 
 # target to preprocess a source file
 src/ftxui/screen/box.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.i
 .PHONY : src/ftxui/screen/box.cpp.i
 
 src/ftxui/screen/box.s: src/ftxui/screen/box.cpp.s
@@ -1804,7 +1804,7 @@ src/ftxui/screen/box.s: src/ftxui/screen/box.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/screen/box.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/box.cpp.s
 .PHONY : src/ftxui/screen/box.cpp.s
 
 src/ftxui/screen/color.o: src/ftxui/screen/color.cpp.o
@@ -1812,7 +1812,7 @@ src/ftxui/screen/color.o: src/ftxui/screen/color.cpp.o
 
 # target to build an object file
 src/ftxui/screen/color.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.o
 .PHONY : src/ftxui/screen/color.cpp.o
 
 src/ftxui/screen/color.i: src/ftxui/screen/color.cpp.i
@@ -1820,7 +1820,7 @@ src/ftxui/screen/color.i: src/ftxui/screen/color.cpp.i
 
 # target to preprocess a source file
 src/ftxui/screen/color.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.i
 .PHONY : src/ftxui/screen/color.cpp.i
 
 src/ftxui/screen/color.s: src/ftxui/screen/color.cpp.s
@@ -1828,7 +1828,7 @@ src/ftxui/screen/color.s: src/ftxui/screen/color.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/screen/color.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color.cpp.s
 .PHONY : src/ftxui/screen/color.cpp.s
 
 src/ftxui/screen/color_info.o: src/ftxui/screen/color_info.cpp.o
@@ -1836,7 +1836,7 @@ src/ftxui/screen/color_info.o: src/ftxui/screen/color_info.cpp.o
 
 # target to build an object file
 src/ftxui/screen/color_info.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.o
 .PHONY : src/ftxui/screen/color_info.cpp.o
 
 src/ftxui/screen/color_info.i: src/ftxui/screen/color_info.cpp.i
@@ -1844,7 +1844,7 @@ src/ftxui/screen/color_info.i: src/ftxui/screen/color_info.cpp.i
 
 # target to preprocess a source file
 src/ftxui/screen/color_info.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.i
 .PHONY : src/ftxui/screen/color_info.cpp.i
 
 src/ftxui/screen/color_info.s: src/ftxui/screen/color_info.cpp.s
@@ -1852,7 +1852,7 @@ src/ftxui/screen/color_info.s: src/ftxui/screen/color_info.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/screen/color_info.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/color_info.cpp.s
 .PHONY : src/ftxui/screen/color_info.cpp.s
 
 src/ftxui/screen/image.o: src/ftxui/screen/image.cpp.o
@@ -1860,7 +1860,7 @@ src/ftxui/screen/image.o: src/ftxui/screen/image.cpp.o
 
 # target to build an object file
 src/ftxui/screen/image.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.o
 .PHONY : src/ftxui/screen/image.cpp.o
 
 src/ftxui/screen/image.i: src/ftxui/screen/image.cpp.i
@@ -1868,7 +1868,7 @@ src/ftxui/screen/image.i: src/ftxui/screen/image.cpp.i
 
 # target to preprocess a source file
 src/ftxui/screen/image.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.i
 .PHONY : src/ftxui/screen/image.cpp.i
 
 src/ftxui/screen/image.s: src/ftxui/screen/image.cpp.s
@@ -1876,7 +1876,7 @@ src/ftxui/screen/image.s: src/ftxui/screen/image.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/screen/image.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/image.cpp.s
 .PHONY : src/ftxui/screen/image.cpp.s
 
 src/ftxui/screen/screen.o: src/ftxui/screen/screen.cpp.o
@@ -1884,7 +1884,7 @@ src/ftxui/screen/screen.o: src/ftxui/screen/screen.cpp.o
 
 # target to build an object file
 src/ftxui/screen/screen.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.o
 .PHONY : src/ftxui/screen/screen.cpp.o
 
 src/ftxui/screen/screen.i: src/ftxui/screen/screen.cpp.i
@@ -1892,7 +1892,7 @@ src/ftxui/screen/screen.i: src/ftxui/screen/screen.cpp.i
 
 # target to preprocess a source file
 src/ftxui/screen/screen.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.i
 .PHONY : src/ftxui/screen/screen.cpp.i
 
 src/ftxui/screen/screen.s: src/ftxui/screen/screen.cpp.s
@@ -1900,7 +1900,7 @@ src/ftxui/screen/screen.s: src/ftxui/screen/screen.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/screen/screen.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/screen.cpp.s
 .PHONY : src/ftxui/screen/screen.cpp.s
 
 src/ftxui/screen/string.o: src/ftxui/screen/string.cpp.o
@@ -1908,7 +1908,7 @@ src/ftxui/screen/string.o: src/ftxui/screen/string.cpp.o
 
 # target to build an object file
 src/ftxui/screen/string.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.o
 .PHONY : src/ftxui/screen/string.cpp.o
 
 src/ftxui/screen/string.i: src/ftxui/screen/string.cpp.i
@@ -1916,7 +1916,7 @@ src/ftxui/screen/string.i: src/ftxui/screen/string.cpp.i
 
 # target to preprocess a source file
 src/ftxui/screen/string.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.i
 .PHONY : src/ftxui/screen/string.cpp.i
 
 src/ftxui/screen/string.s: src/ftxui/screen/string.cpp.s
@@ -1924,7 +1924,7 @@ src/ftxui/screen/string.s: src/ftxui/screen/string.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/screen/string.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/string.cpp.s
 .PHONY : src/ftxui/screen/string.cpp.s
 
 src/ftxui/screen/terminal.o: src/ftxui/screen/terminal.cpp.o
@@ -1932,7 +1932,7 @@ src/ftxui/screen/terminal.o: src/ftxui/screen/terminal.cpp.o
 
 # target to build an object file
 src/ftxui/screen/terminal.cpp.o:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.o
 .PHONY : src/ftxui/screen/terminal.cpp.o
 
 src/ftxui/screen/terminal.i: src/ftxui/screen/terminal.cpp.i
@@ -1940,7 +1940,7 @@ src/ftxui/screen/terminal.i: src/ftxui/screen/terminal.cpp.i
 
 # target to preprocess a source file
 src/ftxui/screen/terminal.cpp.i:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.i
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.i
 .PHONY : src/ftxui/screen/terminal.cpp.i
 
 src/ftxui/screen/terminal.s: src/ftxui/screen/terminal.cpp.s
@@ -1948,7 +1948,7 @@ src/ftxui/screen/terminal.s: src/ftxui/screen/terminal.cpp.s
 
 # target to generate assembly for a file
 src/ftxui/screen/terminal.cpp.s:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.s
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(MAKE) $(MAKESILENT) -f _deps/ftxui-build/CMakeFiles/screen.dir/build.make _deps/ftxui-build/CMakeFiles/screen.dir/src/ftxui/screen/terminal.cpp.s
 .PHONY : src/ftxui/screen/terminal.cpp.s
 
 # Help Target
@@ -2195,6 +2195,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/bau/university/ba2/year_project/group-1/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /mnt/c/Users/antoi/Desktop/test/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
