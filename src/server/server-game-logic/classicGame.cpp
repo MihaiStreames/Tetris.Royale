@@ -1,51 +1,96 @@
+
 #include "classicGame.hpp"
 
 
 
-std::vector<ClassicGame*> ClassicGame::getOpponents() { return opponents; }
+ClassicGame::ClassicGame(const int gWidth, const int gHeight, const int gScore, const int fc, const int lvl, const int totLinesCleared) :
+    TetrisGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared) {
 
-ClassicGame* ClassicGame::getTarget() { return target; }
+        // this is the constructor for the ClassicGame class which is a subclass of TetrisGame
+        // it initializes the game with the given parameters and initializes the opponents vector and targetIndex (to 0)
 
-void ClassicGame::addPenaltyLines(int linesToAdd) {
+        // TODO : initialize opponents correctly
 
-    GameMatrix& matrix = getGameMatrix();
-    tetroMat& board = matrix.getBoard();
+        opponents = std::vector<ClassicGame*>();
+        targetIndex = 0;
+
+}
+
+
+int ClassicGame::getOpponentVectorSize() {
+
+    // returns the size of the opponents vector
+    return static_cast<int>(opponents.size());
+
+}
+
+
+
+std::vector<ClassicGame*> ClassicGame::getOpponents() {
+
+    // returns the opponents vector (vector of ClassicGame pointers)
+    return opponents;
+
+}
+
+void ClassicGame::setOpponents(std::vector<ClassicGame*> opponents) {
+
+    // sets the opponents vector to the given vector of ClassicGame pointers
+    this->opponents = opponents;
+
+}
+
+ClassicGame* ClassicGame::getTarget() {
     
-    // ?? need to add methods IN gameMatrix to get the top line
-    for (int i = 0; i < linesToAdd; ++i){
-        for (int cell : getGameMatrix().getBoard()[i]){
-            if (cell) {
-                setGameOver(true);
-                return;
-            }
-        }
-    }
+    // returns the target ClassicGame pointer (targetIndex-th element of the opponents vector)
+    // beware of out of bounds, so if that happens, returns the first element of the opponents vector
+    // again, beware of the case where the opponents vector is empty, so in that case, return nullptr
 
-    // if reached, then no game over
+    int size = getOpponentVectorSize();
 
-    // remove the top line (since it's empty) and add the new penalty line at the bottom
-    board.erase(board.begin(), board.begin() + linesToAdd);
-    int holePosition = rand() % matrix.getWidth();
-
-    for (int i = 0; i < linesToAdd; ++i) {
-        std::vector<int> newLine(matrix.getWidth(), 8);
-        newLine[holePosition] = 0;
-        board.push_back(newLine);
+    if (size == 0) {
+        return nullptr;
+    } else if (targetIndex >= size) {
+        return opponents[0];  // default
+    } else {
+        return opponents[targetIndex];
     }
 
 }
 
-void ClassicGame::changePlayerView() {
 
-    // ?? maybe need a rework
 
-    if (targetIndex < opponents.size()) {
-        targetIndex += 1;
-    } else {
-        targetIndex = 0;
+
+void ClassicGame::addPenaltyLines(int linesToAdd) {
+
+    // this method adds penalty lines to the game board
+    // it first checks if the n-th top lines are empty, if not, then the game is over
+    // if the game is not over, then it removes the top n lines and adds n new lines at the bottom
+    // the new lines have a hole at a random position
+
+    GameMatrix& matrix = getGameMatrix();
+    
+    // check if the top lines are empty (if not, game over)
+    if (!matrix.areLinesEmpty(0, linesToAdd)) {
+        setGameOver(true);
+        return;
     }
 
-    target = opponents[targetIndex];
+    // push the new lines into the board (at the bottom)
+    matrix.pushPenaltyLinesAtBottom(linesToAdd);
+
+}
+
+void ClassicGame::changePlayerView(int idx) {
+
+    // changes the targetIndex to the given index
+    // if the index is out of bounds, then it sets the targetIndex to 0
+
+    if (idx < 0 || idx >= getOpponentVectorSize()) {
+        targetIndex = 0;
+    } else {
+        targetIndex = idx;
+    }
 
 }
 

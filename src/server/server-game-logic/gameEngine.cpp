@@ -1,124 +1,177 @@
+
 #include "gameEngine.hpp"
 
 
-bool GameEngine::handleAction(RoyalGame &game, const Action action) {
 
-    bool success = true;
-    auto& gm = game.getGameMatrix();
+bool GameEngine::handleAction(TetrisGame &game, const Action action) {
+
+    // this method is responsible for handling the game logic
+    // based on the action that the player has taken
+
+    // will throw an exception if the action is invalid
+    // handled actions include : classic moves, special moves, and none
+
+    GameMatrix& gm = game.getGameMatrix();
 
     switch (action) {
         
-        case MoveLeft:
-            success = gm.tryMoveCurrent(-1, 0);
-            break;
+        // classic moves
+        case MoveLeft: return gm.tryMoveLeft();
+        case MoveRight: return gm.tryMoveRight();
+        case MoveDown: return gm.tryMoveDown();
+        case RotateLeft: return gm.tryRotateLeft();
+        case RotateRight: return gm.tryRotateRight();
 
-        case MoveRight:
-            success = gm.tryMoveCurrent(1, 0);
-            break;
+        // special moves
+        case InstantFall: return gm.tryInstantFall();
+        case UseBag: return handleBag(game);
+        case None: return false;
 
-        case MoveDown:
-            success = gm.tryMoveCurrent(0, 1);
-            break;
-
-        case RotateLeft:
-            success = gm.tryRotateCurrent(false);
-            break;
-
-        case RotateRight:
-            success = gm.tryRotateCurrent(true);
-            break;
-
-        case InstantFall:
-            // ?? do that in GAMEMATRIX ?
-            // Instant fall: keep moving down until you can't
-            while (gm.tryMoveCurrent(0, 1)) {}
-            success = true;
-            break;
-
-        case UseBag:
-            success = handleBag(game);
-            break;
-
-        // if none of the above, do nothing
-        case None:
-            break;
-
-        default:
-            break;
+        default: throw std::runtime_error("[err] Invalid action: " + static_cast<int>(action));
             
     }
 
-    return success;
 }
+
 
 
 bool GameEngine::handleBag(TetrisGame& game) {
 
-    auto& bag = game.getBag();
-    auto& gm = game.getGameMatrix();
+    // this method is responsible for handling the bag
+    // the bag is a special feature that allows the player to store a piece
+    // and swap it with the current piece
 
-    if (!bag.usable()) { return false; }
+    // will return false if the bag is not usable
+    // will return false if there is no current piece to store or swap
+    // will return true if the bag is used successfully
+
+    Bag& bag = game.getBag();
+    GameMatrix& gm = game.getGameMatrix();
+
+    if (!bag.isBagUsable()) { return false; }
 
     const Tetromino* current = gm.getCurrent();
-    if (!current) return false; // no current piece to store or swap
+    if (!current) {return false; } // no current piece to store or swap
+
 
     if (bag.isEmpty()) {
-
-        bag.storePiece(*current);
-        gm.deleteCurrent();
-        handleSpawn(game); // spawn a new piece from the factory
-
+        handleEmptyBag(game);
     } else {
-
-        // Swap with the stored piece
-        // Put current piece back into the factory pool
-        Tetromino resetCurrent = *current;
-        resetCurrent.reset();
-
-        // Push the reset tetromino back into the factory pool
-        game.getFactory().pushPiece(resetCurrent);
-        gm.deleteCurrent();
-        Tetromino retrieved = bag.retrievePiece();
-        handleSpawn(game, retrieved);
-
+        handleSwap(game);
     }
 
-    bag.setUsable(false);
     return true;
 
 }
 
-bool GameEngine::handleFallingPiece(TetrisGame& game) {
-    if (!game.shouldApplyGravity()) return true;
-    return game.getGameMatrix().tryMakeCurrentPieceFall();
+void GameEngine::handleEmptyBag(TetrisGame& game) {
+
+    // this method is responsible for handling the bag
+    // when the bag is empty, usage will store the current piece
+    // and spawn a new piece from the factory
+
+    Bag& bag = game.getBag();
+    GameMatrix& gm = game.getGameMatrix();
+
+    bag.storePiece(*gm.getCurrent());
+    gm.deleteCurrent();
+    handleSpawn(game);
+
+    // the bag is no longer usable after storing a piece
+    bag.setUsable(false);
+
 }
 
-bool GameEngine::handlePlacingPiece(RoyalGame &game) {
-    
-    auto& gm = game.getGameMatrix();
+void GameEngine::handleSwap(TetrisGame& game) {
+
+    // this method is responsible for handling the bag
+    // when the bag is not empty, usage will swap the current piece
+    // with the piece stored in the bag
+
+    Bag& bag = game.getBag();
+    GameMatrix& gm = game.getGameMatrix();
+    Tetromino current = *gm.getCurrent();
+
+    // put the tetro in the factory (top) and removing it from the game matrix
+    current.reset();
+    game.getFactory().pushPiece(current);
+    gm.deleteCurrent();
+
+    // retrieve the tetro from the bag and put it in the game matrix
+    Tetromino retrieved = bag.retrievePiece();
+    handleSpawn(game, retrieved);
+
+    // the bag is no longer usable after a swap
+    bag.setUsable(false);
+
+}
+
+
+
+bool GameEngine::handleFallingPiece(TetrisGame& game) {
+
+    // this method is responsible for handling the falling piece
+    // the falling piece is the current piece that is being controlled by the player
+    // the piece will fall down until it reaches the bottom of the game matrix
+    // or until it collides with another piece
+
+    // will return true if the piece doesn't need to fall (not on this frame)
+    // will return true if the piece is still falling
+    // will return false if the piece has reached the bottom or collided with another piece
+
+    return (!game.shouldApplyGravity()) ? true : game.getGameMatrix().tryMakeCurrentPieceFall();
+
+}
+
+bool GameEngine::handlePlacingPiece(TetrisGame &game) {
+
+    // this method is responsible for handling the placing of the piece
+    // the placing of the piece is the final step of the game logic
+    // the piece will be placed in the game matrix and a new piece will be spawned
+
+    GameMatrix& gm = game.getGameMatrix();
     const Tetromino* current = gm.getCurrent();
-    if (!current) return false;
 
-    if (const int rowsToObstacle = gm.getRowsToObstacle(*current); rowsToObstacle > 0) return false; // still space before placing
+    // check if there is a current piece
+    if (!current) { return false; }
 
-    const bool placed = gm.tryPlaceCurrentPiece();
-    if (placed) {
-        // After placing a piece, the bag becomes usable again
-        game.getBag().setUsable(true);
+    // check if there is space to place the piece
+    const int rowsToObstacle = gm.getRowsToObstacle(*current);
+    
+    if (rowsToObstacle > 0) {
+        return false;
     }
+
+    // if reached here, the piece need to be placed
+    // if the piece is placed, the bag is usable again
+    const bool placed = gm.tryPlaceCurrentPiece();
+    if (placed) { game.getBag().setUsable(true); }
 
     return placed;
 
 }
 
+
+
+
 void GameEngine::handleSpawn(TetrisGame& game) {
 
-    if (auto& gm = game.getGameMatrix(); !gm.getCurrent()) {
+    // this method is responsible for handling the spawning of the piece
+    // the spawning of the piece is the first step of the game logic
+    // a new piece will be spawned from the factory and placed in the game matrix
+
+    GameMatrix& gm = game.getGameMatrix(); 
+
+    // if empty current piece, spawn a new one!
+    // the piece to spawn will be popped from the factory
+    // if the placing can't be done, the game is over (no space to spawn)
+
+    if (!gm.getCurrent()) {
 
         const Tetromino piece = game.getFactory().popPiece();
-        if (const bool success = gm.trySpawnPiece(piece); !success) {
-            handleGameOver(game);
-        }
+        const bool success = gm.trySpawnPiece(piece);
+        
+        if (!success) { game.setGameOver(true); }
 
     }
 
@@ -126,17 +179,28 @@ void GameEngine::handleSpawn(TetrisGame& game) {
 
 void GameEngine::handleSpawn(TetrisGame &game, Tetromino &piece) {
 
-    if (auto& gm = game.getGameMatrix(); !gm.getCurrent()) {
+    // specific version of the handleSpawn method, that allows to spawn a specific piece
+    // given in parameter, instead of popping a piece from the factory
 
-        if (const bool success = gm.trySpawnPiece(piece); !success) {
-            // If we failed to spawn, the game is over
-            game.setGameOver(true);
-            handleGameOver(game);
-        }
+    // ?? there's probably a clean way to do this without duplicating the code
+    // ?? but time constraints are a thing so I'll leave it like this for now (feel free to edit)
+
+    GameMatrix& gm = game.getGameMatrix(); 
+
+    // if empty current piece, spawn a new one!
+    // if the placing can't be done, the game is over (no space to spawn)
+
+    if (!gm.getCurrent()) {
+
+        const bool success = gm.trySpawnPiece(piece);
+        if (!success) { game.setGameOver(true); }
 
     }
 
 }
+
+
+
 
 void GameEngine::handleGameLogic(RoyalGame &game) {
 

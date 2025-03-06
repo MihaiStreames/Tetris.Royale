@@ -4,26 +4,25 @@
 #include "tetrisGame.hpp"
 
 class ClassicGame : public TetrisGame {
-    std::vector<ClassicGame *> opponents;
-    ClassicGame *target;
+
+private:
+
+    int getOpponentVectorSize();
+
+    std::vector<ClassicGame*> opponents;
     int targetIndex;
 
 public:
-    ClassicGame(const int gWidth, const int gHeight, const int gScore = 0, const int fc = 0, const int lvl = 0,
-                const int totLinesCleared = 0): TetrisGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared) {
-        // TODO : faire une requete qui demande au seveur la liste des joueurs
-        // TODO : target = opponents[0];
-        // TODO : targetIndex = 0;
-    }
 
+    ClassicGame(const int gWidth, const int gHeight, const int gScore = 0, const int fc = 0, const int lvl = 0, const int totLinesCleared = 0);
     ~ClassicGame() override = default;
 
-    virtual std::vector<ClassicGame *> getOpponents();
-
-    virtual ClassicGame *getTarget();
+    [[nodiscard]] virtual std::vector<ClassicGame*> getOpponents();
+    void setOpponents(std::vector<ClassicGame*> opponents);
+    [[nodiscard]] virtual ClassicGame* getTarget();
 
     void addPenaltyLines(int linesToAdd) override;
+    void changePlayerView(int idx);
 
-    void changePlayerView();
 };
 

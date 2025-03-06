@@ -1,25 +1,32 @@
+
 #include "classicEngine.hpp"
-#include "classicGame.hpp"
-
-
 
 
 void ClassicEngine::handleBasicPenalty(ClassicGame& game, const int linesCleared) {
     
+    // this should handle the line penalty for the opponents
+    // the penalty is calculated based on the number of lines cleared
 
-    if (linesCleared <= 1) { return; }
+    if (linesCleared <= 1) {
+        // no penalty lines to add for 0 or 1 lines cleared
+        return;
+    }
 
+    // fetch the opponent of the player
     const std::vector<ClassicGame*>& opponents = game.getOpponents();
-
-    // fetch the game of selected opponent
     ClassicGame* opponent = game.getTarget();
 
     // calculate the number of lines to add
     int linesToAdd;
-    if (linesCleared < 4){
+
+    if (linesCleared < MAX_COMBO) {
+
         linesToAdd = linesCleared - 1;
+
     } else {
-        linesToAdd = 4;
+
+        linesToAdd = MAX_COMBO;
+
     }
 
     // add the penalty lines to the opponent
@@ -28,21 +35,30 @@ void ClassicEngine::handleBasicPenalty(ClassicGame& game, const int linesCleared
 }
 
 
-void ClassicEngine::handleGameLogic(RoyalGame &game) {
+void ClassicEngine::handleGameLogic(TetrisGame &game) {
 
-    // clear the lines and calculate the score for the player
-    const int linesCleared = game.getGameMatrix().clearFullLines();
-    handleScore(game, linesCleared);
+    // this should handle the game logic for the classic game mode
+    // the game logic should handle the following:
+    // - clear the full lines
+    // - handle the score
+    // - handle the penalty lines for the opponents
+    // - handle the spawn of the next piece if needed
+    // - check if the game is over
+
+    ClassicGame& classicGame = static_cast<ClassicGame&>(game);
+
+    // clear the full lines and handle the score
+    const int linesCleared = classicGame.getGameMatrix().clearFullLines();
+    handleScore(classicGame, linesCleared);
 
     // handle the penalty lines for the opponents
-    auto* classicGame = dynamic_cast<ClassicGame*>(&game);
-    handleBasicPenalty(*classicGame, linesCleared);
+    handleBasicPenalty(classicGame, linesCleared);
 
     // handle the spawn of the next piece if needed
-    handleSpawn(game);
+    handleSpawn(classicGame);
 
     // check if the game is over
-    if (game.isGameOver()) { handleGameOver(game); }
+    if (classicGame.isGameOver()) { handleGameOver(classicGame); }
 
 }
 

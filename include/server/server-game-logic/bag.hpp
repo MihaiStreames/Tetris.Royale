@@ -4,24 +4,29 @@
 #include <memory>
 #include "tetromino.hpp"
 
+
 class Bag {
+
+
+private:
+
     std::unique_ptr<Tetromino> storedPiece;
     bool isUsable;
 
 public:
-    Bag() : storedPiece(nullptr), isUsable(true) {}
 
-    Tetromino retrievePiece();
+    Bag();
+    ~Bag();
 
-    [[nodiscard]] const Tetromino* peekPiece() const { return storedPiece.get(); }
+    // getters and setters stuff
+    [[nodiscard]] bool isEmpty() const;
+    [[nodiscard]] bool isBagUsable() const;
+    void setUsable(const bool flag);
 
-    [[nodiscard]] bool isEmpty() const { return storedPiece == nullptr; }
-
-    [[nodiscard]] bool usable() const { return isUsable; }
-
-    void setUsable(const bool flag) { isUsable = flag; }
-
-    // Stores a Tetromino in the bag if the bag is usable and empty.
+    // usage stuff
+    [[nodiscard]] const Tetromino* peekPiece() const;
+    [[nodiscard]] Tetromino retrievePiece();
     void storePiece(const Tetromino& piece);
     
 };
+

@@ -70,6 +70,17 @@ bool GameMatrix::tryPlaceCurrentPiece() {
     return false;
 }
 
+bool GameMatrix::tryInstantFall() {
+    
+    bool moved = false;
+    while (tryMoveDown()) {
+        moved = true;
+    }
+
+    return moved;
+
+}
+
 [[nodiscard]] bool GameMatrix::canRotate(const Tetromino& tetromino, const bool clockwise) const {
     Tetromino rotated = tetromino;
     const tetroMat shape = rotated.getRotateShape(clockwise ? RotateRight : RotateLeft);
@@ -108,6 +119,22 @@ bool GameMatrix::tryPlaceCurrentPiece() {
     return true;
 }
 
+[[nodiscard]] bool GameMatrix::isLineEmpty(const int line) const {
+    for (int x = 0; x < width; ++x) {
+        if (board[line][x] != 0) return false;
+    }
+
+    return true;
+}
+
+[[nodiscard]] bool GameMatrix::areLinesEmpty(const int start, const int end) const {
+    for (int y = start; y < end; ++y) {
+        if (!isLineEmpty(y)) return false;
+    }
+
+    return true;
+}
+
 void GameMatrix::clearSingleLine(const int line) {
     for (int x = 0; x < width; ++x) {
         board[line][x] = 0;
@@ -131,6 +158,28 @@ int GameMatrix::clearFullLines() {
     }
 
     return linesCleared;
+}
+
+void GameMatrix::pushNewLinesAtBottom(const std::vector<std::vector<int>> newLines) {
+    board.erase(board.begin(), board.begin() + newLines.size());
+    for (const auto& line : newLines) {
+        board.push_back(line);
+    }
+}
+
+void GameMatrix::pushPenaltyLinesAtBottom(const int linesToAdd) {
+    
+
+    std::vector<std::vector<int>> newLines;
+
+    for (int i = 0; i < linesToAdd; ++i) {
+        std::vector<int> line(width, Single);
+        const int hole = rand() % width;
+        line[hole] = 0;
+        newLines.push_back(line);
+    }
+
+    pushNewLinesAtBottom(newLines);
 }
 
 [[nodiscard]] tetroMat GameMatrix::getBoardWithCurrentPiece() const {

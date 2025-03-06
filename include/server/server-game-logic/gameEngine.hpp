@@ -9,37 +9,36 @@
 
 
 class GameEngine {
+
 public:
-    virtual ~GameEngine() = default;
 
     GameEngine() = default;
+    virtual ~GameEngine() = default;
 
-    virtual bool handleAction(RoyalGame &game, Action action);
 
-    virtual bool handleBag(TetrisGame &game);
+    [[nodiscard]] virtual bool handleAction(TetrisGame &game, Action action);
 
-    virtual bool handleFallingPiece(TetrisGame &game);
-
-    virtual bool handlePlacingPiece(RoyalGame &game);
+    [[nodiscard]] virtual bool handleBag(TetrisGame &game);
+    virtual void handleEmptyBag(TetrisGame &game);
+    virtual void handleSwap(TetrisGame &game);
+    
+    [[nodiscard]] virtual bool handleFallingPiece(TetrisGame &game);
+    [[nodiscard]] virtual bool handlePlacingPiece(TetrisGame &game);
 
     virtual void handleSpawn(TetrisGame &game);
-
     virtual void handleSpawn(TetrisGame &game, Tetromino &piece);
-
-    virtual void handleGameLogic(RoyalGame &game);
-
-    virtual void handleGameOver(TetrisGame & /*eventually have game*/);
-
+    
+    virtual void handleGameLogic(TetrisGame &game);
+    virtual void handleGameOver(TetrisGame &game);
     virtual void handleScore(TetrisGame &game, int linesCleared);
+    virtual void handlingRoutine(TetrisGame &game, Action action);
 
-    virtual void handlingRoutine(RoyalGame &game, Action action);
+    [[nodiscard]] virtual bool handleBonus(TetrisGame &game);
+    [[nodiscard]] virtual bool handleMalus(TetrisGame &game);
 
-    virtual bool handleBonus(RoyalGame &game) { return false; }
+    static void sendToEnemy();
+    static void handleEnergy();
 
-    virtual bool handleMalus(RoyalGame &game) { return false; }
-
-    static void sendToEnemy() { std::cerr << "You cannot access sendToEnemy from GameEngine"; }
-
-    static void handleEnergy() { std::cerr << "You cannot access handleEnergy from GameEngine"; }
 };
+
 
