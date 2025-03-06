@@ -1,98 +1,82 @@
+
 #include "royalGame.hpp"
 
-void RoyalGame::setInvertedFlag(const bool flag) {
-    reverseControls = flag;
+
+
+RoyalGame::RoyalGame(const int gWidth, const int gHeight, const int gScore, const int fc, const int lvl, const int totLinesCleared) :
+    ClassicGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared) {
+
+    // this is the constructor of the RoyalGame class
+    // might need to modify this later (reverse controls ?)
+
+    // ?? reverseControls = false;
+
 }
 
-void RoyalGame::thunderStrike() {
+
+void RoyalGame::spawnThunderStrike() {
+
+    // this method is called when the player uses the thunder strike power-up
+    // it will destroy a 2x2 area of blocks in a random column
 
     // find some column to destroy
     const int col = rand() % gameMatrix.getWidth();
-    tetroMat& board = gameMatrix.getBoard();
-
 
     // this is the default y value the thunder will strike.
     // will remain -1 if no block is found in the column "col"
-    int impactRow = -1;
-
-    // find the first block in the column
-    for (int y = 0; y < gameMatrix.getHeight(); ++y) {
-
-        if (board[y][col] != 0) {
-            impactRow = y;
-            break;
-        }
-
-    }
+    int impactRow = gameMatrix.findHighestBlockInColumn(col);
 
     // if no block was found in the column, return
     if (impactRow == -1) { return; }
-
-
-    // destroy the block and the blocks around it (2x2)
-    // ?? this logic SHOULD NOT be here, it should be in the gameMatrix class
-    
-    for (int dy = 0; dy < 2; ++dy) {
-
-        for (int dx = 0; dx < 2; ++dx) {
-
-            const int x = col + dx;
-            const int y = impactRow + dy;
-
-            if (x < gameMatrix.getWidth() && y < gameMatrix.getHeight()) {
-                board[y][x] = 0;
-            }
-
-        }
-
-    }
+    else { gameMatrix.destroyAreaAroundBlock({col, impactRow}, THNUDERSTRIKE_BLAST_RADIUS); }
 
 }
 
-void RoyalGame::blockControls() {
 
-    blockCommand = !blockCommand;
+void RoyalGame::increaseFallingSpeed() {
 
-}
-
-void RoyalGame::fastPieces() {
+    // this method is called when the player uses the speed power-up
+    // it will make the pieces fall faster
 
     speedFactor++;
 
 }
 
-void RoyalGame::darkMode() {
+void RoyalGame::decreaseFallingSpeed() {
 
-    // !! magic number (600)
-    setDarkModeTimer(getFrameCount() + 600);
-    setDarkMode(true);
-    
+    // this method is called when the player uses the slow power-up
+    // it will make the pieces fall slower
+
+    speedFactor--;
+
+    // ?? this is kinda weird, I understand but it's not that clear, might need to rewrite this later
+
+    // if the speed factor is negative, set it to 0
+    if (level + speedFactor < 0) {
+        speedFactor = 0;
+    }
+
 }
 
 void RoyalGame::pushSingleBlock() {
 
-    // !! this should be a CONSTANT at the very least, or some logic in the gameMatrix class
-    // !! this is a magic number (2)
+    // this method is called when the player uses the single block power-up
+    // it will push 'SINGLE_BLOCKS_TO_PUSH' (2) single blocks to the player's board
 
-    for (int i = 0; i < 2; ++i){
-
-        factory.pushPiece(Tetromino({0, 0}, Single));
-
-    }
+    for (int i = 0; i < SINGLE_BLOCKS_TO_PUSH; ++i) { factory.pushPiece(Tetromino({0, 0}, Single)); }
 
 }
 
-void RoyalGame::slowPieces() {
+void RoyalGame::startDarkMode() {
 
-    // ?? why level 0 check here?
-    if (level > 0) {
+    // this method is called when the player uses the dark mode power-up
+    // it will make the game harder by making the board invisible
 
-        speedFactor--;
-        if (level + speedFactor < 0) {
-            // ?? what does speedFactor = 0 do? pieces not falling?
-            speedFactor = 0;
-        }
-    }
+    // this is a CHRONO, meaning it will calculate a TIMESTAMP to stop the darkmode on.
+
+    setDarkModeTimer(getFrameCount() + DARK_MODE_TIMER);
+    setDarkMode(true);
+    
 
 }
 

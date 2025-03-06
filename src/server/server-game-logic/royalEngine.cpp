@@ -1,210 +1,209 @@
+
 #include "royalEngine.hpp"
 
 
-bool RoyalEngine::handleAction(RoyalGame &game, const Action action) {
+
+bool RoyalEngine::handleAction(TetrisGame &game, const Action action) {
     
-    bool success = true;
-    auto& gm = game.getGameMatrix();
+    // this method is responsible for handling the game logic
+    // based on the action that the player has taken
+
+    // will throw an exception if the action is invalid
+    // handled actions include : classic moves, special moves, malus, bonus and none
+
+    RoyalGame &royalGame = static_cast<RoyalGame&>(game);
+    GameMatrix& gm = royalGame.getGameMatrix();
 
     switch (action) {
 
-        case MoveLeft:
-            success = gm.tryMoveCurrent(-1, 0);
-            break;
+        // classic moves
+        case MoveLeft: return gm.tryMoveLeft();
+        case MoveRight: return gm.tryMoveRight();
+        case MoveDown: return gm.tryMoveDown();
+        case RotateLeft: return gm.tryRotateLeft();
+        case RotateRight: return gm.tryRotateRight();
 
-        case MoveRight:
-            success = gm.tryMoveCurrent(1, 0);
-            break;
+        // special moves
+        case InstantFall: return gm.tryInstantFall();
+        case UseBag: return handleBag(royalGame);
 
-        case MoveDown:
-            success = gm.tryMoveCurrent(0, 1);
-            break;
+        // power ups
+        case UseMalus: handleMalus(royalGame); return true;
+        case UseBonus: handleBonus(royalGame); return true;
 
-        case RotateLeft:
-            success = gm.tryRotateCurrent(false);
-            break;
+        case None: return false;
+        default: throw std::runtime_error("[err] Invalid action: " + static_cast<int>(action));
 
-        case RotateRight:
-            success = gm.tryRotateCurrent(true);
-            break;
-
-        case InstantFall:
-            // Instant fall: keep moving down until you can't
-            while (gm.tryMoveCurrent(0, 1)) {}
-            success = true;
-            break;
-
-        case UseBag:
-            success = handleBag(game);
-            break;
-
-        case Malus:
-            
-        // !! move logic in handleMalus
-
-            if (game.getEnergy() >= 100) {
-                game.setEnergy(0);
-                success = handleMalus(game);
-            } else {
-                success = false;
-            }
-
-            break;
-            
-        case Bonus:
-
-        // !! move logic in handleBonus
-
-            if (game.getEnergy() >= 100) {
-                game.setEnergy(0);
-                success = handleBonus(game);
-            } else {
-                success = false;
-            }
-
-            break;
-
-        // !! I don't understand
-        case None:               
-        default:
-            // No action
-            break;
     }
-
-    return success;
 
 }
 
-bool RoyalEngine::handlePlacingPiece(RoyalGame &game) {
+void RoyalEngine::handleGameLogic(TetrisGame &game) {
+
+    // this method is responsible for handling the game logic
+    // based on the current state of the game
+
+    RoyalGame &royalGame = static_cast<RoyalGame&>(game);
+
+    const int linesCleared = royalGame.getGameMatrix().clearFullLines();
+    handleScore(royalGame, linesCleared);
+    handleSpawn(royalGame);
+
+    handleEnergy(royalGame, linesCleared);
+
+    if (royalGame.isGameOver()) { handleGameOver(royalGame); }
+
+}
+
+
+
+void RoyalEngine::handleEnergy(TetrisGame &game, const int linesCleared) {
+
+    // this method is responsible for handling the energy
+    // based on the number of lines cleared
+
+    // ?? rename "calculateEnergy" to something more meaningful
+    // TODO : maybe increment energy as time goes on (but that's a stretch)
+
+    RoyalGame &royalGame = static_cast<RoyalGame&>(game);
+
+    if (linesCleared > 0) {
+        royalGame.calculateEnergy(linesCleared);
+    }
+
+}
+
+bool RoyalEngine::hasEnoughEnergy(RoyalGame &game) {
+
+    // this method is responsible for checking if the player has enough energy
+    // to use a special move
+
+    return game.getEnergy() >= POWER_UP_COST;
+
+}
+
+void RoyalEngine::handlingRoutine(TetrisGame &game, const Action action) {
+
+    // this method is responsible for handling the game logic
+    // based on the current state of the game
+
+    RoyalGame &royalGame = static_cast<RoyalGame&>(game);
     
-    auto& gm = game.getGameMatrix();
-    const Tetromino* current = gm.getCurrent();
+    // call the handleAction method with the given action if the block flag is not set,
+    // otherwise call the handleAction method with the None action -> blocking effect
+    (void) handleAction(royalGame, royalGame.getBlockFlag() ? None : action);
 
-    // if no current piece then do nothing
-    if (!current) return false;
+    // ?? check if somehow this works
+    // if darkmode flag is enabled, will check if the current frame is the same as the frame when the darkmode was enabled
+    // + the duration of the darkmode, if so, will disable the darkmode
+    if (royalGame.getDarkMode() && royalGame.getDarkModeTimer() == royalGame.getFrameCount()) {
+        royalGame.setDarkMode(false);
+        royalGame.setDarkModeTimer(0);
+    }
 
-    // if the current piece is still falling, do nothing
-    if (const int rowsToObstacle = gm.getRowsToObstacle(*current); rowsToObstacle > 0) return false;
+    // if the piece's is not falling, then try to place the piece
+    if (!handleFallingPiece(royalGame)) {
 
-    // reached : place the piece
-    const bool placed = gm.tryPlaceCurrentPiece();
+        bool couldPlace = handlePlacingPiece(royalGame);
 
-    if (placed) {
-
-        // After placing a piece, the bag becomes usable again
-        game.getBag().setUsable(true);
-
-        // !! this need to use a boolean flag
-        if (game.getBlockFlag()) {
-            game.blockControls();
-        }
-
-        if (game.getReverseFlag()) {
-
-            // !! also 3 is a magic number, should be a constant
-            game.setReversePieceCount(1);
-
-            if (game.getReverseControlTimeCount() == 3) {
-
-                game.setInvertedFlag(true);
-                game.setReversePieceCount(-3);
-                game.setReverseFlag(false);
-
-            }
-
-        }
+        // if we were able to place, then we need to update the malus flags
+        if (couldPlace) { handleGameFlags(royalGame); }
 
     }
 
-    // return the place flag (if false then we will invoke some gameover / respawn logic)
-    return placed;
-
-}
-
-void RoyalEngine::handleGameLogic(RoyalGame &game) {
-
-    const int linesCleared = game.getGameMatrix().clearFullLines();
-    handleScore(game, linesCleared);
-    handleSpawn(game);
-    handleEnergy(game, linesCleared);
-
-    if (game.isGameOver()) handleGameOver(game);
-
-}
-
-void RoyalEngine::handlingRoutine(RoyalGame &game, const Action action) {
-    
-
-    handleAction(game, game.getBlockFlag() ? None : action);
-
-    // ?? dark mode logic, need to be checked later
-    if (game.getDarkMode() && game.getDarkModeTimer() == game.getFrameCount()) {
-        game.setDarkMode(false);
-        game.setDarkModeTimer(0);
-    }
-
-    if (!handleFallingPiece(game)) { handlePlacingPiece(game); }
+    // game logic + fc
     handleGameLogic(game);
     game.incrementFrameCount();
 
 }
 
-bool RoyalEngine::handleBonus(RoyalGame &game)  {
-    // power ups, self inflicted
+void RoyalEngine::handleGameFlags(RoyalGame &game) {
 
-    switch (bonusVector[rand() % bonusVector.size()]){
+    // this method is responsible for handling the game flags
+    // based on the current state of the game
 
-        // fill the pool with 1x1 blocs
-        case singleBlocks:
-            game.pushSingleBlock();
-            break;
+    // if the block flag is set, then we need to set the block command to false
+    if (game.getBlockFlag()) { game.setBlockCommand(false); }
 
-        // makes the pieces fall slower
-        case slowPieces:
-            game.slowPieces();
-            break;
-        
-        default:
-            std::cerr << "Unexpected Power up";
-            return false;
-            break;
+    // if the inverted flag is set, then we need to manage its logic
+    if (game.getReverseFlag()) {
+
+        // increment the count by 1
+        game.incrementMalusCooldown(1);
+
+        // if the malus cooldown is greater than some limit, then we need to reset the inverted flag
+        if (game.getMalusCooldown() > INVERTED_CONTROLS_COOLDOWN) {
+            game.setReverseFlag(false);
+            game.setMalusCooldown(0);
+        }
+
     }
-
-    return true;
 
 }
 
-bool RoyalEngine::handleMalus(RoyalGame &game)  {
-    switch (malusVector[rand() % malusVector.size()]){
 
-        case invertedControls:
-            game.setInvertedFlag(true);
-            game.setReverseFlag(true);
-            break;
+void RoyalEngine::handleBonus(TetrisGame &game)  {
+    
+    // this method is responsible for handling the bonus
+    // Note that this is self inflicted, so the player will always
+    // target itself with the bonus power up thingy
 
-        case blockControls:
-            game.blockControls();
-            break;
+    RoyalGame &royalGame = static_cast<RoyalGame&>(game);
 
-        case thunderStrike:
-            game.thunderStrike();
-            break;
+    // if the player does not have enough energy, then return
+    // otherwise, decrement the energy by the cost of the power up and continue
+    if (!hasEnoughEnergy(royalGame)) { return; }
+    else { royalGame.incrementEnergy(-POWER_UP_COST); }
 
-        case fastPieces:
-            game.fastPieces();
-            break;
+    // select a random power up from the bonus vector (defined in 'types.hpp')
+    TypePowerUps randomBonus = bonusVector[rand() % bonusVector.size()];
 
-        case darkMode:
-            game.darkMode();
-            break;
+    switch (randomBonus) {
 
-        default:
-            std::cerr << "Unexpected Power up";
-            return false;
-            break;
+        // ?? rename methods to something more meaningful please
+
+        case singleBlocks: return royalGame.pushSingleBlock();
+        case slowPieces: return royalGame.decreaseFallingSpeed();
+        
+        default: throw std::runtime_error("[err] Unexpected Bonus");
+
     }
 
-    return true;
+}
+
+void RoyalEngine::handleMalus(TetrisGame &game) {
+
+    // this method is responsible for handling the malus
+    // note that this is not self inflicted, meaning this will target the opponent
+    // of the game given in parameter
+
+    RoyalGame &royalGame = static_cast<RoyalGame&>(game);
+    RoyalGame* opponent = static_cast<RoyalGame*>(royalGame.getTarget());
+
+    // funny stuff here : if the opponent is null, then self inflict the malus
+    if (opponent == nullptr) { opponent = &royalGame; }
+
+    // if the player does not have enough energy, then return
+    // otherwise, decrement the energy by the cost of the power up and continue
+    if (!hasEnoughEnergy(royalGame)) { return; }
+    else { royalGame.incrementEnergy(-POWER_UP_COST); }
+
+    // select a random power up from the malus vector (defined in 'types.hpp')
+    TypePowerUps randomMalus = malusVector[rand() % malusVector.size()];
+
+    switch (randomMalus) {
+
+        // ?? rename methods to something more meaningful please
+
+        case invertedControls: opponent->setReverseFlag(true); break;
+        case blockControls: opponent->setBlockCommand(true); break;
+        case thunderStrike: opponent->spawnThunderStrike(); break;
+        case fastPieces: opponent->increaseFallingSpeed(); break;
+        case darkMode: opponent->startDarkMode(); break;
+
+        default: throw std::runtime_error("[err] Unexpected Malus");
+        
+    }
 
 }
 

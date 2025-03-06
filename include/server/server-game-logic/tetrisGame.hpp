@@ -25,8 +25,7 @@ protected:
     int darkModeTimer;
     int energy = 0;
     int speedFactor = 0; // ? increase to increase speed
-    int reverseControlTimeCount = 0; // permet de compter cb de piece sont tombé
-
+    int malusCooldown = 0;
 
     bool gameOver = false;
     bool blockCommand = false; // voir s'il n y a pas une meilleur solution
@@ -56,8 +55,11 @@ public:
     [[nodiscard]] virtual bool isGameOver() const;
     virtual void setGameOver(const bool flag);
     virtual void setEnergy(int setEnergy);
+    virtual void incrementEnergy(int incr);
     virtual void setBlockCommand(bool flag);
-    virtual void setReversePieceCount(int nbr);
+    virtual void incrementMalusCooldown(int nbr);
+    virtual void setMalusCooldown(int nbr);
+    [[nodiscard]] virtual int getMalusCooldown() const;
     virtual void setReverseFlag(bool flag);
     virtual void setDarkMode(bool flag);
     virtual void setDarkModeTimer(int time);
@@ -71,7 +73,6 @@ public:
 
     virtual bool getReverseControls();
     virtual bool getBlockFlag();
-    virtual int getReverseControlTimeCount();
     virtual bool getReverseFlag();
     virtual bool getDarkMode();
     virtual int getDarkModeTimer();
@@ -105,13 +106,13 @@ public:
 
     virtual void blockControls();
 
-    virtual void thunderStrike();
-    virtual void fastPieces();
-    virtual void darkMode();
+    virtual void spawnThunderStrike();
+    virtual void increaseFallingSpeed();
+    virtual void startDarkMode();
     virtual void addPenaltyLines(int linesToAdd);
 
     // Bonus Method
     virtual void pushSingleBlock();
-    virtual void slowPieces();
+    virtual void decreaseFallingSpeed();
 };
 

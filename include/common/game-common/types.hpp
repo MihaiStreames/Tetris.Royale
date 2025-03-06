@@ -27,8 +27,8 @@ enum Action {
     RotateRight,
     InstantFall,
     UseBag,
-    Malus,
-    Bonus
+    UseMalus,
+    UseBonus
 };
 
 enum TypePowerUps {

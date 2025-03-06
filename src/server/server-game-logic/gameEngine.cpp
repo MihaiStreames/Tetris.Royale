@@ -202,41 +202,90 @@ void GameEngine::handleSpawn(TetrisGame &game, Tetromino &piece) {
 
 
 
-void GameEngine::handleGameLogic(RoyalGame &game) {
+void GameEngine::handleGameLogic(TetrisGame &game) {
+
+    // this method is responsible for handling the game logic
+    // the game logic includes clearing full lines, updating the score, and checking for game over
 
     const int linesCleared = game.getGameMatrix().clearFullLines();
     handleScore(game, linesCleared);
-    handleSpawn(game);  // ensure a piece is always available
+    handleSpawn(game);
 
-    if (game.isGameOver()) handleGameOver(game);
+    if (game.isGameOver()) { handleGameOver(game); }
 
 }
 
-void GameEngine::handleGameOver(TetrisGame& game /*eventually have game*/) {
+void GameEngine::handleGameOver(TetrisGame& game) {
+
+    // this method is responsible for handling the game over
+    // TODO : maybe need some stuff like free pointers or some
+
     (void) game;
-    std::cerr << "Game Over!" << std::endl;
-    exit(0); // !! later
+
 }
 
 void GameEngine::handleScore(TetrisGame& game, const int linesCleared) {
+
+    // this method is responsible for handling the score
+    // the score is updated based on the number of lines cleared
+    // the score is also used to determine if the player should level up
     
     game.incrementLinesCleared(linesCleared);
     game.calculateScore(linesCleared);
 
-    if (game.shouldLevelUp()) game.updateLevelAfterLineClear();
+    if (game.shouldLevelUp()) { game.updateLevelAfterLineClear(); }
 
 }
 
-void GameEngine::handlingRoutine(RoyalGame &game, const Action action) {
+void GameEngine::handlingRoutine(TetrisGame &game, const Action action) {
 
-    handleAction(game, action);
+    // this method is responsible for handling the game routine
+    // the game routine includes handling the action, the falling piece, the placing piece
+    // and the game logic
 
-    if (!handleFallingPiece(game)) {
-        handlePlacingPiece(game);
-    }
+    (void) handleAction(game, action);
+    // if the piece could not fall, try to place it
+    if (!handleFallingPiece(game)) { (void) handlePlacingPiece(game); }
 
     handleGameLogic(game);
-
     game.incrementFrameCount();
 
 }
+
+
+
+
+void GameEngine::handleBonus(TetrisGame &game) {
+
+    // !! this method should be implemented in other engines
+
+    (void) game;
+    throw std::runtime_error("[err] handleBonus not implemented");
+
+}
+
+void GameEngine::handleMalus(TetrisGame &game) {
+
+    // !! this method should be implemented in other engines
+
+    (void) game;
+    throw std::runtime_error("[err] handleMalus not implemented");
+
+}
+
+void GameEngine::sendToEnemy() {
+
+    // !! this method should be implemented in other engines
+
+    throw std::runtime_error("[err] sendToEnemy not implemented");
+
+}
+
+void GameEngine::handleEnergy() {
+
+    // !! this method should be implemented in other engines
+
+    throw std::runtime_error("[err] handleEnergy not implemented");
+
+}
+

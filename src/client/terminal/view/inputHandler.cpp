@@ -16,8 +16,8 @@ void inputHandler::setupController() {
 
     inputMap[Event::Character('b')] = UseBag;
 
-    inputMap[Event::Character('m')] = Malus;
-    inputMap[Event::Character('l')] = Bonus;
+    inputMap[Event::Character('m')] = UseMalus;
+    inputMap[Event::Character('l')] = UseBonus;
 }
 
 Action inputHandler::getUserAction() {

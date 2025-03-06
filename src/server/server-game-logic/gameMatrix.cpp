@@ -182,6 +182,39 @@ void GameMatrix::pushPenaltyLinesAtBottom(const int linesToAdd) {
     pushNewLinesAtBottom(newLines);
 }
 
+int GameMatrix::findHighestBlockInColumn(const int col) const {
+    
+    int y = -1;
+    
+    for (int i = 0; i < height; ++i) {
+        if (board[i][col] != 0) {
+            y = i;
+            break;
+        }
+    }
+
+    return y;
+
+}
+
+void GameMatrix::destroyAreaAroundBlock(const Position2D pos, const int blastRadius) {
+    
+    const int x = pos.x;
+    const int y = pos.y;
+
+    for (int dy = -blastRadius; dy <= blastRadius; ++dy) {
+        for (int dx = -blastRadius; dx <= blastRadius; ++dx) {
+            const int nx = x + dx;
+            const int ny = y + dy;
+
+            if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+                board[ny][nx] = 0;
+            }
+        }
+    }
+    
+}
+
 [[nodiscard]] tetroMat GameMatrix::getBoardWithCurrentPiece() const {
     tetroMat ret = board;
 

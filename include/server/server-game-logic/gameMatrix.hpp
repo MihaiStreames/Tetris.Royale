@@ -62,6 +62,10 @@ public:
 
     void pushPenaltyLinesAtBottom(int linesToAdd);
 
+    int findHighestBlockInColumn(int col) const;
+
+    void destroyAreaAroundBlock(const Position2D pos, const int blastRadius);
+
     [[nodiscard]] tetroMat getBoardWithCurrentPiece() const;
 
     Tetromino* getCurrent() { return currentTetromino.has_value() ? &currentTetromino.value() : nullptr; }

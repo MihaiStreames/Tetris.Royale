@@ -5,20 +5,25 @@
 
 class RoyalEngine final : public GameEngine {
 
+    const int INVERTED_CONTROLS_COOLDOWN = 3;
+    const int POWER_UP_COST = 100;
+
 public:
 
-    RoyalEngine() {}
+    RoyalEngine() = default;
+    ~RoyalEngine() override = default;
 
-    bool handleAction(RoyalGame &game, Action action) override;
-    bool handlePlacingPiece(RoyalGame &game) override;
+    bool handleAction(TetrisGame &game, Action action) override;
+    void handleGameLogic(TetrisGame &game) override;
 
-    void handleGameLogic(RoyalGame &game) override;
-
-    static void handleEnergy(RoyalGame &game, const int linesCleared) { game.calculateEnergy(linesCleared); }
-    void handlingRoutine(RoyalGame &game, Action action) override;
-
-    bool handleBonus(RoyalGame &game) override;
-    bool handleMalus(RoyalGame &game) override;
+    static void handleEnergy(TetrisGame &game, const int linesCleared);
+    [[nodiscard]] bool hasEnoughEnergy(RoyalGame &game);
+    void handlingRoutine(TetrisGame &game, Action action) override;
+    void handleGameFlags(RoyalGame &game);
+    
+    void handleBonus(TetrisGame &game) override;
+    void handleMalus(TetrisGame &game) override;
+    
 
 };
 

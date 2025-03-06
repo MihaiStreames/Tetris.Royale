@@ -33,8 +33,11 @@ public:
     virtual void handleScore(TetrisGame &game, int linesCleared);
     virtual void handlingRoutine(TetrisGame &game, Action action);
 
-    [[nodiscard]] virtual bool handleBonus(TetrisGame &game);
-    [[nodiscard]] virtual bool handleMalus(TetrisGame &game);
+
+    // interface for bonus and malus (should raise an exception if not implemented)
+
+    virtual void handleBonus(TetrisGame &game);
+    virtual void handleMalus(TetrisGame &game);
 
     static void sendToEnemy();
     static void handleEnergy();
