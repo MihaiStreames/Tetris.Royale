@@ -68,7 +68,7 @@ void RoyalEngine::handleEnergy(TetrisGame &game, const int linesCleared) {
     RoyalGame &royalGame = static_cast<RoyalGame&>(game);
 
     if (linesCleared > 0) {
-        royalGame.calculateEnergy(linesCleared);
+        royalGame.updateEnergy(linesCleared);
     }
 
 }
@@ -91,13 +91,13 @@ void RoyalEngine::handlingRoutine(TetrisGame &game, const Action action) {
     
     // call the handleAction method with the given action if the block flag is not set,
     // otherwise call the handleAction method with the None action -> blocking effect
-    (void) handleAction(royalGame, royalGame.getBlockFlag() ? None : action);
+    (void) handleAction(royalGame, royalGame.getBlockControlsFlag() ? None : action);
 
     // ?? check if somehow this works
     // if darkmode flag is enabled, will check if the current frame is the same as the frame when the darkmode was enabled
     // + the duration of the darkmode, if so, will disable the darkmode
-    if (royalGame.getDarkMode() && royalGame.getDarkModeTimer() == royalGame.getFrameCount()) {
-        royalGame.setDarkMode(false);
+    if (royalGame.getDarkModeFlag() && royalGame.getDarkModeTimer() == royalGame.getFrameCount()) {
+        royalGame.setDarkModeFlag(false);
         royalGame.setDarkModeTimer(0);
     }
 
@@ -113,7 +113,7 @@ void RoyalEngine::handlingRoutine(TetrisGame &game, const Action action) {
 
     // game logic + fc
     handleGameLogic(game);
-    game.incrementFrameCount();
+    game.incrementFrameCount(1);
 
 }
 
@@ -123,17 +123,17 @@ void RoyalEngine::handleGameFlags(RoyalGame &game) {
     // based on the current state of the game
 
     // if the block flag is set, then we need to set the block command to false
-    if (game.getBlockFlag()) { game.setBlockCommand(false); }
+    if (game.getBlockControlsFlag()) { game.setBlockControlsFlag(false); }
 
     // if the inverted flag is set, then we need to manage its logic
-    if (game.getReverseFlag()) {
+    if (game.getReverseControlsFlag()) {
 
         // increment the count by 1
         game.incrementMalusCooldown(1);
 
         // if the malus cooldown is greater than some limit, then we need to reset the inverted flag
         if (game.getMalusCooldown() > INVERTED_CONTROLS_COOLDOWN) {
-            game.setReverseFlag(false);
+            game.setReverseControlsFlag(false);
             game.setMalusCooldown(0);
         }
 
@@ -195,8 +195,8 @@ void RoyalEngine::handleMalus(TetrisGame &game) {
 
         // ?? rename methods to something more meaningful please
 
-        case invertedControls: opponent->setReverseFlag(true); break;
-        case blockControls: opponent->setBlockCommand(true); break;
+        case invertedControls: opponent->setReverseControlsFlag(true); break;
+        case blockControls: opponent->setBlockControlsFlag(true); break;
         case thunderStrike: opponent->spawnThunderStrike(); break;
         case fastPieces: opponent->increaseFallingSpeed(); break;
         case darkMode: opponent->startDarkMode(); break;

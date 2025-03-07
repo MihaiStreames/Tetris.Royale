@@ -65,9 +65,9 @@ int main() {
         while (running && !game.isGameOver()) {
             {
                 std::lock_guard lock(mtx);
-                if(game.getReverseControls()){
+                if(game.getReverseControlsFlag()){
                     ih.invertKeys();
-                    game.setInvertedFlag(false); // --
+                    game.setReverseControlsFlag(false); // --
                 }
                 const Action action = ih.handleInputs();
                 engine.handlingRoutine(game, action);

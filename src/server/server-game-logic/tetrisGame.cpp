@@ -1,99 +1,272 @@
+
 #include "tetrisGame.hpp"
 
-[[nodiscard]] bool TetrisGame::isGameOver() const { return gameOver; }
-void TetrisGame::setGameOver(const bool flag) { gameOver = flag; }
-void TetrisGame::setEnergy(int setEnergy) { energy = setEnergy; }
-void TetrisGame::incrementEnergy(int incr) { energy += incr; }
-void TetrisGame::setBlockCommand(bool flag) { blockCommand = flag; }
 
+TetrisGame::TetrisGame(const int gWidth, const int gHeight, const int gScore, const int fc, const int lvl, const int totLinesCleared)
+    : gameMatrix(gWidth, gHeight), score(gScore), frameCount(fc), level(lvl), totalLinesCleared(totLinesCleared) {
 
-void TetrisGame::incrementMalusCooldown(int nbr) { malusCooldown += nbr; }
-void TetrisGame::setMalusCooldown(int nbr) { malusCooldown = nbr; }
-[[nodiscard]] int TetrisGame::getMalusCooldown() const { return malusCooldown; }
-
-
-
-
-void TetrisGame::setReverseFlag(bool flag) { activeReverseControl = flag; }
-void TetrisGame::setDarkMode(bool flag) { isDarkMode = flag; }
-void TetrisGame::setDarkModeTimer(int time) { darkModeTimer = time; }
-
-GameMatrix& TetrisGame::getGameMatrix() { return gameMatrix; }
-int TetrisGame::getEnergy() { return energy; }
-TetrisFactory& TetrisGame::getFactory() { return factory; }
-Bag& TetrisGame::getBag()               { return bag; }
-
-[[nodiscard]] const Tetromino *TetrisGame::getHoldPiece() const { return bag.peekPiece();}
-[[nodiscard]] Tetromino &TetrisGame::getNextPiece(){ return factory.whatIsNextPiece();}
-
-bool TetrisGame::getReverseControls() { return reverseControls; }
-bool TetrisGame::getBlockFlag() { return blockCommand; }
-bool TetrisGame::getReverseFlag() { return activeReverseControl; }
-bool TetrisGame::getDarkMode() { return isDarkMode; }
-int TetrisGame::getDarkModeTimer() { return darkModeTimer; }
-
-[[nodiscard]]  int TetrisGame::getFrameCount() const noexcept    { return frameCount; }
-void TetrisGame::setFrameCount(const int fc)                    { frameCount = fc; }
-void TetrisGame::incrementFrameCount(const int fc)            { frameCount += fc; }
-
-[[nodiscard]]  int TetrisGame::getLevel() const noexcept { return level; }
-void TetrisGame::setLevel(const int lvl)                { level = lvl; }
-void TetrisGame::incrementLevel(const int lvl)        { level += lvl; }
-
-[[nodiscard]]  int TetrisGame::getScore() const noexcept { return score; }
-
-void TetrisGame::calculateScore(const int linesCleared) {
-    // !! this sohuld be defined elsewhere, NOT in the cpp
-    static const int tabScore[] = {0, 40, 100, 300, 1200};
-    if (linesCleared >= 1 && linesCleared <= 4) score += tabScore[linesCleared];
-}
-
-void TetrisGame::calculateEnergy(const int linesCleared) {
-
-    // !! this sohuld be defined elsewhere, NOT in the cpp
-    // TODO : change the energy values (1 is giving 100 energy for debug)
-    static const int tabEnergy[] = {0, 100, 30, 40, 60, 100};
-    if (linesCleared >= 1 && linesCleared <= 5)
-        energy += tabEnergy[linesCleared];
+    // this is the constructor of the TetrisGame class
+    // might need to write some code here
 
 }
 
-[[nodiscard]]  int TetrisGame::getLinesCleared() const               { return totalLinesCleared; }
-void TetrisGame::setTotalLinesCleared(const int lines)              { totalLinesCleared = lines; }
-void TetrisGame::incrementLinesCleared(const int q)                 { totalLinesCleared += q; }
 
-[[nodiscard]]  bool TetrisGame::shouldApplyGravity() const {
+
+
+
+GameMatrix& TetrisGame::getGameMatrix() {
+    return gameMatrix;
+}
+
+TetrisFactory& TetrisGame::getFactory() {
+    return factory;
+}
+
+Bag& TetrisGame::getBag() {
+    return bag;
+}
+
+int TetrisGame::getScore() const noexcept {
+    return score;
+}
+
+int TetrisGame::getFrameCount() const noexcept {
+    return frameCount;
+}
+
+int TetrisGame::getLevel() const noexcept {
+    return level;
+}
+
+int TetrisGame::getLinesCleared() const noexcept {
+    return totalLinesCleared;
+}
+
+bool TetrisGame::isGameOver() const noexcept {
+    return gameOver;
+}
+
+int TetrisGame::getEnergy() const noexcept {
+    return energy;
+}
+
+int TetrisGame::getDarkModeTimer() const noexcept {
+    return (darkModeTimer > 0) ? darkModeTimer : 0;
+}
+
+int TetrisGame::getSpeedFactor() const noexcept {
+    return speedFactor;
+}
+
+int TetrisGame::getMalusCooldown() const noexcept {
+    return malusCooldown;
+}
+
+bool TetrisGame::getBlockControlsFlag() const noexcept {
+    return blockControlsFlag;
+}
+
+bool TetrisGame::getReverseControlsFlag() const noexcept {
+    return reverseControlsFlag;
+}
+
+bool TetrisGame::getDarkModeFlag() const noexcept {
+    return darkModeFlag;
+}
+
+Tetromino& TetrisGame::getNextPiece() {
+    return factory.whatIsNextPiece();
+}
+
+const Tetromino* TetrisGame::getHoldPiece() const {
+    return bag.peekPiece();
+}
+
+
+
+
+
+void TetrisGame::setScore(const int s) {
+    score = s;
+}
+
+void TetrisGame::setFrameCount(const int fc) {
+    frameCount = fc;
+}
+
+void TetrisGame::setLevel(const int lvl) {
+    level = lvl;
+}
+
+void TetrisGame::setTotalLinesCleared(const int lines) {
+    totalLinesCleared = lines;
+}
+
+void TetrisGame::setGameOver(const bool flag) {
+    gameOver = flag;
+}
+
+void TetrisGame::setEnergy(const int e) {
+    energy = e;
+}
+
+void TetrisGame::setDarkModeTimer(const int time) {
+    darkModeTimer = time;
+}
+
+void TetrisGame::setSpeedFactor(const int sf) {
+    speedFactor = sf;
+}
+
+void TetrisGame::setMalusCooldown(const int mc) {
+    malusCooldown = mc;
+}
+
+void TetrisGame::setBlockControlsFlag(const bool flag) {
+    blockControlsFlag = flag;
+}
+
+void TetrisGame::setReverseControlsFlag(const bool flag) {
+    reverseControlsFlag = flag;
+}
+
+void TetrisGame::setDarkModeFlag(const bool flag) {
+    darkModeFlag = flag;
+}
+
+
+
+
+void TetrisGame::updateScore(const int linesCleared) {
+
+    int dScore = (linesCleared <= MAX_LINES_CLEARABLE_AT_ONCE) ? ScoreRewardTab[linesCleared] : 0;
+    incrementScore(dScore);
+
+}
+
+void TetrisGame::updateEnergy(const int linesCleared) {
+
+    int dEnergy = (linesCleared <= MAX_LINES_CLEARABLE_AT_ONCE) ? EnergyRewardTab[linesCleared] : 0;
+    incrementEnergy(dEnergy);
+
+}
+
+
+
+void TetrisGame::incrementLinesCleared(const int q) {
+    setTotalLinesCleared(getLinesCleared() + q);
+}
+
+void TetrisGame::incrementScore(const int q) {
+    setScore(getScore() + q);
+}
+
+void TetrisGame::incrementFrameCount(const int q) {
+    setFrameCount(getFrameCount() + q);
+}
+
+void TetrisGame::incrementLevel(const int q) {
+    setLevel(getLevel() + q);
+}
+
+void TetrisGame::incrementEnergy(const int q) {
+    setEnergy(getEnergy() + q);
+}
+
+void TetrisGame::incrementMalusCooldown(const int q) {
+    setMalusCooldown(getMalusCooldown() + q);
+}
+
+
+
+
+
+bool TetrisGame::shouldApplyGravity() const {
+
+    // this function is used to determine if the current piece should fall down
+    // it is based on the current frame count and the current level of the game
+
     const int frame = getFrameCount();
-    const int lvl = getLevel();
-    int frame_quantum = 1;
+    const int level = getLevel();
+    int frame_quantum = 1;  // default value
 
-    if (const auto it = SPEED_TABLE.find(lvl + speedFactor); it != SPEED_TABLE.end()) frame_quantum = it->second;
+    // if the level is in the speed table, we use the value of the table
+    // note that we use the level + speedFactor to get the correct value (speedFactor is used for power-ups)
+    if (const auto it = SPEED_TABLE.find(level + speedFactor); it != SPEED_TABLE.end()) frame_quantum = it->second;
 
+    // if the frame count is a multiple of the frame quantum, the piece should fall down
+    // weird way of doing this, but anyway kekw
     return frame % frame_quantum == 0 && frame >= frame_quantum;
+
 }
 
-[[nodiscard]]  bool TetrisGame::shouldLevelUp() const { return getLinesCleared() / LINES_TO_LEVELUP != getLevel(); }
+bool TetrisGame::shouldLevelUp() const {
+
+    // this function is used to determine if the level of the game should be incremented
+    // it is based on the number of lines cleared and the current level of the game
+    
+    // if the number of lines cleared is a multiple of the number of lines to level up, we should level up
+    return getLinesCleared() % LINES_TO_LEVELUP == 0 && getLinesCleared() >= LINES_TO_LEVELUP;
+
+}
 
 void TetrisGame::updateLevelAfterLineClear() {
+
+    // this function is used to update the level of the game after a line clear
+    // it is based on the number of lines cleared and the current level of the game
+
     if (shouldLevelUp()) {
+        
         const int newLineBasedLevel = getLinesCleared() / LINES_TO_LEVELUP;
-        if (const int diff = newLineBasedLevel - getLevel(); diff > 0) incrementLevel(diff);
+        const int diff = newLineBasedLevel - getLevel();
+
+        if (diff > 0) incrementLevel(diff);
+
     }
+
 }
 
 
-// ? handle function ?
 
-// Malus Method
-void TetrisGame::setInvertedFlag(bool flag) { (void) flag; std::cerr << "You tried to access power-ups via TetrisGame"; }
 
-void TetrisGame::blockControls() { std::cerr << "You tried to access power-ups via TetrisGame"; }
+// abstract methods (for power-ups features)
 
-void TetrisGame::spawnThunderStrike() { std::cerr << "You tried to access power-ups via TetrisGame"; }
-void TetrisGame::increaseFallingSpeed() { std::cerr << "You tried to access power-ups via TetrisGame"; }
-void TetrisGame::startDarkMode() { std::cerr << "You tried to access power-ups via TetrisGame"; }
-void TetrisGame::addPenaltyLines(int linesToAdd) { (void) linesToAdd; std::cerr << "You tried to access power-ups via TetrisGame"; } 
 
-// Bonus Method
-void TetrisGame::pushSingleBlock() { std::cerr << "You tried to access power-ups via TetrisGame"; }
-void TetrisGame::decreaseFallingSpeed() { std::cerr << "You tried to access power-ups via TetrisGame"; }
+void TetrisGame::addPenaltyLines(int linesToAdd) {
+
+    (void) linesToAdd;
+    throw std::runtime_error("TetrisGame::addPenaltyLines() is not implemented");
+
+} 
+
+void TetrisGame::spawnThunderStrike() {
+    
+    throw std::runtime_error("TetrisGame::spawnThunderStrike() is not implemented");
+
+}
+
+void TetrisGame::increaseFallingSpeed() {
+    
+    throw std::runtime_error("TetrisGame::increaseFallingSpeed() is not implemented");
+
+}
+
+void TetrisGame::decreaseFallingSpeed() {
+    
+    throw std::runtime_error("TetrisGame::decreaseFallingSpeed() is not implemented");
+
+}
+
+void TetrisGame::startDarkMode() {
+    
+    throw std::runtime_error("TetrisGame::startDarkMode() is not implemented");
+
+}
+
+void TetrisGame::pushSingleBlock() {
+    
+    throw std::runtime_error("TetrisGame::pushSingleBlock() is not implemented");
+
+}
+
+

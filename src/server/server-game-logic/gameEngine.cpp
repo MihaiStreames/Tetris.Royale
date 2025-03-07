@@ -231,7 +231,7 @@ void GameEngine::handleScore(TetrisGame& game, const int linesCleared) {
     // the score is also used to determine if the player should level up
     
     game.incrementLinesCleared(linesCleared);
-    game.calculateScore(linesCleared);
+    game.updateScore(linesCleared);
 
     if (game.shouldLevelUp()) { game.updateLevelAfterLineClear(); }
 
@@ -248,7 +248,7 @@ void GameEngine::handlingRoutine(TetrisGame &game, const Action action) {
     if (!handleFallingPiece(game)) { (void) handlePlacingPiece(game); }
 
     handleGameLogic(game);
-    game.incrementFrameCount();
+    game.incrementFrameCount(1);
 
 }
 

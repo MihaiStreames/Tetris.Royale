@@ -75,7 +75,7 @@ void RoyalGame::startDarkMode() {
     // this is a CHRONO, meaning it will calculate a TIMESTAMP to stop the darkmode on.
 
     setDarkModeTimer(getFrameCount() + DARK_MODE_TIMER);
-    setDarkMode(true);
+    setDarkModeFlag(true);
     
 
 }

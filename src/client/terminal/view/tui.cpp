@@ -34,7 +34,7 @@ Decorator FtxuiView::colorForValue(const int v) {
 
 [[nodiscard]] Element FtxuiView::renderBoard() const {
     const auto &gm = tetrisGame.getGameMatrix();
-    const auto board = tetrisGame.getDarkMode() ? tetroMat(gm.getHeight(), std::vector<int>(gm.getWidth(), 0)) : gm.getBoardWithCurrentPiece();
+    const auto board = tetrisGame.getDarkModeFlag() ? tetroMat(gm.getHeight(), std::vector<int>(gm.getWidth(), 0)) : gm.getBoardWithCurrentPiece();
 
 
     const int width = gm.getWidth();
