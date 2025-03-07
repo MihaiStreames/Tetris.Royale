@@ -80,3 +80,21 @@ void RoyalGame::startDarkMode() {
 
 }
 
+void RoyalGame::startBlockControls() {
+
+    // this method is called when the player uses the block controls power-up
+    // it will make the controls of the player's board inverted
+
+    setBlockControlsFlag(true);
+
+}
+
+void RoyalGame::startInvertedControls() {
+
+    // this method is called when the player uses the inverted controls power-up
+    // it will make the controls of the player's board inverted
+
+    setReverseControlsFlag(true);
+
+}
+

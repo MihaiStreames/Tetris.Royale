@@ -15,15 +15,16 @@ class TetrisGame {
 
     const int LINES_TO_LEVELUP = 10;
     const std::map<int, int> SPEED_TABLE = {
-        {0,48}, {1,43}, {2,38}, {3,33}, {4,28}, {5,23}, {6,18}, {7,13}, {8,8}, {9,6},
-        {10,5}, {11,5}, {12,5},
-        {13,4}, {14,4}, {15,4},
-        {16,3}, {17,3}, {18,3},
-        {19,2}, {20,2}, {21,2}, {22,2}, {23,2}, {24,2}, {25,2}, {26,2}, {27,2}, {28,2},
-        {29,1}
+        { 0,48}, { 1,43}, { 2,38}, { 3,33}, { 4,28},
+        { 5,23}, { 6,18}, { 7,13}, { 8, 8}, { 9, 6},
+        {10, 5}, {11, 5}, {12, 5}, {13, 4}, {14, 4},
+        {15, 4}, {16, 3}, {17, 3}, {18, 3}, {19, 2},
+        {20, 2}, {21, 2}, {22, 2}, {23, 2}, {24, 2},
+        {25, 2}, {26, 2}, {27, 2}, {28, 2}, {29, 1},
     };
 
     const int MAX_LINES_CLEARABLE_AT_ONCE = 4;
+    const int MAX_ENERGY = 500;
 
     const int ScoreRewardTab[5] = {0, 40, 100, 300, 1200};
     const int EnergyRewardTab[5] = {0, 30, 40, 60, 100};
@@ -45,7 +46,7 @@ protected:
     bool gameOver = false;
 
     // some logic variables for powers ups
-    int energy = 0;
+    int energy = MAX_ENERGY;  // !! this is a debug value, used to test bonus/malus (set to 0 in prod)
     int darkModeTimer = -1;  // default
     int speedFactor = 0;
     int malusCooldown = 0;
@@ -106,18 +107,18 @@ public:
     virtual void setDarkModeFlag(bool flag);
 
 
-    // !! swap following methods for consistency sake
-    // update stuff (mostly incrementation)
-    virtual void updateScore(const int linesCleared);
-    virtual void updateEnergy(const int linesCleared);
-
-    virtual void incrementLinesCleared(const int q);
+    // increment stuff
     virtual void incrementScore(const int sc);
     virtual void incrementFrameCount(const int fc);
     virtual void incrementLevel(const int lvl);
+    virtual void incrementLinesCleared(const int q);
     virtual void incrementEnergy(int incr);
     virtual void incrementMalusCooldown(int nbr);
-    // !! end of swap
+
+    // some calculation methods (increment... kinda)
+    virtual void updateScore(const int linesCleared);
+    virtual void updateEnergy(const int linesCleared);
+
 
     // logic stuff
     [[nodiscard]] virtual bool shouldApplyGravity() const;
@@ -131,6 +132,8 @@ public:
     virtual void increaseFallingSpeed();
     virtual void decreaseFallingSpeed();
     virtual void startDarkMode();
+    virtual void startBlockControls();
+    virtual void startInvertedControls();
     virtual void pushSingleBlock();
     
 };

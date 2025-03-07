@@ -62,7 +62,6 @@ void RoyalEngine::handleEnergy(TetrisGame &game, const int linesCleared) {
     // this method is responsible for handling the energy
     // based on the number of lines cleared
 
-    // ?? rename "calculateEnergy" to something more meaningful
     // TODO : maybe increment energy as time goes on (but that's a stretch)
 
     RoyalGame &royalGame = static_cast<RoyalGame&>(game);
@@ -93,12 +92,11 @@ void RoyalEngine::handlingRoutine(TetrisGame &game, const Action action) {
     // otherwise call the handleAction method with the None action -> blocking effect
     (void) handleAction(royalGame, royalGame.getBlockControlsFlag() ? None : action);
 
-    // ?? check if somehow this works
     // if darkmode flag is enabled, will check if the current frame is the same as the frame when the darkmode was enabled
     // + the duration of the darkmode, if so, will disable the darkmode
     if (royalGame.getDarkModeFlag() && royalGame.getDarkModeTimer() == royalGame.getFrameCount()) {
         royalGame.setDarkModeFlag(false);
-        royalGame.setDarkModeTimer(0);
+        royalGame.setDarkModeTimer(-1);
     }
 
     // if the piece's is not falling, then try to place the piece
@@ -160,8 +158,6 @@ void RoyalEngine::handleBonus(TetrisGame &game)  {
 
     switch (randomBonus) {
 
-        // ?? rename methods to something more meaningful please
-
         case singleBlocks: return royalGame.pushSingleBlock();
         case slowPieces: return royalGame.decreaseFallingSpeed();
         
@@ -193,10 +189,8 @@ void RoyalEngine::handleMalus(TetrisGame &game) {
 
     switch (randomMalus) {
 
-        // ?? rename methods to something more meaningful please
-
-        case invertedControls: opponent->setReverseControlsFlag(true); break;
-        case blockControls: opponent->setBlockControlsFlag(true); break;
+        case invertedControls: opponent->startInvertedControls(); break;
+        case blockControls: opponent->startBlockControls(); break;
         case thunderStrike: opponent->spawnThunderStrike(); break;
         case fastPieces: opponent->increaseFallingSpeed(); break;
         case darkMode: opponent->startDarkMode(); break;

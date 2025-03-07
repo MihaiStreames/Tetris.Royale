@@ -2,11 +2,12 @@
 #include "tetrisGame.hpp"
 
 
+
 TetrisGame::TetrisGame(const int gWidth, const int gHeight, const int gScore, const int fc, const int lvl, const int totLinesCleared)
     : gameMatrix(gWidth, gHeight), score(gScore), frameCount(fc), level(lvl), totalLinesCleared(totLinesCleared) {
 
     // this is the constructor of the TetrisGame class
-    // might need to write some code here
+    // might need to write some code here someday
 
 }
 
@@ -137,6 +138,33 @@ void TetrisGame::setDarkModeFlag(const bool flag) {
 
 
 
+void TetrisGame::incrementScore(const int q) {
+    setScore(getScore() + q);
+}
+
+void TetrisGame::incrementFrameCount(const int q) {
+    setFrameCount(getFrameCount() + q);
+}
+
+void TetrisGame::incrementLevel(const int q) {
+    setLevel(getLevel() + q);
+}
+
+void TetrisGame::incrementLinesCleared(const int q) {
+    setTotalLinesCleared(getLinesCleared() + q);
+}
+
+void TetrisGame::incrementEnergy(const int q) {
+    int newEnergy = getEnergy() + q;
+    setEnergy((newEnergy <= MAX_ENERGY) ? newEnergy : MAX_ENERGY);
+}
+
+void TetrisGame::incrementMalusCooldown(const int q) {
+    setMalusCooldown(getMalusCooldown() + q);
+}
+
+
+
 void TetrisGame::updateScore(const int linesCleared) {
 
     int dScore = (linesCleared <= MAX_LINES_CLEARABLE_AT_ONCE) ? ScoreRewardTab[linesCleared] : 0;
@@ -150,33 +178,6 @@ void TetrisGame::updateEnergy(const int linesCleared) {
     incrementEnergy(dEnergy);
 
 }
-
-
-
-void TetrisGame::incrementLinesCleared(const int q) {
-    setTotalLinesCleared(getLinesCleared() + q);
-}
-
-void TetrisGame::incrementScore(const int q) {
-    setScore(getScore() + q);
-}
-
-void TetrisGame::incrementFrameCount(const int q) {
-    setFrameCount(getFrameCount() + q);
-}
-
-void TetrisGame::incrementLevel(const int q) {
-    setLevel(getLevel() + q);
-}
-
-void TetrisGame::incrementEnergy(const int q) {
-    setEnergy(getEnergy() + q);
-}
-
-void TetrisGame::incrementMalusCooldown(const int q) {
-    setMalusCooldown(getMalusCooldown() + q);
-}
-
 
 
 
@@ -260,6 +261,18 @@ void TetrisGame::decreaseFallingSpeed() {
 void TetrisGame::startDarkMode() {
     
     throw std::runtime_error("TetrisGame::startDarkMode() is not implemented");
+
+}
+
+void TetrisGame::startBlockControls() {
+    
+    throw std::runtime_error("TetrisGame::startBlockControls() is not implemented");
+
+}
+
+void TetrisGame::startInvertedControls() {
+    
+    throw std::runtime_error("TetrisGame::startInvertedControls() is not implemented");
 
 }
 

@@ -19,6 +19,8 @@ public:
     void decreaseFallingSpeed() override;
     void pushSingleBlock() override;
     void startDarkMode() override;
+    void startBlockControls() override;
+    void startInvertedControls() override;
 
 };
 
