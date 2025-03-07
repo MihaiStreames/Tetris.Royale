@@ -7,7 +7,8 @@ struct Position2D {
     int y;
 };
 
-enum PieceType {
+enum class PieceType {
+    None,
     O,
     L,
     J,
@@ -15,10 +16,10 @@ enum PieceType {
     Z,
     S,
     T,
-    Single
+    Single,
 };
 
-enum Action {
+enum class Action {
     None,
     MoveLeft,
     MoveRight,
@@ -31,7 +32,7 @@ enum Action {
     UseBonus
 };
 
-enum TypePowerUps {
+enum class TypePowerUps {
     invertedControls,
     blockControls,
     thunderStrike,
@@ -44,8 +45,7 @@ enum TypePowerUps {
 extern std::vector<TypePowerUps> malusVector;
 extern std::vector<TypePowerUps> bonusVector;
 
-// test avec inverseCommand : rajouter les autres malus une fois le reste implementé
-// fast_falling_piece
-
 using tetroMat = std::vector<std::vector<int>>;
 using pieceVec = std::vector<PieceType>;
+using tetroShape = std::vector<std::vector<bool>>;
+

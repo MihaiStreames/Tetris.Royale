@@ -9,7 +9,6 @@ RoyalGame::RoyalGame(const int gWidth, const int gHeight, const int gScore, cons
     // this is the constructor of the RoyalGame class
     // might need to modify this later (reverse controls ?)
 
-    // ?? reverseControls = false;
 
 }
 
@@ -49,8 +48,6 @@ void RoyalGame::decreaseFallingSpeed() {
 
     speedFactor--;
 
-    // ?? this is kinda weird, I understand but it's not that clear, might need to rewrite this later
-
     // if the speed factor is negative, set it to 0
     if (level + speedFactor < 0) {
         speedFactor = 0;
@@ -63,7 +60,7 @@ void RoyalGame::pushSingleBlock() {
     // this method is called when the player uses the single block power-up
     // it will push 'SINGLE_BLOCKS_TO_PUSH' (2) single blocks to the player's board
 
-    for (int i = 0; i < SINGLE_BLOCKS_TO_PUSH; ++i) { factory.pushPiece(Tetromino({0, 0}, Single)); }
+    for (int i = 0; i < SINGLE_BLOCKS_TO_PUSH; ++i) { factory.pushPiece(Tetromino(PieceType::Single)); }
 
 }
 

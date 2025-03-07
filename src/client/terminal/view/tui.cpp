@@ -80,7 +80,7 @@ Element FtxuiView::renderPiece(const Tetromino *piece, int height, int width) {
     // Initialize a canvas grid
     std::vector canvas(height, std::vector(width, 0));
 
-    const int pieceTypeVal = piece->getPieceType();
+    const int pieceTypeVal = static_cast<int>(piece->getPieceType());
     const auto &shape = piece->getShape();
     for (int y = 0; y < static_cast<int>(shape.size()) && y < height; ++y) {
         for (int x = 0; x < static_cast<int>(shape[y].size()) && x < width; ++x) {

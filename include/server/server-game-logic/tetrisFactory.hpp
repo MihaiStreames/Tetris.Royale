@@ -8,7 +8,10 @@
 
 class TetrisFactory {
 
-    const pieceVec possiblePieces = { I, O, T, S, Z, J, L };
+    const pieceVec possiblePieces = {
+        PieceType::I, PieceType::O, PieceType::L, PieceType::J,
+        PieceType::Z, PieceType::S, PieceType::T
+    };
     std::vector<Tetromino> pool;
 
     std::random_device rd;

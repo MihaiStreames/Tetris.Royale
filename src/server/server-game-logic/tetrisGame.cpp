@@ -217,11 +217,11 @@ void TetrisGame::updateLevelAfterLineClear() {
     // it is based on the number of lines cleared and the current level of the game
 
     if (shouldLevelUp()) {
-        
+
         const int newLineBasedLevel = getLinesCleared() / LINES_TO_LEVELUP;
         const int diff = newLineBasedLevel - getLevel();
 
-        if (diff > 0) incrementLevel(diff);
+        if (diff > 0) { incrementLevel(diff); }
 
     }
 

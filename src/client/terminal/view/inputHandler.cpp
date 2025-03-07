@@ -3,21 +3,21 @@
 using namespace ftxui;
 
 void inputHandler::setupController() {
-    inputMap[Event::ArrowLeft]      = MoveLeft;
-    inputMap[Event::ArrowRight]     = MoveRight;
+    inputMap[Event::ArrowLeft]      = Action::MoveLeft;
+    inputMap[Event::ArrowRight]     = Action::MoveRight;
 
-    inputMap[Event::ArrowDown]      = MoveDown;
+    inputMap[Event::ArrowDown]      = Action::MoveDown;
 
-    inputMap[Event::ArrowUp]        = RotateRight;
-    inputMap[Event::Character('q')] = RotateRight;
-    inputMap[Event::Character('e')] = RotateLeft;
+    inputMap[Event::ArrowUp]        = Action::RotateRight;
+    inputMap[Event::Character('q')] = Action::RotateRight;
+    inputMap[Event::Character('e')] = Action::RotateLeft;
 
-    inputMap[Event::Character(' ')] = InstantFall;
+    inputMap[Event::Character(' ')] = Action::InstantFall;
 
-    inputMap[Event::Character('b')] = UseBag;
+    inputMap[Event::Character('b')] = Action::UseBag;
 
-    inputMap[Event::Character('m')] = UseMalus;
-    inputMap[Event::Character('l')] = UseBonus;
+    inputMap[Event::Character('m')] = Action::UseMalus;
+    inputMap[Event::Character('l')] = Action::UseBonus;
 }
 
 Action inputHandler::getUserAction() {
@@ -26,7 +26,7 @@ Action inputHandler::getUserAction() {
         return a;
     }
 
-    return None;
+    return Action::None;
 }
 
 Action inputHandler::handleInputs() {

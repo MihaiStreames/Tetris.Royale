@@ -17,21 +17,21 @@ bool RoyalEngine::handleAction(TetrisGame &game, const Action action) {
     switch (action) {
 
         // classic moves
-        case MoveLeft: return gm.tryMoveLeft();
-        case MoveRight: return gm.tryMoveRight();
-        case MoveDown: return gm.tryMoveDown();
-        case RotateLeft: return gm.tryRotateLeft();
-        case RotateRight: return gm.tryRotateRight();
+        case Action::MoveLeft: return gm.tryMoveLeft();
+        case Action::MoveRight: return gm.tryMoveRight();
+        case Action::MoveDown: return gm.tryMoveDown();
+        case Action::RotateLeft: return gm.tryRotateLeft();
+        case Action::RotateRight: return gm.tryRotateRight();
 
         // special moves
-        case InstantFall: return gm.tryInstantFall();
-        case UseBag: return handleBag(royalGame);
+        case Action::InstantFall: return gm.tryInstantFall();
+        case Action::UseBag: return handleBag(royalGame);
 
         // power ups
-        case UseMalus: handleMalus(royalGame); return true;
-        case UseBonus: handleBonus(royalGame); return true;
+        case Action::UseMalus: handleMalus(royalGame); return true;
+        case Action::UseBonus: handleBonus(royalGame); return true;
 
-        case None: return false;
+        case Action::None: return false;
         default: throw std::runtime_error("[err] Invalid action: " + static_cast<int>(action));
 
     }
@@ -90,7 +90,7 @@ void RoyalEngine::handlingRoutine(TetrisGame &game, const Action action) {
     
     // call the handleAction method with the given action if the block flag is not set,
     // otherwise call the handleAction method with the None action -> blocking effect
-    (void) handleAction(royalGame, royalGame.getBlockControlsFlag() ? None : action);
+    (void) handleAction(royalGame, royalGame.getBlockControlsFlag() ? Action::None : action);
 
     // if darkmode flag is enabled, will check if the current frame is the same as the frame when the darkmode was enabled
     // + the duration of the darkmode, if so, will disable the darkmode
@@ -109,7 +109,6 @@ void RoyalEngine::handlingRoutine(TetrisGame &game, const Action action) {
 
     }
 
-    // game logic + fc
     handleGameLogic(game);
     game.incrementFrameCount(1);
 
@@ -158,8 +157,8 @@ void RoyalEngine::handleBonus(TetrisGame &game)  {
 
     switch (randomBonus) {
 
-        case singleBlocks: return royalGame.pushSingleBlock();
-        case slowPieces: return royalGame.decreaseFallingSpeed();
+        case TypePowerUps::singleBlocks: return royalGame.pushSingleBlock();
+        case TypePowerUps::slowPieces: return royalGame.decreaseFallingSpeed();
         
         default: throw std::runtime_error("[err] Unexpected Bonus");
 
@@ -189,11 +188,11 @@ void RoyalEngine::handleMalus(TetrisGame &game) {
 
     switch (randomMalus) {
 
-        case invertedControls: opponent->startInvertedControls(); break;
-        case blockControls: opponent->startBlockControls(); break;
-        case thunderStrike: opponent->spawnThunderStrike(); break;
-        case fastPieces: opponent->increaseFallingSpeed(); break;
-        case darkMode: opponent->startDarkMode(); break;
+        case TypePowerUps::invertedControls: opponent->startInvertedControls(); break;
+        case TypePowerUps::blockControls: opponent->startBlockControls(); break;
+        case TypePowerUps::thunderStrike: opponent->spawnThunderStrike(); break;
+        case TypePowerUps::fastPieces: opponent->increaseFallingSpeed(); break;
+        case TypePowerUps::darkMode: opponent->startDarkMode(); break;
 
         default: throw std::runtime_error("[err] Unexpected Malus");
         

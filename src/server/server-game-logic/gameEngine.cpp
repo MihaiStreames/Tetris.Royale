@@ -16,16 +16,16 @@ bool GameEngine::handleAction(TetrisGame &game, const Action action) {
     switch (action) {
         
         // classic moves
-        case MoveLeft: return gm.tryMoveLeft();
-        case MoveRight: return gm.tryMoveRight();
-        case MoveDown: return gm.tryMoveDown();
-        case RotateLeft: return gm.tryRotateLeft();
-        case RotateRight: return gm.tryRotateRight();
+        case Action::MoveLeft: return gm.tryMoveLeft();
+        case Action::MoveRight: return gm.tryMoveRight();
+        case Action::MoveDown: return gm.tryMoveDown();
+        case Action::RotateLeft: return gm.tryRotateLeft();
+        case Action::RotateRight: return gm.tryRotateRight();
 
         // special moves
-        case InstantFall: return gm.tryInstantFall();
-        case UseBag: return handleBag(game);
-        case None: return false;
+        case Action::InstantFall: return gm.tryInstantFall();
+        case Action::UseBag: return handleBag(game);
+        case Action::None: return false;
 
         default: throw std::runtime_error("[err] Invalid action: " + static_cast<int>(action));
             
