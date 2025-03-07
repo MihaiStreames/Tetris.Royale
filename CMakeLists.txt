@@ -67,14 +67,13 @@ add_compile_options(
 
 # Shared common library
 file(GLOB_RECURSE COMMON_SRC_FILES
-        "src/common/game-common/*.cpp"
-        "include/common/game-common/*.hpp"
+        "src/common/*.cpp"
+        "include/common/*.hpp"
 )
 add_library(TetrisRoyaleCommon STATIC ${COMMON_SRC_FILES})
 target_include_directories(TetrisRoyaleCommon
         PUBLIC
         "include/common"
-        "include/common/game-common"
 )
 
 # Server game logic library
