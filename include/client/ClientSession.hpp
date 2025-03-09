@@ -17,11 +17,13 @@
 #include "GameRequestManager.hpp"
 #include "common.hpp"
 
+
 class ClientSession {
+
 public:
+
     // public here
     ClientSession(bool debug = false);
-
     ~ClientSession();
 
     DBRequestManager dbRequestManager;
@@ -56,12 +58,28 @@ public:
     void declineFriendRequest(const std::string &senderID);
     void removeFriend(const std::string &friendID);
 
-    // token
+    // ================== Game operations ================== //
+
+    [[nodiscard]] ClientStatus getOwnStatus();
+    [[nodiscard]] ClientStatus getPlayerStatus(const std::string& username);
+
     void startSession();
     void endSession();
 
-    // status
-    [[nodiscard]] ClientStatus getStatus();
+    std::unordered_map<std::string, std::string> getPublicLobbiesList();
+    void createAndJoinLobby(GameMode gameMode, int maxPlayers, bool isPublic);
+    void joinLobby(const std::string& lobbyID);
+    void spectateLobby(const std::string& lobbyID);
+
+    [[nodiscard]] LobbyState getCurrentLobbyState();
+    void leaveLobby();
+    void readyUp();
+    void unreadyUp();
+
+    void sendKeyStroke(const KeyStrokePacket& keyStroke);
+    void getGameState();  // !! this needs to be updated to return the game state
+    
+    
 
 private:
     // private here
@@ -73,6 +91,7 @@ private:
     std::vector<std::string> friendList_;
     std::vector<std::string> pendingFriendRequests_;
     bool debug_;
+
 };
 
 

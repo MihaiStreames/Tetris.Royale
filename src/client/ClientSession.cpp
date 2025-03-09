@@ -8,10 +8,26 @@ ClientSession::ClientSession(
     bestScore_(0),
     debug_(debug)
 {
+
+    // this is the constructor of the ClientSession class
+    // it will initialize the DBRequestManager and the GameRequestManager
+
+    if (gameRequestManager.connectToServer() != StatusCode::SUCCESS) {
+        throw std::runtime_error("[err] Failed to connect to game server.");
+    }
+
 }
 
 ClientSession::~ClientSession() {
+
+    // this is the destructor of the ClientSession class
+    // I really doubt that we need to do anything here
+    // but I will leave it here just in case
+
 }
+
+
+
 
 std::string ClientSession::getUsername() {
     return username_;
@@ -37,6 +53,9 @@ std::vector<std::string>& ClientSession::getPendingFriendRequests() {
     return pendingFriendRequests_;
 }
 
+
+
+
 void ClientSession::setUsername(const std::string &username) {
     username_ = username;
 }
@@ -60,6 +79,8 @@ void ClientSession::setFriendList(const std::vector<std::string>& friends) {
 void ClientSession::setPendingFriendRequests(const std::vector<std::string>& requests) {
     pendingFriendRequests_ = requests;
 }
+
+
 
 void ClientSession::loginPlayer(const std::string &username, const std::string &password) {
     const DBResponse response = dbRequestManager.loginPlayer(username, password);
@@ -159,6 +180,9 @@ void ClientSession::postScore(int score) {
     }
 }
 
+
+
+
 void ClientSession::sendFriendRequest(const std::string &receiverID) {
     if (getAccountID().empty()) {
         std::cerr << "No accountID set; cannot send friend request." << std::endl;
@@ -229,7 +253,36 @@ void ClientSession::removeFriend(const std::string &friendID) {
     }
 }
 
+
+
+// ================== Game operations ================== //
+
+ClientStatus ClientSession::getOwnStatus() {
+    
+    // this method is used to get the status of the client
+    // it will return the status of the client
+    return getPlayerStatus(getUsername());
+
+}
+
+ClientStatus ClientSession::getPlayerStatus(const std::string& username) {
+    
+    ServerResponse response = this->gameRequestManager.getPlayerStatus(username);
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return ClientStatus::OFFLINE;
+    }
+
+    return static_cast<ClientStatus>(std::stoi(response.data.at("status")));
+
+}
+
+
+
 void ClientSession::startSession() {
+
     ServerResponse response = this->gameRequestManager.startSession(getUsername());
 
     // we have to check if the response was successful
@@ -240,9 +293,11 @@ void ClientSession::startSession() {
 
     // we set the token of the client
     this->setToken(response.data.at("token"));
+
 };
 
 void ClientSession::endSession() {
+
     ServerResponse response = this->gameRequestManager.endSession(getToken());
 
     // we have to check if the response was successful
@@ -253,24 +308,141 @@ void ClientSession::endSession() {
 
     // we set the token of the client
     this->setToken("");
+
 };
 
 
-ClientStatus ClientSession::getStatus() {
-    // this method is used to get the status of the client
-    // it will return the status of the client
+std::unordered_map <std::string, std::string> ClientSession::getPublicLobbiesList() {
 
-    if (this->getToken().empty()) {
-        return ClientStatus::OFFLINE;
-    }
-
-    ServerResponse response = this->gameRequestManager.getPlayerStatus(getUsername());
+    ServerResponse response = this->gameRequestManager.getPublicLobbiesList();
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
         std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
-        return ClientStatus::OFFLINE;
+        return {};
     }
 
-    return static_cast<ClientStatus>(std::stoi(response.data.at("status")));
+    // we return the list of lobbies
+    return response.data;
+
 }
+
+void ClientSession::createAndJoinLobby(GameMode gameMode, int maxPlayers, bool isPublic) {
+
+    ServerResponse response = this->gameRequestManager.createAndJoinLobby(getToken(), gameMode, maxPlayers, isPublic);
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return;
+    }
+
+}
+
+void ClientSession::joinLobby(const std::string& lobbyID) {
+
+    ServerResponse response = this->gameRequestManager.joinLobby(getToken(), lobbyID);
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return;
+    }
+
+}
+
+void ClientSession::spectateLobby(const std::string& lobbyID) {
+
+    ServerResponse response = this->gameRequestManager.spectateLobby(getToken(), lobbyID);
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return;
+    }
+
+}
+
+
+
+LobbyState ClientSession::getCurrentLobbyState() {
+
+    ServerResponse response = this->gameRequestManager.getCurrentLobbyState(getToken());
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return LobbyState::generateEmptyState();
+    }
+
+    LobbyState lobbyState = LobbyState::deserialize(response.data.at("lobbyState"));
+    return lobbyState;
+
+}
+
+void ClientSession::leaveLobby() {
+
+    ServerResponse response = this->gameRequestManager.leaveLobby(getToken());
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return;
+    }
+
+}
+
+void ClientSession::readyUp() {
+
+    ServerResponse response = this->gameRequestManager.readyUp(getToken());
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return;
+    }
+
+}
+
+void ClientSession::unreadyUp() {
+
+    ServerResponse response = this->gameRequestManager.unreadyUp(getToken());
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return;
+    }
+
+}
+
+
+
+void ClientSession::sendKeyStroke(const KeyStrokePacket& keyStroke) {
+
+    ServerResponse response = this->gameRequestManager.sendKeyStroke(keyStroke.token, keyStroke);
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return;
+    }
+
+}
+
+void ClientSession::getGameState() {
+
+    ServerResponse response = this->gameRequestManager.getGameState(getToken());
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return;
+    }
+
+    // !! we have to return the game state (not done)
+    std::cout << "game state here" << std::endl;
+
+}
+
+
