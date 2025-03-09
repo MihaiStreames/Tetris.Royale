@@ -12,9 +12,13 @@ void ClassicEngine::handleBasicPenalty(ClassicGame& game, const int linesCleared
         return;
     }
 
-    // fetch the opponent of the player
-    const std::vector<ClassicGame*>& opponents = game.getOpponents();
-    ClassicGame* opponent = game.getTarget();
+    // get the target
+    ClassicGame* opponent = static_cast<ClassicGame*>(game.getTarget());
+
+    if (opponent == nullptr) {
+        // no opponent to add penalty lines to
+        return;
+    }
 
     // calculate the number of lines to add
     int linesToAdd;
@@ -62,3 +66,37 @@ void ClassicEngine::handleGameLogic(TetrisGame &game) {
 
 }
 
+
+bool ClassicEngine::viewPreviousOpponent(TetrisGame &game) {
+
+    // this should handle the view of the previous opponent
+    // the view should be changed to the previous opponent in the list of opponents
+
+    ClassicGame& classicGame = static_cast<ClassicGame&>(game);
+
+    // get the index of the previous opponent
+    int idx = classicGame.getTargetIndex() - 1;
+
+    // change the player view to the previous opponent
+    classicGame.changePlayerView(idx);
+
+    return true;
+
+}
+
+bool ClassicEngine::viewNextOpponent(TetrisGame &game) {
+
+    // this should handle the view of the next opponent
+    // the view should be changed to the next opponent in the list of opponents
+
+    ClassicGame& classicGame = static_cast<ClassicGame&>(game);
+
+    // get the index of the next opponent
+    int idx = classicGame.getTargetIndex() + 1;
+
+    // change the player view to the next opponent
+    classicGame.changePlayerView(idx);
+
+    return true;
+
+}

@@ -29,7 +29,9 @@ enum class Action {
     InstantFall,
     UseBag,
     UseMalus,
-    UseBonus
+    UseBonus,
+    SeePreviousOpponent,
+    SeeNextOpponent,
 };
 
 enum class TypePowerUps {

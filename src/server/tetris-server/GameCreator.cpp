@@ -33,6 +33,15 @@ std::unordered_map<std::string, std::shared_ptr<TetrisGame>> GameCreator::create
         games[player] = std::make_shared<ClassicGame>(GAME_WIDTH, GAME_HEIGHT, 0, 0, 0, 0);
     }
 
+    // initialize the opponents for each player
+    for (auto& player : players) {
+        for (auto& opponent : players) {
+            if (player != opponent) {
+                games[player]->addOpponent(games[opponent].get());
+            }
+        }
+    }
+
     return games;
 
 }
@@ -46,6 +55,15 @@ std::unordered_map<std::string, std::shared_ptr<TetrisGame>> GameCreator::create
 
     for (auto& player : players) {
         games[player] = std::make_shared<RoyalGame>(GAME_WIDTH, GAME_HEIGHT, 0, 0, 0, 0);
+    }
+
+    // initialize the opponents for each player
+    for (auto& player : players) {
+        for (auto& opponent : players) {
+            if (player != opponent) {
+                games[player]->addOpponent(games[opponent].get());
+            }
+        }
     }
 
     return games;

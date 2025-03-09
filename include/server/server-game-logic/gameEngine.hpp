@@ -34,7 +34,10 @@ public:
     virtual void handlingRoutine(TetrisGame &game, Action action);
 
 
-    // interface for bonus and malus (should raise an exception if not implemented)
+    // interface for bonus and malus (should raise an exception if not implemented) and view
+
+    [[nodiscard]] virtual bool viewPreviousOpponent(TetrisGame &game);
+    [[nodiscard]] virtual bool viewNextOpponent(TetrisGame &game);
 
     virtual void handleBonus(TetrisGame &game);
     virtual void handleMalus(TetrisGame &game);

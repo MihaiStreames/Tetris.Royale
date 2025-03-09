@@ -87,7 +87,15 @@ public:
     // special getters
     [[nodiscard]] Tetromino& getNextPiece();
     [[nodiscard]] const Tetromino* getHoldPiece() const;
+
     
+    // opponents stuff
+    [[nodiscard]] virtual std::vector<TetrisGame*> getOpponents();
+    [[nodiscard]] virtual TetrisGame* getTarget();
+    [[nodiscard]] virtual int getTargetIndex();
+    void virtual addOpponent(TetrisGame* opponent);
+    void virtual removeOpponent(TetrisGame* opponent);
+    void virtual changePlayerView(int idx);
     
     // setters
     virtual void setScore(const int s);
@@ -124,7 +132,6 @@ public:
     [[nodiscard]] virtual bool shouldApplyGravity() const;
     [[nodiscard]] virtual bool shouldLevelUp() const;
     virtual void updateLevelAfterLineClear();
-    
     
     // powers up thingy
     virtual void addPenaltyLines(int linesToAdd);

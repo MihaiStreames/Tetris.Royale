@@ -86,6 +86,65 @@ const Tetromino* TetrisGame::getHoldPiece() const {
 
 
 
+std::vector<TetrisGame*> TetrisGame::getOpponents() {
+
+    // this function is used to get the opponents of the current game
+    // it is used for power-ups features
+
+    throw std::runtime_error("TetrisGame::getOpponents() is not implemented");
+
+}
+
+TetrisGame* TetrisGame::getTarget() {
+
+    // this function is used to get the target of the current game
+    // it is used for power-ups features
+
+    throw std::runtime_error("TetrisGame::getTarget() is not implemented");
+
+}
+
+int TetrisGame::getTargetIndex() {
+
+    // this function is used to get the target index of the current game
+    // it is used for power-ups features
+
+    throw std::runtime_error("TetrisGame::getTargetIndex() is not implemented");
+    
+}
+
+void TetrisGame::addOpponent(TetrisGame* opponent) {
+
+    // this function is used to add an opponent to the current game
+    // it is used for power-ups features
+
+    (void) opponent;
+    throw std::runtime_error("TetrisGame::addOpponent() is not implemented");
+
+}
+
+void TetrisGame::removeOpponent(TetrisGame* opponent) {
+
+    // this function is used to remove an opponent from the current game
+    // it is used for power-ups features
+
+    (void) opponent;
+    throw std::runtime_error("TetrisGame::removeOpponent() is not implemented");
+
+}
+
+void TetrisGame::changePlayerView(int idx) {
+
+    // this function is used to change the player view of the current game
+    // it is used for power-ups features
+
+    (void) idx;
+    throw std::runtime_error("TetrisGame::changePlayerView() is not implemented");
+
+}
+
+
+
 
 void TetrisGame::setScore(const int s) {
     score = s;

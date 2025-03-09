@@ -25,6 +25,8 @@ bool GameEngine::handleAction(TetrisGame &game, const Action action) {
         // special moves
         case Action::InstantFall: return gm.tryInstantFall();
         case Action::UseBag: return handleBag(game);
+        case Action::SeePreviousOpponent: return viewPreviousOpponent(game);
+        case Action::SeeNextOpponent: return viewNextOpponent(game);
         case Action::None: return false;
 
         default: throw std::runtime_error("[err] Invalid action: " + static_cast<int>(action));
@@ -254,6 +256,23 @@ void GameEngine::handlingRoutine(TetrisGame &game, const Action action) {
 
 
 
+bool GameEngine::viewPreviousOpponent(TetrisGame &game) {
+
+    // !! this method should be implemented in other engines
+
+    (void) game;
+    throw std::runtime_error("[err] viewPreviousOpponent not implemented");
+
+}
+
+bool GameEngine::viewNextOpponent(TetrisGame &game) {
+
+    // !! this method should be implemented in other engines
+
+    (void) game;
+    throw std::runtime_error("[err] viewNextOpponent not implemented");
+
+}
 
 void GameEngine::handleBonus(TetrisGame &game) {
 

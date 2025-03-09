@@ -468,10 +468,10 @@ void LobbyServer::printMessage(const std::string &message, const MessageType msg
 
 
 std::string LobbyServer::generateToken(const size_t length) {
+
     // some random function (absolutely hate working with random
     // numbers in C++ but it's the quickest way to do it ik)
-    // TODO : check with mihai if we should use integer generation for token to match uuid
-
+    
     constexpr char charset[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     // randomizer stuff

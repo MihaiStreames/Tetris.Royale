@@ -9,9 +9,9 @@ ClassicGame::ClassicGame(const int gWidth, const int gHeight, const int gScore, 
         // this is the constructor for the ClassicGame class which is a subclass of TetrisGame
         // it initializes the game with the given parameters and initializes the opponents vector and targetIndex (to 0)
 
-        // TODO : initialize opponents correctly
+        // ?? initialize opponents correctly or else this game will be boring (lol what a great copilt auto comment)
 
-        opponents = std::vector<ClassicGame*>();
+        opponents = std::vector<TetrisGame*>();
         targetIndex = 0;
 
 }
@@ -26,21 +26,14 @@ int ClassicGame::getOpponentVectorSize() {
 
 
 
-std::vector<ClassicGame*> ClassicGame::getOpponents() {
+std::vector<TetrisGame*> ClassicGame::getOpponents() {
 
     // returns the opponents vector (vector of ClassicGame pointers)
     return opponents;
 
 }
 
-void ClassicGame::setOpponents(std::vector<ClassicGame*> opponents) {
-
-    // sets the opponents vector to the given vector of ClassicGame pointers
-    this->opponents = opponents;
-
-}
-
-ClassicGame* ClassicGame::getTarget() {
+TetrisGame* ClassicGame::getTarget() {
     
     // returns the target ClassicGame pointer (targetIndex-th element of the opponents vector)
     // beware of out of bounds, so if that happens, returns the first element of the opponents vector
@@ -58,6 +51,33 @@ ClassicGame* ClassicGame::getTarget() {
 
 }
 
+int ClassicGame::getTargetIndex() {
+
+    // returns the targetIndex
+    return targetIndex;
+
+}
+
+void ClassicGame::addOpponent(TetrisGame* opponent) {
+
+    // adds an opponent to the opponents vector
+    opponents.push_back(opponent);
+
+}
+
+void ClassicGame::removeOpponent(TetrisGame* opponent) {
+
+    // removes an opponent from the opponents vector
+    // if the opponent is not found, then it does nothing
+
+    for (int i = 0; i < getOpponentVectorSize(); i++) {
+        if (opponents[i] == opponent) {
+            opponents.erase(opponents.begin() + i);
+            return;
+        }
+    }
+
+}
 
 
 
@@ -84,13 +104,15 @@ void ClassicGame::addPenaltyLines(int linesToAdd) {
 void ClassicGame::changePlayerView(int idx) {
 
     // changes the targetIndex to the given index
-    // if the index is out of bounds, then it sets the targetIndex to 0
+    // go in a loop as a looping list
 
-    if (idx < 0 || idx >= getOpponentVectorSize()) {
+    if (idx < 0) {
+        targetIndex = getOpponentVectorSize() - 1;
+    } else if (idx >= getOpponentVectorSize()) {
         targetIndex = 0;
     } else {
         targetIndex = idx;
     }
-
+    
 }
 

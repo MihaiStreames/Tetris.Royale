@@ -17,5 +17,8 @@ public:
     void handleBasicPenalty(ClassicGame& game, int linesCleared);
     void handleGameLogic(TetrisGame& game) override;
 
+    [[nodiscard]] virtual bool viewPreviousOpponent(TetrisGame& game) override;
+    [[nodiscard]] virtual bool viewNextOpponent(TetrisGame& game) override;
+
 };
 
