@@ -83,12 +83,13 @@ ServerResponse GameRequestManager::getPlayerStatus(const std::string &username) 
     }
 
     return response;
+    
 }
 
 
 // main menu stuff
 
-ServerResponse GameRequestManager::startSession() {
+ServerResponse GameRequestManager::startSession(const std::string &username) {
     // this method is used to start a new session
     // it will send a request to the lobby server to start a new session
     // it will return the response from the server
@@ -97,6 +98,7 @@ ServerResponse GameRequestManager::startSession() {
     ServerRequest request;
     request.id = generateRequestID();
     request.method = ServerMethods::START_SESSION;
+    request.params["username"] = username;
 
     // send the request
     (void) sendRequest(request);
@@ -104,6 +106,7 @@ ServerResponse GameRequestManager::startSession() {
 }
 
 ServerResponse GameRequestManager::endSession(const std::string &token) {
+    
     // this method is used to end the current session
     // it will send a request to the lobby server to end the current session
     // it will return the response from the server
@@ -117,6 +120,7 @@ ServerResponse GameRequestManager::endSession(const std::string &token) {
     // send the request
     (void) sendRequest(request);
     return receiveResponse();
+
 }
 
 ServerResponse GameRequestManager::getPublicLobbiesList() {

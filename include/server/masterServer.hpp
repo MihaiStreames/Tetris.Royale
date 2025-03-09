@@ -34,6 +34,8 @@ public:
     [[nodiscard]] bool isTetrisServerRunning() const;
     [[nodiscard]] bool isDBServerRunning() const;
 
+    void handleCommand(const std::string& command);
+
 
 private:
 

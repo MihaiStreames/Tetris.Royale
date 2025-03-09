@@ -40,6 +40,8 @@ class LobbyServer {
         [[nodiscard]] StatusCode addClientSession(const std::string& token, const std::string& username);
         [[nodiscard]] StatusCode removeClientSession(const std::string& token);
         [[nodiscard]] std::string getClientSessionUsername(const std::string& token) const;
+        [[nodiscard]] std::string getClientSessionToken(const std::string& username) const;
+        
         
         [[nodiscard]] std::shared_ptr<Lobby> getLobby(const std::string& lobbyID) const;  // maybe this needs to be private
         [[nodiscard]] int getLobbyPort(const std::string& lobbyID) const;
@@ -66,6 +68,7 @@ class LobbyServer {
         [[nodiscard]] std::unordered_map<std::string, std::shared_ptr<Lobby>> getLobbies() const;
         
         [[nodiscard]] bool isSessionActive(const std::string& token) const;
+        [[nodiscard]] bool doesUserHaveSession(const std::string& username) const;
         void printMessage(const std::string& message, MessageType msgtype) const;
 
         // generation shit
@@ -88,7 +91,8 @@ class LobbyServer {
         [[nodiscard]] ServerResponse handleGetPlayerStatusRequest(const ServerRequest& request) const;
         
 
-        
+        // attributes
+
         std::string ip;
         int port;
         bool debug;

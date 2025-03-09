@@ -147,18 +147,36 @@ StatusCode LobbyServer::removeClientSession(const std::string &token) {
 }
 
 std::string LobbyServer::getClientSessionUsername(const std::string &token) const {
-    // we lock the mutex
-    std::lock_guard lock(clientMutex);
-    const auto it = clientTokens.find(token);
+    
+    // this is used to get the username of a session using the token
+    // will throw an error if the session is not found
 
-    // we check if the session exists
-    if (it == clientTokens.end()) {
-        printMessage("Session [" + token + "] not found", MessageType::ERROR);
-        return "";
+    if (!isSessionActive(token)) {
+        throw std::runtime_error("Session [" + token + "] is not active");
     }
 
-    // if it exists, we return the username
-    return it->second;
+    std::lock_guard lock(clientMutex);
+    return clientTokens.at(token);
+    
+}
+
+std::string LobbyServer::getClientSessionToken(const std::string &username) const {
+    
+    // this is used to get the token of a session using the username
+    // will throw an error if the session is not found
+
+    if (!doesUserHaveSession(username)) {
+        throw std::runtime_error("User [" + username + "] does not have a session");
+    }
+
+    std::lock_guard lock(clientMutex);
+
+    for (const auto &[token, name]: clientTokens) {
+        if (name == username) {
+            return token;
+        }
+    }
+
 }
 
 
@@ -391,6 +409,13 @@ bool LobbyServer::isSessionActive(const std::string &token) const {
     // this is used to check if a session is active
     std::lock_guard lock(clientMutex);
     return clientTokens.contains(token);
+}
+
+bool LobbyServer::doesUserHaveSession(const std::string &username) const {
+    // this is used to check if a user has a session
+    std::lock_guard lock(clientMutex);
+    return std::any_of(clientTokens.begin(), clientTokens.end(),
+                       [&username](const auto &pair) { return pair.second == username; });
 }
 
 void LobbyServer::printMessage(const std::string &message, const MessageType msgtype) const {
@@ -661,8 +686,10 @@ ServerResponse LobbyServer::handleGetPublicLobbiesRequest(const ServerRequest &r
     std::vector<std::shared_ptr<Lobby> > publicLobbies = getPublicLobbies();
 
     // we add the public lobbies to the data
+    int i = 0;
     for (const auto &lobby: publicLobbies) {
-        data["data-" + lobby->getLobbyID()] = lobby->getState().serialize();
+        data[std::to_string(i)] = lobby->getState().serialize();
+        i++;
     }
 
     // and we return the response to the client
@@ -821,12 +848,45 @@ ServerResponse LobbyServer::handleGetPlayerStatusRequest(const ServerRequest &re
     // handle the get player status request
     // return the response to the client
 
-    // we check if the player is connected to the lobby server. if not, then offline
-    if (!isSessionActive(request.params.at("token"))) {
+    // we check if the player is connected to the lobby server. if it is, we
+    // try to see if it is in a lobby, or a game, or if it is just connected.
+    // if it is not connected, we return offline.
+
+    const std::string username = request.params.at("username");
+
+    // we check if the player is connected to the lobby server
+    if (!doesUserHaveSession(username)) {
         return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, PlayerStatus::OFFLINE);
-    } else {
-        return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, PlayerStatus::IDLING);
     }
+
+    // if the player is connected, we get the token
+    const std::string token = getClientSessionToken(username);
+
+    // then we check if the player is in a lobby
+    // but first, we need to lock the mutex
+
+    {
+        std::lock_guard lock(lobbiesMutex);
+
+        for (const auto &[lobbyID, lobby]: lobbyObjects) {
+            if (lobby->isPlayerInLobby(token)) {
+                return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, PlayerStatus::IN_LOBBY);
+            }
+
+            if (lobby->isSpectatorInLobby(token)) {
+                return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, PlayerStatus::IN_LOBBY);
+            }
+        }
+    }
+
+    // if reached this point, the player is connected and might be in a game
+    // we check if the player is in a game
+
+    // TODO : implement this part
+
+    // if reached this point, the player is connected but not in a lobby or a game
+    return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, PlayerStatus::IDLING);
+    
 
 }
 

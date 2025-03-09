@@ -16,9 +16,11 @@ MasterServer::MasterServer(
 }
 
 MasterServer::~MasterServer() {
+    
     // destructor for MasterServer
     // going to close the MasterServer
     (void) closeMasterServer();
+    
 }
 
 StatusCode MasterServer::startMasterServer() {
@@ -157,10 +159,26 @@ void MasterServer::printMessage(const std::string &message, const MessageType ms
     std::cout << senderIdentifier << msgIdentifier << message << std::endl;
 }
 
+void MasterServer::handleCommand(const std::string &command) {
+
+    // This function should handle the commands that the user inputs
+
+    if (command == "restart") { (void) restartMasterServer(); }
+    else if (command == "players") { std::cout << "Players: " << countPlayers() << std::endl; }
+    else if (command == "lobbies") { std::cout << "Lobbies: " << countLobbies() << std::endl; }
+    else if (command == "games") { std::cout << "Games: " << countGames() << std::endl; }
+    else { std::cout << "Unknown command" << std::endl; }
+
+}
+
+
+
 int main(int argc, char *argv[]) {
+
     // entry point for server stuff
     // create a MasterServer and start it
 
+    // we are not using the arguments for now
     (void) argc;
     (void) argv;
 
@@ -170,11 +188,19 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    constexpr bool running = true;
+    bool running = true;
+
+    // ?? we can do stuff in the runnig loop, but for the moment we will just implement the handleCommand function
     while (running) {
-        // do some stuff
-        // ...
-        // ...
+        
+        // we read the input from the user
+        std::string input;
+        std::getline(std::cin, input);
+
+        // and then handle it (if not exit)
+        if (input == "exit") { running = false; }
+        else masterServer.handleCommand(input);
+
     }
 
     // we are done, close the MasterServer
@@ -183,4 +209,7 @@ int main(int argc, char *argv[]) {
     }
 
     return EXIT_SUCCESS;
+
 }
+
+

@@ -37,7 +37,7 @@ public:
     [[nodiscard]] ServerResponse getPlayerStatus(const std::string& username);
 
     // main menu stuff
-    [[nodiscard]] ServerResponse startSession();
+    [[nodiscard]] ServerResponse startSession(const std::string& username);
     [[nodiscard]] ServerResponse endSession(const std::string& token);
     [[nodiscard]] ServerResponse getPublicLobbiesList();
     [[nodiscard]] ServerResponse createAndJoinLobby(const std::string& token, GameMode gameMode, int maxPlayers, bool isPublic);
