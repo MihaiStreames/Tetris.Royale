@@ -49,6 +49,7 @@ private:
     [[nodiscard]] StatusCode initializeEngine();
     [[nodiscard]] StatusCode listen();
 
+    std::shared_ptr<TetrisGame> getGame(const std::string &token);
     void updateGame();
 
     [[nodiscard]] std::unordered_map<std::string, std::string> getPlayers();
@@ -58,11 +59,10 @@ private:
 
     [[nodiscard]] std::string handleServerRequest(const std::string &requestContent);
     [[nodiscard]] ServerResponse handleKeyStrokeRequest(const ServerRequest &request);
-    [[nodiscard]] ServerResponse handleGetGameStateRequest(const ServerRequest &request);
-
-    // called by the handlers
     [[nodiscard]] ServerResponse handleKeyStroke(const KeyStrokePacket& packet, const ServerRequest& request);
+    [[nodiscard]] ServerResponse handleGetGameStateRequest(const ServerRequest &request);
     [[nodiscard]] std::string getGameState(const std::string& token);
+    
 
     std::string ip;
     int port;

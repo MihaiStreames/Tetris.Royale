@@ -267,6 +267,18 @@ StatusCode Game::listen() {
     return StatusCode::SUCCESS;
 }
 
+
+
+std::shared_ptr<TetrisGame> Game::getGame(const std::string &token) {
+    // This method is used to get the game of a player.
+    // It will return the game of the player with the specified token.
+
+    std::lock_guard lock(gameMutex);
+    if (games.contains(token)) { return games[token]; }
+    else { return nullptr; }
+
+}
+
 void Game::updateGame() {
     // This method is used to update the game state.
     // It will run in a separate thread and will update the game state every frame.
@@ -449,16 +461,6 @@ ServerResponse Game::handleKeyStrokeRequest(const ServerRequest &request) {
     return handleKeyStroke(keyStrokePacket, request);
 }
 
-ServerResponse Game::handleGetGameStateRequest(const ServerRequest &request) {
-    // this function will handle the get game state request
-    // it will handle the get game state request and return a response
-
-    // TODO : nuke this shit
-    const std::string token = request.params.at("token");
-    std::string gameStateContent = getGameState(token);
-    return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, {{"gamestate", gameStateContent}});
-}
-
 ServerResponse Game::handleKeyStroke(const KeyStrokePacket &packet, const ServerRequest &request) {
     // this function will handle the key stroke
     // it will handle the key stroke and update the game state
@@ -477,20 +479,67 @@ ServerResponse Game::handleKeyStroke(const KeyStrokePacket &packet, const Server
     return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS);
 }
 
+ServerResponse Game::handleGetGameStateRequest(const ServerRequest &request) {
+    
+    // this function will handle the get game state request
+    // it will handle the get game state request and return a response
+
+    const std::string token = request.params.at("token");
+    std::string gameStateContent = getGameState(token);
+    return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, {{"gamestate", gameStateContent}});
+
+}
+
 std::string Game::getGameState(const std::string &token) {
+    
     // this function will get the game state
     // it will get the game state and return it
 
-    // we lock the game mutex to get the game state
-    std::lock_guard lock(gameMutex);
+    // we want to know who asked for the gamestate
+    // if it's a spectator, will return a string spectator state
+    // if it's a player, will return a string player state
+    
+    std::string rawState = "";
 
-    // TODO : get the game state here
-    //        ...
-    //        ...
-    //        ...
-    (void) token; // just avoid compiler warning
+    if (getPlayers().find(token) != getPlayers().end()) {
 
-    return SpectatorState::generateEmptyState().serialize();
+        // PlayerState needed
+        std::shared_ptr<TetrisGame> game = getGame(token);
+        if (!game) { return rawState; }
+        TetrisGame* target = game->getTarget();
+
+        PlayerState playerState;
+
+        playerState.holdTetro = (game->getHoldPiece()) ? game->getHoldPiece()->getPieceType() : PieceType::None;
+        playerState.nextTetro = game->getNextPiece().getPieceType();
+        playerState.playerGrid = game->getGameMatrix().getBoardWithCurrentPiece();
+        playerState.playerLevel = game->getLevel();
+        playerState.playerScore = game->getScore();
+        playerState.playerUsername = getPlayers().at(token);
+        playerState.targetGrid = (target) ? target->getGameMatrix().getBoardWithCurrentPiece() : std::vector<std::vector<int>>();
+        playerState.targetUsername = "unknown"; // TODO : get the target username
+
+        rawState = playerState.serialize();
+
+    } else if (getSpectators().find(token) != getSpectators().end()) {
+        
+        // SpectatorState needed
+        std::shared_ptr<TetrisGame> game = getGame(token);
+        if (!game) { return rawState; }
+
+        SpectatorState spectatorState;
+        spectatorState.holdTetro = (game->getHoldPiece()) ? game->getHoldPiece()->getPieceType() : PieceType::None;
+        spectatorState.nextTetro = game->getNextPiece().getPieceType();
+        spectatorState.playerGrid = game->getGameMatrix().getBoardWithCurrentPiece();
+        spectatorState.playerUsername = getSpectators().at(token);
+
+        rawState = spectatorState.serialize();
+
+    } else {
+        printMessage("Unknown token asked for GameState", MessageType::ERROR);
+    }
+
+    return rawState;
 
 }
 
