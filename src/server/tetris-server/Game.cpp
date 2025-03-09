@@ -1,4 +1,6 @@
+
 #include "Game.hpp"
+
 
 
 Game::Game(
@@ -198,6 +200,30 @@ StatusCode Game::initializeGames() {
 
 }
 
+StatusCode Game::initializeEngine() {
+    // This method is used to initialize the game engine.
+    // It will initialize the game engine and set it up for the game to run.
+
+    // ?? we lock the game mutex to initialize the engine (we might wanna not do this lol)
+    std::lock_guard lock(gameMutex);
+
+    // initialize the engine
+    // we will use the GameEngineCreator class to create the engine
+    // we will use the lobby state to get the game mode
+
+    try {
+        engine = std::move(GameCreator::createEngine(lobbyState.gameMode));
+    } catch (std::invalid_argument &e) {
+        printMessage("Error creating engine: " + std::string(e.what()), MessageType::ERROR);
+        return StatusCode::ERROR_CREATING_ENGINE;
+    }
+
+    return StatusCode::SUCCESS;
+
+}
+
+
+
 StatusCode Game::listen() {
     // This method is used to listen for incoming requests and handle them.
     // It will return an error code if there is an error receiving the request or sending the response.
@@ -241,8 +267,6 @@ StatusCode Game::listen() {
     return StatusCode::SUCCESS;
 }
 
-
-
 void Game::updateGame() {
     // This method is used to update the game state.
     // It will run in a separate thread and will update the game state every frame.
@@ -262,18 +286,54 @@ void Game::updateGame() {
 
         // update the game state (we lock the game mutex to update the game state)
         {
-            // Shadowed the other lock variable
-            std::lock_guard lock_(gameMutex);
-            // TODO : update the game state here
-            //        most likely we will call handle routine
-            //        for every game engine in a for loop, check if
-            //        the game is over and maybe some other infos
+            
+            // update the games using the engine (if the engine is initialized)
+            if (!engine) {
+
+                printMessage("Engine not initialized", MessageType::CRITICAL);
+                continue;
+
+            } else {
+
+                // for each game, we update the game state, using the engine
+                // we also fetch the actions from the players, stored in some action map
+
+                for (auto &game : games) {
+                    
+                    // get the action of the player
+
+                    Action currentAction;
+
+                    {
+                        std::lock_guard lock__(actionMutex);
+                        if (actionMap.contains(game.first)) {
+                            currentAction = actionMap[game.first];
+                            actionMap.erase(game.first);
+                        } else {
+                            currentAction = Action::None;
+                        }
+                    }
+
+                    // update the game state
+
+                    {
+                        std::lock_guard lock_(gameMutex);
+                        engine->handlingRoutine(*game.second, currentAction);
+                    }
+            
+                }
+
+            }
+
         }
 
-        // sleep for a while
+        // sleep for a while (thx)
         std::this_thread::sleep_for(std::chrono::milliseconds(GAME_UPDATE_INTERVAL));
+
     }
+
 }
+
 
 
 std::unordered_map<std::string, std::string> Game::getPlayers() {
@@ -291,6 +351,8 @@ std::unordered_map<std::string, std::string> Game::getSpectators() {
     std::lock_guard lock(gameMutex);
     return lobbyState.spectators;
 }
+
+
 
 void Game::printMessage(const std::string &message, const MessageType msgtype) const {
     // This method is used to print a message to the console.
@@ -323,6 +385,7 @@ void Game::printMessage(const std::string &message, const MessageType msgtype) c
     const std::string messageToPrint = gameIdentifier + messageType + message;
     std::cout << messageToPrint << std::endl;
 }
+
 
 
 std::string Game::handleServerRequest(const std::string &requestContent) {
@@ -390,13 +453,11 @@ ServerResponse Game::handleGetGameStateRequest(const ServerRequest &request) {
     // this function will handle the get game state request
     // it will handle the get game state request and return a response
 
+    // TODO : nuke this shit
     const std::string token = request.params.at("token");
     std::string gameStateContent = getGameState(token);
     return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, {{"gamestate", gameStateContent}});
 }
-
-
-// TODO : implement this
 
 ServerResponse Game::handleKeyStroke(const KeyStrokePacket &packet, const ServerRequest &request) {
     // this function will handle the key stroke
@@ -404,14 +465,14 @@ ServerResponse Game::handleKeyStroke(const KeyStrokePacket &packet, const Server
 
     // we lock the game mutex to update the game state (to wait for the engines to finish their work)
     std::lock_guard lock(gameMutex);
+    std::lock_guard lock_(actionMutex);
 
-    printMessage("Handling key stroke: " + std::to_string(static_cast<int>(packet.action)) + " from " + packet.token,
-                 MessageType::INFO);
-
-    // TODO : handle the key stroke here
-    //        ...
-    //        ...
-    //        ...
+    printMessage("Handling key stroke: " + std::to_string(static_cast<int>(packet.action)) + " from " + packet.token, MessageType::INFO);
+    
+    // update the action map
+    // TODO : we might wanna implement reverse control OR block control here if gamemode is Royale,
+    // TODO : but that's a feature I'4'm not going to bother implement at the moment (ant0in)
+    actionMap[packet.token] = packet.action;
 
     return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS);
 }
@@ -430,4 +491,6 @@ std::string Game::getGameState(const std::string &token) {
     (void) token; // just avoid compiler warning
 
     return SpectatorState::generateEmptyState().serialize();
+
 }
+

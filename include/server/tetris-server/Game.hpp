@@ -22,14 +22,10 @@
 
 #include "GameCreator.hpp"
 #include "tetrisGame.hpp"
-#include "royalGame.hpp"
-#include "classicGame.hpp"
+#include "gameEngine.hpp"
 
 #include "common.hpp"
 
-
-// at the moment, this is MINIMAL, because we are only doing
-// the server logic, but we will implement real games soon
 
 
 class Game {
@@ -50,6 +46,7 @@ private:
     [[nodiscard]] StatusCode initializeSocket();
     [[nodiscard]] StatusCode setSocketOptions();
     [[nodiscard]] StatusCode initializeGames();
+    [[nodiscard]] StatusCode initializeEngine();
     [[nodiscard]] StatusCode listen();
 
     void updateGame();
@@ -81,9 +78,12 @@ private:
 
     // model stuff (mvc?)
     std::unordered_map<std::string, std::shared_ptr<TetrisGame>> games;
+    std::shared_ptr<GameEngine> engine;
+    std::unordered_map<std::string, Action> actionMap;
 
     // mutexes and threads
     std::mutex gameMutex;
+    std::mutex actionMutex;
     std::mutex listenMutex;
     std::mutex runningMutex;
     std::mutex updateMutex;

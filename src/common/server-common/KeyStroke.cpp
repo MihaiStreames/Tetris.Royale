@@ -30,7 +30,7 @@ KeyStrokePacket KeyStrokePacket::deserialize(const std::string &data) {
     KeyStrokePacket packet;
 
     try {
-        packet.action = static_cast<KeyStroke>(j["action"].get<int>());
+        packet.action = static_cast<Action>(j["action"].get<int>());
         packet.token = j["token"].get<std::string>();
     } catch (nlohmann::json::exception &e) {
         throw std::runtime_error(

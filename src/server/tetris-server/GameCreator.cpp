@@ -52,3 +52,39 @@ std::unordered_map<std::string, std::shared_ptr<TetrisGame>> GameCreator::create
 
 }
 
+
+std::shared_ptr<GameEngine> GameCreator::createEngine(const GameMode& gameMode) {
+
+    // this helper function creates the engine based on the game mode
+    // note that util functions could be called directly to avoid the switch statement, but
+    // that's easier to call this way
+
+    switch (gameMode) {
+
+        case GameMode::CLASSIC: return createClassicEngine();
+        case GameMode::DUEL: return createClassicEngine();
+        case GameMode::ROYALE: return createRoyalEngine();
+        
+        case GameMode::NONE: throw std::invalid_argument("[err] Invalid game mode");
+        default: throw std::invalid_argument("[err] Invalid argument");
+
+    }
+
+}
+
+std::shared_ptr<GameEngine> GameCreator::createClassicEngine() {
+
+    // create a classic engine
+
+    return std::make_shared<ClassicEngine>();
+
+}
+
+std::shared_ptr<GameEngine> GameCreator::createRoyalEngine() {
+
+    // create a royal engine
+
+    return std::make_shared<RoyalEngine>();
+
+}
+
