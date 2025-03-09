@@ -22,6 +22,11 @@ Game::Game(
         printMessage("Error initializing games", MessageType::CRITICAL);
     }
 
+    // initialize the engine
+    if (initializeEngine() != StatusCode::SUCCESS) {
+        printMessage("Error initializing engine", MessageType::CRITICAL);
+    }
+
 
 }
 
@@ -300,7 +305,7 @@ void Game::updateGame() {
         {
             
             // update the games using the engine (if the engine is initialized)
-            if (!engine) {
+            if (!engine.get()) {
 
                 printMessage("Engine not initialized", MessageType::CRITICAL);
                 continue;
@@ -486,7 +491,9 @@ ServerResponse Game::handleGetGameStateRequest(const ServerRequest &request) {
 
     const std::string token = request.params.at("token");
     std::string gameStateContent = getGameState(token);
-    return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, {{"gamestate", gameStateContent}});
+
+    return (gameStateContent.empty()) ? ServerResponse::ErrorResponse(request.id, StatusCode::ERROR_GETTING_GAME_STATE) :
+        ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, {{"gamestate", gameStateContent}});
 
 }
 

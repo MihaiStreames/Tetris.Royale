@@ -76,7 +76,7 @@ public:
     void readyUp();
     void unreadyUp();
 
-    void sendKeyStroke(const KeyStrokePacket& keyStroke);
+    void sendKeyStroke(const Action& action);
     void getGameState();  // !! this needs to be updated to return the game state
     
     

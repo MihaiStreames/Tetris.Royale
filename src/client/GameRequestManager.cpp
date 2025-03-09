@@ -162,8 +162,11 @@ ServerResponse GameRequestManager::createAndJoinLobby(const std::string &token, 
         return response;
     }
 
+    // we extract the lobbyState from the response
+    LobbyState lobbyState = LobbyState::deserialize(response.data.at("lobby"));
+
     // we can join the lobby now
-    return joinLobby(token, response.data.at("lobbyID"));
+    return joinLobby(token, lobbyState.lobbyID);
 }
 
 ServerResponse GameRequestManager::joinLobby(const std::string &token, const std::string &lobbyID) {

@@ -286,13 +286,15 @@ void ClientSession::startSession() {
     ServerResponse response = this->gameRequestManager.startSession(getUsername());
 
     // we have to check if the response was successful
-    if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
-        return;
-    }
+    if (response.status == StatusCode::SUCCESS_REPLACED_SESSION || response.status == StatusCode::SUCCESS) {
 
-    // we set the token of the client
-    this->setToken(response.data.at("token"));
+        std::cout << "Session started successfully for " << getUsername() << " with token " << response.data.at("token") << std::endl;
+        this->setToken(response.data.at("token"));
+
+    } else {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+    }
+    
 
 };
 
@@ -418,9 +420,12 @@ void ClientSession::unreadyUp() {
 
 
 
-void ClientSession::sendKeyStroke(const KeyStrokePacket& keyStroke) {
+void ClientSession::sendKeyStroke(const Action& keyStroke) {
 
-    ServerResponse response = this->gameRequestManager.sendKeyStroke(keyStroke.token, keyStroke);
+    KeyStrokePacket keyStrokePacket;
+    keyStrokePacket.token = getToken();
+    keyStrokePacket.action = keyStroke;
+    ServerResponse response = this->gameRequestManager.sendKeyStroke(keyStrokePacket.token, keyStrokePacket);
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
@@ -440,8 +445,7 @@ void ClientSession::getGameState() {
         return;
     }
 
-    // !! we have to return the game state (not done)
-    std::cout << "game state here" << std::endl;
+    std::cout << response.data.at("gamestate") << std::endl;
 
 }
 
