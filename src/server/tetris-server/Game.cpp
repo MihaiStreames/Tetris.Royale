@@ -12,9 +12,15 @@ Game::Game(
     // this is the constructor for the Game class
     // this will be used to create a new game instance, using lobbyState data to initialize the game
 
-    // TODO ; more funny stuff
     port = lobbyState.port;
     gameID = lobbyState.lobbyID;
+
+    // initialize the actual games
+    if (initializeGames() != StatusCode::SUCCESS) {
+        printMessage("Error initializing games", MessageType::CRITICAL);
+    }
+
+
 }
 
 Game::~Game() {
@@ -165,6 +171,32 @@ StatusCode Game::setSocketOptions() {
     return StatusCode::SUCCESS;
 }
 
+StatusCode Game::initializeGames() {
+    // This method is used to initialize the games.
+    // It will initialize the games and set them up for the players to join.
+
+    // we lock the game mutex to initialize the games
+    std::lock_guard lock(gameMutex);
+
+    // initialize the games
+    // we will use the GameCreator class to create the games
+    // we will use the lobby state to get the players / game mode
+
+    std::vector<std::string> playersToken;
+    for (const auto &player : lobbyState.players) {
+        playersToken.push_back(player.first);
+    }
+
+    try {
+        games = GameCreator::createGames(lobbyState.gameMode, playersToken);
+    } catch (std::invalid_argument &e) {
+        printMessage("Error creating games: " + std::string(e.what()), MessageType::ERROR);
+        return StatusCode::ERROR_CREATING_GAMES;
+    }
+
+    return StatusCode::SUCCESS;
+
+}
 
 StatusCode Game::listen() {
     // This method is used to listen for incoming requests and handle them.
@@ -208,6 +240,8 @@ StatusCode Game::listen() {
 
     return StatusCode::SUCCESS;
 }
+
+
 
 void Game::updateGame() {
     // This method is used to update the game state.

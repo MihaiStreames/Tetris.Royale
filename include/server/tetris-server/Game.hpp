@@ -19,6 +19,12 @@
 #include "KeyStroke.hpp"
 #include "LobbyState.hpp"
 #include "GameState.hpp"
+
+#include "GameCreator.hpp"
+#include "tetrisGame.hpp"
+#include "royalGame.hpp"
+#include "classicGame.hpp"
+
 #include "common.hpp"
 
 
@@ -43,7 +49,9 @@ private:
 
     [[nodiscard]] StatusCode initializeSocket();
     [[nodiscard]] StatusCode setSocketOptions();
+    [[nodiscard]] StatusCode initializeGames();
     [[nodiscard]] StatusCode listen();
+
     void updateGame();
 
     [[nodiscard]] std::unordered_map<std::string, std::string> getPlayers();
@@ -70,6 +78,9 @@ private:
     LobbyState lobbyState;
     bool running = false;
     bool debug;
+
+    // model stuff (mvc?)
+    std::unordered_map<std::string, std::shared_ptr<TetrisGame>> games;
 
     // mutexes and threads
     std::mutex gameMutex;

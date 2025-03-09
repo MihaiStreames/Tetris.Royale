@@ -1,0 +1,54 @@
+
+#include "GameCreator.hpp"
+
+
+
+std::unordered_map<std::string, std::shared_ptr<TetrisGame>> GameCreator::createGames(const GameMode& gameMode, std::vector<std::string>& players) {
+    
+    // this helper function creates the games based on the game mode
+    // note that util functions could be called directly to avoid the switch statement, but
+    // that's easier to call this way
+
+    switch (gameMode) {
+
+        case GameMode::CLASSIC: return createClassicGames(players);
+        case GameMode::DUEL: return createClassicGames(players);
+        case GameMode::ROYALE: return createRoyaleGames(players);
+        
+        case GameMode::NONE: throw std::invalid_argument("[err] Invalid game mode");
+        default: throw std::invalid_argument("[err] Invalid argument");
+
+    }
+
+}
+
+
+std::unordered_map<std::string, std::shared_ptr<TetrisGame>> GameCreator::createClassicGames(std::vector<std::string>& players) {
+
+    // create a map of classic games with the player token as the key
+
+    std::unordered_map<std::string, std::shared_ptr<TetrisGame>> games;
+
+    for (auto& player : players) {
+        games[player] = std::make_shared<ClassicGame>(GAME_WIDTH, GAME_HEIGHT, 0, 0, 0, 0);
+    }
+
+    return games;
+
+}
+
+
+std::unordered_map<std::string, std::shared_ptr<TetrisGame>> GameCreator::createRoyaleGames(std::vector<std::string>& players) {
+
+    // create a map of royal games with the player token as the key
+
+    std::unordered_map<std::string, std::shared_ptr<TetrisGame>> games;
+
+    for (auto& player : players) {
+        games[player] = std::make_shared<RoyalGame>(GAME_WIDTH, GAME_HEIGHT, 0, 0, 0, 0);
+    }
+
+    return games;
+
+}
+
