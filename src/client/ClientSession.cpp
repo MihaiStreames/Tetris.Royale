@@ -1,0 +1,276 @@
+#include "ClientSession.hpp"
+
+
+ClientSession::ClientSession(
+    const bool debug
+) : dbRequestManager(MASTER_SERVER_IP, DB_SERVER_PORT),
+    gameRequestManager(MASTER_SERVER_IP, LOBBY_SERVER_PORT),
+    bestScore_(0),
+    debug_(debug)
+{
+}
+
+ClientSession::~ClientSession() {
+}
+
+std::string ClientSession::getUsername() {
+    return username_;
+}
+
+std::string ClientSession::getAccountID() {
+    return accountID_;
+}
+
+std::string ClientSession::getToken() {
+    return token_;
+}
+
+int ClientSession::getBestScore() {
+    return bestScore_;
+}
+
+std::vector<std::string>& ClientSession::getFriendList() {
+    return friendList_;
+}
+
+std::vector<std::string>& ClientSession::getPendingFriendRequests() {
+    return pendingFriendRequests_;
+}
+
+void ClientSession::setUsername(const std::string &username) {
+    username_ = username;
+}
+
+void ClientSession::setAccountID(const std::string &accountID) {
+    accountID_ = accountID;
+}
+
+void ClientSession::setToken(const std::string &token) {
+    token_ = token;
+}
+
+void ClientSession::setBestScore(const int score) {
+    bestScore_ = score;
+}
+
+void ClientSession::setFriendList(const std::vector<std::string>& friends) {
+    friendList_ = friends;
+}
+
+void ClientSession::setPendingFriendRequests(const std::vector<std::string>& requests) {
+    pendingFriendRequests_ = requests;
+}
+
+void ClientSession::loginPlayer(const std::string &username, const std::string &password) {
+    const DBResponse response = dbRequestManager.loginPlayer(username, password);
+
+    if (response.status == 200) {
+        setAccountID(response.json.get<std::string>("accountID"));
+        setUsername(response.json.get<std::string>("userName"));
+        std::cout << "Login successful. AccountID: " << getAccountID() << std::endl;
+    } else {
+        std::cerr << "Login error (" << response.status << "): "
+                  << response.json.get<std::string>("error", "Unknown error") << std::endl;
+    }
+}
+
+void ClientSession::registerPlayer(const std::string &username, const std::string &password) {
+    const DBResponse response = dbRequestManager.registerPlayer(username, password);
+
+    if (response.status == 200) {
+        setAccountID(response.json.get<std::string>("accountID"));
+        setUsername(response.json.get<std::string>("userName"));
+        std::cout << "Registration successful. AccountID: " << getAccountID() << std::endl;
+    } else {
+        std::cerr << "Registration error (" << response.status << "): "
+                  << response.json.get<std::string>("error", "Unknown error") << std::endl;
+    }
+}
+
+void ClientSession::fetchPlayerData() {
+    if (getAccountID().empty()) {
+        std::cerr << "No accountID set; cannot fetch player data." << std::endl;
+        return;
+    }
+
+    DBResponse response = dbRequestManager.getPlayer(getAccountID());
+    if (response.status == 200) {
+        // Update basic fields
+        setUsername(response.json.get<std::string>("userName", username_));
+        setBestScore(response.json.get<int>("bestScore", 0));
+
+        // Parse friendList array
+        std::vector<std::string> friends;
+        if (const auto maybeFriends = response.json.get_child_optional("friendList")) {
+            for (const auto &child : maybeFriends.get()) {
+                friends.push_back(child.second.data());
+            }
+        }
+        setFriendList(friends);
+
+        // Parse pendingFriendRequests array
+        std::vector<std::string> pending;
+        if (const auto maybePending = response.json.get_child_optional("pendingFriendRequests")) {
+            for (const auto &child : maybePending.get()) {
+                pending.push_back(child.second.data());
+            }
+        }
+        setPendingFriendRequests(pending);
+
+        std::cout << "Fetched player data for " << getUsername() << std::endl;
+    } else {
+        std::cerr << "Error fetching player data (" << response.status << "): "
+                  << response.json.get<std::string>("error", "Unknown error") << std::endl;
+    }
+}
+
+void ClientSession::updatePlayer(const std::string &newName, const std::string &newPassword) {
+    if (getAccountID().empty()) {
+        std::cerr << "No accountID set; cannot update player." << std::endl;
+        return;
+    }
+
+    const DBResponse response = dbRequestManager.updatePlayer(getAccountID(), newName, newPassword);
+
+    if (response.status == 200) {
+        setUsername(response.json.get<std::string>("userName", username_));
+        std::cout << "Player updated successfully!" << std::endl;
+    } else {
+        std::cerr << "Error updating player (" << response.status << "): "
+                  << response.json.get<std::string>("error", "Unknown error") << std::endl;
+    }
+}
+
+void ClientSession::postScore(int score) {
+    if (getAccountID().empty()) {
+        std::cerr << "No accountID set; cannot post score." << std::endl;
+        return;
+    }
+
+    const DBResponse response = dbRequestManager.postPlayerScore(getAccountID(), score);
+
+    if (response.status == 200) {
+        std::cout << "Score posted successfully!" << std::endl;
+        // Refresh local data after score update
+        fetchPlayerData();
+    } else {
+        std::cerr << "Error posting score (" << response.status << "): "
+                  << response.json.get<std::string>("error", "Unknown error") << std::endl;
+    }
+}
+
+void ClientSession::sendFriendRequest(const std::string &receiverID) {
+    if (getAccountID().empty()) {
+        std::cerr << "No accountID set; cannot send friend request." << std::endl;
+        return;
+    }
+
+    const DBResponse response = dbRequestManager.sendFriendRequest(getAccountID(), receiverID);
+
+    if (response.status == 200) {
+        std::cout << "Friend request sent to " << receiverID << std::endl;
+    } else {
+        std::cerr << "Error sending friend request (" << response.status << "): "
+                  << response.json.get<std::string>("error", "Unknown error") << std::endl;
+    }
+}
+
+void ClientSession::acceptFriendRequest(const std::string &senderID) {
+    if (getAccountID().empty()) {
+        std::cerr << "No accountID set; cannot accept friend request." << std::endl;
+        return;
+    }
+
+    DBResponse response = dbRequestManager.acceptFriendRequest(getAccountID(), senderID);
+
+    if (response.status == 200) {
+        std::cout << "Friend request from " << senderID << " accepted!" << std::endl;
+        // Optionally, update local friend list
+        fetchPlayerData();
+    } else {
+        std::cerr << "Error accepting friend request (" << response.status << "): "
+                  << response.json.get<std::string>("error", "Unknown error") << std::endl;
+    }
+}
+
+void ClientSession::declineFriendRequest(const std::string &senderID) {
+    if (getAccountID().empty()) {
+        std::cerr << "No accountID set; cannot decline friend request." << std::endl;
+        return;
+    }
+
+    DBResponse response = dbRequestManager.declineFriendRequest(getAccountID(), senderID);
+
+    if (response.status == 200) {
+        std::cout << "Friend request from " << senderID << " declined." << std::endl;
+        // Optionally, update local pending list
+        fetchPlayerData();
+    } else {
+        std::cerr << "Error declining friend request (" << response.status << "): "
+                  << response.json.get<std::string>("error", "Unknown error") << std::endl;
+    }
+}
+
+void ClientSession::removeFriend(const std::string &friendID) {
+    if (getAccountID().empty()) {
+        std::cerr << "No accountID set; cannot remove friend." << std::endl;
+        return;
+    }
+
+    const DBResponse response = dbRequestManager.removeFriend(getAccountID(), friendID);
+
+    if (response.status == 200) {
+        std::cout << "Friend " << friendID << " removed :(" << std::endl;
+        // Optionally, update local friend list
+        fetchPlayerData();
+    } else {
+        std::cerr << "Error removing friend (" << response.status << "): "
+                  << response.json.get<std::string>("error", "Unknown error") << std::endl;
+    }
+}
+
+void ClientSession::startSession() {
+    ServerResponse response = this->gameRequestManager.startSession();
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return;
+    }
+
+    // we set the token of the client
+    this->setToken(response.data.at("token"));
+};
+
+void ClientSession::endSession() {
+    ServerResponse response = this->gameRequestManager.endSession(getToken());
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return;
+    }
+
+    // we set the token of the client
+    this->setToken("");
+};
+
+
+ClientStatus ClientSession::getStatus() {
+    // this method is used to get the status of the client
+    // it will return the status of the client
+
+    if (this->getToken().empty()) {
+        return ClientStatus::OFFLINE;
+    }
+
+    ServerResponse response = this->gameRequestManager.getPlayerStatus(getUsername());
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return ClientStatus::OFFLINE;
+    }
+
+    return static_cast<ClientStatus>(std::stoi(response.data.at("status")));
+}
