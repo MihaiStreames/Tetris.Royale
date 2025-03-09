@@ -48,6 +48,11 @@ class Lobby {
         void decrementTTL();
         [[nodiscard]] bool isLobbyDead();
         [[nodiscard]] bool isLobbyPublic();
+
+        // utility
+        [[nodiscard]] bool isPlayerInLobby(const std::string& sessionToken) const;
+        [[nodiscard]] bool isSpectatorInLobby(const std::string& sessionToken) const;
+        [[nodiscard]] bool isLobbyFull() const;
         
 
     private:
@@ -57,12 +62,6 @@ class Lobby {
         [[nodiscard]] StatusCode setSocketOptions();
         [[nodiscard]] StatusCode listen();
 
-        // utility
-        [[nodiscard]] bool isPlayerInLobby(const std::string& sessionToken) const;
-        [[nodiscard]] bool isSpectatorInLobby(const std::string& sessionToken) const;
-        [[nodiscard]] bool isLobbyFull() const;
-        
-        
         void printMessage(const std::string& message, MessageType msgtype) const;
 
         // handling requests stuff

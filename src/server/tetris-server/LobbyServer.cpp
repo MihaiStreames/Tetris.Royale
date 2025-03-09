@@ -93,6 +93,13 @@ StatusCode LobbyServer::closeLobbyServer() {
 }
 
 
+void LobbyServer::setGameServer(std::shared_ptr<GameServer> gameServer) {
+    // this is used to set the game server that is using this lobby server
+    this->gameServer = std::move(gameServer);
+}
+
+
+
 StatusCode LobbyServer::addClientSession(const std::string &token, const std::string &username) {
     // this method is used to add a client session to the lobby server
 
@@ -171,11 +178,15 @@ std::string LobbyServer::getClientSessionToken(const std::string &username) cons
 
     std::lock_guard lock(clientMutex);
 
+
+    std::string foundToken;
     for (const auto &[token, name]: clientTokens) {
         if (name == username) {
-            return token;
+            foundToken = token;
+            break; 
         }
     }
+    return foundToken;
 
 }
 
@@ -882,7 +893,9 @@ ServerResponse LobbyServer::handleGetPlayerStatusRequest(const ServerRequest &re
     // if reached this point, the player is connected and might be in a game
     // we check if the player is in a game
 
-    // TODO : implement this part
+    if (gameServer->isSessionInAnyGame(token)) {
+        return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, PlayerStatus::IN_GAME);
+    }
 
     // if reached this point, the player is connected but not in a lobby or a game
     return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS, PlayerStatus::IDLING);

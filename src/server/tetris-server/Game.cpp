@@ -86,6 +86,17 @@ StatusCode Game::closeGame() {
 }
 
 
+
+bool Game::isSessionInGame(const std::string &token) {
+    // This method is used to check if a session is in the game.
+    // It will return true if the session is in the game, false otherwise.
+
+    std::lock_guard lock(gameMutex);
+    return lobbyState.players.contains(token) || lobbyState.spectators.contains(token);
+}
+
+
+
 StatusCode Game::initializeSocket() {
     // This method is used to initialize the socket of the game.
     // It will return an error code if there is an error initializing the socket.

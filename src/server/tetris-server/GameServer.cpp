@@ -75,6 +75,22 @@ StatusCode GameServer::closeGameServer() {
 }
 
 
+
+bool GameServer::isSessionInAnyGame(const std::string &token) {
+    // This method is used to check if a session is in any game.
+    // It will return true if the session is in any game, and false otherwise.
+
+    std::lock_guard lock(gamesMutex);
+    for (const auto &game: activeGames) {
+        if (game->isSessionInGame(token)) { return true; }
+    }
+
+    return false;
+}
+
+
+
+
 int GameServer::countGames() {
     // This method is used to count the number of games in the game server.
     // It will return the number of games.

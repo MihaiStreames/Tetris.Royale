@@ -9,9 +9,13 @@
 #include <vector>
 #include <unordered_map>
 
-#include "LobbyServer.hpp"
 #include "Game.hpp"
 #include "common.hpp"
+#include "LobbyServer.hpp"
+
+
+// forward declaration
+class LobbyServer;
 
 
 class GameServer {
@@ -23,6 +27,9 @@ class GameServer {
 
         [[nodiscard]] StatusCode startGameServer();
         [[nodiscard]] StatusCode closeGameServer();
+
+        [[nodiscard]] bool isSessionInAnyGame(const std::string& token);
+        
 
         [[nodiscard]] int countGames();
         [[nodiscard]] bool isRunning();

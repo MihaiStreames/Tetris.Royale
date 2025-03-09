@@ -245,6 +245,34 @@ bool Lobby::isLobbyPublic() {
 }
 
 
+
+
+bool Lobby::isPlayerInLobby(const std::string &sessionToken) const {
+    // This method is used to check if a player is in the lobby.
+    // It will return true if the player is in the lobby, false otherwise.
+    const bool inPlayers = players.contains(sessionToken);
+    return inPlayers;
+}
+
+bool Lobby::isSpectatorInLobby(const std::string &sessionToken) const {
+    // This method is used to check if a spectator is in the lobby.
+    // It will return true if the spectator is in the lobby, false otherwise.
+    const bool inSpectators = spectators.contains(sessionToken);
+    return inSpectators;
+}
+
+bool Lobby::isLobbyFull() const {
+    // This method is used to check if the lobby is full.
+    // It will return true if the lobby is full, false otherwise.
+
+    return static_cast<int>(players.size()) >= maxPlayers;
+}
+
+
+
+
+
+
 StatusCode Lobby::initializeSocket() {
     // This method is used to initialize the socket of the lobby.
     // It will return an error code if there is an error initializing the socket.
@@ -357,26 +385,7 @@ StatusCode Lobby::listen() {
 }
 
 
-bool Lobby::isPlayerInLobby(const std::string &sessionToken) const {
-    // This method is used to check if a player is in the lobby.
-    // It will return true if the player is in the lobby, false otherwise.
-    const bool inPlayers = players.contains(sessionToken);
-    return inPlayers;
-}
 
-bool Lobby::isSpectatorInLobby(const std::string &sessionToken) const {
-    // This method is used to check if a spectator is in the lobby.
-    // It will return true if the spectator is in the lobby, false otherwise.
-    const bool inSpectators = spectators.contains(sessionToken);
-    return inSpectators;
-}
-
-bool Lobby::isLobbyFull() const {
-    // This method is used to check if the lobby is full.
-    // It will return true if the lobby is full, false otherwise.
-
-    return static_cast<int>(players.size()) >= maxPlayers;
-}
 
 
 void Lobby::printMessage(const std::string &message, const MessageType msgtype) const {

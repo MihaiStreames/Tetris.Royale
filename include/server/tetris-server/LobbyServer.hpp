@@ -18,7 +18,12 @@
 #include "Lobby.hpp"
 #include "ServerRequest.hpp"
 #include "ServerResponse.hpp"
+#include "GameServer.hpp"
 #include "common.hpp"
+
+
+// forward declaration
+class GameServer;
 
 
 // LobbyServer class is used to manage the lobbies that are created by the clients.
@@ -35,6 +40,8 @@ class LobbyServer {
     
         [[nodiscard]] StatusCode startLobbyServer();
         [[nodiscard]] StatusCode closeLobbyServer();
+
+        void setGameServer(std::shared_ptr<GameServer> gameServer);
 
         // session management
         [[nodiscard]] StatusCode addClientSession(const std::string& token, const std::string& username);
@@ -95,6 +102,7 @@ class LobbyServer {
 
         std::string ip;
         int port;
+        std::shared_ptr<GameServer> gameServer;  // the game server that is using this lobby server
         bool debug;
         bool running = false;
 

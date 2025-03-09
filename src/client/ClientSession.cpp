@@ -230,7 +230,7 @@ void ClientSession::removeFriend(const std::string &friendID) {
 }
 
 void ClientSession::startSession() {
-    ServerResponse response = this->gameRequestManager.startSession();
+    ServerResponse response = this->gameRequestManager.startSession(getUsername());
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {

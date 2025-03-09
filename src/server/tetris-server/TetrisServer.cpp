@@ -18,6 +18,8 @@ TetrisServer::TetrisServer(
 
     lobbyServer = std::make_shared<LobbyServer>(ip, listenPort, debug);
     gameServer = std::make_shared<GameServer>(ip, lobbyServer, debug);
+    lobbyServer->setGameServer(gameServer);
+
 }
 
 

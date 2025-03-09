@@ -36,6 +36,8 @@ public:
     [[nodiscard]] StatusCode startGame();
     [[nodiscard]] StatusCode closeGame();
 
+    [[nodiscard]] bool isSessionInGame(const std::string &token);
+
 
 private:
 
