@@ -3,6 +3,19 @@
 
 
 
+
+SpectatorState SpectatorState::generateEmptyState() {
+    
+    // generate an empty spectator state
+    SpectatorState state;
+    state.playerUsername = "";
+    state.playerGrid = tetroMat();
+    state.nextTetro = PieceType::None;
+    state.holdTetro = PieceType::None;
+    return state;
+
+}
+
 std::string SpectatorState::serialize() const {
 
     // serialize the spectator state
@@ -16,7 +29,7 @@ std::string SpectatorState::serialize() const {
 
 }
 
-std::unique_ptr<SpectatorState> SpectatorState::deserialize(const std::string& data) {
+SpectatorState SpectatorState::deserialize(const std::string& data) {
 
     // deserialize the spectator state
     nlohmann::json j;
@@ -31,13 +44,13 @@ std::unique_ptr<SpectatorState> SpectatorState::deserialize(const std::string& d
             "[error] Unknown json error while deserializing SpectatorState: " + std::string(e.what()));
     }
 
-    std::unique_ptr<SpectatorState> state = std::make_unique<SpectatorState>();
+    SpectatorState state;
     
     try {
-        state->playerUsername = j["playerUsername"].get<std::string>();
-        state->playerGrid = j["playerGrid"].get<tetroMat>();
-        state->nextTetro = j["nextTetro"].get<PieceType>();
-        state->holdTetro = j["holdTetro"].get<PieceType>();
+        state.playerUsername = j["playerUsername"].get<std::string>();
+        state.playerGrid = j["playerGrid"].get<tetroMat>();
+        state.nextTetro = j["nextTetro"].get<PieceType>();
+        state.holdTetro = j["holdTetro"].get<PieceType>();
     } catch (nlohmann::json::exception &e) {
         throw std::runtime_error(
             "[error] Unknown json error while deserializing SpectatorState: " + std::string(e.what()));
@@ -50,6 +63,22 @@ std::unique_ptr<SpectatorState> SpectatorState::deserialize(const std::string& d
 }
 
 
+
+PlayerState PlayerState::generateEmptyState() {
+
+    // generate an empty player state
+    PlayerState state;
+    state.playerUsername = "";
+    state.playerGrid = tetroMat();
+    state.nextTetro = PieceType::None;
+    state.holdTetro = PieceType::None;
+    state.playerScore = 0;
+    state.playerLevel = 0;
+    state.targetUsername = "";
+    state.targetGrid = tetroMat();
+    return state;
+    
+}
 
 std::string PlayerState::serialize() const {
 
@@ -67,7 +96,7 @@ std::string PlayerState::serialize() const {
 
 }
 
-std::unique_ptr<PlayerState> PlayerState::deserialize(const std::string& data) {
+PlayerState PlayerState::deserialize(const std::string& data) {
 
     // deserialize the player state
     nlohmann::json j;
@@ -82,17 +111,17 @@ std::unique_ptr<PlayerState> PlayerState::deserialize(const std::string& data) {
             "[error] Unknown json error while deserializing PlayerState: " + std::string(e.what()));
     }
 
-    std::unique_ptr<PlayerState> state = std::make_unique<PlayerState>();
+    PlayerState state;
     
     try {
-        state->playerUsername = j["playerUsername"].get<std::string>();
-        state->playerGrid = j["playerGrid"].get<tetroMat>();
-        state->nextTetro = j["nextTetro"].get<PieceType>();
-        state->holdTetro = j["holdTetro"].get<PieceType>();
-        state->playerScore = j["playerScore"].get<int>();
-        state->playerLevel = j["playerLevel"].get<int>();
-        state->targetUsername = j["targetUsername"].get<std::string>();
-        state->targetGrid = j["targetGrid"].get<tetroMat>();
+        state.playerUsername = j["playerUsername"].get<std::string>();
+        state.playerGrid = j["playerGrid"].get<tetroMat>();
+        state.nextTetro = j["nextTetro"].get<PieceType>();
+        state.holdTetro = j["holdTetro"].get<PieceType>();
+        state.playerScore = j["playerScore"].get<int>();
+        state.playerLevel = j["playerLevel"].get<int>();
+        state.targetUsername = j["targetUsername"].get<std::string>();
+        state.targetGrid = j["targetGrid"].get<tetroMat>();
     } catch (nlohmann::json::exception &e) {
         throw std::runtime_error(
             "[error] Unknown json error while deserializing PlayerState: " + std::string(e.what()));

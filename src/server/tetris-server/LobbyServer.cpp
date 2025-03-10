@@ -744,13 +744,28 @@ ServerResponse LobbyServer::handleCreateLobbyRequest(const ServerRequest &reques
     int maxPlayers = std::stoi(request.params.at("maxPlayers"));
     bool publicLobby = request.params.at("visibility") == "public";
 
-    if ((gameMode == GameMode::CLASSIC || gameMode == GameMode::ROYALE) && (
-            (maxPlayers > MAX_LOBBY_SIZE) || (maxPlayers < MIN_LOBBY_SIZE))) {
-        return ServerResponse::ErrorResponse(request.id, StatusCode::ERROR_INVALID_LOBBY_SIZE);
-    }
 
-    if (gameMode == GameMode::DUEL && maxPlayers != DUAL_LOBBY_SIZE) {
-        return ServerResponse::ErrorResponse(request.id, StatusCode::ERROR_INVALID_LOBBY_SIZE);
+    // we want to check if the number of players is fine for the game mode
+    // (Classic and Royale should be between MIN_LOBBY_SIZE and MAX_LOBBY_SIZE)
+    // (Duel should be DUAL_LOBBY_SIZE)
+    // if it's not the case, then return ERROR_INVALID_LOBBY_SIZE
+
+    if (gameMode == GameMode::CLASSIC || gameMode == GameMode::ROYALE) {
+
+        if (maxPlayers < MIN_LOBBY_SIZE || maxPlayers > MAX_LOBBY_SIZE) {
+            return ServerResponse::ErrorResponse(request.id, StatusCode::ERROR_INVALID_LOBBY_SIZE);
+        }
+
+    } else if (gameMode == GameMode::DUEL) {
+
+        if (maxPlayers != DUAL_LOBBY_SIZE) {
+            return ServerResponse::ErrorResponse(request.id, StatusCode::ERROR_INVALID_LOBBY_SIZE);
+        }
+
+    } else {
+
+        throw std::runtime_error("[err] Invalid GameMode in createLobbyRequest");
+
     }
 
 

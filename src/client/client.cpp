@@ -25,7 +25,7 @@ void printMenu() {
     std::cout << "16. Ready Up" << std::endl;
     std::cout << "17. Unready Up" << std::endl;
     std::cout << "18. Send Key Stroke" << std::endl;
-    std::cout << "19. Get Game State" << std::endl;
+    std::cout << "19. Get GameState as a Player" << std::endl;
     std::cout << "20. Get Player Status" << std::endl;
     std::cout << "21. Exit" << std::endl;
 
@@ -131,7 +131,7 @@ int main() {
 
             // create and join lobby
             case 12:
-                std::cout << "Enter game mode (0 for CLASSIC, 1 for DUEL, 2 for ROYALE): ";
+                std::cout << "Enter game mode (0 for CLASSIC, 1 for ROYALE, 2 for DUEL): ";
                 std::cin >> choice;
                 std::cout << "Enter max players: ";
                 std::cin >> maxPlayers;
@@ -170,14 +170,52 @@ int main() {
                 break;
 
             // send key stroke
-            case 18:
-                // TODO: implement
+            case 18: {
+                
+                // create a map of all the actions linked with numbers
+                std::map<int, Action> actionMap = {
+                    {0, Action::MoveLeft},
+                    {1, Action::MoveRight},
+                    {2, Action::MoveDown},
+                    {3, Action::RotateLeft},
+                    {4, Action::RotateRight},
+                    {5, Action::UseBag},
+                    {6, Action::UseBonus},
+                    {7, Action::UseMalus},
+                    {8, Action::InstantFall},
+                    {9, Action::SeePreviousOpponent},
+                    {10, Action::SeeNextOpponent},
+                };
+
+                std::cout << "Enter action (0 for MoveLeft, 1 for MoveRight, 2 for MoveDown, 3 for RotateLeft, 4 for RotateRight, 5 for UseBag, 6 for UseBonus, 7 for UseMalus, 8 for InstantFall), 9 for SeePreviousOpponent, 10 for SeeNextOpponent: ";
+                std::cin >> choice;
+
+                // send the key stroke
+                clientSession.sendKeyStroke(actionMap[choice]);
                 break;
 
-            // get game state
-            case 19:
-                clientSession.getGameState();
+            }
+
+            // get gamestate player view
+            case 19: {
+
+                PlayerState state = clientSession.getPlayerState();
+                
+                // print the board
+                for (int i = 0; i < state.playerGrid.size(); i++) {
+                    std::cout << "|";
+                    for (int j = 0; j < state.playerGrid[i].size(); j++) {
+                        std::cout << (state.playerGrid[i][j] ? "█" : ".");
+                    }
+                    std::cout << "|" << "             " << "|";
+                    for (int j = 0; j < state.targetGrid[i].size(); j++) {
+                        std::cout << (state.targetGrid[i][j] ? "x" : ".");
+                    }
+                    std::cout << "|" << std::endl;
+                }
+
                 break;
+            }
             
             // get player status
             case 20: {

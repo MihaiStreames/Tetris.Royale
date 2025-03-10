@@ -435,17 +435,33 @@ void ClientSession::sendKeyStroke(const Action& keyStroke) {
 
 }
 
-void ClientSession::getGameState() {
+PlayerState ClientSession::getPlayerState() {
 
     ServerResponse response = this->gameRequestManager.getGameState(getToken());
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
         std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
-        return;
+        return PlayerState::generateEmptyState();
     }
 
-    std::cout << response.data.at("gamestate") << std::endl;
+    PlayerState playerState = PlayerState::deserialize(response.data.at("gamestate"));
+    return playerState;
+
+}
+
+SpectatorState ClientSession::getSpectatorState() {
+
+    ServerResponse response = this->gameRequestManager.getGameState(getToken());
+
+    // we have to check if the response was successful
+    if (response.status != StatusCode::SUCCESS) {
+        std::cerr << "Error: " << getStatusCodeString(response.status) << std::endl;
+        return SpectatorState::generateEmptyState();
+    }
+
+    SpectatorState spectatorState = SpectatorState::deserialize(response.data.at("gamestate"));
+    return spectatorState;
 
 }
 

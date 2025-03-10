@@ -137,7 +137,7 @@ const int INVALID_ID = -1;
 const int EMPTY_LOBBY_PORT = -1;
 
 // Buffer size for the server
-const int MAX_BUFFER_SIZE = 1024;
+const int MAX_BUFFER_SIZE = 2048;
 
 // Timeout values for the server / client
 const int TIMEOUT_SEC = 5;
@@ -164,7 +164,7 @@ const int MAX_GAMES = 20;
 const int MAX_LOBBIES = 20;
 
 const int DUAL_LOBBY_SIZE = 2;
-const int MIN_LOBBY_SIZE = 1;
+const int MIN_LOBBY_SIZE = 3;
 const int MAX_LOBBY_SIZE = 9;
 
 const int LOBBY_TTL = 1000000;  // ttl for the lobby

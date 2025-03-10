@@ -317,7 +317,7 @@ ServerResponse GameRequestManager::sendKeyStroke(const std::string &token, const
     request.id = generateRequestID();
     request.method = ServerMethods::KEY_STROKE;
     request.params["token"] = token;
-    request.params["keyStroke"] = keyStroke.serialize();
+    request.params["keystroke"] = keyStroke.serialize();
 
     // send the request
     (void) sendRequest(request);
@@ -336,6 +336,7 @@ ServerResponse GameRequestManager::getGameState(const std::string &token) {
     request.params["token"] = token;
 
     // send the request
+
     (void) sendRequest(request);
     return receiveResponse();
 }

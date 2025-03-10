@@ -471,14 +471,13 @@ ServerResponse Game::handleKeyStroke(const KeyStrokePacket &packet, const Server
     // it will handle the key stroke and update the game state
 
     // we lock the game mutex to update the game state (to wait for the engines to finish their work)
-    std::lock_guard lock(gameMutex);
-    std::lock_guard lock_(actionMutex);
+    std::lock_guard lock(actionMutex);
 
     printMessage("Handling key stroke: " + std::to_string(static_cast<int>(packet.action)) + " from " + packet.token, MessageType::INFO);
     
     // update the action map
     // TODO : we might wanna implement reverse control OR block control here if gamemode is Royale,
-    // TODO : but that's a feature I'4'm not going to bother implement at the moment (ant0in)
+    // TODO : but that's a feature I'm not going to bother implement at the moment (ant0in)
     actionMap[packet.token] = packet.action;
 
     return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS);

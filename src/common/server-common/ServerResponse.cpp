@@ -31,7 +31,7 @@ ServerResponse ServerResponse::deserialize(const std::string &data) {
     try {
         response.id = j["id"];
         response.status = j["status"];
-        response.data = j["data"].get<std::unordered_map<std::string, std::string> >();
+        response.data = j["data"].get<std::unordered_map<std::string, std::string>>();
     } catch (nlohmann::json::exception &e) {
         throw std::runtime_error("[error] Unknown json error while deserializing Response: " + std::string(e.what()));
     } catch (std::exception &e) {

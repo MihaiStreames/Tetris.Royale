@@ -24,7 +24,7 @@ struct GameState {
         PieceType holdTetro;
 
         virtual ~GameState() = default;
-        virtual std::string serialize() const = 0;
+        [[nodiscard]] virtual std::string serialize() const = 0;
 
 };
 
@@ -32,9 +32,10 @@ struct GameState {
 struct SpectatorState : public GameState {
 
     public:
-
-        std::string serialize() const override;
-        static std::unique_ptr<SpectatorState> deserialize(const std::string& data);
+    
+        [[nodiscard]] static SpectatorState generateEmptyState();
+        [[nodiscard]] std::string serialize() const override;
+        [[nodiscard]] static SpectatorState deserialize(const std::string& data);
 
 };
 
@@ -45,12 +46,12 @@ struct PlayerState : public GameState {
 
         int playerScore;
         int playerLevel;
-
         std::string targetUsername;
         tetroMat targetGrid;
-
-        std::string serialize() const override;
-        static std::unique_ptr<PlayerState> deserialize(const std::string& data);
+        
+        [[nodiscard]] static PlayerState generateEmptyState();
+        [[nodiscard]] std::string serialize() const override;
+        [[nodiscard]] static PlayerState deserialize(const std::string& data);
 
 };
 

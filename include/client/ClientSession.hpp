@@ -15,6 +15,7 @@
 
 #include "DBRequestManager.hpp"
 #include "GameRequestManager.hpp"
+#include "GameState.hpp"
 #include "common.hpp"
 
 
@@ -77,7 +78,8 @@ public:
     void unreadyUp();
 
     void sendKeyStroke(const Action& action);
-    void getGameState();  // !! this needs to be updated to return the game state
+    PlayerState getPlayerState();
+    SpectatorState getSpectatorState();
     
     
 
