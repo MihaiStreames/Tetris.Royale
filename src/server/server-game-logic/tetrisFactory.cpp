@@ -1,4 +1,4 @@
-#include "TetrisFactory.hpp"
+#include "tetrisFactory.hpp"
 
 
 void TetrisFactory::fillPool() {

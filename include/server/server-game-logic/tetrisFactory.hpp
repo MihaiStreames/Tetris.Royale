@@ -6,7 +6,7 @@
 
 
 #include "types.hpp"
-#include "Tetromino.hpp"
+#include "tetromino.hpp"
 
 class TetrisFactory {
 

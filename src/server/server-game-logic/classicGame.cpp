@@ -1,5 +1,5 @@
 
-#include "ClassicGame.hpp"
+#include "classicGame.hpp"
 
 // #include "[[nodiscard]]lassicGame.hpp"  ->  funny copy paste error
 

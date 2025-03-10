@@ -6,7 +6,7 @@
 #include <iostream>
 #include <random>
 
-#include "Tetromino.hpp"
+#include "tetromino.hpp"
 
 
 

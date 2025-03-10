@@ -21,8 +21,8 @@
 #include "GameState.hpp"
 
 #include "GameCreator.hpp"
-#include "TetrisGame.hpp"
-#include "GameEngine.hpp"
+#include "tetrisGame.hpp"
+#include "gameEngine.hpp"
 
 #include "common.hpp"
 

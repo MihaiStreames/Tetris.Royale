@@ -1,5 +1,5 @@
 
-#include "RoyalGame.hpp"
+#include "royalGame.hpp"
 
 
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GameEngine.hpp"
-#include "RoyalGame.hpp"
+#include "gameEngine.hpp"
+#include "royalGame.hpp"
 
 class RoyalEngine final : public GameEngine {
 

@@ -1,5 +1,5 @@
 
-#include "ClassicEngine.hpp"
+#include "classicEngine.hpp"
 
 
 void ClassicEngine::handleBasicPenalty(ClassicGame& game, const int linesCleared) {

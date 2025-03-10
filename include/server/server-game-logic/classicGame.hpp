@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdlib>
-#include "TetrisGame.hpp"
+#include "tetrisGame.hpp"
 
 class ClassicGame : public TetrisGame {
 

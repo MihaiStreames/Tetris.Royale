@@ -1,7 +1,7 @@
 #pragma once
 
-#include "GameEngine.hpp"
-#include "ClassicGame.hpp"
+#include "gameEngine.hpp"
+#include "classicGame.hpp"
 
 
 class ClassicEngine final : public GameEngine {
