@@ -62,6 +62,8 @@ private:
     [[nodiscard]] ServerResponse handleKeyStroke(const KeyStrokePacket& packet, const ServerRequest& request);
     [[nodiscard]] ServerResponse handleGetGameStateRequest(const ServerRequest &request);
     [[nodiscard]] std::string getGameState(const std::string& token);
+
+    [[nodiscard]] Action getActionFromKeyStroke(const KeyStrokePacket& packet);
     
 
     std::string ip;

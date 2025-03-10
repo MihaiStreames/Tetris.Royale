@@ -470,15 +470,13 @@ ServerResponse Game::handleKeyStroke(const KeyStrokePacket &packet, const Server
     // this function will handle the key stroke
     // it will handle the key stroke and update the game state
 
-    // we lock the game mutex to update the game state (to wait for the engines to finish their work)
-    std::lock_guard lock(actionMutex);
-
     printMessage("Handling key stroke: " + std::to_string(static_cast<int>(packet.action)) + " from " + packet.token, MessageType::INFO);
     
     // update the action map
-    // TODO : we might wanna implement reverse control OR block control here if gamemode is Royale,
-    // TODO : but that's a feature I'm not going to bother implement at the moment (ant0in)
-    actionMap[packet.token] = packet.action;
+    {
+        std::lock_guard lock(actionMutex);
+        actionMap[packet.token] = getActionFromKeyStroke(packet);
+    }
 
     return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS);
 }
@@ -548,4 +546,43 @@ std::string Game::getGameState(const std::string &token) {
     return rawState;
 
 }
+
+
+
+Action Game::getActionFromKeyStroke(const KeyStrokePacket &packet) {
+    
+    // this function will get the action from the key stroke
+    // it will get the action from the key stroke and return it
+
+    // get the game of the player
+    std::shared_ptr<TetrisGame> game = getGame(packet.token);
+    if (!game) { return Action::None; }
+
+    // get the key stroke
+    Action action = packet.action;
+
+    // check if the game is in block state OR in reverse state
+
+    if (game->getBlockControlsFlag()) {
+        
+        // if the game is in block state, we can NOT move the block
+        if (std::find(BLOCKED_ACTIONS.begin(), BLOCKED_ACTIONS.end(), action) != BLOCKED_ACTIONS.end()) {
+            action = Action::None;
+        }
+
+    } else if (game->getReverseControlsFlag()) {
+            
+        // if the game is in reverse state, we need to reverse the actions
+        // we use the reverse map for this
+        if (REVERSE_ACTIONS_MAP.contains(action)) {
+            action = REVERSE_ACTIONS_MAP.at(action);
+        }
+
+    }
+
+    return action;
+
+
+} 
+
 

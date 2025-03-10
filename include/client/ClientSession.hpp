@@ -67,7 +67,7 @@ public:
     void startSession();
     void endSession();
 
-    std::unordered_map<std::string, std::string> getPublicLobbiesList();
+    [[nodiscard]] std::unordered_map<std::string, std::string> getPublicLobbiesList();
     void createAndJoinLobby(GameMode gameMode, int maxPlayers, bool isPublic);
     void joinLobby(const std::string& lobbyID);
     void spectateLobby(const std::string& lobbyID);
@@ -78,8 +78,8 @@ public:
     void unreadyUp();
 
     void sendKeyStroke(const Action& action);
-    PlayerState getPlayerState();
-    SpectatorState getSpectatorState();
+    [[nodiscard]] PlayerState getPlayerState();
+    [[nodiscard]] SpectatorState getSpectatorState();
     
     
 

@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+#include <vector>
+
+#include "types.hpp"
 
 
 
@@ -61,6 +64,28 @@ enum class StatusCode {
 
 // status codes in string format
 std::string getStatusCodeString(StatusCode code);
+
+
+// malus things with the game
+
+const std::unordered_map<Action, Action> REVERSE_ACTIONS_MAP = {
+    {Action::MoveRight, Action::MoveLeft},
+    {Action::MoveLeft, Action::MoveRight},
+    {Action::RotateLeft, Action::RotateRight},
+    {Action::RotateRight, Action::RotateLeft},
+};
+
+const std::vector<Action> BLOCKED_ACTIONS = {
+    Action::MoveDown,
+    Action::MoveLeft,
+    Action::MoveRight,
+    Action::RotateLeft,
+    Action::RotateRight,
+    Action::InstantFall,
+    Action::UseBag,
+    Action::UseMalus,
+    Action::UseBonus,
+};
 
 
 // gamemode for the lobby
@@ -125,8 +150,7 @@ enum class PlayerStatus {
     NONE,  // default value
 };
 
-// some type def
-#define Matrix std::vector<std::vector<int>>
+
 
 
 // method type in string format
