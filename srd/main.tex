@@ -87,7 +87,7 @@ Ce document de spécifications des besoins logiciels (\textit{Software Requireme
     \item\textbf{Tetramino} : Pièce de \emph{Tetris}, composée de 4 blocs carrés disposés selon diverses configurations.
     \item\textbf{Battle Royale} : Mode de compétition où chaque joueur s'affronte pour être le dernier en vie.
     \item\textbf{Ligne} : Une rangée complète de blocs horizontaux sur la grille. Une ligne complétée disparaît.
-    \item\textbf{Grille} : L'aire de jeu où tombent les \emph{tetriminos}. Elle mesure 10 cases de large et 22 cases de haut.
+    \item\textbf{Grille} : L'aire de jeu où tombent les \emph{tetraminos}. Elle mesure 10 cases de large et 22 cases de haut.
     \item\textbf{Tetris} : Compléter quatre lignes en une seule action à l’aide d’une pièce en forme de barre (\emph{I}).
 \end{itemize}
 
@@ -110,6 +110,7 @@ Ce document de spécifications des besoins logiciels (\textit{Software Requireme
 0.3 & Roberto Rabei & Squelette Design système & 09/12/2024 \\ \hline
 0.4 & Oleksandra Omelyanyuk & Modifications besoins système + diagrammes & 09/12/2024 \\ \hline
 1.0 & Berthion Antoine & Restructuration du SRD & 13/12/2024 \\ \hline
+1.1 & Oleksandra Omelyanyuk & Début adaptation aux changements & 10/03/2025 \\ \hline
 \end{longtable}
 
 
@@ -165,19 +166,14 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 \noindent Si l'utilisateur choisit de créer sa propre partie, il dispose des options suivantes :
 \begin{itemize}
-    \item \textbf{Inviter des amis} : L'utilisateur peut inviter ses amis à participer à la partie, soit pour jouer, soit pour observer. Les invitations sont envoyées via la liste d'amis de l'utilisateur.
+    \item \textbf{Inviter des amis} : L'utilisateur peut inviter ses amis à participer à la partie, soit pour jouer, soit pour observer. Une invitation correspond à un code que le joueur invité devra rentrer pour accéder au jeu.
     \item \textbf{Choisir un mode de jeu} : L'utilisateur doit obligatoirement sélectionner un mode de jeu avant de lancer la partie. Il doit ensuite se mettre prêt, en attendant que le bon nombre de joueurs rejoigne sa partie.
     \item \textbf{Choisir un nombre maximal de joueurs} : Pour les modes \emph{Classic} et \emph{Royal Competition}, l'utilisateur doit définir un nombre maximal de joueurs qui peuvent rejoindre la partie. Ce nombre doit être compris entre 3 et 9 joueurs inclus.
 \end{itemize}
 
 \subsubsection{Rejoindre une Partie}
 
-\noindent L'utilisateur peut également choisir de rejoindre une partie existante. Les possibilités sont les suivantes :
-
-\begin{itemize}
-    \item \textbf{Accepter une invitation} : L'utilisateur peut accepter une invitation d'un ami pour rejoindre une partie en cours, à condition que cette partie n'ait pas encore atteint son nombre maximal de joueurs.
-    \item \textbf{Observer une partie} : Si l'utilisateur ne souhaite pas jouer mais veut suivre une partie en cours, il peut accepter une invitation pour observer celle-ci.
-\end{itemize}
+\noindent L'utilisateur peut également choisir de rejoindre une partie existante. Il peut accéder à un menu contenant les parties en cours, ou qui n'ont pas encore atteint leur nombre souhaité de joueurs, et peut alors choisir de les rejoindre ou de les observer.
 
 \subsubsection{Gestion du Profil Utilisateur}
 
@@ -192,9 +188,9 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 \noindent Chaque utilisateur possède une liste d'amis, qu'il peut gérer de la manière suivante :
 
 \begin{itemize}
-    \item \textbf{Ajouter des amis} : L'utilisateur peut envoyer des demandes d'ami à d'autres joueurs. Une fois la demande acceptée, ils deviennent amis et peuvent interagir plus facilement dans le jeu.
+    \item \textbf{Ajouter des amis} : L'utilisateur peut envoyer des demandes d'ami à d'autres joueurs. Une fois la demande acceptée, ils deviennent amis et peuvent interagir dans le jeu.
     \item \textbf{Supprimer des amis} : L'utilisateur peut retirer des amis de sa liste à tout moment.
-    \item \textbf{Lancer une discussion} : L'utilisateur peut démarrer une conversation avec un ami à partir de la liste d'amis, facilitant ainsi la communication pendant le jeu.
+    \item \textbf{Lancer une discussion} : L'utilisateur peut démarrer une conversation avec un ami à partir de la liste d'amis.
 \end{itemize}
 
 \subsubsection{Classement du Mode Endless}
@@ -209,7 +205,7 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 \noindent Une fois que le joueur a lancé une partie, il peut déplacer un tetramino pour le positionner sur son tableau de jeu. Il peut également utiliser le \emph{bag}, un espace dans lequel il peut ranger un tetramino ou utiliser celui qui y est déjà stocké. \\
 
-\noindent De plus, le joueur a la possibilité d'utiliser des malus, mais seulement s'il joue dans les modes \emph{Classic}, \emph{Duel} ou \emph{Royal Competition}. Dans ces trois modes, il peut également voir les tableaux des autres joueurs en temps réel.
+\noindent De plus, le joueur a la possibilité d'utiliser des malus, mais seulement s'il joue dans les modes \emph{Classic}, \emph{Duel} ou \emph{Royal Competition} (dans ce mode des bonus sont aussi disponibles). Dans ces trois modes, il peut également voir les tableaux des autres joueurs en temps réel.
 
 \begin{figure}[H]
     \centering
@@ -218,9 +214,9 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
     \label{fig:use_case_game}
 \end{figure}
 
-\subsubsection{Malus}
+\subsubsection{Malus et bonus}
 
-\noindent Dans les modes de jeu autres que \emph{Royal Competition}, où les malus sont disponibles, seuls des malus basiques sont envoyés automatiquement lorsqu'un joueur réalise un combo. Ces malus se traduisent par l'apparition de lignes additionnelles sur le tableau d'un joueur adverse, selon les règles suivantes :
+\noindent Dans les modes de jeu autres que \emph{Royal Competition}, où des bonus et des malus avancés sont disponibles, seuls des malus basiques sont envoyés automatiquement lorsqu'un joueur réalise un combo. Ces malus se traduisent par l'apparition de lignes additionnelles sur le tableau d'un joueur adverse, selon les règles suivantes :
 \begin{itemize}
     \item 1 ligne complétée n'envoie aucun malus.
     \item 2 lignes complétées envoient 1 ligne de malus.
@@ -234,7 +230,7 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 \vspace{-1em}
 
-\noindent Le mode \emph{Royal Competition} introduit des malus plus avancés, incluant des bonus (avantage), permettant une interaction plus dynamique avec les autres joueurs. Voici quelques exemples des \textit{power-ups} disponibles dans ce mode :
+\noindent Le mode \emph{Royal Competition} introduit des malus plus avancés, incluant des bonus (avantages), permettant une interaction plus dynamique avec les autres joueurs. Voici quelques exemples des \textit{power-ups} disponibles dans ce mode :
 \begin{itemize}
     \item \textbf{Inverser les commandes} : Inverse les commandes du joueur ciblé pour la pose des trois prochains blocs.
     \item \textbf{Bloquer les commandes} : Bloque les commandes du joueur ciblé pour la pose du prochain bloc.
@@ -251,7 +247,7 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 \section{Besoins non-fonctionnels}
 
-\noindent Le jeu doit offrir une interface à la fois simple d’utilisation et agréable à l’œil. Cela est particulièrement important dans les modes multijoueurs, où les tableaux des adversaires doivent être affichés de manière claire et disposés de façon à ne pas encombrer l’interface principale du jeu. \\ 
+\noindent Le jeu doit offrir une interface à la fois simple d’utilisation et agréable à l’œil. Cela est particulièrement important dans les modes multijoueurs, où les tableaux des adversaires doivent être affichés de manière claire et disposés de façon à ne pas encombrer l’interface principale du jeu. C'est pourquoi il est possible d'afficher un seul tableau adverse à la fois, avec une possibilité de changer d'adversaire visé.\\ 
 
 \noindent De plus, le jeu doit être accessible à travers différentes interfaces, permettant à l’utilisateur de jouer aussi bien sur un terminal que sur une interface graphique (GUI). \\
 
@@ -294,9 +290,9 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 \begin{itemize}
     \item \textbf{Endless :} Ce mode solo affiche la grille de jeu avec le nombre de points accumulés durant la partie.
-    \item \textbf{Classique :} L'affichage est similaire au mode \emph{Endless}, avec, en plus, les grilles des joueurs adverses visibles à droite, permettant ainsi de choisir à qui envoyer les malus.
-    \item \textbf{Duel :} Le même affichage que le mode \emph{Classique}, mais avec un seul tableau adverse visible.
-    \item \textbf{Royal Competition :} L'affichage du mode \emph{Classique} est utilisé, mais cette fois, l'utilisateur peut choisir le malus à envoyer en cliquant sur le joueur qu'il souhaite cibler.
+    \item \textbf{Classique :} L'affichage est similaire au mode \emph{Endless}, avec, en plus, une grille d'un joueur adverse visible à droite, permettant ainsi de choisir à qui envoyer les malus.
+    \item \textbf{Duel :} Le même affichage que le mode \emph{Classique}, mais sans possibilité de changer d'adversaire visé (car il y en a qu'un).
+    \item \textbf{Royal Competition :} L'affichage du mode \emph{Classique} est utilisé, mais cette fois, l'utilisateur peut choisir d'utiliser des bonus ou d'envoyer des malus plus avancés, sans pouvoir envoyer le malus de base.
 \end{itemize}
 
 
@@ -363,7 +359,7 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 \section{Matchmaking}
 
-\noindent Le serveur gère une liste de parties actives et une liste de parties en état de \emph{matchmaking}, c’est-à-dire des parties en attente de joueurs pour être complétées. Lorsqu'un joueur souhaite rejoindre une partie, le serveur vérifie s'il existe une partie en \emph{matchmaking}. Si une partie est disponible, le joueur la rejoint. Sinon, le serveur crée une nouvelle partie avec ce joueur comme premier participant et marque la partie comme étant en \emph{matchmaking}.
+\noindent Le serveur gère une liste de parties actives et une liste de parties en état de \emph{matchmaking}, c’est-à-dire des parties en attente de joueurs pour être complétées. Lorsqu'un joueur souhaite rejoindre une partie, le serveur vérifie s'ils existent déjà des parties en \emph{matchmaking}. Si au moins une partie est disponible, le joueur peut choisir de la rejoindre. Sinon, le serveur crée une nouvelle partie avec ce joueur comme premier participant et marque la partie comme étant en \emph{matchmaking}.
 
 \vspace{-1em}
 
