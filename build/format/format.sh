@@ -1,10 +1,33 @@
 #!/bin/bash
 
+set -e  # Exit immediately if a command exits with a non-zero status
+
 # Base directory (relative to script location)
-BASE_DIR="../../"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BASE_DIR="$(realpath "$SCRIPT_DIR/../../")"
+cd "$BASE_DIR"
 
 # List of acronyms to preserve their uppercase form
 ACRONYMS=("DB" "API" "HTTP" "TCP" "UDP" "Tetris" "Game" "Engine" "Server" "State" "Request" "Response" "Factory" "Matrix")
+
+# Check if clang-format is installed
+if ! command -v clang-format &> /dev/null; then
+    echo "❌ Error: clang-format is not installed. Please install it first."
+    exit 1
+fi
+
+# Check if .clang-format exists (first in script dir, then in base dir)
+CLANG_FORMAT_PATH=""
+if [[ -f "$SCRIPT_DIR/.clang-format" ]]; then
+    CLANG_FORMAT_PATH="$SCRIPT_DIR/.clang-format"
+    echo "Found .clang-format in script directory."
+elif [[ -f "$BASE_DIR/.clang-format" ]]; then
+    CLANG_FORMAT_PATH="$BASE_DIR/.clang-format"
+    echo "Found .clang-format in base directory."
+else
+    echo "❌ Error: .clang-format not found in script or base directory."
+    exit 1
+fi
 
 # Function to convert filename to PascalCase while preserving known acronyms
 to_pascal_case() {
@@ -17,15 +40,17 @@ to_pascal_case() {
 
     for word in "${words[@]}"; do
         # Check if the word is an acronym
+        is_acronym=false
         for ACRONYM in "${ACRONYMS[@]}"; do
             if [[ "${word,,}" == "${ACRONYM,,}" ]]; then
                 word="$ACRONYM"
+                is_acronym=true
                 break
             fi
         done
 
         # Convert to PascalCase if not an acronym
-        if [[ ! " ${ACRONYMS[@]} " =~ " ${word} " ]]; then
+        if [[ "$is_acronym" == "false" ]]; then
             word="$(tr '[:lower:]' '[:upper:]' <<< ${word:0:1})${word:1}"
         fi
 
@@ -37,70 +62,126 @@ to_pascal_case() {
 
 # Find all .hpp and .cpp files in include/ and src/, ignoring cmake-build-* folders
 FILES=$(find "$BASE_DIR" -type f \( -path "*/include/*" -o -path "*/src/*" \) \
-    -regex '.*\.\(cpp\|hpp\)$' ! -path "*/cmake-build-*/*")
+    -regex '.*\.\(cpp\|hpp\)$' ! -path "*/cmake-build-*/*" | sort)
 
-echo "Found files in include/ and src/ (excluding cmake-build-*):"
-echo "$FILES"
+echo "Found $(echo "$FILES" | wc -l) files in include/ and src/ (excluding cmake-build-*):"
+echo "$FILES" | sed 's/^/  /'
 echo ""
 
-# Step 1: Cache header file mappings BEFORE renaming
-declare -A HEADER_MAP
+# Process headers first, then source files
+echo "Step 1: Processing headers and tracking their usage..."
+declare -A HEADER_USAGE
+declare -A RENAME_MAP
+
+# First build the mapping of header usage
 for FILE in $FILES; do
-    EXTENSION="${FILE##*.}"
-    if [[ "$EXTENSION" == "hpp" ]]; then
-        FILENAME="${FILE##*/}"
-        HEADER_MAP["$FILENAME"]="$FILE"
-    fi
+    for OTHER_FILE in $FILES; do
+        if [[ "$FILE" != "$OTHER_FILE" ]]; then
+            BASENAME=$(basename "$OTHER_FILE")
+            if grep -q "#include \"$BASENAME\"" "$FILE"; then
+                if [[ -z "${HEADER_USAGE[$BASENAME]}" ]]; then
+                    HEADER_USAGE[$BASENAME]="$FILE"
+                else
+                    HEADER_USAGE[$BASENAME]+=" $FILE"
+                fi
+            fi
+        fi
+    done
 done
 
-# Step 2: Rename files if needed
-declare -A RENAMED_HEADERS
+echo "Header usage map:"
+for HEADER in "${!HEADER_USAGE[@]}"; do
+    COUNT=$(echo "${HEADER_USAGE[$HEADER]}" | wc -w)
+    echo "  $HEADER is used in $COUNT files"
+done
+echo ""
+
+# Process headers first, then source files, to ensure proper propagation
+echo "Step 2: Renaming files and updating includes..."
+
+# Process all header files first
 for FILE in $FILES; do
-    DIR=$(dirname "$FILE")
-    BASENAME=$(basename "$FILE")
-    EXTENSION="${BASENAME##*.}"
-    FILENAME="${BASENAME%.*}"
+    if [[ "$FILE" =~ \.hpp$ ]]; then
+        DIR=$(dirname "$FILE")
+        BASENAME=$(basename "$FILE")
+        EXTENSION="${BASENAME##*.}"
+        FILENAME="${BASENAME%.*}"
 
-    # Convert to PascalCase
-    NEW_NAME=$(to_pascal_case "$FILENAME" "$EXTENSION")
+        # Convert to PascalCase
+        NEW_NAME=$(to_pascal_case "$FILENAME" "$EXTENSION")
 
-    if [[ "$BASENAME" != "$NEW_NAME" ]]; then
-        echo "Renaming: $BASENAME → $NEW_NAME"
-        mv "$FILE" "$DIR/$NEW_NAME"
-        if [[ "$EXTENSION" == "hpp" ]]; then
-            RENAMED_HEADERS["$BASENAME"]="$NEW_NAME"
+        if [[ "$BASENAME" != "$NEW_NAME" ]]; then
+            echo "Renaming header: $BASENAME → $NEW_NAME"
+            RENAME_MAP["$BASENAME"]="$NEW_NAME"
+
+            # Keep track of the new file path for future reference
+            NEW_FILE="$DIR/$NEW_NAME"
+
+            # Rename the file first
+            mv "$FILE" "$NEW_FILE"
+
+            # Update all files that include this header
+            if [[ -n "${HEADER_USAGE[$BASENAME]}" ]]; then
+                for USAGE_FILE in ${HEADER_USAGE[$BASENAME]}; do
+                    # Check if the usage file still exists (might have been renamed already)
+                    REAL_USAGE_FILE="$USAGE_FILE"
+                    BASE_USAGE=$(basename "$USAGE_FILE")
+                    if [[ -n "${RENAME_MAP[$BASE_USAGE]}" ]] && [[ ! -f "$USAGE_FILE" ]]; then
+                        # Try to find the renamed file
+                        REAL_USAGE_FILE="$(dirname "$USAGE_FILE")/${RENAME_MAP[$BASE_USAGE]}"
+                    fi
+
+                    if [[ -f "$REAL_USAGE_FILE" ]]; then
+                        echo "  Updating #include in: $(basename "$REAL_USAGE_FILE")"
+                        sed -i "s|#include \"$BASENAME\"|#include \"$NEW_NAME\"|g" "$REAL_USAGE_FILE"
+                    else
+                        echo "  Warning: Could not find file: $USAGE_FILE (or its renamed version)"
+                    fi
+                done
+            fi
         fi
     fi
 done
 
-# Step 3: Update `#include` statements in all files
+# Now process all source files
 for FILE in $FILES; do
-    if [[ "$FILE" =~ \.(cpp|hpp)$ ]]; then
-        for OLD_HEADER in "${!RENAMED_HEADERS[@]}"; do
-            NEW_HEADER="${RENAMED_HEADERS[$OLD_HEADER]}"
-            OLD_HEADER_PATH="${HEADER_MAP[$OLD_HEADER]}"
-            if [[ -n "$OLD_HEADER_PATH" ]]; then
-                echo "Updating includes in: $FILE"
-                sed -i "s|#include \"$OLD_HEADER\"|#include \"$NEW_HEADER\"|g" "$FILE"
-            fi
-        done
+    if [[ "$FILE" =~ \.cpp$ ]]; then
+        DIR=$(dirname "$FILE")
+        BASENAME=$(basename "$FILE")
+        EXTENSION="${BASENAME##*.}"
+        FILENAME="${BASENAME%.*}"
+
+        # Convert to PascalCase
+        NEW_NAME=$(to_pascal_case "$FILENAME" "$EXTENSION")
+
+        if [[ "$BASENAME" != "$NEW_NAME" ]]; then
+            echo "Renaming source: $BASENAME → $NEW_NAME"
+            mv "$FILE" "$DIR/$NEW_NAME"
+        fi
     fi
 done
 
 echo ""
-echo "Applying clang-format..."
+echo "Step 3: Applying clang-format..."
 
-# Verify .clang-format exists
-CLANG_FORMAT_CONFIG=".clang-format"
-if [[ ! -f "$CLANG_FORMAT_CONFIG" ]]; then
-    echo "❌ Error: .clang-format not found in $BASE_DIR"
-    exit 1
-fi
+# Find all files again (including renamed ones)
+UPDATED_FILES=$(find "$BASE_DIR" -type f \( -path "*/include/*" -o -path "*/src/*" \) \
+    -regex '.*\.\(cpp\|hpp\)$' ! -path "*/cmake-build-*/*" | sort)
 
-# Apply clang-format
-for FILE in $FILES; do
-    clang-format -i "$FILE"
-    echo "Formatted: $FILE"
+# Apply clang-format using the detected config
+for FILE in $UPDATED_FILES; do
+    clang-format -style=file:"$CLANG_FORMAT_PATH" -i "$FILE"
+    echo "Formatted: $(basename "$FILE")"
 done
 
-echo "✅ Renaming, header propagation, and formatting complete."
+echo "✅ File renaming, header propagation, and formatting complete."
+echo "   Total files processed: $(echo "$UPDATED_FILES" | wc -l)"
+
+# Summary of changes made
+if [[ ${#RENAME_MAP[@]} -gt 0 ]]; then
+    echo ""
+    echo "Summary of renamed headers:"
+    for OLD_NAME in "${!RENAME_MAP[@]}"; do
+        echo "  $OLD_NAME → ${RENAME_MAP[$OLD_NAME]}"
+    done
+fi

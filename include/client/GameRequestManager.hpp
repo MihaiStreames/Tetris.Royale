@@ -2,31 +2,27 @@
 #ifndef GAME_REQUEST_MANAGER_HPP
 #define GAME_REQUEST_MANAGER_HPP
 
+#include "Common.hpp"
+#include "KeyStroke.hpp"
+#include "ServerRequest.hpp"
+#include "ServerResponse.hpp"
 
+#include <iostream>
+#include <random>
+#include <sstream>
 #include <string>
 #include <unordered_map>
-#include <iostream>
-#include <sstream>
 #include <vector>
-#include <random>
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
-#include "common.hpp"
-#include "KeyStroke.hpp"
-#include "ServerRequest.hpp"
-#include "ServerResponse.hpp"
-
-
-
-class GameRequestManager {
-
-
-public:
-
-    GameRequestManager(const std::string& serverIP = MASTER_SERVER_IP, int lobbyServerPort = LOBBY_SERVER_PORT);
+class GameRequestManager
+{
+  public:
+    GameRequestManager(const std::string& serverIP = MASTER_SERVER_IP,
+                       int lobbyServerPort = LOBBY_SERVER_PORT);
     ~GameRequestManager();
 
     // methods :
@@ -40,10 +36,14 @@ public:
     [[nodiscard]] ServerResponse startSession(const std::string& username);
     [[nodiscard]] ServerResponse endSession(const std::string& token);
     [[nodiscard]] ServerResponse getPublicLobbiesList();
-    [[nodiscard]] ServerResponse createAndJoinLobby(const std::string& token, GameMode gameMode, int maxPlayers, bool isPublic);
-    [[nodiscard]] ServerResponse joinLobby(const std::string& token, const std::string& lobbyID);
-    [[nodiscard]] ServerResponse spectateLobby(const std::string& token, const std::string& lobbyID);
-
+    [[nodiscard]] ServerResponse createAndJoinLobby(const std::string& token,
+                                                    GameMode gameMode,
+                                                    int maxPlayers,
+                                                    bool isPublic);
+    [[nodiscard]] ServerResponse joinLobby(const std::string& token,
+                                           const std::string& lobbyID);
+    [[nodiscard]] ServerResponse spectateLobby(const std::string& token,
+                                               const std::string& lobbyID);
 
     // lobby stuff
     [[nodiscard]] ServerResponse getCurrentLobbyState(const std::string& token);
@@ -52,12 +52,11 @@ public:
     [[nodiscard]] ServerResponse unreadyUp(const std::string& token);
 
     // game stuff
-    [[nodiscard]] ServerResponse sendKeyStroke(const std::string& token, const KeyStrokePacket& keyStroke);
+    [[nodiscard]] ServerResponse
+    sendKeyStroke(const std::string& token, const KeyStrokePacket& keyStroke);
     [[nodiscard]] ServerResponse getGameState(const std::string& token);
 
-
-private:
-
+  private:
     // private here
     StatusCode sendRequest(const ServerRequest& request);
     ServerResponse receiveResponse();
@@ -70,18 +69,14 @@ private:
 
     // utils
     static int generateRequestID();
-    
+
     // config
     std::string serverIP;
     int lobbyServerPort;
-    
+
     // network stuff
     int clientSocket;
     struct sockaddr_in serverAddress;
-
-
 };
-
-
 
 #endif

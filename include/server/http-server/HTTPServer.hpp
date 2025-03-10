@@ -1,19 +1,20 @@
 #pragma once
 
+#include <atomic>
 #include <boost/asio.hpp>
 #include <boost/beast.hpp>
-#include <atomic>
 #include <iostream>
-#include <utility>
 #include <string>
+#include <utility>
 
 namespace beast = boost::beast;
-namespace http  = beast::http;
-namespace asio  = boost::asio;
+namespace http = beast::http;
+namespace asio = boost::asio;
 using tcp = asio::ip::tcp;
 
-class TetrisHTTPServer {
-public:
+class TetrisHTTPServer
+{
+  public:
     TetrisHTTPServer(std::string address, unsigned short port);
 
     virtual ~TetrisHTTPServer();
@@ -22,23 +23,19 @@ public:
 
     virtual void stop();
 
-protected:
-    virtual void handleRequest(
-        http::request<http::string_body> req,
-        http::response<http::string_body> &res
-    );
+  protected:
+    virtual void handleRequest(http::request<http::string_body> req,
+                               http::response<http::string_body>& res);
 
-    virtual std::string forwardRequest(
-        const std::string &host,
-        const std::string &port,
-        const std::string &target,
-        http::verb method,
-        const std::string &body
-    );
+    virtual std::string forwardRequest(const std::string& host,
+                                       const std::string& port,
+                                       const std::string& target,
+                                       http::verb method,
+                                       const std::string& body);
 
     virtual void doSession(tcp::socket socket);
 
-private:
+  private:
     void doAccept();
 
     std::string address_;

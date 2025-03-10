@@ -1,17 +1,16 @@
 #ifndef COMMON_HPP
 #define COMMON_HPP
 
+#include "Types.hpp"
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "types.hpp"
-
-
-
 // status codes for the server responses
-enum class StatusCode {
+enum class StatusCode
+{
 
     // success codes
     SUCCESS,
@@ -65,7 +64,6 @@ enum class StatusCode {
 // status codes in string format
 std::string getStatusCodeString(StatusCode code);
 
-
 // malus things with the game
 
 const std::unordered_map<Action, Action> REVERSE_ACTIONS_MAP = {
@@ -76,37 +74,33 @@ const std::unordered_map<Action, Action> REVERSE_ACTIONS_MAP = {
 };
 
 const std::vector<Action> BLOCKED_ACTIONS = {
-    Action::MoveDown,
-    Action::MoveLeft,
-    Action::MoveRight,
-    Action::RotateLeft,
-    Action::RotateRight,
-    Action::InstantFall,
-    Action::UseBag,
-    Action::UseMalus,
-    Action::UseBonus,
+    Action::MoveDown,   Action::MoveLeft,    Action::MoveRight,
+    Action::RotateLeft, Action::RotateRight, Action::InstantFall,
+    Action::UseBag,     Action::UseMalus,    Action::UseBonus,
 };
 
-
 // gamemode for the lobby
-enum class GameMode {
+enum class GameMode
+{
     CLASSIC,
     ROYALE,
     DUEL,
-    NONE,  // default value
+    NONE, // default value
 };
 
 // message type for debugging
-enum class MessageType {
+enum class MessageType
+{
     INFO,
     WARNING,
     ERROR,
     CRITICAL,
-    NONE,  // default value
+    NONE, // default value
 };
 
 // method type for the servers
-enum class ServerMethods {
+enum class ServerMethods
+{
 
     // status thing
     GET_PLAYER_STATUS,
@@ -130,28 +124,27 @@ enum class ServerMethods {
     JOIN_LOBBY,
     SPECTATE_LOBBY,
 
-    NONE,  // default value
+    NONE, // default value
 
 };
 
-enum class ClientStatus {
+enum class ClientStatus
+{
     IN_MENU,
     IN_LOBBY,
     IN_GAME,
     OFFLINE,
-    NONE,  // default value
+    NONE, // default value
 };
 
-enum class PlayerStatus {
+enum class PlayerStatus
+{
     IDLING,
     IN_LOBBY,
     IN_GAME,
     OFFLINE,
-    NONE,  // default value
+    NONE, // default value
 };
-
-
-
 
 // method type in string format
 std::string getServerMethodString(ServerMethods method);
@@ -191,7 +184,7 @@ const int DUAL_LOBBY_SIZE = 2;
 const int MIN_LOBBY_SIZE = 3;
 const int MAX_LOBBY_SIZE = 9;
 
-const int LOBBY_TTL = 1000000;  // ttl for the lobby
+const int LOBBY_TTL = 1000000; // ttl for the lobby
 const int MAX_REQUEST_ID = 4096;
 
 // rules for tokens
@@ -200,8 +193,5 @@ const int TOKEN_LENGTH = 16;
 
 // IP address for the servers
 const std::string MASTER_SERVER_IP = "127.0.0.1";
-
-
-
 
 #endif

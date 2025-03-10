@@ -1,13 +1,14 @@
 
-#include "classicEngine.hpp"
+#include "ClassicEngine.hpp"
 
-
-void ClassicEngine::handleBasicPenalty(ClassicGame& game, const int linesCleared) {
-    
+void
+ClassicEngine::handleBasicPenalty(ClassicGame& game, const int linesCleared)
+{
     // this should handle the line penalty for the opponents
     // the penalty is calculated based on the number of lines cleared
 
-    if (linesCleared <= 1) {
+    if (linesCleared <= 1)
+    {
         // no penalty lines to add for 0 or 1 lines cleared
         return;
     }
@@ -15,7 +16,8 @@ void ClassicEngine::handleBasicPenalty(ClassicGame& game, const int linesCleared
     // get the target
     ClassicGame* opponent = static_cast<ClassicGame*>(game.getTarget());
 
-    if (opponent == nullptr) {
+    if (opponent == nullptr)
+    {
         // no opponent to add penalty lines to
         return;
     }
@@ -23,24 +25,22 @@ void ClassicEngine::handleBasicPenalty(ClassicGame& game, const int linesCleared
     // calculate the number of lines to add
     int linesToAdd;
 
-    if (linesCleared < MAX_COMBO) {
-
+    if (linesCleared < MAX_COMBO)
+    {
         linesToAdd = linesCleared - 1;
-
-    } else {
-
+    }
+    else
+    {
         linesToAdd = MAX_COMBO;
-
     }
 
     // add the penalty lines to the opponent
     opponent->addPenaltyLines(linesToAdd);
-
 }
 
-
-void ClassicEngine::handleGameLogic(TetrisGame &game) {
-
+void
+ClassicEngine::handleGameLogic(TetrisGame& game)
+{
     // this should handle the game logic for the classic game mode
     // the game logic should handle the following:
     // - clear the full lines
@@ -62,15 +62,18 @@ void ClassicEngine::handleGameLogic(TetrisGame &game) {
     handleSpawn(classicGame);
 
     // check if the game is over
-    if (classicGame.isGameOver()) { handleGameOver(classicGame); }
-
+    if (classicGame.isGameOver())
+    {
+        handleGameOver(classicGame);
+    }
 }
 
-
-bool ClassicEngine::viewPreviousOpponent(TetrisGame &game) {
-
+bool
+ClassicEngine::viewPreviousOpponent(TetrisGame& game)
+{
     // this should handle the view of the previous opponent
-    // the view should be changed to the previous opponent in the list of opponents
+    // the view should be changed to the previous opponent in the list of
+    // opponents
 
     ClassicGame& classicGame = static_cast<ClassicGame&>(game);
 
@@ -81,11 +84,11 @@ bool ClassicEngine::viewPreviousOpponent(TetrisGame &game) {
     classicGame.changePlayerView(idx);
 
     return true;
-
 }
 
-bool ClassicEngine::viewNextOpponent(TetrisGame &game) {
-
+bool
+ClassicEngine::viewNextOpponent(TetrisGame& game)
+{
     // this should handle the view of the next opponent
     // the view should be changed to the next opponent in the list of opponents
 
@@ -98,5 +101,4 @@ bool ClassicEngine::viewNextOpponent(TetrisGame &game) {
     classicGame.changePlayerView(idx);
 
     return true;
-
 }

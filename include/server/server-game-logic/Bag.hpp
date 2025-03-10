@@ -1,20 +1,17 @@
 #pragma once
 
-#include <stdexcept>
+#include "Tetromino.hpp"
+
 #include <memory>
-#include "tetromino.hpp"
+#include <stdexcept>
 
-
-class Bag {
-
-
-private:
-
+class Bag
+{
+  private:
     std::unique_ptr<Tetromino> storedPiece;
     bool isUsable;
 
-public:
-
+  public:
     Bag();
     ~Bag();
 
@@ -27,6 +24,4 @@ public:
     [[nodiscard]] const Tetromino* peekPiece() const;
     [[nodiscard]] Tetromino retrievePiece();
     void storePiece(const Tetromino& piece);
-    
 };
-

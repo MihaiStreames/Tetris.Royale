@@ -1,19 +1,19 @@
 #ifndef TETRIS_SERVER_HPP
 #define TETRIS_SERVER_HPP
 
-#include <string>
-#include <thread>
+#include "Common.hpp"
+#include "GameServer.hpp"
+#include "LobbyServer.hpp"
+
 #include <iostream>
 #include <memory>
+#include <string>
+#include <thread>
 
-#include "common.hpp"
-#include "LobbyServer.hpp"
-#include "GameServer.hpp"
-
-
-class TetrisServer {
-public:
-    TetrisServer(const std::string &ip, int listenPort, bool debug = false);
+class TetrisServer
+{
+  public:
+    TetrisServer(const std::string& ip, int listenPort, bool debug = false);
 
     ~TetrisServer();
 
@@ -33,8 +33,8 @@ public:
 
     [[nodiscard]] bool isGameServerRunning() const;
 
-private:
-    void printMessage(const std::string &message, MessageType msgtype) const;
+  private:
+    void printMessage(const std::string& message, MessageType msgtype) const;
 
     std::string ip;
     int lobbyPort;
@@ -43,6 +43,5 @@ private:
     std::shared_ptr<LobbyServer> lobbyServer;
     std::shared_ptr<GameServer> gameServer;
 };
-
 
 #endif

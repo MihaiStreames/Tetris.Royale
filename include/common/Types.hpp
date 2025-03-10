@@ -2,12 +2,14 @@
 
 #include <vector>
 
-struct Position2D {
+struct Position2D
+{
     int x;
     int y;
 };
 
-enum class PieceType {
+enum class PieceType
+{
     None,
     O,
     L,
@@ -19,7 +21,8 @@ enum class PieceType {
     Single,
 };
 
-enum class Action {
+enum class Action
+{
     None,
     MoveLeft,
     MoveRight,
@@ -34,7 +37,8 @@ enum class Action {
     SeeNextOpponent,
 };
 
-enum class TypePowerUps {
+enum class TypePowerUps
+{
     invertedControls,
     blockControls,
     thunderStrike,
@@ -50,4 +54,3 @@ extern std::vector<TypePowerUps> bonusVector;
 using tetroMat = std::vector<std::vector<int>>;
 using pieceVec = std::vector<PieceType>;
 using tetroShape = std::vector<std::vector<bool>>;
-
