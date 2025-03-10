@@ -1,5 +1,5 @@
 
-#include "gameMatrix.hpp"
+#include "GameMatrix.hpp"
 
 
 

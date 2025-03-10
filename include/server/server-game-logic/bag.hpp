@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 #include <memory>
-#include "tetromino.hpp"
+#include "Tetromino.hpp"
 
 
 class Bag {

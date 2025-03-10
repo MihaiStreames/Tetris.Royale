@@ -11,13 +11,13 @@
 
 #include "common.hpp"
 
-#include "tetrisGame.hpp"
-#include "royalGame.hpp"
-#include "classicGame.hpp"
+#include "TetrisGame.hpp"
+#include "RoyalGame.hpp"
+#include "ClassicGame.hpp"
 
-#include "gameEngine.hpp"
-#include "classicEngine.hpp"
-#include "royalEngine.hpp"
+#include "GameEngine.hpp"
+#include "ClassicEngine.hpp"
+#include "RoyalEngine.hpp"
 
 
 

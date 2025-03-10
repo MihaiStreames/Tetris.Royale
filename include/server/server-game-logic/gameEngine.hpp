@@ -4,8 +4,8 @@
 #include <memory>
 #include <iostream>
 
-#include "royalGame.hpp"
-#include "tetrisGame.hpp"
+#include "RoyalGame.hpp"
+#include "TetrisGame.hpp"
 
 
 class GameEngine {

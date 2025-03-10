@@ -5,9 +5,9 @@
 #include <iostream>
 
 
-#include "gameMatrix.hpp"
-#include "tetrisFactory.hpp"
-#include "bag.hpp"
+#include "GameMatrix.hpp"
+#include "TetrisFactory.hpp"
+#include "Bag.hpp"
 
 
 

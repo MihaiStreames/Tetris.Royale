@@ -1,6 +1,7 @@
 
-#include "classicGame.hpp"
+#include "ClassicGame.hpp"
 
+// #include "[[nodiscard]]lassicGame.hpp"  ->  funny copy paste error
 
 
 ClassicGame::ClassicGame(const int gWidth, const int gHeight, const int gScore, const int fc, const int lvl, const int totLinesCleared) :

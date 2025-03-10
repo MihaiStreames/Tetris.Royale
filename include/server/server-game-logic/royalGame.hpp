@@ -1,6 +1,6 @@
 #pragma once
 
-#include "classicGame.hpp"
+#include "ClassicGame.hpp"
 
 
 class RoyalGame final : public ClassicGame {

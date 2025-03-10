@@ -3,8 +3,10 @@
 #include <vector>
 #include <random>
 #include <algorithm>
+
+
 #include "types.hpp"
-#include "tetromino.hpp"
+#include "Tetromino.hpp"
 
 class TetrisFactory {
 
