@@ -15,4 +15,7 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/util/ref.hpp"
 
+#include "viewTestData.hpp"
+#include "menuHandler.hpp"
+
 void preLobbyMenu();

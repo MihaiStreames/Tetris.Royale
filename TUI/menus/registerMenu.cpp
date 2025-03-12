@@ -23,12 +23,12 @@ void registerMenu() {
     std::string error_message;
     // -------- BUTTONS  ----------- //
     auto registerButton = Button("Register", [&screen, &data, &error_message] { 
-        if (&data.username.empty() || &data.password.empty() || &data.confirm_password.empty()) {
+        if (data.username.empty() || data.password.empty() || data.passwordConfirm.empty()) {
             error_message = "Please fill in all fields";
-        } else if (&data.password != &data.confirm_password) {
+        } else if (data.password != data.passwordConfirm) {
             error_message = "Passwords do not match";
         } else {
-            current_menu = MenuState::loginMenu;
+            currMenu = MenuState::loginMenu;
             screen.Exit();
         }
     });

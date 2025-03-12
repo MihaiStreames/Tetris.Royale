@@ -13,8 +13,9 @@ void mainMenu() {
     });
 
     // Menu buttons
-    auto playButton = Button("Play", [] {
-        // e.g. trigger “lobby” or something else
+    auto playButton = Button("Play", [&screen] {
+        currMenu = MenuState::preLobbyMenu;
+        screen.Exit();
     });
 
     auto settingsButton = Button("Settings", [&screen] {

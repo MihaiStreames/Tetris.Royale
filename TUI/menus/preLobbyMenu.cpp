@@ -1,52 +1,14 @@
 #include "preLobbyMenu.hpp"
  
 
-
-struct Lobby {
-    const std::string lobbyID;
-    std::string gameMode;
-    int nbPlayers;
-    int nbSpectators;
-    std::string status;
-};
-
-struct ChatMessage {
-    std::string from;
-    std::string text;
-};
-
-
-/// Store all placeholder data here; in real usage, populate these from your Client class. 
-struct TestData {
-
-    // Lobby
-    std::vector<Lobby> lobbies{
-        {"ABC123", "Classic", 2, 0, "Readying Up"},
-        {"DEF456", "Royale", 3, 2, "Ongoing"}
-    };
-
-    // Title
-    std::string gameTitle = "TETRIS ROYALE";
-
-    // Friend list
-    std::vector<std::string> friendList{
-        "Player1", "Player2", "Player3", "Player4",
-        "Player5", "Player6", "Player7", "Player8"
-    };
-    // Conversations: each friend has a sequence of messages
-    std::map<std::string, std::vector<ChatMessage> > conversations{
-    };
-
-};
-
 using namespace ftxui;
 
 // Très crade mais ça marche -> à améliorer
 void preLobbyMenu() {
     auto screen = ScreenInteractive::Fullscreen();
 
-    auto data = TestData();
-
+    //auto data = TestData();
+    auto& data = testData;
 
     // Title
     auto titlebox = Renderer([&] {
@@ -60,9 +22,10 @@ void preLobbyMenu() {
         //currMenu = MenuState::inGameMenu();
     });
 
-    auto CreateButton = Button("Create Lobby",[]{
+    auto CreateButton = Button("Create Lobby",[&screen]{
         //Créer un lobby
-        //currMenu = MenuState::inLobbyMenu();
+        currMenu = MenuState::inLobbyMenu;
+        screen.Exit();
     });
 
     auto LeaveButton = Button("Back to Main Menu",[]{
@@ -102,7 +65,7 @@ void preLobbyMenu() {
         });
     });
     
-
+    
     // Friend list / chat
     int currentFriendPage = 0;
     const int friendsPerPage = 5;

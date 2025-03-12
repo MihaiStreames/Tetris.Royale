@@ -26,11 +26,11 @@ void loginMenu() {
     Component inputPassword = Input(&data.password, "Type in your password", passwordOption);
 
     // -------- BUTTONS  ----------- //
-    auto loginButton = Button("Login", [&screen, &data, &error_message] {
-         if (username.empty() || password.empty()) {
+    auto loginButton = Button("Login", [&screen, &data] {
+         if (data.username.empty() || data.password.empty()) {
            error_message = "Please fill in both fields";
-        } else if (username == testUsername && password == testPassword) {
-            current_menu = MenuState::mainMenu;
+        } else if (data.username == testUsername && data.password == testPassword) {
+            currMenu = MenuState::mainMenu;
             screen.Exit();
         } else {
             error_message = "Invalid username or password";

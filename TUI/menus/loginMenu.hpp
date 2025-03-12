@@ -11,5 +11,6 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/util/ref.hpp"
 #include "menuHandler.hpp"
+#include "viewTestData.hpp"
 
 void loginMenu();

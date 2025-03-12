@@ -1,54 +1,6 @@
 #include "inLobbyMenu.hpp"
 #include "menuHandler.hpp"
 
-
-struct ChatMessage {
-    std::string from;
-    std::string text;
-};
-
-struct GameMode {
-    std::unordered_map<std::string, std::string> descriptions{
-        {"ClassicButton", "Classic Tetris mode."},
-        {"DuelButton", "1v1 classic Tetris (2 players)"},
-        {"RoyaleButton", "Battle Royale Tetris with abilities, last alive wins. (3-9 players)"}
-    };
-};
-
-/// Store all placeholder data here; in real usage, populate these from your Client class. 
-struct TestData {
-
-    // Lobby
-    std::string lobbyName = "ABC123";
-
-    // Title
-    std::string gameTitle = "TETRIS ROYALE";
-
-    // Friend list
-    std::vector<std::string> friendList{
-        "Player1", "Player2", "Player3", "Player4",
-        "Player5", "Player6", "Player7", "Player8"
-    };
-
-    // Conversations: each friend has a sequence of messages
-    std::map<std::string, std::vector<ChatMessage> > conversations{
-        {"Player1", {{"Player1", "Hello!"}, {"Me", "Hi Player1!"}}},
-        {"Player2", {{"Player2", "Hello!"}, {"Me", "Hi Player2!"}}},
-        {"Player3", {{"Player3", "Hello!"}, {"Me", "Hi Player3!"}}},
-        {"Player4", {{"Player4", "Hello!"}, {"Me", "Hi Player4!"}}},
-    };
-
-    std::map<std::string, std::string> players{
-        {"Player1" , "Ready"},
-        {"Player2", "Not Ready"}
-    };
-
-    std::vector<std::string> spectators{
-        "Spectator1", "Spectator2"
-    };
-};
-
-
 std::string currGameMode = "Classic";
 
 

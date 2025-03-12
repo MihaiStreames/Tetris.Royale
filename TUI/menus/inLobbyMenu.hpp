@@ -14,4 +14,6 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/util/ref.hpp"
 
+#include "viewTestData.hpp"
+
 void inLobbyMenu();
