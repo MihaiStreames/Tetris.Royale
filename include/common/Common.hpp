@@ -192,6 +192,6 @@ const int LOBBY_ID_LENGTH = 6;
 const int TOKEN_LENGTH = 16;
 
 // IP address for the servers
-const std::string MASTER_SERVER_IP = "127.0.0.1";
+const std::string MASTER_SERVER_IP = "0.0.0.0";  // all interfaces (was set to something prior but oh well)
 
 #endif
