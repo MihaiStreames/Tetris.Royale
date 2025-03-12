@@ -1,17 +1,31 @@
-# Si des commits ont été faits avec le nom "simon12" et avec l'addresse mail "simon12@gmail.com", ajouter la ligne suivant pour qu'il soit associé à "Simon Renard" et l'addresse "simon.renard@ulb.be"
+// Title: Mailmap file for git
+// Description: This file is used to map different email addresses to a single one.
 
-Alexis_Reynouard	<alexis.reynouard@ulb.be>
-Ali_Umar_Babar	<ali.babar@ulb.be>
-Ali_Umar_Babar	<ali.babar@ulb.be>	<babaraliumar23@gmail.com>
-Antoine_Berthion	<antoine.berthion@ulb.be>
-Ayman_Benaim	<ayman.benaim@ulb.be>
-Mamadou_Barry	<mamadou.barry5@ulb.be>
-Oleksandra_Omelyanyuk	<oleksandra.omelyanyuk@ulb.be>
-Rares_Bors	<rares.bors@ulb.be>
-Rares_Bors	<rares.bors@ulb.be>	<moreliciouscod@gmail.com>
-Roberto_Rabei	<roberto.rabei@ulb.be> <robertorabei@Robertos-MacBook-Air.local>
-Simon_Renard	<simon.renard@ulb.be>
-Simon_Renard	<simon.renard@ulb.be>	<simon12@gmail.com>
-Taha_Es-saâdouni	<taha.essaadouni@ulb.be>
+# This file maps authors to canonical names and email addresses (using @ulb.be).
+# Use `git shortlog -se --all -n` to check the list of authors and commits, sorted by commits in main.
 
-# vim: ts=36 noexpandtab list listchars=tab\:\ -\ 
+
+# Teachers
+
+Alexis Reynouard    <alexis.reynouard@ulb.be>
+Simon Renard        <simon.renard@ulb.be>
+Simon Renard        <simon12@gmail.com>
+
+
+# Group members
+
+Antoine Berthion        <antoine.berthion@ulb.be>
+Ali Umar Babar          <ali.babar@ulb.be>
+Ali Umar Babar          <ali.babar@ulb.be> <babaraliumar@outlook.com> 
+Ali Umar Babar          <ali.babar@ulb.be> <babaraliumar23@gmail.com>
+Ayman Benaim            <ayman.benaim@ulb.be>
+Mamadou Barry           <mamadou.barry5@ulb.be>
+Roberto Rabei           <roberto.rabei@ulb.be>
+Roberto Rabei           <roberto.rabei@ulb.be> <robertorabei@Robertos-MacBook-Air.local>
+Roberto Rabei           <roberto.rabei@ulb.be> <robertorabei@mac.home>
+Rares Bors              <rares.bors@ulb.be>
+Rares Bors              <rares.bors@ulb.be> <moreliciouscod@gmail.com>
+Oleksandra Omelyanyuk   <oleksandra.omelyanyuk@ulb.be>
+Taha Es-saâdouni        <taha.essaadouni@ulb.be>
+
+
