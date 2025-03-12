@@ -111,6 +111,7 @@ Ce document de spécifications des besoins logiciels (\textit{Software Requireme
 0.4 & Oleksandra Omelyanyuk & Modifications besoins système + diagrammes & 09/12/2024 \\ \hline
 1.0 & Berthion Antoine & Restructuration du SRD & 13/12/2024 \\ \hline
 1.1 & Oleksandra Omelyanyuk & Début adaptation aux changements & 10/03/2025 \\ \hline
+1.2 & Oleksandra Omelyanyuk & Modification/rajout diagrammes & 12/03/2025 \\ \hline
 \end{longtable}
 
 
@@ -392,10 +393,12 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth, keepaspectratio]{src/cdg_global.png}
-    \caption{Diagramme de classe : Vue globale du système en architecture MVC}
+    \includegraphics[width=\textwidth, keepaspectratio]{src/global.png}
+    \caption{Diagramme de classes : Vue globale du système en architecture MVC}
     \label{fig:class_global_mvc}
 \end{figure}
+
+\subsubsection{Vue globale : Vue}
 
 \subsection{Vue globale : Serveur}
 
@@ -408,5 +411,25 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
     \label{fig:use_case_server}
 \end{figure}
 
+\vspace{-1em}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth, keepaspectratio]{src/server_class.png}
+    \caption{Diagramme de classes : Interactions classes du serveur}
+    \label{fig:classes_server}
+\end{figure}
+
+\subsection{Vue globale : Base de données}
+
+\vspace{-1em}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth, keepaspectratio]{src/db.png}
+    \caption{Diagramme entité-relation : Base de données}
+    \label{fig:entity_relation_database}
+\end{figure}
++
 
 \end{document}
