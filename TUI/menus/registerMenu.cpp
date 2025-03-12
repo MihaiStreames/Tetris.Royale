@@ -1,6 +1,5 @@
 #include "registerMenu.hpp"
 
-
 using namespace ftxui;
 
 void registerMenu() {
@@ -21,13 +20,17 @@ void registerMenu() {
     Component inputPassword = Input(&data.password, "Type in your password", passwordOption);
     Component inputConfirmPassword = Input(&data.passwordConfirm, "Confirm your password", passwordOption);
 
+    std::string error_message;
     // -------- BUTTONS  ----------- //
-    auto registerButton = Button("Register", [&screen] {
-        // ADD LES INFOS DANS LA DB 
-        // if (data.password == data.passwordConfirm){ 
-        //    currMenu = MenuState::loginMenu; // Login car doit se connecter avec nouveau compte
-        //    screen.Exit();
-        // }
+    auto registerButton = Button("Register", [&screen, &data, &error_message] { 
+        if (&data.username.empty() || &data.password.empty() || &data.confirm_password.empty()) {
+            error_message = "Please fill in all fields";
+        } else if (&data.password != &data.confirm_password) {
+            error_message = "Passwords do not match";
+        } else {
+            current_menu = MenuState::loginMenu;
+            screen.Exit();
+        }
     });
 
     auto loginButton = Button("Back to login", [&screen] {
@@ -61,10 +64,10 @@ void registerMenu() {
     auto loginBox = Renderer(components, [&] {
         return hbox({
             vbox({
-                hbox(text("Username: ") | color(Color::Green1), inputUsername->Render()),
-                hbox(text("Password: ") | color(Color::Green1), inputPassword->Render()),
-                hbox(text("Confirm Password: ") | color(Color::Green1),
-                            inputConfirmPassword->Render()),
+                text(error_message) | color(Color::Red), // Message d'erreur
+                hbox(text("Username: ") | color(Color::Green1),         inputUsername->Render()),
+                hbox(text("Password: ") | color(Color::Green1),         inputPassword->Render()),
+                hbox(text("Confirm Password: ") | color(Color::Green1), inputConfirmPassword->Render()),
                 buttonBox->Render()
             })
         });
