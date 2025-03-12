@@ -2,6 +2,10 @@
 
 using namespace ftxui;
 
+std::string testUsername = "user1";
+std::string testPassword = "test1";
+std::string error_message;
+
 void loginMenu() {
     auto& data = testData;
     auto screen = ScreenInteractive::Fullscreen();
@@ -22,12 +26,15 @@ void loginMenu() {
     Component inputPassword = Input(&data.password, "Type in your password", passwordOption);
 
     // -------- BUTTONS  ----------- //
-    auto loginButton = Button("Login", [&screen] {
-        //Vérification des données dans la DB ici
-        // if (data.username in db && data.password == username.password){
-        //  currMenu = MenuState::mainMenu;
-        //  screen.Exit();
-        //} else { cout << "Wrong username or password" << endl; }
+    auto loginButton = Button("Login", [&screen, &data, &error_message] {
+         if (username.empty() || password.empty()) {
+           error_message = "Please fill in both fields";
+        } else if (username == testUsername && password == testPassword) {
+            current_menu = MenuState::mainMenu;
+            screen.Exit();
+        } else {
+            error_message = "Invalid username or password";
+        }
     });
 
     auto registerButton = Button("Register", [&screen] {
@@ -61,6 +68,7 @@ void loginMenu() {
     auto loginBox = Renderer(components, [&] {
         return hbox({
             vbox({
+                text(error_message) | color(Color::Red),
                 hbox(text("Username: ") | color(Color::Green1), inputUsername->Render()),
                 hbox(text("Password: ") | color(Color::Green1), inputPassword->Render()),
                 buttonBox->Render()
