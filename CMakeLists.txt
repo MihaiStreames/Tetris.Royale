@@ -292,12 +292,21 @@ target_link_libraries(TetrisRoyaleMasterServer
 set_target_compile_options(TetrisRoyaleMasterServer)
 
 # 7. Client Executable
-file(GLOB CLIENT_SRC_FILES "${TETRIS_SRC_DIR}/client/*.cpp")
-add_executable(TetrisRoyaleClient ${CLIENT_SRC_FILES})
+file(GLOB TETRIS_CLIENT_SRC_FILES
+    "${TETRIS_SRC_DIR}/client/*.cpp"
+    "${TETRIS_SRC_DIR}/client/TUI/*.cpp"
+    "${TETRIS_SRC_DIR}/client/TUI/data/*.cpp"
+    "${TETRIS_SRC_DIR}/client/TUI/menu/*.cpp"
+)
+add_executable(TetrisRoyaleMasterServer
+    "${TETRIS_SRC_DIR}/client/TUI/menuHandler.cpp"
+    ${TETRIS_CLIENT_SRC_FILES})
 target_include_directories(TetrisRoyaleClient
     PRIVATE
         "${TETRIS_INCLUDE_DIR}/client"
-        "${TETRIS_INCLUDE_DIR}/server"
+        "${TETRIS_INCLUDE_DIR}/client/TUI"
+        "${TETRIS_INCLUDE_DIR}/client/TUI/data"
+        "${TETRIS_INCLUDE_DIR}/client/TUI/menu"
         "${TETRIS_INCLUDE_DIR}/common"
         "${TETRIS_INCLUDE_DIR}/common/server-common"
 )
