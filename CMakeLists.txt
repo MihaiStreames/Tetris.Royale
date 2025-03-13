@@ -299,7 +299,7 @@ file(GLOB TETRIS_CLIENT_SRC_FILES
     "${TETRIS_SRC_DIR}/client/tui/menus/*.cpp"
 )
 add_executable(TetrisRoyaleClient
-    "${TETRIS_SRC_DIR}/client/tui/menuHandler.cpp"
+    "${TETRIS_SRC_DIR}/client/tui/MenuHandler.cpp"
     ${TETRIS_CLIENT_SRC_FILES})
 target_include_directories(TetrisRoyaleClient
     PRIVATE
