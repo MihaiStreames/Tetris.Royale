@@ -1,9 +1,12 @@
 // Title: Mailmap file for git
-// Description: This file is used to map different email addresses to a single one.
+// Description: This file is used to map different email addresses to a single one
 
-# This file maps authors to canonical names and email addresses (using @ulb.be).
-# Use `git shortlog -se --all -n` to check the list of authors and commits, sorted by commits in main.
-
+# This file maps authors to canonical names and email addresses (using @ulb.be)
+# Use git log --all --numstat --format='%ae' | awk '
+#    NF==1 {author=$1; commits[author]++} 
+#    NF==3 {insertions[author]+=1*$1; deletions[author]+=1*$2; total[author]+=1*$1 - 1*$2} 
+#    END {for (a in total) print commits[a], total[a], insertions[a], deletions[a], a}' | sort -nr
+# for counting commits and lines together everywhere :D
 
 # Teachers
 
