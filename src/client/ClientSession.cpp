@@ -26,14 +26,14 @@ ClientSession::getServerIP() {
 }
 
 int
-ClientSession::getLobbyPort() {
+ClientSession::getLobbyPort() const {
     // this method is used to get the lobby port
     // it will return the lobby port
     return gameRequestManager.getPort();
 }
 
 int
-ClientSession::getDBPort() {
+ClientSession::getDBPort() const {
     // this method is used to get the DB port
     // it will return the DB port
     return dbRequestManager.getPort();
@@ -55,7 +55,7 @@ ClientSession::getToken() {
 }
 
 int
-ClientSession::getBestScore() {
+ClientSession::getBestScore() const {
     return bestScore_;
 }
 
@@ -156,7 +156,7 @@ ClientSession::registerPlayer(const std::string &username,
 }
 
 std::vector<PlayerScore>
-ClientSession::getLeaderboard(const int limit) {
+ClientSession::getLeaderboard(const int limit) const {
     std::vector<PlayerScore> leaderboard;
 
     // Request the leaderboard from the database server
@@ -204,12 +204,6 @@ ClientSession::getPlayerMessages(const std::string &otherAccountID) {
         return std::vector<ChatMessage>();
     }
 
-    // If we already have messages cached, return those
-    if (conversations_.find(otherAccountID) != conversations_.end()) {
-        return conversations_[otherAccountID];
-    }
-
-    // Otherwise, fetch messages from the database server
     std::vector<ChatMessage> messages;
     const DBResponse response = dbRequestManager.getMessages(getAccountID(), otherAccountID);
 
@@ -231,19 +225,19 @@ ClientSession::getPlayerMessages(const std::string &otherAccountID) {
                     chatMsg.from = "Me"; // Message sent by this user
                 } else {
                     // Try to get username from message or use a default
-                    chatMsg.from = message.get<std::string>("senderName", "User");
+                    // turn id into username
+                    chatMsg.from = getFriendUsername(senderId);
                 }
 
                 // Extract message content
                 chatMsg.text = message.get<std::string>("content", "");
 
+                // Cache the message locally
+                updateLocalMessages(otherAccountID, chatMsg);
+
                 // Add to the messages vector
                 messages.push_back(chatMsg);
             }
-
-            // Cache these messages for future use
-            conversations_[otherAccountID] = messages;
-
             // std::cout << "Fetched " << messages.size() << " messages with " << otherAccountID << std::endl;
         } catch (std::exception &e) {
             std::cerr << "Error parsing messages data: " << e.what() << std::endl;
@@ -258,7 +252,7 @@ ClientSession::getPlayerMessages(const std::string &otherAccountID) {
 }
 
 std::string
-ClientSession::getAccountIDFromUsername(const std::string &username) {
+ClientSession::getAccountIDFromUsername(const std::string &username) const {
     std::cout << "[ClientSession] Looking up accountID for username: " << username << std::endl;
 
     // Send request to get account ID by username

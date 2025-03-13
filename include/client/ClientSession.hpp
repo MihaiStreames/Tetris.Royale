@@ -31,9 +31,9 @@ public:
     // Getters for player info
     [[nodiscard]] std::string getServerIP();
 
-    [[nodiscard]] int getLobbyPort();
+    [[nodiscard]] int getLobbyPort() const;
 
-    [[nodiscard]] int getDBPort();
+    [[nodiscard]] int getDBPort() const;
 
     [[nodiscard]] std::string getUsername();
 
@@ -41,7 +41,7 @@ public:
 
     [[nodiscard]] std::string getToken();
 
-    [[nodiscard]] int getBestScore();
+    [[nodiscard]] int getBestScore() const;
 
     void updateLocalMessages(const std::string &otherAccountID,
                              const ChatMessage &message);
@@ -50,7 +50,7 @@ public:
 
     [[nodiscard]] std::vector<std::string> &getPendingFriendRequests();
 
-    std::string getAccountIDFromUsername(const std::string &username);
+    std::string getAccountIDFromUsername(const std::string &username) const;
 
     std::string getFriendUsername(const std::string &friendID);
 
@@ -76,7 +76,7 @@ public:
 
     [[nodiscard]] std::vector<ChatMessage> getPlayerMessages(const std::string &otherAccountID);
 
-    [[nodiscard]] std::vector<PlayerScore> getLeaderboard(int limit = 5);
+    [[nodiscard]] std::vector<PlayerScore> getLeaderboard(int limit = 5) const;
 
     [[nodiscard]] StatusCode fetchPlayerData();
 
