@@ -32,7 +32,7 @@ main()
             settingsMenu();
             break;
         case MenuState::inLobbyMenu:
-            inLobbyMenu();
+            inLobbyMenu(clientSession);
             break;
 
         case MenuState::preLobbyMenu:
@@ -40,8 +40,9 @@ main()
             break;
 
         case MenuState::inGame:
-            inGameMenu(data);
+            inGameMenu(clientSession.getPlayerState());
             break;
+
         case MenuState::quitter:
             return 0;
         }

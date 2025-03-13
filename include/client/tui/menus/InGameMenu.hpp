@@ -7,20 +7,23 @@
 #include <vector>
 
 #include "GameMatrix.hpp"
+#include "GameState.hpp"
+#include "Common.hpp"
+#include "Types.hpp"
 #include "Tetromino.hpp"
 
 struct str;
 
 // Render routine
-ftxui::Element inGameMenu(TestData data);
+ftxui::Element inGameMenu(const PlayerState& state);
 
 static ftxui::Decorator colorForValue(int v);
 
-ftxui::Element renderMainBox(const TestData& data);
+ftxui::Element renderMainBox(const PlayerState& state);
 
 static ftxui::Element renderPowerUpBox();
 
-ftxui::Element renderTargetPlayerBox(TempMatrix targetPlayerBoard);
+ftxui::Element renderTargetPlayerBox(tetroMat targetGrid);
 
 ftxui::Element renderScoreBox(int score);
 
@@ -28,7 +31,7 @@ static ftxui::Element renderProgressBar(int energy);
 
 ftxui::Element renderSwitchBox();
 
-ftxui::Element renderBoard(TempMatrix board);
+ftxui::Element renderBoard(tetroMat board);
 
 static ftxui::Element renderPiece(const Tetromino* piece, int h, int w);
 

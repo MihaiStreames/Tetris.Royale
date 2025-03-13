@@ -59,11 +59,11 @@ renderScoreBox(const int score)
 Element
 renderProgressBar(int energy)
 {
-    constexpr int maxEnergy = 10;
-    const int filledCells = energy * maxEnergy / 100;
+
+    const int filledCells = energy * MAX_ENERGY / 100;
 
     std::vector<Element> barElements;
-    for (int i = 0; i < maxEnergy; ++i)
+    for (int i = 0; i < MAX_ENERGY; ++i)
     {
         if (i < filledCells)
         {
@@ -75,8 +75,8 @@ renderProgressBar(int energy)
         }
     }
 
-    if (energy > 100)
-        energy = 100;
+    if (energy > MAX_ENERGY)
+        energy = MAX_ENERGY;
 
     return vbox({vbox(std::move(barElements)) | border,
                  text(std::to_string(energy) + "%") | center |
@@ -93,7 +93,7 @@ renderSwitchBox()
 }
 
 Element
-renderBoard(TempMatrix board)
+renderBoard(tetroMat board)
 {
     const int height = static_cast<int>(board.size());
     if (height == 0)
@@ -113,7 +113,7 @@ renderBoard(TempMatrix board)
         for (int x = 0; x < width; ++x)
         {
             const int val = board[y][x];
-            const std::string cellStr = val != 0 ? "██" : "  ";
+            const std::string cellStr = val != static_cast<int>(PieceType::None) ? "██" : "  ";
             cells.push_back(text(cellStr) | colorForValue(val));
         }
 
@@ -124,7 +124,7 @@ renderBoard(TempMatrix board)
 }
 
 Element
-renderTargetPlayerBox(TempMatrix targetPlayerBoard)
+renderTargetPlayerBox(tetroMat targetPlayerBoard)
 {
     return renderBoard(targetPlayerBoard);
 }
@@ -159,7 +159,7 @@ renderPiece(const Tetromino* piece, const int h, const int w)
     {
         for (int x = 0; x < static_cast<int>(shape[y].size()) && x < w; ++x)
         {
-            canvas[y][x] = shape[y][x] ? pieceTypeVal : 0;
+            canvas[y][x] = shape[y][x] ? pieceTypeVal : static_cast<int>(PieceType::None);
         }
     }
 
@@ -188,41 +188,46 @@ renderBox(Element content)
 }
 
 Element
-renderMainBox(const TestData& data)
+renderMainBox(const PlayerState& state)
 {
     str s;
-    return vbox({renderScoreBox(data.playerScore) | center,
-                 hbox({renderProgressBar(data.playerEnergy),
-                       renderBoard(testData.tempBoard)}) |
-                     center,
-                 hbox({
-                     vbox({
-                         s.nextTxt | center | color(Color::Green),
-                         renderBox(renderPiece(&testData.nextTetromino, 4, 5)) |
-                             center,
-                     }),
-                     vbox({
-                         s.bagTxt | center | color(Color::Green),
-                         renderBox(renderPiece(&testData.holdTetromino, 4, 5)) |
-                             center,
-                     }),
-                 }),
-                 s.powerUpTxt | color(Color::Green), renderPowerUpBox(),
-                 s.useSpaceTxt | color(Color::Green)}) |
-           border | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 42) |
-           color(Color::Green);
+    return vbox(
+        
+        {renderScoreBox(state.playerScore) | center,
+                
+            // !! state.energy needs to be added but for now MAX_ENERGY is used
+            hbox({
+                renderProgressBar(MAX_ENERGY), renderBoard(state.playerGrid)
+            }) | center,
+            
+            hbox({
+                
+                vbox({s.nextTxt | center | color(Color::Green), renderBox(renderPiece(&state.nextTetro, 4, 5)) | center,}),
+                vbox({s.bagTxt | center | color(Color::Green), renderBox(renderPiece(&state.holdTetro, 4, 5)) | center, })
+
+            }),
+            
+            s.powerUpTxt | color(Color::Green),
+            renderPowerUpBox(),
+            s.useSpaceTxt | color(Color::Green)
+        
+        }
+                
+        ) | border | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 42) | color(Color::Green);
+    
 }
 
 Element
-inGameMenu(TestData data)
+inGameMenu(const PlayerState& state)
 {
     str s;
     return vbox({hbox({
-                     renderMainBox(data),
-                     vbox({renderTargetPlayerBox(data.tempBoard),
+                     renderMainBox(state),
+                     vbox({renderTargetPlayerBox(state.targetGrid),
                            s.targetPlayerTxt | color(Color::Green),
                            renderSwitchBox()}),
                  }) | center,
                  s.spectatorTxt | center | color(Color::Green)}) |
            center;
 }
+

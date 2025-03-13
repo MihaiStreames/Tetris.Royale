@@ -1,111 +1,64 @@
 #include "InLobbyMenu.hpp"
-#include "MenuHandler.hpp"
 
-std::string currGameMode = "Classic";
+
 
 std::string
-gameDescription(const TestGameMode& gameMode)
+gameDescription(const GameMode& gameMode)
 {
-    if (currGameMode == "Classic")
-    {
-        return gameMode.descriptions.at("ClassicButton");
-    }
-    if (currGameMode == "Duel")
-    {
-        return gameMode.descriptions.at("DuelButton");
-    }
-    if (currGameMode == "Royale")
-    {
-        return gameMode.descriptions.at("RoyaleButton");
-    }
-    return "";
+    return GAMEMODE_DESCRIPTIONS.at(gameMode);
 }
 
 void
-inLobbyMenu()
+inLobbyMenu(ClientSession& clientSession)
 {
     using namespace ftxui;
     auto screen = ScreenInteractive::Fullscreen();
 
-    // Use the global testData instead of creating a new TestData instance
-    // This ensures we're using the shared TestData with its gameMode
+    // we get the current lobby state
+    LobbyState state = clientSession.getCurrentLobbyState();
+    std::vector<std::string> friendList = clientSession.getFriendList();
 
     // Title
     auto titlebox = Renderer(
         [&]
-        { return hbox({text(testData.gameTitle) | bold | color(Color::Green1)}); });
-
-    // Menu buttons
-    auto ClassicButton = Button("Classic",
-                                [&]
-                                {
-                                    // Choisir mode de jeu classic
-                                    currGameMode = "Classic";
-                                });
-
-    auto DuelButton = Button("Duel",
-                             [&]
-                             {
-                                 // Choisir mode de jeu Duel
-                                 currGameMode = "Duel";
-                             });
-
-    auto RoyaleButton = Button("Royal",
-                               [&]
-                               {
-                                   // Choisir mode de jeu Royale
-                                   currGameMode = "Royale";
-                               });
+        { return hbox({text(GAME_TITLE) | bold | color(Color::Green1)}); });
 
     auto LeaveButton = Button("Leave Lobby",
-                              [&screen]
+                              [&screen, &clientSession]
                               {
-                                  currMenu = MenuState::mainMenu;
-                                  screen.Exit();
+                                    clientSession.leaveLobby();
+                                    currMenu = MenuState::mainMenu;
+                                    screen.Exit();
                               });
 
     auto ReadyButton = Button("Ready",
-                              []
+                              [&clientSession]
                               {
-                                  // todo
+                                    clientSession.readyUp();
                               });
 
-    auto JoinPlayerButton = Button("Join as player",
-                                   []
-                                   {
-                                       // Rejoindre lobby en tant que joueur
-                                   });
-
-    auto JoinSpectatorButton = Button("Join as spectator",
-                                      []
-                                      {
-                                          // todo
-                                      });
+    auto UnreadyButton = Button("Unready",
+                              [&clientSession]
+                              {
+                                    clientSession.unready();
+                              });
 
     auto leftMenuButtonsContainer = Container::Vertical(
-        {ClassicButton, DuelButton, RoyaleButton, JoinSpectatorButton,
-         JoinPlayerButton, ReadyButton, LeaveButton});
+        {LeaveButton, ReadyButton, UnreadyButton});
 
-    // Demander à Roberto pour savoir commment ça marche | Commentaires +
-    // liaison au serveur à faire
+
     auto GameModeBox = Renderer(
         leftMenuButtonsContainer,
         [&]
         {
-            return vbox({text("Game Modes") | color(Color::Green1),
-                         hbox({ClassicButton->Render() | color(Color::Green1),
-                               DuelButton->Render() | color(Color::Green1),
-                               RoyaleButton->Render() | color(Color::Green1)}),
-                         text(gameDescription(testData.gameMode)) |
-                             color(Color::Green1)}) |
-                   border;
+            return vbox({text("Current Game Mode : " + gameDescription(state.gameMode)) | color(Color::Green1)});
         });
 
     auto PlayersBox = Renderer(
         [&]
         {
             Elements lines;
-            for (const auto& player : testData.players)
+            for (const auto& player : state.players)
             {
                 lines.push_back(text(player.first + " : " + player.second));
             }
@@ -116,7 +69,7 @@ inLobbyMenu()
         [&]
         {
             Elements lines;
-            for (auto& spectator : testData.spectators)
+            for (auto& spectator : state.spectators)
             {
                 lines.push_back(text(spectator));
             }
@@ -128,15 +81,13 @@ inLobbyMenu()
         [&]
         {
             return window(
-                       text("Lobby : " + testData.lobbyName) | color(Color::Green1),
+                       text("Lobby : " + state.lobbyID) | color(Color::Green1),
                        vbox({GameModeBox->Render() | color(Color::Green1),
                              PlayersBox->Render() | color(Color::Green1),
                              SpectatorsBox->Render() | color(Color::Green1),
-                             hbox({JoinSpectatorButton->Render() |
-                                       color(Color::Green1),
-                                   JoinPlayerButton->Render() |
-                                       color(Color::Green1)}),
+                             
                              hbox({ReadyButton->Render() | color(Color::Green1),
+                                      UnreadyButton->Render() | color(Color::Green1),
                                    LeaveButton->Render() |
                                        color(Color::Green1)})})) |
                    color(Color::Green1);
@@ -157,10 +108,8 @@ inLobbyMenu()
                {
                    if (!messageInputBuffer.empty() && !testData.friendList.empty())
                    {
-                       std::string selectedFriend =
-                           testData.friendList[selectedFriendIndex];
-                       testData.conversations[selectedFriend].push_back(
-                           {"Me", messageInputBuffer});
+                       
+                        // TODO: send message to server
                        messageInputBuffer.clear();
                    }
                });
@@ -169,21 +118,19 @@ inLobbyMenu()
     auto prevFriendButton = Button("Prev",
                                    [&]
                                    {
-                                       if (currentFriendPage > 0)
-                                           currentFriendPage--;
+                                       // TODO
                                    });
 
     auto nextFriendButton =
         Button("Next",
                [&]
                {
-                   if ((currentFriendPage + 1) * friendsPerPage <
-                       static_cast<int>(testData.friendList.size()))
-                       currentFriendPage++;
+                   // TODO
                });
 
     // Friend selector
-    auto friendSelector = Menu(&testData.friendList, &selectedFriendIndex);
+
+    auto friendSelector = Menu(&friendList, &selectedFriendIndex);
 
     auto friendsRenderer = Renderer(
         [&]() -> Element
@@ -191,13 +138,13 @@ inLobbyMenu()
             Elements lines;
             int start = currentFriendPage * friendsPerPage;
             int end = std::min(start + friendsPerPage,
-                               static_cast<int>(testData.friendList.size()));
+                               static_cast<int>(friendList.size()));
 
             for (int i = start; i < end; i++)
             {
                 lines.push_back(
                     text((i == selectedFriendIndex ? "-> " : "   ") +
-                         testData.friendList[i]));
+                        friendList[i]));
             }
 
             return window(
@@ -214,16 +161,16 @@ inLobbyMenu()
     auto messagesRenderer = Renderer(
         [&]() -> Element
         {
-            if (testData.friendList.empty()) {
+            if (friendList.empty()) {
                 return window(text("Messages"), text("No friends available.") | color(Color::Red));
             }
 
-            std::string selectedFriend = testData.friendList[selectedFriendIndex];
+            std::string selectedFriend = friendList[selectedFriendIndex];
             Elements lines;
-            for (auto& msg : testData.conversations[selectedFriend])
-            {
-                lines.push_back(text(msg.from + ": " + msg.text));
-            }
+            // for (auto& msg : testData.conversations[selectedFriend])
+            // {
+            //    lines.push_back(text(msg.from + ": " + msg.text));
+            // }
             return vbox({window(text("Messages with " + selectedFriend) |
                                     color(Color::Green1),
                                 vbox(std::move(lines)) | color(Color::Green1)) |

@@ -68,6 +68,15 @@ enum class StatusCode
 
 };
 
+// gamemode for the lobby
+enum class GameMode
+{
+    CLASSIC,
+    ROYALE,
+    DUEL,
+    NONE, // default value
+};
+
 // status codes in string format
 std::string getStatusCodeString(StatusCode code);
 
@@ -86,6 +95,15 @@ const std::vector BLOCKED_ACTIONS = {
     Action::UseBag,     Action::UseMalus,    Action::UseBonus,
 };
 
+
+const std::unordered_map<GameMode, std::string> GAMEMODE_DESCRIPTIONS = {
+        {GameMode::CLASSIC,     "Play against others in classic Tetris mode. Clear lines to score points."},
+        {GameMode::DUEL,        "Play against a single opponent in a head-to-head battle."},
+        {GameMode::ROYALE,      "Battle royale mode with power-ups and special abilities."},
+        {GameMode::NONE,        "No description available."},
+};
+
+
 struct PlayerScore
 {
     int rank;
@@ -99,14 +117,7 @@ struct ChatMessage
     std::string text;
 };
 
-// gamemode for the lobby
-enum class GameMode
-{
-    CLASSIC,
-    ROYALE,
-    DUEL,
-    NONE, // default value
-};
+
 
 // message type for debugging
 enum class MessageType
@@ -206,6 +217,8 @@ const int MAX_LOBBY_SIZE = 9;
 
 const int LOBBY_TTL = 1000000; // ttl for the lobby
 const int MAX_REQUEST_ID = 4096;
+
+const int MAX_ENERGY = 200;
 
 // rules for tokens
 const int LOBBY_ID_LENGTH = 6;

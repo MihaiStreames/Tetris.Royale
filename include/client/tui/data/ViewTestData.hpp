@@ -9,15 +9,6 @@
 #include "Tetromino.hpp"
 #include "Types.hpp"
 
-using TempMatrix = std::vector<std::vector<int>>;
-
-struct TestGameMode {
-    std::map<std::string, std::string> descriptions = {
-        {"ClassicButton", "Play against others in classic Tetris mode. Clear lines to score points."},
-        {"DuelButton", "Play against a single opponent in a head-to-head battle."},
-        {"RoyaleButton", "Battle royale mode with power-ups and special abilities."}
-    };
-};
 
 struct Notification
 {
@@ -81,24 +72,6 @@ struct TestData
     int spectatorCount = 0; // For "Spectator: X"
     std::string currentTarget = "Player 2";
 
-    // Board
-    TempMatrix tempBoard = {
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-    };
-
-    Tetromino holdTetromino = Tetromino(PieceType::I);
-    Tetromino nextTetromino = Tetromino(PieceType::O);
-
     // Lobby Data
     std::string lobbyName = "Test Lobby";
     std::vector<LobbyInfo> lobbies = {
@@ -118,8 +91,6 @@ struct TestData
         "Spectator1",
         "Spectator2"
     };
-
-    TestGameMode gameMode;
 };
 
 /// Extern to be defined in a .cpp or used directly as a global.

@@ -14,8 +14,9 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/util/ref.hpp"
 
-#include "ViewTestData.hpp"
+#include "MenuHandler.hpp"
 
 #include "Common.hpp"
+#include "ClientSession.hpp"
 
-void inLobbyMenu();
+void inLobbyMenu(ClientSession &clientSession);
