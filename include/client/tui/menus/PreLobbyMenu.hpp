@@ -1,9 +1,10 @@
-#include <memory>
-#include <string>
-#include <vector>
 #include <algorithm> // pour std::min
 #include <iostream>
 #include <map>
+#include <memory>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 // FTXUI
 #include "ftxui/component/captured_mouse.hpp"
@@ -14,8 +15,7 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/util/ref.hpp"
 
-#include "viewTestData.hpp"
+#include "MenuHandler.hpp"
+#include "ViewTestData.hpp"
 
-#include "Common.hpp"
-
-void inLobbyMenu();
+void preLobbyMenu();

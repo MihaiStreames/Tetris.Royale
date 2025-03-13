@@ -1,11 +1,10 @@
 #pragma once
 
+#include "ViewTestData.hpp"
+#include <ftxui/dom/elements.hpp>
+#include <string>
 #include <utility>
 #include <vector>
-#include <string>
-#include <ftxui/dom/elements.hpp>
-#include "viewTestData.hpp"
-
 
 #include "GameMatrix.hpp"
 #include "Tetromino.hpp"
@@ -31,6 +30,6 @@ ftxui::Element renderSwitchBox();
 
 ftxui::Element renderBoard(TempMatrix board);
 
-static ftxui::Element renderPiece(const Tetromino *piece, int h, int w);
+static ftxui::Element renderPiece(const Tetromino* piece, int h, int w);
 
 static ftxui::Element renderBox(ftxui::Element content);

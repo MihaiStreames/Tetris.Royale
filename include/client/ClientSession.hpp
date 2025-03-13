@@ -21,7 +21,8 @@ class ClientSession
 {
   public:
     // public here
-    ClientSession(const std::string& server_ip, int lobby_port, int db_port, bool debug = false);
+    ClientSession(const std::string& server_ip, int lobby_port, int db_port,
+                  bool debug = false);
     ~ClientSession();
 
     DBRequestManager dbRequestManager;

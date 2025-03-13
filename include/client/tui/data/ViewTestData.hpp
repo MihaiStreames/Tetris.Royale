@@ -2,32 +2,37 @@
 #define VIEWTESTDATA_H
 
 #pragma once
+#include <map>
 #include <string>
 #include <vector>
-#include <map>
 
 #include "Tetromino.hpp"
 #include "Types.hpp"
 
 using TempMatrix = std::vector<std::vector<int>>;
 
-struct PlayerScore {
+struct PlayerScore
+{
     int rank;
     std::string name;
     int score;
 };
 
-struct Notification {
+struct Notification
+{
     std::string message;
 };
 
-struct ChatMessage {
+struct ChatMessage
+{
     std::string from;
     std::string text;
 };
 
-/// Store all placeholder data here; in real usage, populate these from your Client class.
-struct TestData {
+/// Store all placeholder data here; in real usage, populate these from your
+/// Client class.
+struct TestData
+{
     // Title
     std::string gameTitle = "TETRIS ROYALE";
 
@@ -45,13 +50,12 @@ struct TestData {
     };
 
     // Friend list
-    std::vector<std::string> friendList{
-        "Player1", "Player2", "Player3", "Player4",
-        "Player5", "Player6", "Player7", "Player8"
-    };
+    std::vector<std::string> friendList{"Player1", "Player2", "Player3",
+                                        "Player4", "Player5", "Player6",
+                                        "Player7", "Player8"};
 
     // Conversations: each friend has a sequence of messages
-    std::map<std::string, std::vector<ChatMessage> > conversations{
+    std::map<std::string, std::vector<ChatMessage>> conversations{
         {"Player1", {{"Player1", "Hello!"}, {"Me", "Hi Player1!"}}},
         {"Player2", {{"Player2", "Hello!"}, {"Me", "Hi Player2!"}}},
         {"Player3", {{"Player3", "Hello!"}, {"Me", "Hi Player3!"}}},
@@ -65,13 +69,8 @@ struct TestData {
 
     // Example: Key bindings or settings
     std::map<std::string, std::string> keyBindings{
-        {"Left", "\u2190"},
-        {"Right", "\u2192"},
-        {"Rotate", "\u2191"},
-        {"Drop", "space"},
-        {"Switch Player", "S"},
-        {"Power-up", "Q"}
-    };
+        {"Left", "\u2190"}, {"Right", "\u2192"},    {"Rotate", "\u2191"},
+        {"Drop", "space"},  {"Switch Player", "S"}, {"Power-up", "Q"}};
 
     // In-game placeholders
     int playerScore = 100;
@@ -81,29 +80,18 @@ struct TestData {
 
     // Board
     TempMatrix tempBoard = {
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0,0},
-     };
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    };
 
     Tetromino holdTetromino = Tetromino(PieceType::I);
     Tetromino nextTetromino = Tetromino(PieceType::O);
@@ -112,4 +100,4 @@ struct TestData {
 /// Extern to be defined in a .cpp or used directly as a global.
 extern TestData testData;
 
-#endif //VIEWTESTDATA_H
+#endif // VIEWTESTDATA_H

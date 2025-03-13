@@ -1,12 +1,8 @@
+#pragma once
+
 #include <memory>
 #include <string>
-#include <vector>
-#include <algorithm> // pour std::min
-#include <iostream>
-#include <unordered_map>
-#include <map>
-
-// FTXUI
+// FTXUI includes
 #include "ftxui/component/captured_mouse.hpp"
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/component_base.hpp"
@@ -15,7 +11,6 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/util/ref.hpp"
 
-#include "viewTestData.hpp"
-#include "menuHandler.hpp"
+#include "MenuHandler.hpp"
 
-void preLobbyMenu();
+void registerMenu();

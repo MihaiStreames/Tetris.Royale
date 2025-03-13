@@ -195,6 +195,7 @@ const int TOKEN_LENGTH = 16;
 const int INDENT_SIZE_CONFIG = 4;
 
 // IP address for the servers
-const std::string MASTER_SERVER_IP = "0.0.0.0";  // all interfaces (was set to something prior but oh well)
+const std::string MASTER_SERVER_IP =
+    "0.0.0.0"; // all interfaces (was set to something prior but oh well)
 
 #endif

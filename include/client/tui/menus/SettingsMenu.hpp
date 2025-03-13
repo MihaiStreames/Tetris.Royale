@@ -1,11 +1,11 @@
 #pragma once
 
+#include <algorithm>
+#include <iostream>
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
-#include <algorithm> 
-#include <iostream>
-#include <map>
 
 // FTXUI
 #include "ftxui/component/captured_mouse.hpp"
@@ -16,7 +16,7 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/util/ref.hpp"
 
-#include "viewTestData.hpp"
-#include "menuHandler.hpp"
+#include "MenuHandler.hpp"
+#include "ViewTestData.hpp"
 
-void mainMenu();
+void settingsMenu();

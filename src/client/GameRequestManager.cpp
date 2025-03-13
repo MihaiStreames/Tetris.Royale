@@ -23,7 +23,8 @@ GameRequestManager::~GameRequestManager()
     (void)disconnectFromServer();
 }
 
-std::string GameRequestManager::getServerIP()
+std::string
+GameRequestManager::getServerIP()
 {
     // this method is used to get the server IP
     // it will return the server IP
@@ -31,7 +32,8 @@ std::string GameRequestManager::getServerIP()
     return serverIP;
 }
 
-int GameRequestManager::getPort()
+int
+GameRequestManager::getPort()
 {
     // this method is used to get the port
     // it will return the port

@@ -1,13 +1,16 @@
-#include "menuHandler.hpp"
+#include "MenuHandler.hpp"
 
 // Set loginMenu comme menu initial
 MenuState currMenu;
 
-int main(){
+int
+main()
+{
 
-    while(true){
+    while (true)
+    {
         TestData data; // remplacer ici par une requete serveur
-        //Selon bouton appuyé dans chaque menu -> redirection dans menu demandé
+        // Selon bouton appuyé dans chaque menu -> redirection dans menu demandé
         switch (currMenu)
         {
         case MenuState::loginMenu:
@@ -28,17 +31,16 @@ int main(){
         case MenuState::inLobbyMenu:
             inLobbyMenu();
             break;
-        
+
         case MenuState::preLobbyMenu:
             preLobbyMenu();
             break;
-        
+
         case MenuState::inGame:
             inGameMenu(data);
             break;
         case MenuState::quitter:
             return 0;
-
         }
     }
     return 0;

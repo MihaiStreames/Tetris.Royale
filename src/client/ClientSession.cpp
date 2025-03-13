@@ -1,10 +1,12 @@
 #include "ClientSession.hpp"
 
+ClientSession::ClientSession(const std::string& server_ip, int lobby_port,
+                             int db_port, bool debug)
+    : dbRequestManager(server_ip, db_port),
+      gameRequestManager(server_ip, lobby_port), debug_(debug)
+{
 
-ClientSession::ClientSession(const std::string& server_ip, int lobby_port, int db_port, bool debug)
-    : dbRequestManager(server_ip, db_port), gameRequestManager(server_ip, lobby_port), debug_(debug) {
-    
-        // this is the constructor of the ClientSession class
+    // this is the constructor of the ClientSession class
     // it will initialize the DBRequestManager and the GameRequestManager
 
     if (gameRequestManager.connectToServer() != StatusCode::SUCCESS)
