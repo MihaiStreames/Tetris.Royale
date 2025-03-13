@@ -191,6 +191,9 @@ const int MAX_REQUEST_ID = 4096;
 const int LOBBY_ID_LENGTH = 6;
 const int TOKEN_LENGTH = 16;
 
+// stuff idfk stop asking me
+const int INDENT_SIZE_CONFIG = 4;
+
 // IP address for the servers
 const std::string MASTER_SERVER_IP = "0.0.0.0";  // all interfaces (was set to something prior but oh well)
 

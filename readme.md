@@ -63,13 +63,13 @@ This will generate the project files and compile the source code into executable
 
 After successfully building the project, you can run **Tetris Royale** as either the **server** or **client**:
 
-* For **Server** (to host the game):
+- For **Server** (to host the game):
 
     ```sh
     ./bin/TetrisRoyaleMasterServer
     ```
 
-* For **Client** (to connect to the server and play):
+- For **Client** (to connect to the server and play):
 
     ```sh
     ./bin/TetrisRoyaleClient

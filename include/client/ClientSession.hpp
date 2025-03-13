@@ -21,13 +21,16 @@ class ClientSession
 {
   public:
     // public here
-    ClientSession(bool debug = false);
+    ClientSession(const std::string& server_ip, int lobby_port, int db_port, bool debug = false);
     ~ClientSession();
 
     DBRequestManager dbRequestManager;
     GameRequestManager gameRequestManager;
 
     // Getters for player info
+    [[nodiscard]] std::string getServerIP();
+    [[nodiscard]] int getLobbyPort();
+    [[nodiscard]] int getDBPort();
     [[nodiscard]] std::string getUsername();
     [[nodiscard]] std::string getAccountID();
     [[nodiscard]] std::string getToken();

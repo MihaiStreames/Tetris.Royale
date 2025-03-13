@@ -25,6 +25,9 @@ class GameRequestManager
                        int lobbyServerPort = LOBBY_SERVER_PORT);
     ~GameRequestManager();
 
+    [[nodiscard]] std::string getServerIP();
+    [[nodiscard]] int getPort();
+
     // methods :
     [[nodiscard]] StatusCode connectToServer();
     [[nodiscard]] StatusCode disconnectFromServer();

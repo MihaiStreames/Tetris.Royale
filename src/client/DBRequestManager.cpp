@@ -11,6 +11,17 @@ DBRequestManager::DBRequestManager(const std::string& host, const int& port)
 
 DBRequestManager::~DBRequestManager() = default;
 
+std::string DBRequestManager::getServerIP()
+{
+    return host_;
+}
+
+int DBRequestManager::getPort()
+{
+    return port_;
+}
+
+
 std::string
 DBRequestManager::toJSON(const boost::property_tree::ptree& pt)
 {

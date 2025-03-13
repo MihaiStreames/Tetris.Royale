@@ -1,11 +1,10 @@
 #include "ClientSession.hpp"
 
-ClientSession::ClientSession(const bool debug)
-    : dbRequestManager(MASTER_SERVER_IP, DB_SERVER_PORT),
-      gameRequestManager(MASTER_SERVER_IP, LOBBY_SERVER_PORT), bestScore_(0),
-      debug_(debug)
-{
-    // this is the constructor of the ClientSession class
+
+ClientSession::ClientSession(const std::string& server_ip, int lobby_port, int db_port, bool debug)
+    : dbRequestManager(server_ip, db_port), gameRequestManager(server_ip, lobby_port), debug_(debug) {
+    
+        // this is the constructor of the ClientSession class
     // it will initialize the DBRequestManager and the GameRequestManager
 
     if (gameRequestManager.connectToServer() != StatusCode::SUCCESS)
@@ -19,6 +18,30 @@ ClientSession::~ClientSession()
     // this is the destructor of the ClientSession class
     // I really doubt that we need to do anything here
     // but I will leave it here just in case
+}
+
+std::string
+ClientSession::getServerIP()
+{
+    // this method is used to get the server IP
+    // it will return the server IP
+    return gameRequestManager.getServerIP();
+}
+
+int
+ClientSession::getLobbyPort()
+{
+    // this method is used to get the lobby port
+    // it will return the lobby port
+    return gameRequestManager.getPort();
+}
+
+int
+ClientSession::getDBPort()
+{
+    // this method is used to get the DB port
+    // it will return the DB port
+    return dbRequestManager.getPort();
 }
 
 std::string

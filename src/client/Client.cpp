@@ -1,5 +1,6 @@
 
 #include "ClientSession.hpp"
+#include "Config.hpp"
 
 #include <iostream>
 #include <string>
@@ -34,7 +35,14 @@ printMenu()
 int
 main()
 {
-    ClientSession clientSession(true);
+
+    Config config("client_config.json");
+    config.load();
+    std::string serverIp = config.get("server_ip");
+    int lobbyPort = std::stoi(config.get("lobby_port"));
+    int dbPort = std::stoi(config.get("db_port"));
+
+    ClientSession clientSession(serverIp, lobbyPort, dbPort, true);
 
     int choice;
     std::string username, password, friendID, lobbyID, newName, newPassword;

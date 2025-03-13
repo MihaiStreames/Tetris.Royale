@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.22)
 
+# This is a revised version of Mihai's CMake template,
+# rewritten by Antoine & Mihai to include boost stuff
+
 # Project name and standard
 project(TetrisRoyale VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
@@ -16,10 +19,14 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Set policies (yeah well I don't like the new behavior & the warnings lol)
+cmake_policy(SET CMP0167 NEW)
+
+
 # Compiler flags function
 function(set_target_compile_options target)
     target_compile_options(${target} PRIVATE
-        -pedantic -Wall -Wextra -Werror -Wformat=2 -Wfloat-equal -Wconversion
+        -pedantic -Wall -Wextra -Wformat=2 -Wfloat-equal -Wconversion
         -Wlogical-op -Wshift-overflow=2 -Wduplicated-cond -Wcast-qual -Wcast-align
         -Wnull-dereference -Wold-style-cast -Wuseless-cast -Wdouble-promotion
         -Wzero-as-null-pointer-constant -Wstrict-null-sentinel

@@ -25,6 +25,9 @@ class DBRequestManager
 
     ~DBRequestManager();
 
+    [[nodiscard]] std::string getServerIP();
+    [[nodiscard]] int getPort();
+
     // GET Requests
     DBResponse getPlayer(const std::string& accountID);
 
