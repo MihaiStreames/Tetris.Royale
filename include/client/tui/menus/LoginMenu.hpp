@@ -13,4 +13,8 @@
 #include "ftxui/dom/elements.hpp"
 #include "ftxui/util/ref.hpp"
 
-void loginMenu();
+#include "Common.hpp"
+#include "ClientSession.hpp"
+
+
+void loginMenu(ClientSession& clientSession);

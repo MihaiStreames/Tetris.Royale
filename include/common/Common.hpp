@@ -59,6 +59,9 @@ enum class StatusCode
 
     ERROR_NOT_SUPPOSED_TO_HAPPEN,
 
+    ERROR_LOGGING_IN,
+    ERROR_REGISTERING,
+
 };
 
 // status codes in string format
@@ -197,5 +200,9 @@ const int INDENT_SIZE_CONFIG = 4;
 // IP address for the servers
 const std::string MASTER_SERVER_IP =
     "0.0.0.0"; // all interfaces (was set to something prior but oh well)
+
+
+// default values for the game
+const std::string GAME_TITLE = "TETRIS ROYALE";
 
 #endif

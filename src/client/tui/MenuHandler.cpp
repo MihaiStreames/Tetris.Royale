@@ -7,6 +7,9 @@ int
 main()
 {
 
+    // instantiate the clientSession here
+    ClientSession clientSession = ClientSession(MASTER_SERVER_IP, LOBBY_SERVER_PORT, DB_SERVER_PORT);
+
     while (true)
     {
         TestData data; // remplacer ici par une requete serveur
@@ -14,7 +17,7 @@ main()
         switch (currMenu)
         {
         case MenuState::loginMenu:
-            loginMenu();
+            loginMenu(clientSession);
             break;
 
         case MenuState::registerMenu:

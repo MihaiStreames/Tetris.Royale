@@ -119,7 +119,7 @@ ClientSession::setPendingFriendRequests(
     pendingFriendRequests_ = requests;
 }
 
-void
+StatusCode
 ClientSession::loginPlayer(const std::string& username,
                            const std::string& password)
 {
@@ -130,14 +130,17 @@ ClientSession::loginPlayer(const std::string& username,
     {
         setAccountID(response.json.get<std::string>("accountID"));
         setUsername(response.json.get<std::string>("userName"));
-        std::cout << "Login successful. AccountID: " << getAccountID()
-                  << std::endl;
+        std::cout << "Login successful. AccountID: " << getAccountID() << std::endl;
+        return StatusCode::SUCCESS;
+
     }
+
     else
     {
         std::cerr << "Login error (" << response.status << "): "
                   << response.json.get<std::string>("error", "Unknown error")
                   << std::endl;
+        return StatusCode::ERROR_LOGGING_IN;
     }
 }
 

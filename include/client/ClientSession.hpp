@@ -48,7 +48,7 @@ class ClientSession
     void setPendingFriendRequests(const std::vector<std::string>& requests);
 
     // Database operations
-    void loginPlayer(const std::string& username, const std::string& password);
+    [[nodiscard]] StatusCode loginPlayer(const std::string& username, const std::string& password);
     void registerPlayer(const std::string& username,
                         const std::string& password);
     void fetchPlayerData(); // Get full player info from DB (username,

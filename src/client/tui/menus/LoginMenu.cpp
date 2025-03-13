@@ -2,49 +2,49 @@
 
 using namespace ftxui;
 
-std::string testUsername = "user1";
-std::string testPassword = "test1";
-std::string error_message;
+
+std::string errorMessage;
 
 void
-loginMenu()
+loginMenu(ClientSession& clientSession)
 {
-    auto& data = testData;
+
     auto screen = ScreenInteractive::Fullscreen();
 
     // Titre
     auto titlebox = Renderer(
         [&]
-        { return hbox({text(data.gameTitle) | bold | color(Color::Green1)}); });
+        { return hbox({text(GAME_TITLE) | bold | color(Color::Green1)}); });
+
+
+    std::string inputUsernameString;
+    std::string inputPasswordString;
 
     // ------- USERNAME AND PASSWORD INPUTS -------- //
-    Component inputUsername = Input(&data.username, "Type in your username");
+    Component inputUsername = Input(&inputUsernameString, "Type in your username");
 
-    // Input pour le mot de passe
     InputOption passwordOption;
-    passwordOption.password = true;
+    passwordOption.password = true;  // hide the password
+
     Component inputPassword =
-        Input(&data.password, "Type in your password", passwordOption);
+        Input(&inputPasswordString, "Type in your password", passwordOption);
 
     // -------- BUTTONS  ----------- //
     auto loginButton =
         Button("Login",
-               [&screen, &data]
+               [&screen, &clientSession, &inputUsernameString, &inputPasswordString]
                {
-                   if (data.username.empty() || data.password.empty())
-                   {
-                       error_message = "Please fill in both fields";
-                   }
-                   else if (data.username == testUsername &&
-                            data.password == testPassword)
-                   {
-                       currMenu = MenuState::mainMenu;
-                       screen.Exit();
-                   }
-                   else
-                   {
-                       error_message = "Invalid username or password";
-                   }
+
+                    if (inputUsernameString.empty() || inputPasswordString.empty()) {
+                        errorMessage = "Please fill in both fields";
+                    // check if login worked
+                    } else if ((clientSession.loginPlayer(inputUsernameString, inputPasswordString)) == StatusCode::SUCCESS) {
+                        currMenu = MenuState::mainMenu;
+                        screen.Exit();
+                    } else {
+                        errorMessage = "Login failed. Please try again.";
+                    }
+
                });
 
     auto registerButton = Button("Register",
@@ -54,7 +54,7 @@ loginMenu()
                                      screen.Exit();
                                  });
 
-    auto quitterButton = Button("Quitter",
+    auto quitterButton = Button("Quit",
                                 [&screen]
                                 {
                                     currMenu = MenuState::quitter;
@@ -79,7 +79,7 @@ loginMenu()
         components,
         [&]
         {
-            return hbox({vbox({text(error_message) | color(Color::Red),
+            return hbox({vbox({text(errorMessage) | color(Color::Red),
                                hbox(text("Username: ") | color(Color::Green1),
                                     inputUsername->Render()),
                                hbox(text("Password: ") | color(Color::Green1),

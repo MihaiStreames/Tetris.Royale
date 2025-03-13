@@ -11,6 +11,8 @@
 #include "SettingsMenu.hpp"
 #include "ViewTestData.hpp"
 
+#include "ClientSession.hpp"
+
 enum class MenuState
 {
     loginMenu,
