@@ -9,7 +9,8 @@
 #include "preLobbyMenu.hpp"
 #include "inLobbyMenu.hpp"
 #include "inGameMenu.hpp"
-#include "../data/viewTestData.hpp"
+#include "viewTestData.hpp"
+
 enum class MenuState{
     loginMenu,
     registerMenu,

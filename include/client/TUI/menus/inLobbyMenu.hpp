@@ -16,4 +16,6 @@
 
 #include "viewTestData.hpp"
 
+#include "Common.hpp"
+
 void inLobbyMenu();

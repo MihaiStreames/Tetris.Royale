@@ -126,7 +126,7 @@ Element renderPiece(const Tetromino *piece, const int h, const int w) {
 
     // Fill a small 2D buffer
     std::vector canvas(h, std::vector(w, 0));
-    const int pieceTypeVal = piece->getPieceVal();
+    const int pieceTypeVal = static_cast<int>(piece->getPieceType());
     const auto &shape = piece->getShape();
 
     for (int y = 0; y < static_cast<int>(shape.size()) && y < h; ++y) {

@@ -1,10 +1,14 @@
 #!/bin/bash
 # Dependency installation script for TetrisRoyale
-# This script installs all required dependencies locally
 
 set -e # Exit on error
 
 # We check for curl and unzip, as they are required for downloading and extracting dependencies
+if ! command -v curl > /dev/null; then
+    echo "'curl' is required but not installed. Please install it and try again."
+    exit 1
+fi
+
 if ! command -v unzip > /dev/null; then
     echo "'unzip' is required but not installed. Please install it and try again."
     exit 1
@@ -17,16 +21,8 @@ BOOST_VERSION="1.87.0"
 NLOHMANN_JSON_VERSION="3.10.5"
 SQLITE_VERSION="3420000"
 
-# Create installation directory
-mkdir -p "$INSTALL_ROOT"
+# Create installation directory if needed
 mkdir -p "$INSTALL_ROOT/downloads"
-cd "$INSTALL_ROOT/downloads"
-
-# Set environment variables for the build
-export BOOST_ROOT="$INSTALL_ROOT/boost"
-export NLOHMANN_JSON_ROOT="$INSTALL_ROOT/json"
-export SQLITE_ROOT="$INSTALL_ROOT/sqlite"
-export CMAKE_PREFIX_PATH="$BOOST_ROOT:$NLOHMANN_JSON_ROOT:$SQLITE_ROOT:$CMAKE_PREFIX_PATH"
 
 # Print status header function
 print_header() {
@@ -36,13 +32,46 @@ print_header() {
     echo "=============================="
 }
 
+# Function to check if a library exists in system paths
+check_system_lib() {
+    local lib_name="$1"
+    local header_path="$2"
+    local lib_file="$3"
+
+    # Check if header exists
+    if [ -f "/usr/include/$header_path" ] || [ -f "/usr/local/include/$header_path" ]; then
+        # Check if library exists
+        if [ -z "$lib_file" ] || ldconfig -p | grep -q "$lib_file"; then
+            return 0  # Library found
+        fi
+    fi
+
+    return 1  # Library not found
+}
+
 # ============================
-# Install Boost
+# Setup Environment Variables
 # ============================
-if [ ! -d "$BOOST_ROOT/include/boost" ]; then
-    print_header "Installing Boost $BOOST_VERSION"
+USING_SYSTEM_BOOST=false
+USING_SYSTEM_JSON=false
+USING_SYSTEM_SQLITE=false
+
+# ============================
+# Check and Install Boost
+# ============================
+if check_system_lib "boost" "boost/version.hpp" "libboost_system"; then
+    print_header "Using system Boost"
+    BOOST_ROOT="/usr"
+    USING_SYSTEM_BOOST=true
+elif [ -d "$INSTALL_ROOT/boost/include/boost" ]; then
+    print_header "Using previously installed Boost"
+    BOOST_ROOT="$INSTALL_ROOT/boost"
+else
+    print_header "Installing Boost $BOOST_VERSION locally"
+    BOOST_ROOT="$INSTALL_ROOT/boost"
 
     # Download Boost
+    cd "$INSTALL_ROOT/downloads"
     BOOST_URL="https://github.com/boostorg/boost/releases/download/boost-${BOOST_VERSION}/boost-${BOOST_VERSION}-b2-nodocs.tar.gz"
     BOOST_ARCHIVE="boost-${BOOST_VERSION}-b2-nodocs.tar.gz"
     BOOST_DIR="boost-${BOOST_VERSION}"
@@ -67,20 +96,27 @@ if [ ! -d "$BOOST_ROOT/include/boost" ]; then
     echo "Building and installing Boost (this may take a while)..."
     ./b2 install --with-filesystem --with-system -j$(nproc)
 
-    cd "$INSTALL_ROOT/downloads"
+    cd "$CURDIR"
     echo "Boost installed successfully at ${BOOST_ROOT}"
-else
-    echo "Boost already installed at ${BOOST_ROOT}"
 fi
 
 # ============================
-# Install nlohmann_json
+# Check and Install nlohmann_json
 # ============================
-if [ ! -d "$NLOHMANN_JSON_ROOT/include/nlohmann" ]; then
-    print_header "Installing nlohmann_json $NLOHMANN_JSON_VERSION"
+if check_system_lib "nlohmann_json" "nlohmann/json.hpp" ""; then
+    print_header "Using system nlohmann_json"
+    NLOHMANN_JSON_ROOT="/usr"
+    USING_SYSTEM_JSON=true
+elif [ -d "$INSTALL_ROOT/json/include/nlohmann" ]; then
+    print_header "Using previously installed nlohmann_json"
+    NLOHMANN_JSON_ROOT="$INSTALL_ROOT/json"
+else
+    print_header "Installing nlohmann_json $NLOHMANN_JSON_VERSION locally"
+    NLOHMANN_JSON_ROOT="$INSTALL_ROOT/json"
 
     # Create installation directory
     mkdir -p "$NLOHMANN_JSON_ROOT/include"
+    cd "$INSTALL_ROOT/downloads"
 
     # Download and extract
     JSON_URL="https://github.com/nlohmann/json/releases/download/v${NLOHMANN_JSON_VERSION}/include.zip"
@@ -94,20 +130,28 @@ if [ ! -d "$NLOHMANN_JSON_ROOT/include/nlohmann" ]; then
     echo "Extracting nlohmann_json..."
     unzip -q -o "$JSON_ARCHIVE" -d "$NLOHMANN_JSON_ROOT/include"
 
+    cd "$CURDIR"
     echo "nlohmann_json installed successfully at ${NLOHMANN_JSON_ROOT}"
-else
-    echo "nlohmann_json already installed at ${NLOHMANN_JSON_ROOT}"
 fi
 
 # ============================
-# Install SQLite
+# Check and Install SQLite
 # ============================
-if [ ! -d "$SQLITE_ROOT/include" ]; then
-    print_header "Installing SQLite $SQLITE_VERSION"
+if check_system_lib "sqlite3" "sqlite3.h" "libsqlite3.so"; then
+    print_header "Using system SQLite"
+    SQLITE_ROOT="/usr"
+    USING_SYSTEM_SQLITE=true
+elif [ -d "$INSTALL_ROOT/sqlite/include" ] && [ -f "$INSTALL_ROOT/sqlite/include/sqlite3.h" ]; then
+    print_header "Using previously installed SQLite"
+    SQLITE_ROOT="$INSTALL_ROOT/sqlite"
+else
+    print_header "Installing SQLite $SQLITE_VERSION locally"
+    SQLITE_ROOT="$INSTALL_ROOT/sqlite"
 
     # Create installation directory
     mkdir -p "$SQLITE_ROOT/include"
     mkdir -p "$SQLITE_ROOT/lib"
+    cd "$INSTALL_ROOT/downloads"
 
     # Download and extract
     SQLITE_URL="https://sqlite.org/2023/sqlite-amalgamation-${SQLITE_VERSION}.zip"
@@ -153,9 +197,8 @@ if [ ! -d "$SQLITE_ROOT/include" ]; then
         exit 1
     fi
 
+    cd "$CURDIR"
     echo "SQLite installed successfully at ${SQLITE_ROOT}"
-else
-    echo "SQLite already installed at ${SQLITE_ROOT}"
 fi
 
 # ============================
@@ -163,28 +206,79 @@ fi
 # ============================
 print_header "Generating environment script"
 
+# Set CMAKE_PREFIX_PATH conditionally
+CMAKE_PREFIX_PATH=""
+if ! $USING_SYSTEM_BOOST; then
+    CMAKE_PREFIX_PATH="${BOOST_ROOT}:${CMAKE_PREFIX_PATH}"
+fi
+if ! $USING_SYSTEM_JSON; then
+    CMAKE_PREFIX_PATH="${NLOHMANN_JSON_ROOT}:${CMAKE_PREFIX_PATH}"
+fi
+if ! $USING_SYSTEM_SQLITE; then
+    CMAKE_PREFIX_PATH="${SQLITE_ROOT}:${CMAKE_PREFIX_PATH}"
+fi
+# Remove trailing colon if exists
+CMAKE_PREFIX_PATH=$(echo $CMAKE_PREFIX_PATH | sed 's/:$//')
+
 ENV_SCRIPT="$INSTALL_ROOT/setup-env.sh"
 cat > "$ENV_SCRIPT" << EOF
 #!/bin/bash
 # Environment setup for TetrisRoyale build
 
-export BOOST_ROOT="$BOOST_ROOT"
-export NLOHMANN_JSON_ROOT="$NLOHMANN_JSON_ROOT"
-export SQLITE_ROOT="$SQLITE_ROOT"
-export CMAKE_PREFIX_PATH="$BOOST_ROOT:$NLOHMANN_JSON_ROOT:$SQLITE_ROOT:\$CMAKE_PREFIX_PATH"
+EOF
+
+# Add variables only for non-system libraries
+if ! $USING_SYSTEM_BOOST; then
+    echo "export BOOST_ROOT=\"$BOOST_ROOT\"" >> "$ENV_SCRIPT"
+fi
+if ! $USING_SYSTEM_JSON; then
+    echo "export NLOHMANN_JSON_ROOT=\"$NLOHMANN_JSON_ROOT\"" >> "$ENV_SCRIPT"
+fi
+if ! $USING_SYSTEM_SQLITE; then
+    echo "export SQLITE_ROOT=\"$SQLITE_ROOT\"" >> "$ENV_SCRIPT"
+fi
+if [ ! -z "$CMAKE_PREFIX_PATH" ]; then
+    echo "export CMAKE_PREFIX_PATH=\"$CMAKE_PREFIX_PATH:\$CMAKE_PREFIX_PATH\"" >> "$ENV_SCRIPT"
+fi
+
+cat >> "$ENV_SCRIPT" << EOF
 
 echo "Environment variables set for TetrisRoyale build"
-echo "  BOOST_ROOT=$BOOST_ROOT"
-echo "  NLOHMANN_JSON_ROOT=$NLOHMANN_JSON_ROOT"
-echo "  SQLITE_ROOT=$SQLITE_ROOT"
 EOF
+
+# Add echo statements only for non-system libraries
+if ! $USING_SYSTEM_BOOST; then
+    echo "echo \"  BOOST_ROOT=$BOOST_ROOT\"" >> "$ENV_SCRIPT"
+else
+    echo "echo \"  Using system Boost\"" >> "$ENV_SCRIPT"
+fi
+if ! $USING_SYSTEM_JSON; then
+    echo "echo \"  NLOHMANN_JSON_ROOT=$NLOHMANN_JSON_ROOT\"" >> "$ENV_SCRIPT"
+else
+    echo "echo \"  Using system nlohmann_json\"" >> "$ENV_SCRIPT"
+fi
+if ! $USING_SYSTEM_SQLITE; then
+    echo "echo \"  SQLITE_ROOT=$SQLITE_ROOT\"" >> "$ENV_SCRIPT"
+else
+    echo "echo \"  Using system SQLite\"" >> "$ENV_SCRIPT"
+fi
 
 chmod +x "$ENV_SCRIPT"
 echo "Environment script created at $ENV_SCRIPT"
 echo "Source this script before running CMake:"
 echo "  source $ENV_SCRIPT"
 
-print_header "All dependencies installed"
+print_header "Dependencies resolved"
+echo "System libraries used:"
+if $USING_SYSTEM_BOOST; then echo "  - Boost"; fi
+if $USING_SYSTEM_JSON; then echo "  - nlohmann_json"; fi
+if $USING_SYSTEM_SQLITE; then echo "  - SQLite"; fi
+
+echo "Locally installed libraries:"
+if ! $USING_SYSTEM_BOOST; then echo "  - Boost: $BOOST_ROOT"; fi
+if ! $USING_SYSTEM_JSON; then echo "  - nlohmann_json: $NLOHMANN_JSON_ROOT"; fi
+if ! $USING_SYSTEM_SQLITE; then echo "  - SQLite: $SQLITE_ROOT"; fi
+
 echo "You can now build TetrisRoyale with:"
 echo "  source $ENV_SCRIPT"
 echo "  mkdir -p build && cd build"

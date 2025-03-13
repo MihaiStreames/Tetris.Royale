@@ -6,8 +6,8 @@
 #include <vector>
 #include <map>
 
-#include "tetromino.hpp"
-#include "types.hpp"
+#include "Tetromino.hpp"
+#include "Types.hpp"
 
 using TempMatrix = std::vector<std::vector<int>>;
 

@@ -4,9 +4,11 @@
 #include <vector>
 #include <string>
 #include <ftxui/dom/elements.hpp>
-#include "gameMatrix.hpp"
-#include "data/viewTestData.hpp"
-#include "tetromino.hpp"
+#include "viewTestData.hpp"
+
+
+#include "GameMatrix.hpp"
+#include "Tetromino.hpp"
 
 struct str;
 
