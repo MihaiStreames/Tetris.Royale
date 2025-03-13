@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Dependency installation script for TetrisRoyale
 
 set -e # Exit on error

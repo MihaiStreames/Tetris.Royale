@@ -18,3 +18,4 @@ CMakeCache.txt
 /.pytest_cache
 __pycache__
 
+client_config.json
