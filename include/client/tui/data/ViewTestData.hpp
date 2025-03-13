@@ -19,23 +19,17 @@ struct TestGameMode {
     };
 };
 
-struct PlayerScore
-{
-    int rank;
-    std::string name;
-    int score;
-};
-
 struct Notification
 {
     std::string message;
 };
 
-struct ChatMessage
+struct TestChatMessage
 {
     std::string from;
     std::string text;
 };
+
 
 struct LobbyInfo {
     std::string lobbyID;
@@ -52,13 +46,6 @@ struct TestData
     // Title
     std::string gameTitle = "TETRIS ROYALE";
 
-    // Leaderboard
-    std::vector<PlayerScore> leaderboardData{
-        {1, "Player1", 100000},
-        {2, "Player2", 80000},
-        {3, "Player3", 60000},
-    };
-
     // Notifications
     std::vector<Notification> notifications{
         {"PlayerX sent you a game invite!"},
@@ -71,11 +58,11 @@ struct TestData
                                         "Player7", "Player8"};
 
     // Conversations: each friend has a sequence of messages
-    std::map<std::string, std::vector<ChatMessage>> conversations{
-        {"Player1", {{"Player1", "Hello!"}, {"Me", "Hi Player1!"}}},
-        {"Player2", {{"Player2", "Hello!"}, {"Me", "Hi Player2!"}}},
-        {"Player3", {{"Player3", "Hello!"}, {"Me", "Hi Player3!"}}},
-        {"Player4", {{"Player4", "Hello!"}, {"Me", "Hi Player4!"}}},
+    std::map<std::string, std::vector<TestChatMessage>> conversations{
+         {"Player1", {{"Player1", "Hello!"}, {"Me", "Hi Player1!"}}},
+         {"Player2", {{"Player2", "Hello!"}, {"Me", "Hi Player2!"}}},
+         {"Player3", {{"Player3", "Hello!"}, {"Me", "Hi Player3!"}}},
+         {"Player4", {{"Player4", "Hello!"}, {"Me", "Hi Player4!"}}},
     };
 
     // (Login/Register)

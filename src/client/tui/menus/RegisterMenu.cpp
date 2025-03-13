@@ -3,45 +3,62 @@
 using namespace ftxui;
 
 void
-registerMenu()
+registerMenu(ClientSession& clientSession)
 {
-    auto& data = testData;
+
     auto screen = ScreenInteractive::Fullscreen();
 
     auto titlebox = Renderer(
         [&]
-        { return hbox({text(data.gameTitle) | bold | color(Color::Green1)}); });
+        { return hbox({text(GAME_TITLE) | bold | color(Color::Green1)}); });
 
     // ------- USERNAME AND PASSWORD INPUTS -------- //
-    Component inputUsername = Input(&data.username, "Type in your username");
+
+    std::string inputUsernameString;
+    std::string inputPasswordString;
+    std::string confirmPasswordString;
+
+    Component inputUsername = Input(&inputUsernameString, "Type in your username");
 
     InputOption passwordOption;
-    passwordOption.password = true;
+    passwordOption.password = true;  // hide pwd
     Component inputPassword =
-        Input(&data.password, "Type in your password", passwordOption);
+        Input(&inputPasswordString, "Type in your password", passwordOption);
     Component inputConfirmPassword =
-        Input(&data.passwordConfirm, "Confirm your password", passwordOption);
+        Input(&confirmPasswordString, "Confirm your password", passwordOption);
 
-    std::string error_message;
+    std::string errorMessage;
+
     // -------- BUTTONS  ----------- //
     auto registerButton =
         Button("Register",
-               [&screen, &data, &error_message]
+               [&screen, &inputUsernameString, &inputPasswordString, &confirmPasswordString, &clientSession, &errorMessage]
                {
-                   if (data.username.empty() || data.password.empty() ||
-                       data.passwordConfirm.empty())
+
+                   if (inputUsernameString.empty() || inputPasswordString.empty() || confirmPasswordString.empty())
                    {
-                       error_message = "Please fill in all fields";
+                       errorMessage = "Please fill in all fields";
                    }
-                   else if (data.password != data.passwordConfirm)
-                   {
-                       error_message = "Passwords do not match";
+                   else if (inputPasswordString != confirmPasswordString) {
+                       errorMessage = "Passwords do not match";
                    }
                    else
                    {
-                       currMenu = MenuState::loginMenu;
-                       screen.Exit();
-                   }
+                       StatusCode status = clientSession.registerPlayer(inputUsernameString, inputPasswordString);
+                       if (status == StatusCode::SUCCESS)
+                       {
+                           currMenu = MenuState::loginMenu;
+                           screen.Exit();
+                       }
+                       else if (status == StatusCode::ERROR_USERNAME_TAKEN)
+                       {
+                           errorMessage = "Username already taken";
+                       }
+                       else
+                       {
+                           errorMessage = "Registration failed. Please try again.";
+                       }
+                     }
                });
 
     auto loginButton =
@@ -53,7 +70,7 @@ registerMenu()
                    screen.Exit();
                });
 
-    auto quitterButton = Button("Quitter",
+    auto quitterButton = Button("Quit",
                                 [&screen]
                                 {
                                     currMenu = MenuState::quitter;
@@ -79,7 +96,7 @@ registerMenu()
         [&]
         {
             return hbox({vbox(
-                {text(error_message) | color(Color::Red), // Message d'erreur
+                {text(errorMessage) | color(Color::Red), // Message d'erreur
                  hbox(text("Username: ") | color(Color::Green1),
                       inputUsername->Render()),
                  hbox(text("Password: ") | color(Color::Green1),

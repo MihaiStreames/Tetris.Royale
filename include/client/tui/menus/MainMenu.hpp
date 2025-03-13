@@ -17,6 +17,7 @@
 #include "ftxui/util/ref.hpp"
 
 #include "MenuHandler.hpp"
-#include "ViewTestData.hpp"
+#include "Common.hpp"
+#include "ClientSession.hpp"
 
-void mainMenu();
+void mainMenu(ClientSession &session);

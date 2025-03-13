@@ -12,5 +12,7 @@
 #include "ftxui/util/ref.hpp"
 
 #include "MenuHandler.hpp"
+#include "Common.hpp"
+#include "ClientSession.hpp"
 
-void registerMenu();
+void registerMenu(ClientSession& clientSession);

@@ -17,12 +17,12 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
-class ClientSession
-{
-  public:
+class ClientSession {
+public:
     // public here
-    ClientSession(const std::string& server_ip, int lobby_port, int db_port,
+    ClientSession(const std::string &server_ip, int lobby_port, int db_port,
                   bool debug = false);
+
     ~ClientSession();
 
     DBRequestManager dbRequestManager;
@@ -30,63 +30,107 @@ class ClientSession
 
     // Getters for player info
     [[nodiscard]] std::string getServerIP();
+
     [[nodiscard]] int getLobbyPort();
+
     [[nodiscard]] int getDBPort();
+
     [[nodiscard]] std::string getUsername();
+
     [[nodiscard]] std::string getAccountID();
+
     [[nodiscard]] std::string getToken();
+
     [[nodiscard]] int getBestScore();
-    [[nodiscard]] std::vector<std::string>& getFriendList();
-    [[nodiscard]] std::vector<std::string>& getPendingFriendRequests();
+
+    void updateLocalMessages(const std::string &otherAccountID,
+                             const ChatMessage &message);
+
+    [[nodiscard]] std::vector<std::string> &getFriendList();
+
+    [[nodiscard]] std::vector<std::string> &getPendingFriendRequests();
+
+    // TODO: Get internal messages!!
 
     // Setters for updating local session info
-    void setUsername(const std::string& username);
-    void setAccountID(const std::string& accountID);
-    void setToken(const std::string& token);
+
+    void setUsername(const std::string &username);
+    void setAccountID(const std::string &accountID);
+
+    void setToken(const std::string &token);
+
     void setBestScore(int score);
-    void setFriendList(const std::vector<std::string>& friends);
-    void setPendingFriendRequests(const std::vector<std::string>& requests);
+
+    void setFriendList(const std::vector<std::string> &friends);
+
+    void setPendingFriendRequests(const std::vector<std::string> &requests);
+
+    // TODO: Set messages internally!!
 
     // Database operations
-    [[nodiscard]] StatusCode loginPlayer(const std::string& username, const std::string& password);
-    void registerPlayer(const std::string& username,
-                        const std::string& password);
+
+    [[nodiscard]] StatusCode loginPlayer(const std::string &username, const std::string &password);
+
+    [[nodiscard]] StatusCode registerPlayer(const std::string &username,
+                                            const std::string &password);
+
+    [[nodiscard]] std::vector<ChatMessage> getPlayerMessages(const std::string &otherAccountID);
+
+    [[nodiscard]] std::vector<PlayerScore> getLeaderboard(int limit = 5);
+
     void fetchPlayerData(); // Get full player info from DB (username,
-                            // bestScore, friend lists, etc.)
-    void updatePlayer(const std::string& newName,
-                      const std::string& newPassword);
+    // bestScore, friend lists, etc.)
+    void updatePlayer(const std::string &newName,
+                      const std::string &newPassword);
+
     void postScore(int score);
 
+    [[nodiscard]] StatusCode sendMessage(const std::string &receiverID,
+                                        const std::string &messageContent);
+
     // Friend-related operations
-    void sendFriendRequest(const std::string& receiverID);
-    void acceptFriendRequest(const std::string& senderID);
-    void declineFriendRequest(const std::string& senderID);
-    void removeFriend(const std::string& friendID);
+    void sendFriendRequest(const std::string &receiverID);
+
+    void acceptFriendRequest(const std::string &senderID);
+
+    void declineFriendRequest(const std::string &senderID);
+
+    void removeFriend(const std::string &friendID);
 
     // ================== Game operations ================== //
 
     [[nodiscard]] ClientStatus getOwnStatus();
-    [[nodiscard]] ClientStatus getPlayerStatus(const std::string& username);
+
+    [[nodiscard]] ClientStatus getPlayerStatus(const std::string &username);
 
     void startSession();
+
     void endSession();
 
     [[nodiscard]] std::unordered_map<std::string, std::string>
     getPublicLobbiesList();
+
     void createAndJoinLobby(GameMode gameMode, int maxPlayers, bool isPublic);
-    void joinLobby(const std::string& lobbyID);
-    void spectateLobby(const std::string& lobbyID);
+
+    void joinLobby(const std::string &lobbyID);
+
+    void spectateLobby(const std::string &lobbyID);
 
     [[nodiscard]] LobbyState getCurrentLobbyState();
+
     void leaveLobby();
+
     void readyUp();
+
     void unreadyUp();
 
-    void sendKeyStroke(const Action& action);
+    void sendKeyStroke(const Action &action);
+
     [[nodiscard]] PlayerState getPlayerState();
+
     [[nodiscard]] SpectatorState getSpectatorState();
 
-  private:
+private:
     // private here
 
     std::string username_;
@@ -95,6 +139,7 @@ class ClientSession
     int bestScore_;
     std::vector<std::string> friendList_;
     std::vector<std::string> pendingFriendRequests_;
+    std::unordered_map<std::string, std::vector<ChatMessage>> conversations_;
     bool debug_;
 };
 

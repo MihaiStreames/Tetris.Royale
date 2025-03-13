@@ -60,7 +60,11 @@ enum class StatusCode
     ERROR_NOT_SUPPOSED_TO_HAPPEN,
 
     ERROR_LOGGING_IN,
+    ERROR_USERNAME_TAKEN,
     ERROR_REGISTERING,
+
+    ERROR_INVALID_MESSAGE,
+    ERROR_SENDING_MESSAGE,
 
 };
 
@@ -76,10 +80,23 @@ const std::unordered_map<Action, Action> REVERSE_ACTIONS_MAP = {
     {Action::RotateRight, Action::RotateLeft},
 };
 
-const std::vector<Action> BLOCKED_ACTIONS = {
+const std::vector BLOCKED_ACTIONS = {
     Action::MoveDown,   Action::MoveLeft,    Action::MoveRight,
     Action::RotateLeft, Action::RotateRight, Action::InstantFall,
     Action::UseBag,     Action::UseMalus,    Action::UseBonus,
+};
+
+struct PlayerScore
+{
+    int rank;
+    std::string name;
+    int score;
+};
+
+struct ChatMessage
+{
+    std::string from;
+    std::string text;
 };
 
 // gamemode for the lobby

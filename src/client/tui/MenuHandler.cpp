@@ -21,11 +21,11 @@ main()
             break;
 
         case MenuState::registerMenu:
-            registerMenu();
+            registerMenu(clientSession);
             break;
 
         case MenuState::mainMenu:
-            mainMenu();
+            mainMenu(clientSession);
             break;
 
         case MenuState::settingsMenu:

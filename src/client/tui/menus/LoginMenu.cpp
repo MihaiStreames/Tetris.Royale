@@ -2,9 +2,6 @@
 
 using namespace ftxui;
 
-
-std::string errorMessage;
-
 void
 loginMenu(ClientSession& clientSession)
 {
@@ -29,16 +26,18 @@ loginMenu(ClientSession& clientSession)
     Component inputPassword =
         Input(&inputPasswordString, "Type in your password", passwordOption);
 
+    std::string errorMessage;
+
     // -------- BUTTONS  ----------- //
     auto loginButton =
         Button("Login",
-               [&screen, &clientSession, &inputUsernameString, &inputPasswordString]
+               [&screen, &clientSession, &inputUsernameString, &inputPasswordString, &errorMessage]
                {
 
                     if (inputUsernameString.empty() || inputPasswordString.empty()) {
                         errorMessage = "Please fill in both fields";
                     // check if login worked
-                    } else if ((clientSession.loginPlayer(inputUsernameString, inputPasswordString)) == StatusCode::SUCCESS) {
+                    } else if (clientSession.loginPlayer(inputUsernameString, inputPasswordString) == StatusCode::SUCCESS) {
                         currMenu = MenuState::mainMenu;
                         screen.Exit();
                     } else {
