@@ -1,12 +1,19 @@
+
+# IDE stuff
+/.vscode
 /.idea
-.vscode
 
+# CMake stuff
 /cmake-build-*
-
-/build/.cmake
-/build/CMakeFiles
 CMakeCache.txt
 
+# Build stuff
+/build/.cmake
+/build/CMakeFiles
 /build
 
+# Python stuff
+/.venv
+/.pytest_cache
 __pycache__
+
