@@ -28,9 +28,10 @@ void preLobbyMenu() {
         screen.Exit();
     });
 
-    auto LeaveButton = Button("Back to Main Menu",[]{
+    auto LeaveButton = Button("Back to Main Menu",[&screen]{
         //Quitter le preLobby
-        //currMenu = MenuState::mainMenu();
+        currMenu = MenuState::mainMenu;
+        screen.Exit();
     });
 
 
