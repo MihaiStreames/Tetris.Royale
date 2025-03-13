@@ -4,24 +4,21 @@
 std::string currGameMode = "Classic";
 
 std::string
-gameDescription(const GameMode& gameMode)
+gameDescription(const TestGameMode& gameMode)
 {
     if (currGameMode == "Classic")
     {
         return gameMode.descriptions.at("ClassicButton");
     }
-    else if (currGameMode == "Duel")
+    if (currGameMode == "Duel")
     {
         return gameMode.descriptions.at("DuelButton");
     }
-    else if (currGameMode == "Royale")
+    if (currGameMode == "Royale")
     {
         return gameMode.descriptions.at("RoyaleButton");
     }
-    else
-    {
-        return "";
-    }
+    return "";
 }
 
 void
@@ -30,13 +27,13 @@ inLobbyMenu()
     using namespace ftxui;
     auto screen = ScreenInteractive::Fullscreen();
 
-    auto data = TestData();
-    auto gameMode = GameMode();
+    // Use the global testData instead of creating a new TestData instance
+    // This ensures we're using the shared TestData with its gameMode
 
     // Title
     auto titlebox = Renderer(
         [&]
-        { return hbox({text(data.gameTitle) | bold | color(Color::Green1)}); });
+        { return hbox({text(testData.gameTitle) | bold | color(Color::Green1)}); });
 
     // Menu buttons
     auto ClassicButton = Button("Classic",
@@ -99,7 +96,7 @@ inLobbyMenu()
                          hbox({ClassicButton->Render() | color(Color::Green1),
                                DuelButton->Render() | color(Color::Green1),
                                RoyaleButton->Render() | color(Color::Green1)}),
-                         text(gameDescription(gameMode)) |
+                         text(gameDescription(testData.gameMode)) |
                              color(Color::Green1)}) |
                    border;
         });
@@ -108,7 +105,7 @@ inLobbyMenu()
         [&]
         {
             Elements lines;
-            for (const auto& player : data.players)
+            for (const auto& player : testData.players)
             {
                 lines.push_back(text(player.first + " : " + player.second));
             }
@@ -119,7 +116,7 @@ inLobbyMenu()
         [&]
         {
             Elements lines;
-            for (auto& spectator : data.spectators)
+            for (auto& spectator : testData.spectators)
             {
                 lines.push_back(text(spectator));
             }
@@ -131,7 +128,7 @@ inLobbyMenu()
         [&]
         {
             return window(
-                       text("Lobby : " + data.lobbyName) | color(Color::Green1),
+                       text("Lobby : " + testData.lobbyName) | color(Color::Green1),
                        vbox({GameModeBox->Render() | color(Color::Green1),
                              PlayersBox->Render() | color(Color::Green1),
                              SpectatorsBox->Render() | color(Color::Green1),
@@ -158,11 +155,11 @@ inLobbyMenu()
         Button("Send",
                [&]
                {
-                   if (!messageInputBuffer.empty())
+                   if (!messageInputBuffer.empty() && !testData.friendList.empty())
                    {
                        std::string selectedFriend =
-                           data.friendList[selectedFriendIndex];
-                       data.conversations[selectedFriend].push_back(
+                           testData.friendList[selectedFriendIndex];
+                       testData.conversations[selectedFriend].push_back(
                            {"Me", messageInputBuffer});
                        messageInputBuffer.clear();
                    }
@@ -181,12 +178,12 @@ inLobbyMenu()
                [&]
                {
                    if ((currentFriendPage + 1) * friendsPerPage <
-                       static_cast<int>(data.friendList.size()))
+                       static_cast<int>(testData.friendList.size()))
                        currentFriendPage++;
                });
 
     // Friend selector
-    auto friendSelector = Menu(&data.friendList, &selectedFriendIndex);
+    auto friendSelector = Menu(&testData.friendList, &selectedFriendIndex);
 
     auto friendsRenderer = Renderer(
         [&]() -> Element
@@ -194,13 +191,13 @@ inLobbyMenu()
             Elements lines;
             int start = currentFriendPage * friendsPerPage;
             int end = std::min(start + friendsPerPage,
-                               static_cast<int>(data.friendList.size()));
+                               static_cast<int>(testData.friendList.size()));
 
             for (int i = start; i < end; i++)
             {
                 lines.push_back(
                     text((i == selectedFriendIndex ? "-> " : "   ") +
-                         data.friendList[i]));
+                         testData.friendList[i]));
             }
 
             return window(
@@ -217,9 +214,13 @@ inLobbyMenu()
     auto messagesRenderer = Renderer(
         [&]() -> Element
         {
-            std::string selectedFriend = data.friendList[selectedFriendIndex];
+            if (testData.friendList.empty()) {
+                return window(text("Messages"), text("No friends available.") | color(Color::Red));
+            }
+
+            std::string selectedFriend = testData.friendList[selectedFriendIndex];
             Elements lines;
-            for (auto& msg : data.conversations[selectedFriend])
+            for (auto& msg : testData.conversations[selectedFriend])
             {
                 lines.push_back(text(msg.from + ": " + msg.text));
             }
@@ -241,7 +242,7 @@ inLobbyMenu()
                                   [&]
                                   {
                                       // e.g.
-                                      // data.friendList.push_back(friendName);
+                                      // testData.friendList.push_back(friendName);
                                       // friendName.clear();
                                   });
 

@@ -11,6 +11,14 @@
 
 using TempMatrix = std::vector<std::vector<int>>;
 
+struct TestGameMode {
+    std::map<std::string, std::string> descriptions = {
+        {"ClassicButton", "Play against others in classic Tetris mode. Clear lines to score points."},
+        {"DuelButton", "Play against a single opponent in a head-to-head battle."},
+        {"RoyaleButton", "Battle royale mode with power-ups and special abilities."}
+    };
+};
+
 struct PlayerScore
 {
     int rank;
@@ -27,6 +35,14 @@ struct ChatMessage
 {
     std::string from;
     std::string text;
+};
+
+struct LobbyInfo {
+    std::string lobbyID;
+    std::string gameMode;
+    int nbPlayers;
+    int nbSpectators;
+    std::string status;
 };
 
 /// Store all placeholder data here; in real usage, populate these from your
@@ -95,6 +111,28 @@ struct TestData
 
     Tetromino holdTetromino = Tetromino(PieceType::I);
     Tetromino nextTetromino = Tetromino(PieceType::O);
+
+    // Lobby Data
+    std::string lobbyName = "Test Lobby";
+    std::vector<LobbyInfo> lobbies = {
+        {"AABBCC", "Classic", 2, 1, "Waiting"},
+        {"DDEEFF", "Royale", 5, 0, "Ready"},
+        {"GGHHII", "Duel", 2, 3, "Full"}
+    };
+
+    // Player and Spectator Maps for Lobby
+    std::map<std::string, std::string> players = {
+        {"Player1", "Ready"},
+        {"Player2", "Not Ready"},
+        {"Player3", "Ready"},
+    };
+
+    std::vector<std::string> spectators = {
+        "Spectator1",
+        "Spectator2"
+    };
+
+    TestGameMode gameMode;
 };
 
 /// Extern to be defined in a .cpp or used directly as a global.
