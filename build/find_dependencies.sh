@@ -4,6 +4,13 @@
 
 set -e # Exit on error
 
+# We check for curl and unzip, as they are required for downloading and extracting dependencies
+if ! command -v unzip &> /dev/null; then
+    echo "unzip could not be found, installing..."
+    sudo apt-get update
+    sudo apt-get install -y unzip
+fi
+
 # Configuration
 INSTALL_ROOT="$HOME/tetris-deps"
 BOOST_VERSION="1.87.0"
@@ -114,6 +121,12 @@ if [ ! -d "$SQLITE_ROOT/include" ]; then
     echo "Extracting SQLite..."
     unzip -q -o "$SQLITE_ARCHIVE" -d "$INSTALL_ROOT/downloads"
 
+    # Verify the source file exists
+    if [ ! -f "$INSTALL_ROOT/downloads/sqlite-amalgamation-${SQLITE_VERSION}/sqlite3.c" ]; then
+        echo "Error: sqlite3.c not found in the extracted archive."
+        exit 1
+    fi
+    
     # Copy header file
     cp "$INSTALL_ROOT/downloads/sqlite-amalgamation-${SQLITE_VERSION}/sqlite3.h" "$SQLITE_ROOT/include/"
 

@@ -4,18 +4,19 @@
 start_time=$(date +%s)
 
 # TODO : fix the find_dependencies.sh script (somehow fails with zip)
-# echo "Running find_dependencies.sh..."
-# start_dep_time=$(date +%s)
-# sh ./build/find_dependencies.sh
-# 
-# if [ $? -ne 0 ]; then
-#     echo "find_dependencies.sh failed. Exiting."
-#     exit 1
-# fi
-# end_dep_time=$(date +%s)
-# dep_time=$((end_dep_time - start_dep_time))
-# echo "find_dependencies.sh completed in $dep_time seconds."
+echo "Running find_dependencies.sh..."
+start_dep_time=$(date +%s)
+sh ./build/find_dependencies.sh
+ 
+if [ $? -ne 0 ]; then
+    echo "find_dependencies.sh failed. Exiting."
+    exit 1
+fi
+end_dep_time=$(date +%s)
+dep_time=$((end_dep_time - start_dep_time))
+echo "find_dependencies.sh completed in $dep_time seconds."
 
+source "$HOME/tetris-deps/setup-env.sh"
 
 echo "Creating test_build directory..."
 mkdir -p test_build

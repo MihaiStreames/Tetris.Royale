@@ -20,8 +20,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # Set policies (yeah well I don't like the new behavior & the warnings lol)
-cmake_policy(SET CMP0167 NEW)
-
+# cmake_policy(SET CMP0167 NEW)
+# ok so for some reason this policy is not available in 3.22, so we'll just ignore it
 
 # Compiler flags function
 function(set_target_compile_options target)
