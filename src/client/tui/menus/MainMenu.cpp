@@ -1,319 +1,234 @@
 #include "MainMenu.hpp"
+#include "Common.hpp"
 
-void
-mainMenu(ClientSession &clientSession) {
-    using namespace ftxui;
+using namespace ftxui;
+
+void showMainMenu(ClientSession& session) {
     auto screen = ScreenInteractive::Fullscreen();
-    std::vector<std::string> &friendList = clientSession.getFriendList();
-    std::vector<std::string> &pendingFriendRequests = clientSession.getPendingFriendRequests();
 
-    // Title
-    auto titlebox = Renderer(
-        [&] { return hbox({text(GAME_TITLE) | bold | color(Color::Green1)}); });
+    // Fetch player data
+    session.fetchPlayerData();
 
-    // Menu buttons
-    auto playButton = Button("Play",
-                             [&screen] {
-                                 currMenu = MenuState::preLobbyMenu;
-                                 screen.Exit();
-                             });
+    // Tab selection
+    int activeTab = 0;
+    std::vector<std::string> tabs = {"Home", "Friends", "Messages", "Leaderboard"};
+    auto tabToggle = Toggle(&tabs, &activeTab);
 
-    auto settingsButton = Button("Settings",
-                                 [&screen] {
-                                     currMenu = MenuState::settingsMenu;
-                                     screen.Exit();
-                                 });
+    // Friends tab
+    std::vector<std::string>& friendList = session.getFriendList();
+    std::vector<std::string>& pendingRequests = session.getPendingFriendRequests();
 
-    bool showLeaderboard = true;
-    auto hideShowLeaderboardButton = Button(
-        "Hide/Show Leaderboard", [&] { showLeaderboard = !showLeaderboard; });
+    // Friend request management
+    std::string friendToAdd;
+    auto friendInput = Input(&friendToAdd, "Friend's username");
 
-    auto logoutButton = Button("Logout",
-                               [&screen] {
-                                   currMenu = MenuState::loginMenu;
-                                   screen.Exit();
-                               });
+    auto addFriendButton = Button("Add Friend", [&] {
+        if (!friendToAdd.empty()) {
+            session.sendFriendRequest(friendToAdd);
+            friendToAdd.clear();
+            // Refresh data
+            session.fetchPlayerData();
+        }
+    });
 
-    // Leaderboard
-    auto leaderboardRenderer = Renderer(
-        [&]() -> Element {
-            Elements rows; {
-                Elements cols;
-                cols.push_back(text("Rank") | size(WIDTH, EQUAL, 10));
-                cols.push_back(text("Name") | size(WIDTH, EQUAL, 10));
-                cols.push_back(text("Score") | size(WIDTH, EQUAL, 10));
-                rows.push_back(hbox(std::move(cols)) | border);
-            }
-
-            const std::vector<PlayerScore> leaderboardData = clientSession.getLeaderboard(5);
-
-            for (auto &player: leaderboardData) {
-                Elements cols;
-                cols.push_back(text(std::to_string(player.rank)) |
-                               size(WIDTH, EQUAL, 10));
-                cols.push_back(text(player.name) | size(WIDTH, EQUAL, 10));
-                cols.push_back(text(std::to_string(player.score)) |
-                               size(WIDTH, EQUAL, 10));
-                rows.push_back(hbox(std::move(cols)) | border);
-            }
-            return window(text("Leaderboard") | color(Color::Green1),
-                          vbox(std::move(rows)));
-        });
-
-    // !! This is a placeholder comment for the actual notif code, time constrain we cant do it now
-    // Notifications
-    //auto notificationsContainer = Container::Vertical({});
-    //std::vector<Component> notificationRows;
-    //std::function<void()> rebuildNotificationsUI;
-    //rebuildNotificationsUI = [&]
-    //{
-    //    notificationRows.clear();
-    //    notificationsContainer->DetachAllChildren();
-    //
-    //    // reference the notifications from placeholder
-    //    for (size_t i = 0; i < data.notifications.size(); i++)
-    //    {
-    //        auto acceptButton = Button(
-    //            "Accept",
-    //            [&, i]
-    //            {
-    //                std::cout
-    //                    << "Accepted invite: " << data.notifications[i].message
-    //                    << std::endl;
-    //                data.notifications.erase(data.notifications.begin() + i);
-    //                rebuildNotificationsUI();
-    //            });
-    //        auto declineButton = Button(
-    //            "Decline",
-    //            [&, i]
-    //            {
-    //                std::cout
-    //                    << "Declined invite: " << data.notifications[i].message
-    //                    << std::endl;
-    //                data.notifications.erase(data.notifications.begin() + i);
-    //                rebuildNotificationsUI();
-    //            });
-    //        auto notifText = Renderer(
-    //            [i, &data]
-    //            {
-    //                return text(data.notifications[i].message) |
-    //                       color(Color::Green1);
-    //            });
-    //        auto row = Container::Horizontal({
-    //            notifText,
-    //            acceptButton,
-    //            declineButton,
-    //        });
-    //        notificationRows.push_back(row);
-    //        notificationsContainer->Add(row);
-    //    }
-    //};
-    //rebuildNotificationsUI();
-    //
-    //auto notificationsRenderer =
-    //    Renderer(notificationsContainer,
-    //             [&]() -> Element
-    //             {
-    //                 Elements lines;
-    //                 for (auto& row : notificationRows)
-    //                 {
-    //                     lines.push_back(row->Render());
-    //                 }
-    //                 return window(text("Notifications") | color(Color::Green1),
-    //                               vbox(std::move(lines)));
-    //             });
-
-    // Left menu container
-    auto leftMenuContainer = Container::Vertical(
-        {playButton, settingsButton, hideShowLeaderboardButton, logoutButton});
-
-    auto leftMenuRenderer = Renderer(
-        leftMenuContainer,
-        [&]() -> Element {
-            Elements btns;
-            btns.push_back(playButton->Render() | color(Color::Green1));
-            btns.push_back(settingsButton->Render() | color(Color::Green1));
-            btns.push_back(hideShowLeaderboardButton->Render() |
-                           color(Color::Green1));
-            btns.push_back(logoutButton->Render() | color(Color::Green1));
-
-            auto buttonsBox = vbox(std::move(btns));
-            auto mainMenuWindow =
-                    window(text("Main Menu") | color(Color::Green1), buttonsBox);
-            Elements col;
-            col.push_back(mainMenuWindow);
-            col.push_back(separator());
-            if (showLeaderboard) {
-                col.push_back(leaderboardRenderer->Render());
-                col.push_back(separator());
-            }
-            return vbox(std::move(col));
-        });
-
-    // Friend list / chat
-    int currentFriendPage = 0;
-    const int friendsPerPage = 5;
+    // Messaging
     int selectedFriendIndex = 0;
-
-    // Input buffer for new messages
-    std::string messageInputBuffer;
-    auto messageInput = Input(&messageInputBuffer, "Type your message...");
-
-    auto sendButton =
-            Button("Send",
-                   [&] {
-                       if (!messageInputBuffer.empty() && selectedFriendIndex < friendList.size()) {
-                           std::string selectedFriend = friendList[selectedFriendIndex];
-                           // Send the message through the client session
-                           clientSession.sendMessage(selectedFriend, messageInputBuffer);
-                           messageInputBuffer.clear();
-                       }
-                   });
-
-    // Pagination
-    auto prevFriendButton = Button("Prev",
-                                   [&] {
-                                       if (currentFriendPage > 0)
-                                           currentFriendPage--;
-                                   });
-
-    auto nextFriendButton =
-            Button("Next",
-                   [&] {
-                       if ((currentFriendPage + 1) * friendsPerPage <
-                           static_cast<int>(friendList.size()))
-                           currentFriendPage++;
-                   });
-
-    // Friend selector
     auto friendSelector = Menu(&friendList, &selectedFriendIndex);
 
-    auto friendsRenderer = Renderer(
-        [&]() -> Element {
-            Elements lines;
-            int start = currentFriendPage * friendsPerPage;
-            int end = std::min(start + friendsPerPage,
-                               static_cast<int>(friendList.size()));
+    std::string messageInput;
+    auto messageTextInput = Input(&messageInput, "Type message");
 
-            if (friendList.empty()) {
-                return window(
-                    text("Friends"),
-                    vbox({
-                        text("No friends yet") | center,
+    auto sendMessageButton = Button("Send", [&] {
+        if (!messageInput.empty() && !friendList.empty()) {
+            std::string recipient = friendList[selectedFriendIndex];
+            session.sendMessage(recipient, messageInput);
+            messageInput.clear();
+        }
+    });
+
+    // Navigation buttons
+    auto playButton = Button("Play", [&] {
+        currentScreen = ScreenState::LobbyBrowser;
+        screen.Exit();
+    });
+
+    auto logoutButton = Button("Logout", [&] {
+        session.endSession();
+        currentScreen = ScreenState::Login;
+        screen.Exit();
+    });
+
+    // Notifications for friend requests
+    std::vector<Component> requestComponents;
+    for (size_t i = 0; i < pendingRequests.size(); i++) {
+        // Using a copy of i to avoid capture issues
+        size_t index = i;
+
+        auto acceptButton = Button("Accept", [&, index] {
+            if (index < pendingRequests.size()) {
+                session.acceptFriendRequest(pendingRequests[index]);
+                session.fetchPlayerData();
+            }
+        });
+
+        auto declineButton = Button("Decline", [&, index] {
+            if (index < pendingRequests.size()) {
+                session.declineFriendRequest(pendingRequests[index]);
+                session.fetchPlayerData();
+            }
+        });
+
+        auto container = Container::Horizontal({acceptButton, declineButton});
+        requestComponents.push_back(container);
+    }
+
+    // Main container for interactive components
+    auto container = Container::Vertical({
+        tabToggle,
+        playButton,
+        logoutButton,
+        friendSelector,
+        friendInput,
+        addFriendButton,
+        messageTextInput,
+        sendMessageButton
+    });
+
+    // Add friend request components
+    for (auto& comp : requestComponents) {
+        container->Add(comp);
+    }
+
+    // Main renderer
+    auto renderer = Renderer(container, [&] {
+        // Get fresh data for leaderboard
+        std::vector<PlayerScore> leaderboard = session.getLeaderboard(10);
+
+        // Content based on active tab
+        Element content;
+
+        switch (activeTab) {
+            case 0: // Home
+                content = vbox({
+                    text("Welcome, " + session.getUsername()) | bold,
+                    text("Best Score: " + std::to_string(session.getBestScore())),
+                    separator(),
+                    playButton->Render() | center
+                });
+                break;
+
+            case 1: // Friends
+                {
+                    // Friend list
+                    Elements friendElements;
+                    if (friendList.empty()) {
+                        friendElements.push_back(text("You have no friends yet"));
+                    } else {
+                        for (const auto& friendName : friendList) {
+                            friendElements.push_back(text(friendName));
+                        }
+                    }
+
+                    // Friend requests
+                    Elements requestElements;
+                    for (size_t i = 0; i < pendingRequests.size(); i++) {
+                        requestElements.push_back(
+                            hbox({
+                                text("Request from: " + pendingRequests[i]),
+                                requestComponents[i]->Render()
+                            })
+                        );
+                    }
+
+                    content = vbox({
+                        text("Friends") | bold,
+                        vbox(friendElements) | border,
+                        separator(),
+                        text("Friend Requests") | bold,
+                        vbox(requestElements) | border,
                         separator(),
                         hbox({
-                            prevFriendButton->Render(),
-                            text(" Page " + std::to_string(currentFriendPage + 1) + " "),
-                            nextFriendButton->Render()
+                            friendInput->Render(),
+                            addFriendButton->Render()
                         })
-                    }));
-            }
-
-            for (int i = start; i < end; i++) {
-                lines.push_back(
-                    text((i == selectedFriendIndex ? "-> " : "   ") +
-                         friendList[i]));
-            }
-
-            return window(
-                text("Friends"),
-                vbox({
-                    vbox(std::move(lines)),
-                    separator(),
-                    hbox({
-                        prevFriendButton->Render(),
-                        text(" Page " + std::to_string(currentFriendPage + 1) + " "),
-                        nextFriendButton->Render()
-                    })
-                }));
-        });
-
-    auto messagesRenderer = Renderer(
-        [&]() -> Element {
-            if (friendList.empty()) {
-                return window(text("Messages") | color(Color::Green1),
-                              text("Add friends to start chatting") | center);
-            }
-
-            std::string selectedFriend = friendList[selectedFriendIndex];
-            std::vector<ChatMessage> messages = clientSession.getPlayerMessages(selectedFriend);
-
-            Elements lines;
-            if (messages.empty()) {
-                lines.push_back(text("No messages yet") | center);
-            } else {
-                for (auto &msg: messages) {
-                    lines.push_back(text(msg.from + ": " + msg.text));
+                    });
                 }
-            }
+                break;
 
-            return vbox({
-                window(text("Messages with " + selectedFriend) |
-                       color(Color::Green1),
-                       vbox(std::move(lines))),
-                separator(),
-                hbox({
-                    messageInput->Render() | size(WIDTH, EQUAL, 30),
-                    sendButton->Render() | color(Color::Green1)
-                })
-            });
-        });
+            case 2: // Messages
+                {
+                    if (friendList.empty()) {
+                        content = text("Add friends to start messaging");
+                    } else {
+                        std::string selectedFriend = friendList[selectedFriendIndex];
+                        std::vector<ChatMessage> messages = session.getPlayerMessages(selectedFriend);
 
-    // Add friend (placeholder)
-    std::string friendName; // local buffer
-    auto friendInput = Input(&friendName, "Enter username...");
+                        Elements messageElements;
+                        if (messages.empty()) {
+                            messageElements.push_back(text("No messages yet"));
+                        } else {
+                            for (const auto& msg : messages) {
+                                messageElements.push_back(text(msg.from + ": " + msg.text));
+                            }
+                        }
 
-    // Add friend functionality
-    auto addFriendButton = Button("Add",
-                                  [&] {
-                                      if (!friendName.empty()) {
-                                          // Need to implement this in ClientSession
-                                          clientSession.sendFriendRequest(friendName);
-                                          friendName.clear();
-                                      }
-                                  });
+                        content = vbox({
+                            text("Chat with: " + selectedFriend) | bold,
+                            friendSelector->Render(),
+                            separator(),
+                            vbox(messageElements) | border | yframe,
+                            hbox({
+                                messageTextInput->Render(),
+                                sendMessageButton->Render()
+                            })
+                        });
+                    }
+                }
+                break;
 
-    auto friendAddRenderer = Renderer(
-        [&]() -> Element {
-            Elements row;
-            row.push_back(friendInput->Render() | size(WIDTH, EQUAL, 20));
-            row.push_back(addFriendButton->Render() | color(Color::Green1));
-            return window(text("Add Friend") | color(Color::Green1),
-                          hbox(std::move(row)));
-        });
+            case 3: // Leaderboard
+                {
+                    Elements leaderboardElements;
+                    leaderboardElements.push_back(
+                        hbox({
+                            text("Rank") | size(WIDTH, EQUAL, 8),
+                            text("Player") | size(WIDTH, EQUAL, 15),
+                            text("Score") | size(WIDTH, EQUAL, 10)
+                        }) | bold
+                    );
 
-    auto rightContainer = Container::Vertical(
-        {
-            friendSelector, prevFriendButton, nextFriendButton, messageInput,
-            sendButton, friendInput, addFriendButton
-        });
+                    for (const auto& entry : leaderboard) {
+                        leaderboardElements.push_back(
+                            hbox({
+                                text(std::to_string(entry.rank)) | size(WIDTH, EQUAL, 8),
+                                text(entry.name) | size(WIDTH, EQUAL, 15),
+                                text(std::to_string(entry.score)) | size(WIDTH, EQUAL, 10)
+                            })
+                        );
+                    }
 
-    auto rightSideRenderer = Renderer(
-        rightContainer,
-        [&]() -> Element {
-            return vbox({
-                friendsRenderer->Render(), messagesRenderer->Render(),
-                friendAddRenderer->Render()
-            });
-        });
+                    content = vbox({
+                        text("Leaderboard") | bold,
+                        vbox(leaderboardElements) | border
+                    });
+                }
+                break;
+        }
 
-    auto mainContainer =
-            Container::Horizontal({leftMenuContainer, rightContainer});
+        return vbox({
+            text("TETRIS ROYALE") | bold | center,
+            separator(),
+            tabToggle->Render(),
+            content,
+            separator(),
+            hbox({
+                filler(),
+                logoutButton->Render(),
+                filler()
+            })
+        }) | border | color(Color::Green);
+    });
 
-    auto mainBox = Renderer(
-        mainContainer,
-        [&]() -> Element {
-            Elements row;
-            row.push_back(leftMenuRenderer->Render() | size(WIDTH, EQUAL, 100));
-            row.push_back(rightSideRenderer->Render() |
-                          size(WIDTH, EQUAL, 100));
-            auto mainRow = hbox(std::move(row));
-            Elements col;
-            col.push_back(titlebox->Render());
-            col.push_back(separator() | color(Color::Green1));
-            col.push_back(mainRow);
-            return vbox(std::move(col));
-        });
-
-    screen.Loop(mainBox);
+    // Main loop
+    screen.Loop(renderer);
 }

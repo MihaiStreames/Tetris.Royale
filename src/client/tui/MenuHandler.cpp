@@ -1,51 +1,52 @@
 #include "MenuHandler.hpp"
+#include "Common.hpp"
+#include <iostream>
 
-// Set loginMenu comme menu initial
-MenuState currMenu;
+// Initialize the current screen to Login
+ScreenState currentScreen = ScreenState::Login;
 
-int
-main()
-{
+void runTetrisClient() {
+    // Create the client session
+    ClientSession session(MASTER_SERVER_IP, LOBBY_SERVER_PORT, DB_SERVER_PORT);
 
-    // instantiate the clientSession here
-    ClientSession clientSession = ClientSession(MASTER_SERVER_IP, LOBBY_SERVER_PORT, DB_SERVER_PORT);
-
-    while (true)
-    {
-        TestData data; // remplacer ici par une requete serveur
-        // Selon bouton appuyé dans chaque menu -> redirection dans menu demandé
-        switch (currMenu)
-        {
-        case MenuState::loginMenu:
-            loginMenu(clientSession);
+    // Main application loop
+    while (currentScreen != ScreenState::Exit) {
+        switch (currentScreen) {
+            case ScreenState::Login:
+                showLoginScreen(session);
             break;
 
-        case MenuState::registerMenu:
-            registerMenu(clientSession);
+            case ScreenState::Register:
+                showRegisterScreen(session);
             break;
 
-        case MenuState::mainMenu:
-            mainMenu(clientSession);
+            case ScreenState::MainMenu:
+                showMainMenu(session);
             break;
 
-        case MenuState::settingsMenu:
-            settingsMenu();
-            break;
-        case MenuState::inLobbyMenu:
-            inLobbyMenu(clientSession);
+            case ScreenState::LobbyBrowser:
+                showLobbyBrowser(session);
             break;
 
-        case MenuState::preLobbyMenu:
-            preLobbyMenu();
+            case ScreenState::InLobby:
+                showInLobbyScreen(session);
             break;
 
-        case MenuState::inGame:
-            inGameMenu(clientSession.getPlayerState());
+            case ScreenState::InGame:
+                showGameScreen(session);
             break;
 
-        case MenuState::quitter:
-            return 0;
+            default:
+                currentScreen = ScreenState::Exit;
+            break;
         }
     }
+
+    std::cout << "Thank you for playing Tetris Royale!" << std::endl;
+}
+
+// The main entry point
+int main() {
+    runTetrisClient();
     return 0;
 }

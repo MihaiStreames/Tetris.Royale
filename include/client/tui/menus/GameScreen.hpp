@@ -7,4 +7,4 @@
 #include "ftxui/component/screen_interactive.hpp"
 #include "MenuHandler.hpp"
 
-void showMainMenu(ClientSession& session);
+void showGameScreen(ClientSession& session);

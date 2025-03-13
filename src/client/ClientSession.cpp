@@ -142,7 +142,7 @@ ClientSession::loginPlayer(const std::string& username,
     {
         setAccountID(response.json.get<std::string>("accountID"));
         setUsername(response.json.get<std::string>("userName"));
-        std::cout << "Login successful. AccountID: " << getAccountID() << std::endl;
+        // std::cout << "Login successful. AccountID: " << getAccountID() << std::endl;
         return StatusCode::SUCCESS;
 
     }
@@ -167,7 +167,7 @@ ClientSession::registerPlayer(const std::string& username,
     {
         setAccountID(response.json.get<std::string>("accountID"));
         setUsername(response.json.get<std::string>("userName"));
-        std::cout << "Registration successful. AccountID: " << getAccountID() << std::endl;
+        // std::cout << "Registration successful. AccountID: " << getAccountID() << std::endl;
         return StatusCode::SUCCESS;
     }
     if (response.status == 400) { // Bad request
@@ -214,7 +214,7 @@ ClientSession::getLeaderboard(const int limit)
                 leaderboard.push_back(score);
             }
 
-            std::cout << "Fetched leaderboard with " << leaderboard.size() << " entries" << std::endl;
+            // std::cout << "Fetched leaderboard with " << leaderboard.size() << " entries" << std::endl;
         }
         catch (std::exception& e)
         {
@@ -284,7 +284,7 @@ ClientSession::getPlayerMessages(const std::string& otherAccountID)
             // Cache these messages for future use
             conversations_[otherAccountID] = messages;
 
-            std::cout << "Fetched " << messages.size() << " messages with " << otherAccountID << std::endl;
+            // std::cout << "Fetched " << messages.size() << " messages with " << otherAccountID << std::endl;
         }
         catch (std::exception& e)
         {
@@ -341,7 +341,7 @@ ClientSession::fetchPlayerData()
         }
         setPendingFriendRequests(pending);
 
-        std::cout << "Fetched player data for " << getUsername() << std::endl;
+        // std::cout << "Fetched player data for " << getUsername() << std::endl;
     }
     else
     {
@@ -367,7 +367,7 @@ ClientSession::updatePlayer(const std::string& newName,
     if (response.status == 200)
     {
         setUsername(response.json.get<std::string>("userName", username_));
-        std::cout << "Player updated successfully!" << std::endl;
+        // std::cout << "Player updated successfully!" << std::endl;
     }
     else
     {
@@ -391,7 +391,7 @@ ClientSession::postScore(int score)
 
     if (response.status == 200)
     {
-        std::cout << "Score posted successfully!" << std::endl;
+        // std::cout << "Score posted successfully!" << std::endl;
         // Refresh local data after score update
         fetchPlayerData();
     }
@@ -423,7 +423,7 @@ ClientSession::sendMessage(const std::string& receiverID, const std::string& mes
 
     if (response.status == 200)
     {
-        std::cout << "Message sent to " << receiverID << std::endl;
+        // std::cout << "Message sent to " << receiverID << std::endl;
 
         // Add the message to our local cache for this conversation
         ChatMessage newMessage;
@@ -459,7 +459,7 @@ ClientSession::sendFriendRequest(const std::string& receiverID)
 
     if (response.status == 200)
     {
-        std::cout << "Friend request sent to " << receiverID << std::endl;
+        // std::cout << "Friend request sent to " << receiverID << std::endl;
     }
     else
     {
@@ -485,8 +485,7 @@ ClientSession::acceptFriendRequest(const std::string& senderID)
 
     if (response.status == 200)
     {
-        std::cout << "Friend request from " << senderID << " accepted!"
-                  << std::endl;
+        // std::cout << "Friend request from " << senderID << " accepted!" << std::endl;
         // Optionally, update local friend list
         fetchPlayerData();
     }
@@ -514,8 +513,7 @@ ClientSession::declineFriendRequest(const std::string& senderID)
 
     if (response.status == 200)
     {
-        std::cout << "Friend request from " << senderID << " declined."
-                  << std::endl;
+        // std::cout << "Friend request from " << senderID << " declined." << std::endl;
         // Optionally, update local pending list
         fetchPlayerData();
     }
@@ -542,7 +540,7 @@ ClientSession::removeFriend(const std::string& friendID)
 
     if (response.status == 200)
     {
-        std::cout << "Friend " << friendID << " removed :(" << std::endl;
+        // std::cout << "Friend " << friendID << " removed :(" << std::endl;
         // Optionally, update local friend list
         fetchPlayerData();
     }
@@ -591,8 +589,7 @@ ClientSession::startSession()
     if (response.status == StatusCode::SUCCESS_REPLACED_SESSION ||
         response.status == StatusCode::SUCCESS)
     {
-        std::cout << "Session started successfully for " << getUsername()
-                  << " with token " << response.data.at("token") << std::endl;
+        // std::cout << "Session started successfully for " << getUsername() << " with token " << response.data.at("token") << std::endl;
         this->setToken(response.data.at("token"));
     }
     else

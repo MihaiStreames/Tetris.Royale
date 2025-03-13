@@ -1,28 +1,29 @@
 #pragma once
 
-#include <iostream>
-
-#include "InGameMenu.hpp"
-#include "InLobbyMenu.hpp"
-#include "LoginMenu.hpp"
-#include "MainMenu.hpp"
-#include "PreLobbyMenu.hpp"
-#include "RegisterMenu.hpp"
-#include "SettingsMenu.hpp"
-#include "ViewTestData.hpp"
-
 #include "ClientSession.hpp"
+#include <string>
 
-enum class MenuState
-{
-    loginMenu,
-    registerMenu,
-    mainMenu,
-    settingsMenu,
-    preLobbyMenu,
-    inLobbyMenu,
-    inGame,
-    quitter
+// Enum for the different screens in the application
+enum class ScreenState {
+    Login,
+    Register,
+    MainMenu,
+    LobbyBrowser,
+    InLobby,
+    InGame,
+    Exit
 };
 
-extern MenuState currMenu;
+// Forward declarations of screen functions
+void showLoginScreen(ClientSession& session);
+void showRegisterScreen(ClientSession& session);
+void showMainMenu(ClientSession& session);
+void showLobbyBrowser(ClientSession& session);
+void showInLobbyScreen(ClientSession& session);
+void showGameScreen(ClientSession& session);
+
+// Global current screen state
+extern ScreenState currentScreen;
+
+// Main application loop
+void runTetrisClient();
