@@ -1,10 +1,8 @@
-
 #include "GameMatrix.hpp"
 
 GameMatrix::GameMatrix(const int wMatrix, const int hMatrix)
     : width(wMatrix), height(hMatrix),
-      board(generateBoardByDimension(wMatrix, hMatrix))
-{
+      board(generateBoardByDimension(wMatrix, hMatrix)) {
     // this is the constructor of the GameMatrix class
     // it initializes the board with the dimensions given in the constructor
 
@@ -12,70 +10,60 @@ GameMatrix::GameMatrix(const int wMatrix, const int hMatrix)
     // that is needed
 }
 
-const Tetromino*
-GameMatrix::getCurrent() const
-{
+const Tetromino *
+GameMatrix::getCurrent() const {
     return currentTetromino.has_value() ? &currentTetromino.value() : nullptr;
 }
 
 int
-GameMatrix::getWidth() const
-{
+GameMatrix::getWidth() const {
     return width;
 }
 
 int
-GameMatrix::getHeight() const
-{
+GameMatrix::getHeight() const {
     return height;
 }
 
-tetroMat&
-GameMatrix::getBoard()
-{
+tetroMat &
+GameMatrix::getBoard() {
     return board;
 }
 
 tetroMat
-GameMatrix::getBoardWithCurrentPiece() const
-{
+GameMatrix::getBoardWithCurrentPiece() const {
     // this method is used to get the board with the current piece on it
     // it is used to render the board with the current piece on it
 
     tetroMat boardWithCurrentPiece = board;
-    const Tetromino* currentTetromino = getCurrent();
+    const Tetromino *currentTetromino = getCurrent();
 
     // check if there is a current piece
-    if (!currentTetromino)
-    {
+    if (!currentTetromino) {
         return boardWithCurrentPiece;
     }
 
     // if there is a current piece, get its shape, shape size and position
-    const tetroShape& shape = currentTetromino->getShape();
-    const auto& [x, y] = currentTetromino->getPosition();
+    const tetroShape &shape = currentTetromino->getShape();
+    const auto &[x, y] = currentTetromino->getPosition();
     int n = static_cast<int>(shape.size());
 
     // iterate over the shape of the current piece and add it to the board
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < n; ++j)
-        {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
             // lol would you believe : there was a random +1 here which would
             // cause the piece to have a different color when on the board (what
             // the fuck even happened here, does someone even read this code
             // lol?)
 
-            if (shape[i][j])
-            {
+            if (shape[i][j]) {
                 int nx = x + j;
                 int ny = y + i;
 
                 // check if the indices are within the bounds of the board
-                if (nx >= 0 && nx < width && ny >= 0 && ny < height)
-                {
+                if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
                     boardWithCurrentPiece[ny][nx] =
-                        static_cast<int>(currentTetromino->getPieceType());
+                            static_cast<int>(currentTetromino->getPieceType());
                 }
             }
         }
@@ -85,78 +73,72 @@ GameMatrix::getBoardWithCurrentPiece() const
 }
 
 void
-GameMatrix::setCurrent(const Tetromino& tetromino)
-{
+GameMatrix::setCurrent(const Tetromino &tetromino) {
     deleteCurrent();
     currentTetromino.emplace(tetromino);
 }
 
 bool
-GameMatrix::canMove(const Tetromino& tetromino, const int dx, const int dy)
-{
+GameMatrix::canMove(const Tetromino &tetromino, const int dx, const int dy) {
     // this method is used to check if a piece, given a move (dx, dy), is
     // colliding with something on the board
 
-    const Position2D newPos = {tetromino.getPosition().x + dx,
-                               tetromino.getPosition().y + dy};
+    const Position2D newPos = {
+        tetromino.getPosition().x + dx,
+        tetromino.getPosition().y + dy
+    };
     Tetromino moved =
-        Tetromino(newPos, tetromino.getPieceType(), tetromino.getShape());
+            Tetromino(newPos, tetromino.getPieceType(), tetromino.getShape());
 
     return !isColliding(moved);
 }
 
 bool
-GameMatrix::tryMoveCurrent(const int dx, const int dy)
-{
+GameMatrix::tryMoveCurrent(const int dx, const int dy) {
     // this method is used to try move the current piece, given a move (dx, dy).
     // will return true if the move was sucessful, false otherwise
 
-    const Tetromino* current = getCurrent();
+    const Tetromino *current = getCurrent();
 
     // if no current tetro
-    if (!current)
-    {
+    if (!current) {
         return false;
     }
 
     // if the move is not possible
-    if (!canMove(*current, dx, dy))
-    {
+    if (!canMove(*current, dx, dy)) {
         return false;
     }
 
     // if the move is possible, move the piece
-    Position2D newPos = {current->getPosition().x + dx,
-                         current->getPosition().y + dy};
+    Position2D newPos = {
+        current->getPosition().x + dx,
+        current->getPosition().y + dy
+    };
     currentTetromino->setPosition(newPos);
 
     return true;
 }
 
 bool
-GameMatrix::tryMoveLeft()
-{
+GameMatrix::tryMoveLeft() {
     return tryMoveCurrent(-1, 0);
 }
 
 bool
-GameMatrix::tryMoveRight()
-{
+GameMatrix::tryMoveRight() {
     return tryMoveCurrent(1, 0);
 }
 
 bool
-GameMatrix::tryMoveDown()
-{
+GameMatrix::tryMoveDown() {
     return tryMoveCurrent(0, 1);
 }
 
 bool
-GameMatrix::tryInstantFall()
-{
+GameMatrix::tryInstantFall() {
     bool moved = false;
-    while (tryMoveDown())
-    {
+    while (tryMoveDown()) {
         moved = true;
     }
 
@@ -164,8 +146,7 @@ GameMatrix::tryInstantFall()
 }
 
 bool
-GameMatrix::canRotate(const Tetromino& tetromino, const bool clockwise)
-{
+GameMatrix::canRotate(const Tetromino &tetromino, const bool clockwise) {
     // this method is used to check if a piece, given a rotation (clockwise or
     // not), is colliding with something on the board
 
@@ -178,23 +159,20 @@ GameMatrix::canRotate(const Tetromino& tetromino, const bool clockwise)
 }
 
 bool
-GameMatrix::tryRotateCurrent(bool clockwise)
-{
+GameMatrix::tryRotateCurrent(bool clockwise) {
     // this method is used to try rotate the current piece, given a rotation
     // (clockwise or not). will return true if the rotation was sucessful, false
     // otherwise
 
-    const Tetromino* current = getCurrent();
+    const Tetromino *current = getCurrent();
 
     // if no current tetro
-    if (!current)
-    {
+    if (!current) {
         return false;
     }
 
     // if the rotation is not possible
-    if (!canRotate(*current, clockwise))
-    {
+    if (!canRotate(*current, clockwise)) {
         return false;
     }
 
@@ -207,20 +185,17 @@ GameMatrix::tryRotateCurrent(bool clockwise)
 }
 
 bool
-GameMatrix::tryRotateLeft()
-{
+GameMatrix::tryRotateLeft() {
     return tryRotateCurrent(true);
 }
 
 bool
-GameMatrix::tryRotateRight()
-{
+GameMatrix::tryRotateRight() {
     return tryRotateCurrent(false);
 }
 
 bool
-GameMatrix::tryMakeCurrentPieceFall()
-{
+GameMatrix::tryMakeCurrentPieceFall() {
     // alias for tryMoveDown, used in the game engines.
     // not really sure why this was made, it's been too long since I wrote the
     // python version this is based on
@@ -229,13 +204,11 @@ GameMatrix::tryMakeCurrentPieceFall()
 }
 
 bool
-GameMatrix::tryPlacePiece(const Tetromino& tetromino)
-{
+GameMatrix::tryPlacePiece(const Tetromino &tetromino) {
     // this method is used to try place a piece on the board
     // will return true if the piece was placed, false otherwise
 
-    if (isColliding(tetromino))
-    {
+    if (isColliding(tetromino)) {
         return false;
     }
 
@@ -249,19 +222,16 @@ GameMatrix::tryPlacePiece(const Tetromino& tetromino)
 
     // if the piece is not colliding, place it on the board
     // get the shape, shape size and position of the piece
-    const tetroShape& shape = tetromino.getShape();
+    const tetroShape &shape = tetromino.getShape();
     int n = static_cast<int>(shape.size());
-    const auto& [x, y] = tetromino.getPosition();
+    const auto &[x, y] = tetromino.getPosition();
 
     // iterate over the shape of the piece and add it to the board
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < n; ++j)
-        {
-            if (shape[i][j])
-            {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            if (shape[i][j]) {
                 board[y + i][x + j] =
-                    static_cast<int>(tetromino.getPieceType());
+                        static_cast<int>(tetromino.getPieceType());
             }
         }
     }
@@ -271,16 +241,14 @@ GameMatrix::tryPlacePiece(const Tetromino& tetromino)
 }
 
 bool
-GameMatrix::tryPlaceCurrentPiece()
-{
+GameMatrix::tryPlaceCurrentPiece() {
     // this method is used to try place the current piece on the board
     // will return true if the piece was placed, false otherwise
 
-    const Tetromino* current = getCurrent();
+    const Tetromino *current = getCurrent();
 
     // if no current tetro
-    if (!current)
-    {
+    if (!current) {
         return false;
     }
 
@@ -288,13 +256,11 @@ GameMatrix::tryPlaceCurrentPiece()
 }
 
 bool
-GameMatrix::trySpawnPiece(Tetromino piece)
-{
+GameMatrix::trySpawnPiece(Tetromino piece) {
     // this method is used to try spawn a piece on the board
     // will return true if the piece was spawned, false otherwise
 
-    if (isColliding(piece))
-    {
+    if (isColliding(piece)) {
         return false;
     }
 
@@ -303,14 +269,12 @@ GameMatrix::trySpawnPiece(Tetromino piece)
 }
 
 void
-GameMatrix::deleteCurrent()
-{
+GameMatrix::deleteCurrent() {
     currentTetromino.reset();
 }
 
 bool
-GameMatrix::isTileEmpty(const int x, const int y)
-{
+GameMatrix::isTileEmpty(const int x, const int y) {
     // this method is used to check if a tile on the board is empty
     // it returns true if the tile is empty, false otherwise
 
@@ -318,39 +282,32 @@ GameMatrix::isTileEmpty(const int x, const int y)
 }
 
 bool
-GameMatrix::isColliding(const Tetromino& tetromino)
-{
+GameMatrix::isColliding(const Tetromino &tetromino) {
     // this method is used to check if a piece is colliding with something on
     // the board it returns true if the piece is colliding, false otherwise
 
-    const tetroShape& shape = tetromino.getShape();
+    const tetroShape &shape = tetromino.getShape();
     int n = static_cast<int>(shape.size());
-    const auto& [x, y] = tetromino.getPosition();
+    const auto &[x, y] = tetromino.getPosition();
 
     // iterate over the shape of the piece and check if it is colliding with
     // something on the board
-    for (int i = 0; i < n; ++i)
-    {
-        for (int j = 0; j < n; ++j)
-        {
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
             // !! this has been changed without testing, please check if it
             // works
 
-            if (shape[i][j])
-            {
+            if (shape[i][j]) {
                 const int nx = x + j;
                 const int ny = y + i;
 
-                if (nx < 0 || nx >= width || ny >= height)
-                {
+                if (nx < 0 || nx >= width || ny >= height) {
                     return true;
                 }
-                if (ny < 0)
-                {
+                if (ny < 0) {
                     continue;
                 }
-                if (!isTileEmpty(nx, ny))
-                {
+                if (!isTileEmpty(nx, ny)) {
                     return true;
                 }
             }
@@ -361,15 +318,12 @@ GameMatrix::isColliding(const Tetromino& tetromino)
 }
 
 bool
-GameMatrix::isLineFull(const int line)
-{
+GameMatrix::isLineFull(const int line) {
     // this method is used to check if a line is full
     // it returns true if the line is full, false otherwise
 
-    for (int x = 0; x < getWidth(); ++x)
-    {
-        if (isTileEmpty(x, line))
-        {
+    for (int x = 0; x < getWidth(); ++x) {
+        if (isTileEmpty(x, line)) {
             return false;
         }
     }
@@ -378,15 +332,12 @@ GameMatrix::isLineFull(const int line)
 }
 
 bool
-GameMatrix::isLineEmpty(const int line)
-{
+GameMatrix::isLineEmpty(const int line) {
     // this method is used to check if a line is empty
     // it returns true if the line is empty, false otherwise
 
-    for (int x = 0; x < getWidth(); ++x)
-    {
-        if (!isTileEmpty(x, line))
-        {
+    for (int x = 0; x < getWidth(); ++x) {
+        if (!isTileEmpty(x, line)) {
             return false;
         }
     }
@@ -395,15 +346,12 @@ GameMatrix::isLineEmpty(const int line)
 }
 
 bool
-GameMatrix::areLinesEmpty(const int start, const int end)
-{
+GameMatrix::areLinesEmpty(const int start, const int end) {
     // this method is used to check if a range of lines is empty
     // it returns true if the range of lines is empty, false otherwise
 
-    for (int y = start; y < end; ++y)
-    {
-        if (!isLineEmpty(y))
-        {
+    for (int y = start; y < end; ++y) {
+        if (!isLineEmpty(y)) {
             return false;
         }
     }
@@ -412,8 +360,7 @@ GameMatrix::areLinesEmpty(const int start, const int end)
 }
 
 int
-GameMatrix::getRowsToObstacle(const Tetromino& tetromino)
-{
+GameMatrix::getRowsToObstacle(const Tetromino &tetromino) {
     // this method is used to get the number of rows to the obstacle
     // it returns the number of rows to the obstacle
 
@@ -425,8 +372,7 @@ GameMatrix::getRowsToObstacle(const Tetromino& tetromino)
     Tetromino temp = tetromino;
     int rowsToObstacle = 0;
 
-    while (!isColliding(temp))
-    {
+    while (!isColliding(temp)) {
         Position2D newPos = {temp.getPosition().x, temp.getPosition().y + 1};
         temp.setPosition(newPos);
         ++rowsToObstacle;
@@ -436,8 +382,7 @@ GameMatrix::getRowsToObstacle(const Tetromino& tetromino)
 }
 
 int
-GameMatrix::findHighestBlockInColumn(const int col)
-{
+GameMatrix::findHighestBlockInColumn(const int col) {
     // this method is used to find the highest block in a column
     // it returns the y position of the highest block in the column or -1 if the
     // column is empty used to calculate the impact position of the thunder
@@ -445,10 +390,8 @@ GameMatrix::findHighestBlockInColumn(const int col)
 
     int y = -1;
 
-    for (int i = 0; i < getHeight(); ++i)
-    {
-        if (!isTileEmpty(col, i))
-        {
+    for (int i = 0; i < getHeight(); ++i) {
+        if (!isTileEmpty(col, i)) {
             y = i;
             break;
         }
@@ -458,8 +401,7 @@ GameMatrix::findHighestBlockInColumn(const int col)
 }
 
 void
-GameMatrix::clearSingleLine(const int line)
-{
+GameMatrix::clearSingleLine(const int line) {
     // this method is used to clear a single line
     // it sets all the tiles in the line to empty and moves the lines above it
     // down this is the core of the game logic, as this is what happens when a
@@ -469,14 +411,12 @@ GameMatrix::clearSingleLine(const int line)
     // getter
 
     // set all the tiles in the line to empty
-    for (int x = 0; x < getWidth(); ++x)
-    {
+    for (int x = 0; x < getWidth(); ++x) {
         board[line][x] = static_cast<int>(PieceType::None);
     }
 
     // move the lines above it down by one
-    for (int y = line; y > 0; --y)
-    {
+    for (int y = line; y > 0; --y) {
         board[y] = board[y - 1];
     }
 
@@ -485,17 +425,14 @@ GameMatrix::clearSingleLine(const int line)
 }
 
 int
-GameMatrix::clearFullLines()
-{
+GameMatrix::clearFullLines() {
     // this method is used to clear all the full lines
     // it returns the number of lines cleared
 
     int linesCleared = 0;
 
-    for (int y = 0; y < getHeight(); ++y)
-    {
-        if (isLineFull(y))
-        {
+    for (int y = 0; y < getHeight(); ++y) {
+        if (isLineFull(y)) {
             clearSingleLine(y);
             ++linesCleared;
         }
@@ -505,8 +442,7 @@ GameMatrix::clearFullLines()
 }
 
 void
-GameMatrix::pushNewLinesAtBottom(const std::vector<std::vector<int>> newLines)
-{
+GameMatrix::pushNewLinesAtBottom(const std::vector<std::vector<int> > newLines) {
     // this method is used to push new lines at the bottom of the board
     // it is used to add new lines to the board when a player is hit by a
     // penalty
@@ -515,23 +451,20 @@ GameMatrix::pushNewLinesAtBottom(const std::vector<std::vector<int>> newLines)
     // getter
 
     board.erase(board.begin(), board.begin() + newLines.size());
-    for (const auto& line : newLines)
-    {
+    for (const auto &line: newLines) {
         board.push_back(line);
     }
 }
 
 void
-GameMatrix::pushPenaltyLinesAtBottom(const int linesToAdd)
-{
+GameMatrix::pushPenaltyLinesAtBottom(const int linesToAdd) {
     // this method is used to push penalty lines at the bottom of the board
     // it is used to add penalty lines to the board when a player is hit by a
     // penalty
 
-    std::vector<std::vector<int>> newLines;
+    std::vector<std::vector<int> > newLines;
 
-    for (int i = 0; i < linesToAdd; ++i)
-    {
+    for (int i = 0; i < linesToAdd; ++i) {
         std::vector<int> line(getWidth(), static_cast<int>(PieceType::Single));
         const int hole = rand() % getWidth();
         line[hole] = static_cast<int>(PieceType::None);
@@ -542,8 +475,7 @@ GameMatrix::pushPenaltyLinesAtBottom(const int linesToAdd)
 }
 
 void
-GameMatrix::destroyAreaAroundBlock(const Position2D pos, const int blastRadius)
-{
+GameMatrix::destroyAreaAroundBlock(const Position2D pos, const int blastRadius) {
     // this method is used to destroy an area around a block
     // it is used to destroy an area around a block when a player is hit by a
     // thunder strike
@@ -554,15 +486,12 @@ GameMatrix::destroyAreaAroundBlock(const Position2D pos, const int blastRadius)
     const int x = pos.x;
     const int y = pos.y;
 
-    for (int dy = -blastRadius; dy <= blastRadius; ++dy)
-    {
-        for (int dx = -blastRadius; dx <= blastRadius; ++dx)
-        {
+    for (int dy = -blastRadius; dy <= blastRadius; ++dy) {
+        for (int dx = -blastRadius; dx <= blastRadius; ++dx) {
             const int nx = x + dx;
             const int ny = y + dy;
 
-            if (nx >= 0 && nx < getWidth() && ny >= 0 && ny < getHeight())
-            {
+            if (nx >= 0 && nx < getWidth() && ny >= 0 && ny < getHeight()) {
                 board[ny][nx] = static_cast<int>(PieceType::None);
             }
         }
@@ -570,8 +499,7 @@ GameMatrix::destroyAreaAroundBlock(const Position2D pos, const int blastRadius)
 }
 
 tetroMat
-GameMatrix::generateBoardByDimension(int width, int height)
-{
+GameMatrix::generateBoardByDimension(int width, int height) {
     // this method is used to generate the board with the dimensions given in
     // the constructor it is used in the constructor to initialize the board
     // with the correct dimensions

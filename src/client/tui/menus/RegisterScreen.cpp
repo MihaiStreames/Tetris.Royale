@@ -3,7 +3,7 @@
 
 using namespace ftxui;
 
-void showRegisterScreen(ClientSession& session) {
+void showRegisterScreen(ClientSession &session) {
     auto screen = ScreenInteractive::Fullscreen();
 
     // Input fields
@@ -13,7 +13,7 @@ void showRegisterScreen(ClientSession& session) {
     std::string errorMessage;
 
     InputOption passwordOption;
-    passwordOption.password = true;  // hide the password
+    passwordOption.password = true; // hide the password
 
     // Create input components
     auto usernameInput = Input(&username, "Username");
@@ -61,18 +61,18 @@ void showRegisterScreen(ClientSession& session) {
     // Renderer for the layout
     auto renderer = Renderer(container, [&] {
         return vbox({
-            text("REGISTER ACCOUNT") | bold | center,
-            separator(),
-            text(errorMessage) | color(Color::Red),
-            hbox(text("Username: "), usernameInput->Render()),
-            hbox(text("Password: "), passwordInput->Render()),
-            hbox(text("Confirm: "), confirmInput->Render()),
-            separator(),
-            hbox({
-                registerButton->Render() | center,
-                backButton->Render() | center
-            })
-        }) | border | color(Color::Green);
+                   text("REGISTER ACCOUNT") | bold | center,
+                   separator(),
+                   text(errorMessage) | color(Color::Red),
+                   hbox(text("Username: "), usernameInput->Render()),
+                   hbox(text("Password: "), passwordInput->Render()),
+                   hbox(text("Confirm: "), confirmInput->Render()),
+                   separator(),
+                   hbox({
+                       registerButton->Render() | center,
+                       backButton->Render() | center
+                   })
+               }) | border | color(Color::Green);
     });
 
     // Main loop

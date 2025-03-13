@@ -1,4 +1,3 @@
-
 #include "Types.hpp"
 
 std::vector<TypePowerUps> malusVector = {

@@ -3,7 +3,7 @@
 
 using namespace ftxui;
 
-void showMainMenu(ClientSession& session) {
+void showMainMenu(ClientSession &session) {
     auto screen = ScreenInteractive::Fullscreen();
 
     // Fetch player data
@@ -15,8 +15,8 @@ void showMainMenu(ClientSession& session) {
     auto tabToggle = Toggle(&tabs, &activeTab);
 
     // Friends tab
-    std::vector<std::string>& friendList = session.getFriendList();
-    std::vector<std::string>& pendingRequests = session.getPendingFriendRequests();
+    std::vector<std::string> &friendList = session.getFriendList();
+    std::vector<std::string> &pendingRequests = session.getPendingFriendRequests();
 
     // Friend request management
     std::string friendToAdd;
@@ -95,7 +95,7 @@ void showMainMenu(ClientSession& session) {
     });
 
     // Add friend request components
-    for (auto& comp : requestComponents) {
+    for (auto &comp: requestComponents) {
         container->Add(comp);
     }
 
@@ -118,115 +118,115 @@ void showMainMenu(ClientSession& session) {
                 break;
 
             case 1: // Friends
-                {
-                    // Friend list
-                    Elements friendElements;
-                    if (friendList.empty()) {
-                        friendElements.push_back(text("You have no friends yet"));
+            {
+                // Friend list
+                Elements friendElements;
+                if (friendList.empty()) {
+                    friendElements.push_back(text("You have no friends yet"));
+                } else {
+                    for (const auto &friendName: friendList) {
+                        friendElements.push_back(text(friendName));
+                    }
+                }
+
+                // Friend requests
+                Elements requestElements;
+                for (size_t i = 0; i < pendingRequests.size(); i++) {
+                    requestElements.push_back(
+                        hbox({
+                            text("Request from: " + pendingRequests[i]),
+                            requestComponents[i]->Render()
+                        })
+                    );
+                }
+
+                content = vbox({
+                    text("Friends") | bold,
+                    vbox(friendElements) | border,
+                    separator(),
+                    text("Friend Requests") | bold,
+                    vbox(requestElements) | border,
+                    separator(),
+                    hbox({
+                        friendInput->Render(),
+                        addFriendButton->Render()
+                    })
+                });
+            }
+            break;
+
+            case 2: // Messages
+            {
+                if (friendList.empty()) {
+                    content = text("Add friends to start messaging");
+                } else {
+                    std::string selectedFriend = friendList[selectedFriendIndex];
+                    std::vector<ChatMessage> messages = session.getPlayerMessages(selectedFriend);
+
+                    Elements messageElements;
+                    if (messages.empty()) {
+                        messageElements.push_back(text("No messages yet"));
                     } else {
-                        for (const auto& friendName : friendList) {
-                            friendElements.push_back(text(friendName));
+                        for (const auto &msg: messages) {
+                            messageElements.push_back(text(msg.from + ": " + msg.text));
                         }
                     }
 
-                    // Friend requests
-                    Elements requestElements;
-                    for (size_t i = 0; i < pendingRequests.size(); i++) {
-                        requestElements.push_back(
-                            hbox({
-                                text("Request from: " + pendingRequests[i]),
-                                requestComponents[i]->Render()
-                            })
-                        );
-                    }
-
                     content = vbox({
-                        text("Friends") | bold,
-                        vbox(friendElements) | border,
+                        text("Chat with: " + selectedFriend) | bold,
+                        friendSelector->Render(),
                         separator(),
-                        text("Friend Requests") | bold,
-                        vbox(requestElements) | border,
-                        separator(),
+                        vbox(messageElements) | border | yframe,
                         hbox({
-                            friendInput->Render(),
-                            addFriendButton->Render()
+                            messageTextInput->Render(),
+                            sendMessageButton->Render()
                         })
                     });
                 }
-                break;
-
-            case 2: // Messages
-                {
-                    if (friendList.empty()) {
-                        content = text("Add friends to start messaging");
-                    } else {
-                        std::string selectedFriend = friendList[selectedFriendIndex];
-                        std::vector<ChatMessage> messages = session.getPlayerMessages(selectedFriend);
-
-                        Elements messageElements;
-                        if (messages.empty()) {
-                            messageElements.push_back(text("No messages yet"));
-                        } else {
-                            for (const auto& msg : messages) {
-                                messageElements.push_back(text(msg.from + ": " + msg.text));
-                            }
-                        }
-
-                        content = vbox({
-                            text("Chat with: " + selectedFriend) | bold,
-                            friendSelector->Render(),
-                            separator(),
-                            vbox(messageElements) | border | yframe,
-                            hbox({
-                                messageTextInput->Render(),
-                                sendMessageButton->Render()
-                            })
-                        });
-                    }
-                }
-                break;
+            }
+            break;
 
             case 3: // Leaderboard
-                {
-                    Elements leaderboardElements;
+            {
+                Elements leaderboardElements;
+                leaderboardElements.push_back(
+                    hbox({
+                        text("Rank") | size(WIDTH, EQUAL, 8),
+                        text("Player") | size(WIDTH, EQUAL, 15),
+                        text("Score") | size(WIDTH, EQUAL, 10)
+                    }) | bold
+                );
+
+                for (const auto &entry: leaderboard) {
                     leaderboardElements.push_back(
                         hbox({
-                            text("Rank") | size(WIDTH, EQUAL, 8),
-                            text("Player") | size(WIDTH, EQUAL, 15),
-                            text("Score") | size(WIDTH, EQUAL, 10)
-                        }) | bold
+                            text(std::to_string(entry.rank)) | size(WIDTH, EQUAL, 8),
+                            text(entry.name) | size(WIDTH, EQUAL, 15),
+                            text(std::to_string(entry.score)) | size(WIDTH, EQUAL, 10)
+                        })
                     );
-
-                    for (const auto& entry : leaderboard) {
-                        leaderboardElements.push_back(
-                            hbox({
-                                text(std::to_string(entry.rank)) | size(WIDTH, EQUAL, 8),
-                                text(entry.name) | size(WIDTH, EQUAL, 15),
-                                text(std::to_string(entry.score)) | size(WIDTH, EQUAL, 10)
-                            })
-                        );
-                    }
-
-                    content = vbox({
-                        text("Leaderboard") | bold,
-                        vbox(leaderboardElements) | border
-                    });
                 }
-                break;
+
+                content = vbox({
+                    text("Leaderboard") | bold,
+                    vbox(leaderboardElements) | border
+                });
+            }
+            break;
         }
 
         return vbox({
-            text("TETRIS ROYALE") | bold | center,
-            separator(),
-            tabToggle->Render(),
-            content,
-            separator(),
-            hbox({
-                filler(),
-                logoutButton->Render(),
-                filler()
-            })
-        }) | border | color(Color::Green);
+                   text("TETRIS ROYALE") | bold | center,
+                   separator(),
+                   tabToggle->Render(),
+                   content,
+                   separator(),
+                   hbox({
+                       filler(),
+                       logoutButton->Render(),
+                       filler()
+                   })
+               }) | border | color(Color::Green);
     });
 
     // Main loop

@@ -65,6 +65,7 @@ enum class StatusCode
 
     ERROR_INVALID_MESSAGE,
     ERROR_SENDING_MESSAGE,
+    ERROR_USER_NOT_FOUND,
 
 };
 

@@ -12,11 +12,25 @@ std::string getGameModeName(GameMode mode) {
     }
 }
 
-void showInLobbyScreen(ClientSession& session) {
+void showInLobbyScreen(ClientSession &session) {
     auto screen = ScreenInteractive::Fullscreen();
 
-    // Get initial lobby state
-    LobbyState lobbyState = session.getCurrentLobbyState();
+    // Initialize with an empty state
+    LobbyState lobbyState = LobbyState::generateEmptyState();
+    std::string errorMessage;
+
+    // Initial fetch with error handling
+    try {
+        lobbyState = session.getCurrentLobbyState();
+
+        // If we got an empty lobby ID, there might be a problem
+        if (lobbyState.lobbyID.empty()) {
+            errorMessage = "Warning: Received empty lobby state";
+        }
+    } catch (const std::exception &e) {
+        errorMessage = "Error getting initial lobby state: ";
+        errorMessage += e.what();
+    }
 
     // Create buttons
     auto readyButton = Button("Ready", [&] {
@@ -28,9 +42,17 @@ void showInLobbyScreen(ClientSession& session) {
     });
 
     auto leaveButton = Button("Leave Lobby", [&] {
-        session.leaveLobby();
-        currentScreen = ScreenState::LobbyBrowser;
-        screen.Exit();
+        try {
+            session.leaveLobby();
+            currentScreen = ScreenState::LobbyBrowser;
+            screen.Exit();
+        } catch (const std::exception &e) {
+            errorMessage = "Error leaving lobby: ";
+            errorMessage += e.what();
+            // Try to exit anyway if there was an error
+            currentScreen = ScreenState::LobbyBrowser;
+            screen.Exit();
+        }
     });
 
     // Container for interactive components
@@ -50,58 +72,90 @@ void showInLobbyScreen(ClientSession& session) {
             try {
                 LobbyState newState = session.getCurrentLobbyState();
 
-                // Check if the game is starting - all players ready
-                bool allReady = true;
-                for (const auto& [token, isReady] : newState.readyPlayers) {
-                    if (!isReady) {
-                        allReady = false;
-                        break;
+                // Check if we got a valid state
+                if (newState.lobbyID.empty()) {
+                    errorMessage = "Warning: Received empty lobby state";
+                } else {
+                    lobbyState = newState;
+                    errorMessage = ""; // Clear error on successful update
+
+                    // Check if the game is starting - all players ready
+                    bool allReady = true;
+                    int playerCount = 0;
+
+                    for (const auto &[token, isReady]: lobbyState.readyPlayers) {
+                        if (!isReady) {
+                            allReady = false;
+                        }
+                        playerCount++;
+                    }
+
+                    // Only transition if we have enough ready players
+                    if (allReady && playerCount >= 2) {
+                        currentScreen = ScreenState::InGame;
+                        screen.Exit();
+                        return text("Starting game...") | center;
                     }
                 }
-
-                // If all players are ready and there are enough players, redirect to game
-                if (allReady && newState.players.size() >= 2) {
-                    currentScreen = ScreenState::InGame;
-                    screen.Exit();
-                    return text("Starting game...") | center;
-                }
-
-                lobbyState = newState;
-            } catch (const std::exception& e) {
-                // Handle error - possibly lost connection
+            } catch (const std::exception &e) {
+                errorMessage = "Error refreshing lobby: ";
+                errorMessage += e.what();
+                // Keep the existing state
             }
         }
 
-        // Display players with ready status
+        // Build player list with safe iteration
         Elements playerElements;
-        for (const auto& [token, username] : lobbyState.players) {
-            bool isReady = lobbyState.readyPlayers.contains(token) && lobbyState.readyPlayers.at(token);
-            std::string statusStr = isReady ? " [Ready]" : " [Not Ready]";
-            playerElements.push_back(text(username + statusStr));
+        if (lobbyState.players.empty()) {
+            playerElements.push_back(text("No players in lobby"));
+        } else {
+            for (const auto &[token, username]: lobbyState.players) {
+                // Safe lookup in readyPlayers
+                bool isReady = false;
+                auto it = lobbyState.readyPlayers.find(token);
+                if (it != lobbyState.readyPlayers.end()) {
+                    isReady = it->second;
+                }
+
+                std::string statusStr = isReady ? " [Ready]" : " [Not Ready]";
+                playerElements.push_back(text(username + statusStr));
+            }
         }
 
-        // Display spectators
+        // Build spectator list with safe iteration
         Elements spectatorElements;
-        for (const auto& [token, username] : lobbyState.spectators) {
-            spectatorElements.push_back(text(username));
+        if (lobbyState.spectators.empty()) {
+            spectatorElements.push_back(text("No spectators"));
+        } else {
+            for (const auto &[token, username]: lobbyState.spectators) {
+                spectatorElements.push_back(text(username));
+            }
         }
 
-        return vbox({
-            text("LOBBY: " + lobbyState.lobbyID) | bold | center,
-            text("Game Mode: " + getGameModeName(lobbyState.gameMode)),
-            separator(),
-            text("Players: (" + std::to_string(lobbyState.players.size()) + "/" +
-                 std::to_string(lobbyState.maxPlayers) + ")") | bold,
-            vbox(playerElements) | border,
-            text("Spectators: " + std::to_string(lobbyState.spectators.size())) | bold,
-            vbox(spectatorElements) | border,
-            separator(),
-            hbox({
-                readyButton->Render(),
-                unreadyButton->Render(),
-                leaveButton->Render()
-            })
-        }) | border | color(Color::Green);
+        // Main content elements
+        Elements content;
+        content.push_back(text("LOBBY: " + lobbyState.lobbyID) | bold | center);
+        content.push_back(text("Game Mode: " + getGameModeName(lobbyState.gameMode)));
+
+        // Display error message if any
+        if (!errorMessage.empty()) {
+            content.push_back(text(errorMessage) | color(Color::Red));
+        }
+
+        content.push_back(separator());
+        content.push_back(text("Players: (" + std::to_string(lobbyState.players.size()) + "/" +
+                               std::to_string(lobbyState.maxPlayers) + ")") | bold);
+        content.push_back(vbox(playerElements) | border);
+        content.push_back(text("Spectators: " + std::to_string(lobbyState.spectators.size())) | bold);
+        content.push_back(vbox(spectatorElements) | border);
+        content.push_back(separator());
+        content.push_back(hbox({
+            readyButton->Render(),
+            unreadyButton->Render(),
+            leaveButton->Render()
+        }));
+
+        return vbox(content) | border | color(Color::Green);
     });
 
     // Main loop

@@ -14,31 +14,31 @@ void runTetrisClient() {
         switch (currentScreen) {
             case ScreenState::Login:
                 showLoginScreen(session);
-            break;
+                break;
 
             case ScreenState::Register:
                 showRegisterScreen(session);
-            break;
+                break;
 
             case ScreenState::MainMenu:
                 showMainMenu(session);
-            break;
+                break;
 
             case ScreenState::LobbyBrowser:
                 showLobbyBrowser(session);
-            break;
+                break;
 
             case ScreenState::InLobby:
                 showInLobbyScreen(session);
-            break;
+                break;
 
             case ScreenState::InGame:
                 showGameScreen(session);
-            break;
+                break;
 
             default:
                 currentScreen = ScreenState::Exit;
-            break;
+                break;
         }
     }
 

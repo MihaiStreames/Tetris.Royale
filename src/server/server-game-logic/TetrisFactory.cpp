@@ -1,35 +1,29 @@
 #include "TetrisFactory.hpp"
 
 void
-TetrisFactory::fillPool()
-{
+TetrisFactory::fillPool() {
     // if pool's empty, then refill it with pieces
 
-    if (pool.empty())
-    {
+    if (pool.empty()) {
         pieceVec newPool = possiblePieces;
         // hinter does whatever idk dont mind
         std::ranges::shuffle(newPool, rng);
 
         pool.clear();
-        for (auto p : newPool)
-        {
+        for (auto p: newPool) {
             pool.emplace_back(Position2D{0, 0}, p);
         }
     }
 }
 
 void
-TetrisFactory::pushPiece(const Tetromino& tetromino)
-{
+TetrisFactory::pushPiece(const Tetromino &tetromino) {
     pool.push_back(tetromino);
 }
 
 Tetromino
-TetrisFactory::popPiece()
-{
-    if (pool.empty())
-    {
+TetrisFactory::popPiece() {
+    if (pool.empty()) {
         fillPool();
     }
 
@@ -39,23 +33,20 @@ TetrisFactory::popPiece()
     return piece;
 }
 
-Tetromino&
-TetrisFactory::whatIsNextPiece()
-{
-    if (pool.empty())
-    {
+Tetromino &
+TetrisFactory::whatIsNextPiece() {
+    if (pool.empty()) {
         fillPool();
     }
     return pool.back();
 }
 
 bool
-TetrisFactory::isPoolEmpty() const
-{
+TetrisFactory::isPoolEmpty() const {
     return pool.empty();
 }
+
 int
-TetrisFactory::getPoolSize() const
-{
+TetrisFactory::getPoolSize() const {
     return static_cast<int>(pool.size());
 }

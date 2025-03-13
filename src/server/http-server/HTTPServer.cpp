@@ -2,31 +2,27 @@
 
 TetrisHTTPServer::TetrisHTTPServer(std::string address,
                                    const unsigned short port)
-    : address_(std::move(address)), port_(port), ioc_(1), acceptor_(ioc_)
-{
+    : address_(std::move(address)), port_(port), ioc_(1), acceptor_(ioc_) {
     boost::system::error_code errorCode;
     const asio::ip::tcp::endpoint endpoint(asio::ip::make_address(address_),
                                            port_);
 
     acceptor_.open(endpoint.protocol(), errorCode);
-    if (errorCode)
-    {
+    if (errorCode) {
         std::cerr << "[HTTP] Error opening acceptor: " << errorCode.message()
-                  << std::endl;
+                << std::endl;
         return;
     }
     acceptor_.bind(endpoint, errorCode);
-    if (errorCode)
-    {
+    if (errorCode) {
         std::cerr << "[HTTP] Error binding acceptor: " << errorCode.message()
-                  << std::endl;
+                << std::endl;
         return;
     }
     acceptor_.listen(asio::socket_base::max_listen_connections, errorCode);
-    if (errorCode)
-    {
+    if (errorCode) {
         std::cerr << "[HTTP] Error listening on acceptor: "
-                  << errorCode.message() << std::endl;
+                << errorCode.message() << std::endl;
         return;
     }
 }
@@ -34,23 +30,20 @@ TetrisHTTPServer::TetrisHTTPServer(std::string address,
 TetrisHTTPServer::~TetrisHTTPServer() { TetrisHTTPServer::stop(); }
 
 void
-TetrisHTTPServer::run()
-{
+TetrisHTTPServer::run() {
     running_.store(true);
     std::cout << "[HTTP] [INFO] TetrisHTTPServer listening on " << address_
-              << ":" << port_ << " (TCP/HTTP)" << std::endl;
+            << ":" << port_ << " (TCP/HTTP)" << std::endl;
 
     doAccept();
     ioc_.run();
 }
 
 void
-TetrisHTTPServer::stop()
-{
-    if (running_.exchange(false))
-    {
+TetrisHTTPServer::stop() {
+    if (running_.exchange(false)) {
         std::cout << "[HTTP] [INFO] Stopping server on " << address_ << ":"
-                  << port_ << std::endl;
+                << port_ << std::endl;
         boost::system::error_code ec;
         acceptor_.close(ec);
         ioc_.stop();
@@ -58,22 +51,18 @@ TetrisHTTPServer::stop()
 }
 
 void
-TetrisHTTPServer::doAccept()
-{
-    if (!running_.load())
-    {
+TetrisHTTPServer::doAccept() {
+    if (!running_.load()) {
         return; // Bail out
     }
 
     acceptor_.async_accept(
-        [this](const boost::system::error_code& errorCode, tcp::socket socket)
-        {
-            if (!errorCode)
-            {
+        [this](const boost::system::error_code &errorCode, tcp::socket socket) {
+            if (!errorCode) {
                 // Launch a new session in its own thread
                 std::thread(&TetrisHTTPServer::doSession, this,
                             std::move(socket))
-                    .detach();
+                        .detach();
             }
             // Accept the next connection
             doAccept();
@@ -81,25 +70,21 @@ TetrisHTTPServer::doAccept()
 }
 
 void
-TetrisHTTPServer::doSession(tcp::socket socket)
-{
+TetrisHTTPServer::doSession(tcp::socket socket) {
     beast::error_code ec;
     beast::flat_buffer buffer;
 
-    for (;;)
-    {
+    for (;;) {
         http::request<http::string_body> req;
         http::read(socket, buffer, req, ec);
 
-        if (ec == http::error::end_of_stream)
-        {
+        if (ec == http::error::end_of_stream) {
             break; // Remote closed
         }
 
-        if (ec)
-        {
+        if (ec) {
             std::cerr << "[HTTP] [ERROR] Read error: " << ec.message()
-                      << std::endl;
+                    << std::endl;
             break;
         }
 
@@ -112,15 +97,13 @@ TetrisHTTPServer::doSession(tcp::socket socket)
 
         // Send the response
         http::write(socket, res, ec);
-        if (ec)
-        {
+        if (ec) {
             std::cerr << "[HTTP] [ERROR] Write error: " << ec.message()
-                      << std::endl;
+                    << std::endl;
             break;
         }
 
-        if (res.need_eof())
-        {
+        if (res.need_eof()) {
             break;
         }
     }
@@ -130,20 +113,17 @@ TetrisHTTPServer::doSession(tcp::socket socket)
 
 void
 TetrisHTTPServer::handleRequest(http::request<http::string_body> req,
-                                http::response<http::string_body>& res)
-{
+                                http::response<http::string_body> &res) {
     res.body() = "[HTTP] [INFO] Received request body:\n" + req.body();
     res.prepare_payload();
 }
 
 std::string
-TetrisHTTPServer::forwardRequest(const std::string& host,
-                                 const std::string& port,
-                                 const std::string& target, http::verb method,
-                                 const std::string& body)
-{
-    try
-    {
+TetrisHTTPServer::forwardRequest(const std::string &host,
+                                 const std::string &port,
+                                 const std::string &target, http::verb method,
+                                 const std::string &body) {
+    try {
         asio::io_context forwardIoc;
         tcp::resolver resolver(forwardIoc);
         auto const results = resolver.resolve(host, port);
@@ -169,11 +149,9 @@ TetrisHTTPServer::forwardRequest(const std::string& host,
 
         socket.shutdown(tcp::socket::shutdown_both);
         return res.body();
-    }
-    catch (std::exception& e)
-    {
+    } catch (std::exception &e) {
         std::cerr << "[HTTP] [ERROR] Error forwarding request: " << e.what()
-                  << std::endl;
+                << std::endl;
         return "";
     }
 }

@@ -50,11 +50,15 @@ public:
 
     [[nodiscard]] std::vector<std::string> &getPendingFriendRequests();
 
-    // TODO: Get internal messages!!
+    std::string getAccountIDFromUsername(const std::string &username);
+
+    std::string getFriendUsername(const std::string &friendID);
+
+    std::string getRequestUsername(const std::string &requestID);
 
     // Setters for updating local session info
-
     void setUsername(const std::string &username);
+
     void setAccountID(const std::string &accountID);
 
     void setToken(const std::string &token);
@@ -65,66 +69,58 @@ public:
 
     void setPendingFriendRequests(const std::vector<std::string> &requests);
 
-    // TODO: Set messages internally!!
-
     // Database operations
-
     [[nodiscard]] StatusCode loginPlayer(const std::string &username, const std::string &password);
 
-    [[nodiscard]] StatusCode registerPlayer(const std::string &username,
-                                            const std::string &password);
+    [[nodiscard]] StatusCode registerPlayer(const std::string &username, const std::string &password);
 
     [[nodiscard]] std::vector<ChatMessage> getPlayerMessages(const std::string &otherAccountID);
 
     [[nodiscard]] std::vector<PlayerScore> getLeaderboard(int limit = 5);
 
-    void fetchPlayerData(); // Get full player info from DB (username,
-    // bestScore, friend lists, etc.)
-    void updatePlayer(const std::string &newName,
-                      const std::string &newPassword);
+    [[nodiscard]] StatusCode fetchPlayerData();
 
-    void postScore(int score);
+    [[nodiscard]] StatusCode updatePlayer(const std::string &newName, const std::string &newPassword);
 
-    [[nodiscard]] StatusCode sendMessage(const std::string &receiverID,
-                                        const std::string &messageContent);
+    [[nodiscard]] StatusCode postScore(int score);
+
+    [[nodiscard]] StatusCode sendMessage(const std::string &receiverID, const std::string &messageContent);
 
     // Friend-related operations
-    void sendFriendRequest(const std::string &receiverID);
+    [[nodiscard]] StatusCode sendFriendRequest(const std::string &receiverID);
 
-    void acceptFriendRequest(const std::string &senderID);
+    [[nodiscard]] StatusCode acceptFriendRequest(const std::string &senderID);
 
-    void declineFriendRequest(const std::string &senderID);
+    [[nodiscard]] StatusCode declineFriendRequest(const std::string &senderID);
 
-    void removeFriend(const std::string &friendID);
+    [[nodiscard]] StatusCode removeFriend(const std::string &friendID);
 
     // ================== Game operations ================== //
-
     [[nodiscard]] ClientStatus getOwnStatus();
 
     [[nodiscard]] ClientStatus getPlayerStatus(const std::string &username);
 
-    void startSession();
+    [[nodiscard]] StatusCode startSession();
 
-    void endSession();
+    [[nodiscard]] StatusCode endSession();
 
-    [[nodiscard]] std::unordered_map<std::string, std::string>
-    getPublicLobbiesList();
+    [[nodiscard]] std::unordered_map<std::string, std::string> getPublicLobbiesList();
 
-    void createAndJoinLobby(GameMode gameMode, int maxPlayers, bool isPublic);
+    [[nodiscard]] StatusCode createAndJoinLobby(GameMode gameMode, int maxPlayers, bool isPublic);
 
-    void joinLobby(const std::string &lobbyID);
+    [[nodiscard]] StatusCode joinLobby(const std::string &lobbyID);
 
-    void spectateLobby(const std::string &lobbyID);
+    [[nodiscard]] StatusCode spectateLobby(const std::string &lobbyID);
 
     [[nodiscard]] LobbyState getCurrentLobbyState();
 
-    void leaveLobby();
+    [[nodiscard]] StatusCode leaveLobby();
 
-    void readyUp();
+    [[nodiscard]] StatusCode readyUp();
 
-    void unreadyUp();
+    [[nodiscard]] StatusCode unreadyUp();
 
-    void sendKeyStroke(const Action &action);
+    [[nodiscard]] StatusCode sendKeyStroke(const Action &action);
 
     [[nodiscard]] PlayerState getPlayerState();
 
@@ -132,14 +128,15 @@ public:
 
 private:
     // private here
-
     std::string username_;
     std::string accountID_;
     std::string token_;
     int bestScore_;
     std::vector<std::string> friendList_;
     std::vector<std::string> pendingFriendRequests_;
-    std::unordered_map<std::string, std::vector<ChatMessage>> conversations_;
+    std::unordered_map<std::string, std::string> friendIDToUsername;
+    std::unordered_map<std::string, std::string> pendingRequestIDToUsername;
+    std::unordered_map<std::string, std::vector<ChatMessage> > conversations_;
     bool debug_;
 };
 

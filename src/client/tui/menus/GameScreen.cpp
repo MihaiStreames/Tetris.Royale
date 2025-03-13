@@ -6,20 +6,20 @@ using namespace ftxui;
 // Helper to color tetromino blocks
 Decorator colorForValue(int value) {
     switch (value) {
-        case 1: return color(Color::CyanLight);    // I
-        case 2: return color(Color::Yellow);       // O
-        case 3: return color(Color::Blue);         // J
-        case 4: return color(Color::RedLight);     // Z
-        case 5: return color(Color::GreenLight);   // S
-        case 6: return color(Color::Magenta);      // T
-        case 7: return color(Color::Red);          // L
-        case 8: return color(Color::White);        // Ghost/preview
+        case 1: return color(Color::CyanLight); // I
+        case 2: return color(Color::Yellow); // O
+        case 3: return color(Color::Blue); // J
+        case 4: return color(Color::RedLight); // Z
+        case 5: return color(Color::GreenLight); // S
+        case 6: return color(Color::Magenta); // T
+        case 7: return color(Color::Red); // L
+        case 8: return color(Color::White); // Ghost/preview
         default: return color(Color::Default);
     }
 }
 
 // Render a tetris board
-Element renderBoard(const tetroMat& board, bool darkMode = false) {
+Element renderBoard(const tetroMat &board, bool darkMode = false) {
     if (board.empty()) {
         return text("No board data") | center;
     }
@@ -102,12 +102,12 @@ Element renderTetromino(PieceType type) {
     return text(display) | colorForValue(value);
 }
 
-void showGameScreen(ClientSession& session) {
+void showGameScreen(ClientSession &session) {
     auto screen = ScreenInteractive::TerminalOutput();
 
     // Track player view (for cycling through opponents)
-    int currentOpponent = 0;
     bool isSpectator = false;
+    std::string errorMessage;
 
     // Create a renderer with key event handling
     Component empty = Container::Vertical({});
@@ -154,32 +154,52 @@ void showGameScreen(ClientSession& session) {
                 text("Esc : Exit")
             });
 
-            return hbox({
-                // Left - info panel
-                infoPanel | border | size(WIDTH, EQUAL, 20),
+            // Display layout
+            Elements content;
 
-                // Center - main board
-                mainBoard | border | size(WIDTH, EQUAL, 22),
+            // Add error message if any
+            if (!errorMessage.empty()) {
+                content.push_back(text(errorMessage) | color(Color::Red));
+            }
 
-                // Right - opponent & controls
-                vbox({
-                    text("Opponent: " + state.targetUsername) | bold | center,
-                    targetBoard,
-                    separator(),
-                    controls
-                }) | border | size(WIDTH, EQUAL, 22)
-            }) | border;
+            // Add main content
+            content.push_back(
+                hbox({
+                    // Left - info panel
+                    infoPanel | border | size(WIDTH, EQUAL, 20),
 
+                    // Center - main board
+                    mainBoard | border | size(WIDTH, EQUAL, 22),
+
+                    // Right - opponent & controls
+                    vbox({
+                        text("Opponent: " + state.targetUsername) | bold | center,
+                        targetBoard,
+                        separator(),
+                        controls
+                    }) | border | size(WIDTH, EQUAL, 22)
+                })
+            );
+
+            return vbox(content) | border;
         } catch (...) {
             // If player state fails, try spectator state
             try {
                 SpectatorState state = session.getSpectatorState();
                 isSpectator = true;
 
-                return vbox({
-                    text("SPECTATING: " + state.playerUsername) | bold | center,
-                    separator(),
-                    renderBoard(state.playerGrid) | border | size(WIDTH, EQUAL, 22),
+                Elements content;
+
+                // Add error message if any
+                if (!errorMessage.empty()) {
+                    content.push_back(text(errorMessage) | color(Color::Red));
+                }
+
+                // Add spectator content
+                content.push_back(text("SPECTATING: " + state.playerUsername) | bold | center);
+                content.push_back(separator());
+                content.push_back(renderBoard(state.playerGrid) | border | size(WIDTH, EQUAL, 22));
+                content.push_back(
                     hbox({
                         vbox({
                             text("Hold:"),
@@ -189,10 +209,11 @@ void showGameScreen(ClientSession& session) {
                             text("Next:"),
                             renderTetromino(state.nextTetro) | border
                         })
-                    }),
-                    text("Press Esc to exit") | center
-                }) | border;
+                    })
+                );
+                content.push_back(text("Press Esc to exit") | center);
 
+                return vbox(content) | border;
             } catch (...) {
                 // If both fail, show waiting message
                 return text("Waiting for game state...") | center | border;
@@ -205,9 +226,13 @@ void showGameScreen(ClientSession& session) {
         // Only handle keys if not in spectator mode
         if (isSpectator) {
             if (event == Event::Escape) {
-                session.leaveLobby();
-                currentScreen = ScreenState::MainMenu;
-                screen.Exit();
+                StatusCode result = session.leaveLobby();
+                if (result == StatusCode::SUCCESS) {
+                    currentScreen = ScreenState::MainMenu;
+                    screen.Exit();
+                } else {
+                    errorMessage = "Failed to leave lobby: " + getStatusCodeString(result);
+                }
                 return true;
             }
             return false;
@@ -215,53 +240,90 @@ void showGameScreen(ClientSession& session) {
 
         // Game controls
         if (event == Event::ArrowLeft) {
-            session.sendKeyStroke(Action::MoveLeft);
+            StatusCode result = session.sendKeyStroke(Action::MoveLeft);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::ArrowRight) {
-            session.sendKeyStroke(Action::MoveRight);
+            StatusCode result = session.sendKeyStroke(Action::MoveRight);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::ArrowDown) {
-            session.sendKeyStroke(Action::MoveDown);
+            StatusCode result = session.sendKeyStroke(Action::MoveDown);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::Character('e')) {
-            session.sendKeyStroke(Action::RotateRight);
+            StatusCode result = session.sendKeyStroke(Action::RotateRight);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::Character('q')) {
-            session.sendKeyStroke(Action::RotateLeft);
+            StatusCode result = session.sendKeyStroke(Action::RotateLeft);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::Character(' ')) {
-            session.sendKeyStroke(Action::InstantFall);
+            StatusCode result = session.sendKeyStroke(Action::InstantFall);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::Character('c')) {
-            session.sendKeyStroke(Action::UseBag);
+            StatusCode result = session.sendKeyStroke(Action::UseBag);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::Character('b')) {
-            session.sendKeyStroke(Action::UseBonus);
+            StatusCode result = session.sendKeyStroke(Action::UseBonus);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::Character('m')) {
-            session.sendKeyStroke(Action::UseMalus);
+            StatusCode result = session.sendKeyStroke(Action::UseMalus);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::Character('s')) {
-            session.sendKeyStroke(Action::SeePreviousOpponent);
+            StatusCode result = session.sendKeyStroke(Action::SeePreviousOpponent);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::Character('w')) {
-            session.sendKeyStroke(Action::SeeNextOpponent);
+            StatusCode result = session.sendKeyStroke(Action::SeeNextOpponent);
+            if (result != StatusCode::SUCCESS) {
+                errorMessage = "Command failed: " + getStatusCodeString(result);
+            }
             return true;
         }
         if (event == Event::Escape) {
-            session.leaveLobby();
-            currentScreen = ScreenState::MainMenu;
-            screen.Exit();
+            StatusCode result = session.leaveLobby();
+            if (result == StatusCode::SUCCESS) {
+                currentScreen = ScreenState::MainMenu;
+                screen.Exit();
+            } else {
+                errorMessage = "Failed to leave lobby: " + getStatusCodeString(result);
+            }
             return true;
         }
 

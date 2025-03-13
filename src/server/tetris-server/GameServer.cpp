@@ -1,17 +1,15 @@
 #include "GameServer.hpp"
 
-GameServer::GameServer(const std::string& ip,
-                       const std::shared_ptr<LobbyServer>& lobbyServer,
+GameServer::GameServer(const std::string &ip,
+                       const std::shared_ptr<LobbyServer> &lobbyServer,
                        const bool debug)
-    : ip(ip), lobbyServer(lobbyServer), debug(debug)
-{
+    : ip(ip), lobbyServer(lobbyServer), debug(debug) {
     // this is the constructor for the GameServer class
     // this will be used to create a new game server instance, using the
     // lobbyServer data to initialize the game server
 }
 
-GameServer::~GameServer()
-{
+GameServer::~GameServer() {
     // this is the destructor for the GameServer class
     // this will be used to close the game server and free the resources
     // std::lock_guard<std::mutex> lock(runningMutex);
@@ -19,8 +17,7 @@ GameServer::~GameServer()
 }
 
 StatusCode
-GameServer::startGameServer()
-{
+GameServer::startGameServer() {
     // This method is used to start the game server. It should be called in a
     // new thread. It will start the game server and open the socket for the
     // players to connect. this will also start the game server loop, which will
@@ -41,8 +38,7 @@ GameServer::startGameServer()
 }
 
 StatusCode
-GameServer::closeGameServer()
-{
+GameServer::closeGameServer() {
     // This method is used to close the game server. It should be called in a
     // new thread. It will close the game server and close the socket for the
     // players to connect. this will also stop the game server loop, which will
@@ -63,16 +59,14 @@ GameServer::closeGameServer()
     // and close all the games
     {
         std::lock_guard lock(gamesMutex);
-        for (const auto& game : activeGames)
-        {
-            (void)game->closeGame();
+        for (const auto &game: activeGames) {
+            (void) game->closeGame();
         }
         activeGames.clear();
     }
 
     // and finally join the listen thread if it is still running
-    if (listenThread.joinable())
-    {
+    if (listenThread.joinable()) {
         listenThread.join();
     }
 
@@ -81,16 +75,13 @@ GameServer::closeGameServer()
 }
 
 bool
-GameServer::isSessionInAnyGame(const std::string& token)
-{
+GameServer::isSessionInAnyGame(const std::string &token) {
     // This method is used to check if a session is in any game.
     // It will return true if the session is in any game, and false otherwise.
 
     std::lock_guard lock(gamesMutex);
-    for (const auto& game : activeGames)
-    {
-        if (game->isSessionInGame(token))
-        {
+    for (const auto &game: activeGames) {
+        if (game->isSessionInGame(token)) {
             return true;
         }
     }
@@ -99,8 +90,7 @@ GameServer::isSessionInAnyGame(const std::string& token)
 }
 
 int
-GameServer::countGames()
-{
+GameServer::countGames() {
     // This method is used to count the number of games in the game server.
     // It will return the number of games.
 
@@ -109,8 +99,7 @@ GameServer::countGames()
 }
 
 bool
-GameServer::isRunning()
-{
+GameServer::isRunning() {
     // This method is used to check if the game server is running.
     // It will return true if the game server is running, and false otherwise.
 
@@ -119,54 +108,45 @@ GameServer::isRunning()
 }
 
 void
-GameServer::listen()
-{
+GameServer::listen() {
     // This method is used to listen for ready lobbies and start games.
     // It will run in a separate thread and will start the games when the
     // lobbies are ready.
 
     std::lock_guard lock(listenMutex);
 
-    while (true)
-    {
+    while (true) {
         // first, we need to check if the game server is still running
         {
             std::lock_guard lock(runningMutex);
-            if (!running)
-            {
+            if (!running) {
                 break;
             }
         }
 
         // if the game server is still running, we can get the ready lobbies and
         // the empty lobbies
-        std::vector<std::shared_ptr<Lobby>> readyLobbies =
-            lobbyServer->getReadyLobbies();
-        std::vector<std::shared_ptr<Lobby>> deadLobbies =
-            lobbyServer->getDeadLobbies();
+        std::vector<std::shared_ptr<Lobby> > readyLobbies =
+                lobbyServer->getReadyLobbies();
+        std::vector<std::shared_ptr<Lobby> > deadLobbies =
+                lobbyServer->getDeadLobbies();
 
         // we kill the dead lobbies
-        for (const auto& lobby : deadLobbies)
-        {
+        for (const auto &lobby: deadLobbies) {
             if (lobbyServer->closeLobby(lobby->getLobbyID()) !=
-                StatusCode::SUCCESS)
-            {
+                StatusCode::SUCCESS) {
                 printMessage("Error closing lobby: " +
-                                 lobby->getState().lobbyID,
+                             lobby->getState().lobbyID,
                              MessageType::ERROR);
             }
         }
 
         // then, we start the games
-        for (const auto& lobby : readyLobbies)
-        {
+        for (const auto &lobby: readyLobbies) {
             // check if we can start a new game
-            if (countGames() < MAX_GAMES)
-            {
+            if (countGames() < MAX_GAMES) {
                 startGame(lobby);
-            }
-            else
-            {
+            } else {
                 printMessage(
                     "Cannot start a new game, maximum number of games reached",
                     MessageType::WARNING);
@@ -179,8 +159,7 @@ GameServer::listen()
 }
 
 void
-GameServer::startGame(const std::shared_ptr<Lobby>& lobby)
-{
+GameServer::startGame(const std::shared_ptr<Lobby> &lobby) {
     // This method is used to start a game.
     // It will create a new game instance and start the game.
 
@@ -191,8 +170,7 @@ GameServer::startGame(const std::shared_ptr<Lobby>& lobby)
     const auto game = std::make_shared<Game>(ip, lobbyState, debug);
 
     // close the lobby
-    if (lobbyServer->closeLobby(lobbyState.lobbyID) != StatusCode::SUCCESS)
-    {
+    if (lobbyServer->closeLobby(lobbyState.lobbyID) != StatusCode::SUCCESS) {
         printMessage("Error closing lobby: " + lobbyState.lobbyID,
                      MessageType::ERROR);
         return;
@@ -200,8 +178,7 @@ GameServer::startGame(const std::shared_ptr<Lobby>& lobby)
 
     // start the game
     const StatusCode gameStarted = game->startGame();
-    if (gameStarted != StatusCode::SUCCESS)
-    {
+    if (gameStarted != StatusCode::SUCCESS) {
         printMessage("Error starting game: " + getStatusCodeString(gameStarted),
                      MessageType::ERROR);
         return;
@@ -214,45 +191,42 @@ GameServer::startGame(const std::shared_ptr<Lobby>& lobby)
 }
 
 void
-GameServer::printMessage(const std::string& message, MessageType msgType) const
-{
+GameServer::printMessage(const std::string &message, MessageType msgType) const {
     // This method is used to print a message to the console.
     // It will print the message with the specified message type
     // only if the debug flag is set to true.
 
-    if (!debug)
-    {
+    if (!debug) {
         return;
     }
 
     const std::string gameIdentifier = "[Game Server] ";
     std::string msgtype_str;
 
-    switch (msgType)
-    {
-    case MessageType::INFO:
-        msgtype_str = "INFO";
-        break;
+    switch (msgType) {
+        case MessageType::INFO:
+            msgtype_str = "INFO";
+            break;
 
-    case MessageType::WARNING:
-        msgtype_str = "WARNING";
-        break;
+        case MessageType::WARNING:
+            msgtype_str = "WARNING";
+            break;
 
-    case MessageType::ERROR:
-        msgtype_str = "ERROR";
-        break;
+        case MessageType::ERROR:
+            msgtype_str = "ERROR";
+            break;
 
-    case MessageType::CRITICAL:
-        msgtype_str = "CRITICAL";
-        break;
+        case MessageType::CRITICAL:
+            msgtype_str = "CRITICAL";
+            break;
 
-    default:
-        msgtype_str = "UNKNOWN | DEBUG";
-        break;
+        default:
+            msgtype_str = "UNKNOWN | DEBUG";
+            break;
     }
 
     std::cout << gameIdentifier << "[" << msgtype_str << "] " << message
-              << std::endl;
+            << std::endl;
 
     return;
 }

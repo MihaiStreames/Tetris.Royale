@@ -1,9 +1,8 @@
 #include "GameRequestManager.hpp"
 
-GameRequestManager::GameRequestManager(const std::string& serverIP,
-                                       int lobbyServerPort)
-    : serverIP(serverIP), lobbyServerPort(lobbyServerPort)
-{
+GameRequestManager::GameRequestManager(const std::string &serverIP,
+                                       const int lobbyServerPort)
+    : serverIP(serverIP), lobbyServerPort(lobbyServerPort) {
     // this is the constructor of the GameRequestManager class
     // it initializes the RequestManager session with the given serverIP and
     // lobbyServerPort all of them can be ignored and will then be set up to
@@ -13,19 +12,17 @@ GameRequestManager::GameRequestManager(const std::string& serverIP,
     clientSocket = NO_FILE_DESCRIPTOR;
 }
 
-GameRequestManager::~GameRequestManager()
-{
+GameRequestManager::~GameRequestManager() {
     // this is the destructor of the GameRequestManager class
     // it closes the clientSocket if it is connected to a server
     // this is done to avoid memory leaks and to free the resources used by the
     // clientSocket
 
-    (void)disconnectFromServer();
+    (void) disconnectFromServer();
 }
 
 std::string
-GameRequestManager::getServerIP()
-{
+GameRequestManager::getServerIP() {
     // this method is used to get the server IP
     // it will return the server IP
 
@@ -33,8 +30,7 @@ GameRequestManager::getServerIP()
 }
 
 int
-GameRequestManager::getPort()
-{
+GameRequestManager::getPort() const {
     // this method is used to get the port
     // it will return the port
 
@@ -42,21 +38,18 @@ GameRequestManager::getPort()
 }
 
 StatusCode
-GameRequestManager::connectToServer()
-{
+GameRequestManager::connectToServer() {
     // this method is used to connect to the server
     // it will create a socket and connect to the server
 
     // create the socket
     clientSocket = socket(AF_INET, SOCK_DGRAM, 0);
-    if (clientSocket < 0)
-    {
+    if (clientSocket < 0) {
         return StatusCode::ERROR_CREATING_SOCKET;
     }
 
     // set the socket options
-    if (setSocketOptions() != StatusCode::SUCCESS)
-    {
+    if (setSocketOptions() != StatusCode::SUCCESS) {
         return StatusCode::ERROR_SETTING_SOCKET_OPTIONS;
     }
 
@@ -64,14 +57,12 @@ GameRequestManager::connectToServer()
 }
 
 StatusCode
-GameRequestManager::disconnectFromServer()
-{
+GameRequestManager::disconnectFromServer() {
     // this method is used to disconnect from the server
     // it will close the socket
 
     // close the socket
-    if (clientSocket != NO_FILE_DESCRIPTOR)
-    {
+    if (clientSocket != NO_FILE_DESCRIPTOR) {
         close(clientSocket);
         clientSocket = NO_FILE_DESCRIPTOR;
     }
@@ -82,8 +73,7 @@ GameRequestManager::disconnectFromServer()
 // status thing
 
 ServerResponse
-GameRequestManager::getPlayerStatus(const std::string& username)
-{
+GameRequestManager::getPlayerStatus(const std::string &username) {
     // this method is used to get some status from a player having the username
     // [username]
 
@@ -98,19 +88,17 @@ GameRequestManager::getPlayerStatus(const std::string& username)
     // send the request, and then restore the port
 
     const int currentPort = getCurrentPort();
-    if (changePort(lobbyServerPort) != StatusCode::SUCCESS)
-    {
+    if (changePort(lobbyServerPort) != StatusCode::SUCCESS) {
         return ServerResponse::ErrorResponse(INVALID_ID,
                                              StatusCode::ERROR_CHANGING_PORT);
     }
 
     // send the request and receive the response
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     const ServerResponse response = receiveResponse();
 
     // restore the port
-    if (changePort(currentPort) != StatusCode::SUCCESS)
-    {
+    if (changePort(currentPort) != StatusCode::SUCCESS) {
         return ServerResponse::ErrorResponse(INVALID_ID,
                                              StatusCode::ERROR_RESTORING_PORT);
     }
@@ -121,8 +109,7 @@ GameRequestManager::getPlayerStatus(const std::string& username)
 // main menu stuff
 
 ServerResponse
-GameRequestManager::startSession(const std::string& username)
-{
+GameRequestManager::startSession(const std::string &username) {
     // this method is used to start a new session
     // it will send a request to the lobby server to start a new session
     // it will return the response from the server
@@ -134,13 +121,12 @@ GameRequestManager::startSession(const std::string& username)
     request.params["username"] = username;
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     return receiveResponse();
 }
 
 ServerResponse
-GameRequestManager::endSession(const std::string& token)
-{
+GameRequestManager::endSession(const std::string &token) {
     // this method is used to end the current session
     // it will send a request to the lobby server to end the current session
     // it will return the response from the server
@@ -152,13 +138,12 @@ GameRequestManager::endSession(const std::string& token)
     request.params["token"] = token;
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     return receiveResponse();
 }
 
 ServerResponse
-GameRequestManager::getPublicLobbiesList()
-{
+GameRequestManager::getPublicLobbiesList() {
     // this method is used to get the list of public lobbies
     // it will send a request to the lobby server to get the list of public
     // lobbies it will return the response from the server
@@ -169,15 +154,14 @@ GameRequestManager::getPublicLobbiesList()
     request.method = ServerMethods::GET_PUBLIC_LOBBIES;
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     return receiveResponse();
 }
 
 ServerResponse
-GameRequestManager::createAndJoinLobby(const std::string& token,
+GameRequestManager::createAndJoinLobby(const std::string &token,
                                        GameMode gameMode, int maxPlayers,
-                                       bool isPublic)
-{
+                                       bool isPublic) {
     // this method is used to create and join a lobby
     // it will send a request to the lobby server to create and join a lobby
     // it will return the response from the server
@@ -192,27 +176,25 @@ GameRequestManager::createAndJoinLobby(const std::string& token,
     request.params["visibility"] = isPublic ? "public" : "private";
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     ServerResponse response = receiveResponse();
 
     // if the request is sucessful, we join the lobby. if not, we can return the
     // response
-    if (response.status != StatusCode::SUCCESS)
-    {
+    if (response.status != StatusCode::SUCCESS) {
         return response;
     }
 
     // we extract the lobbyState from the response
-    LobbyState lobbyState = LobbyState::deserialize(response.data.at("lobby"));
+    const LobbyState lobbyState = LobbyState::deserialize(response.data.at("lobby"));
 
     // we can join the lobby now
     return joinLobby(token, lobbyState.lobbyID);
 }
 
 ServerResponse
-GameRequestManager::joinLobby(const std::string& token,
-                              const std::string& lobbyID)
-{
+GameRequestManager::joinLobby(const std::string &token,
+                              const std::string &lobbyID) {
     // this method is used to join a lobby
     // it will send a request to the lobby server to join a lobby
     // it will return the response from the server
@@ -225,18 +207,16 @@ GameRequestManager::joinLobby(const std::string& token,
     request.params["lobbyID"] = lobbyID;
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     ServerResponse response = receiveResponse();
 
     // change the port to the lobby port if the request is successful
-    if (response.status != StatusCode::SUCCESS)
-    {
+    if (response.status != StatusCode::SUCCESS) {
         return response;
     }
 
     const int lobbyPort = std::stoi(response.data.at("port"));
-    if (changePort(lobbyPort) != StatusCode::SUCCESS)
-    {
+    if (changePort(lobbyPort) != StatusCode::SUCCESS) {
         return ServerResponse::ErrorResponse(INVALID_ID,
                                              StatusCode::ERROR_CHANGING_PORT);
     }
@@ -245,9 +225,8 @@ GameRequestManager::joinLobby(const std::string& token,
 }
 
 ServerResponse
-GameRequestManager::spectateLobby(const std::string& token,
-                                  const std::string& lobbyID)
-{
+GameRequestManager::spectateLobby(const std::string &token,
+                                  const std::string &lobbyID) {
     // this method is used to spectate a lobby
     // it will send a request to the lobby server to spectate a lobby
     // it will return the response from the server
@@ -260,18 +239,16 @@ GameRequestManager::spectateLobby(const std::string& token,
     request.params["lobbyID"] = lobbyID;
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     ServerResponse response = receiveResponse();
 
     // change the port to the lobby port if the request is successful
-    if (response.status != StatusCode::SUCCESS)
-    {
+    if (response.status != StatusCode::SUCCESS) {
         return response;
     }
 
     const int lobbyPort = std::stoi(response.data.at("port"));
-    if (changePort(lobbyPort) != StatusCode::SUCCESS)
-    {
+    if (changePort(lobbyPort) != StatusCode::SUCCESS) {
         return ServerResponse::ErrorResponse(INVALID_ID,
                                              StatusCode::ERROR_CHANGING_PORT);
     }
@@ -282,8 +259,7 @@ GameRequestManager::spectateLobby(const std::string& token,
 // lobby stuff
 
 ServerResponse
-GameRequestManager::getCurrentLobbyState(const std::string& token)
-{
+GameRequestManager::getCurrentLobbyState(const std::string &token) {
     // this method is used to get the state of the current lobby
     // it will send a request to the lobby server to get the state of the
     // current lobby it will return the response from the server
@@ -295,13 +271,12 @@ GameRequestManager::getCurrentLobbyState(const std::string& token)
     request.params["token"] = token;
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     return receiveResponse();
 }
 
 ServerResponse
-GameRequestManager::leaveLobby(const std::string& token)
-{
+GameRequestManager::leaveLobby(const std::string &token) {
     // this method is used to leave the current lobby
     // it will send a request to the lobby server to leave the current lobby
     // it will return the response from the server
@@ -313,12 +288,11 @@ GameRequestManager::leaveLobby(const std::string& token)
     request.params["token"] = token;
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     ServerResponse response = receiveResponse();
 
     // restore the port if the request is successful
-    if (response.status != StatusCode::SUCCESS)
-    {
+    if (response.status != StatusCode::SUCCESS) {
         return response;
     }
 
@@ -326,12 +300,11 @@ GameRequestManager::leaveLobby(const std::string& token)
     return restoreListeningPort() == StatusCode::SUCCESS
                ? response
                : ServerResponse::ErrorResponse(
-                     INVALID_ID, StatusCode::ERROR_RESTORING_PORT);
+                   INVALID_ID, StatusCode::ERROR_RESTORING_PORT);
 }
 
 ServerResponse
-GameRequestManager::readyUp(const std::string& token)
-{
+GameRequestManager::readyUp(const std::string &token) {
     // this method is used to ready up in the current lobby
     // it will send a request to the lobby server to ready up in the current
     // lobby it will return the response from the server
@@ -343,13 +316,12 @@ GameRequestManager::readyUp(const std::string& token)
     request.params["token"] = token;
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     return receiveResponse();
 }
 
 ServerResponse
-GameRequestManager::unreadyUp(const std::string& token)
-{
+GameRequestManager::unreadyUp(const std::string &token) {
     // this method is used to unready up in the current lobby
     // it will send a request to the lobby server to unready up in the current
     // lobby it will return the response from the server
@@ -361,16 +333,15 @@ GameRequestManager::unreadyUp(const std::string& token)
     request.params["token"] = token;
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     return receiveResponse();
 }
 
 // game stuff
 
 ServerResponse
-GameRequestManager::sendKeyStroke(const std::string& token,
-                                  const KeyStrokePacket& keyStroke)
-{
+GameRequestManager::sendKeyStroke(const std::string &token,
+                                  const KeyStrokePacket &keyStroke) {
     // this method is used to send a key stroke to the game server
     // it will send a request to the game server to send a key stroke
     // it will return the response from the server
@@ -383,13 +354,12 @@ GameRequestManager::sendKeyStroke(const std::string& token,
     request.params["keystroke"] = keyStroke.serialize();
 
     // send the request
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     return receiveResponse();
 }
 
 ServerResponse
-GameRequestManager::getGameState(const std::string& token)
-{
+GameRequestManager::getGameState(const std::string &token) {
     // this method is used to get the state of the game
     // it will send a request to the game server to get the state of the game
     // it will return the response from the server
@@ -402,15 +372,14 @@ GameRequestManager::getGameState(const std::string& token)
 
     // send the request
 
-    (void)sendRequest(request);
+    (void) sendRequest(request);
     return receiveResponse();
 }
 
 // connectivity
 
 StatusCode
-GameRequestManager::sendRequest(const ServerRequest& request)
-{
+GameRequestManager::sendRequest(const ServerRequest &request) {
     // this method is used to send a request to the server
     // it will serialize the request and send it to the server
 
@@ -419,10 +388,9 @@ GameRequestManager::sendRequest(const ServerRequest& request)
     // send the request
     const ssize_t sendLen = sendto(
         clientSocket, serializedRequest.c_str(), serializedRequest.size(), 0,
-        reinterpret_cast<struct sockaddr*>(&serverAddress),
+        reinterpret_cast<struct sockaddr *>(&serverAddress),
         sizeof(serverAddress));
-    if (sendLen < 0)
-    {
+    if (sendLen < 0) {
         return StatusCode::ERROR_SENDING_REQUEST;
     }
 
@@ -430,16 +398,14 @@ GameRequestManager::sendRequest(const ServerRequest& request)
 }
 
 ServerResponse
-GameRequestManager::receiveResponse()
-{
+GameRequestManager::receiveResponse() {
     // this method is used to receive a response from the server
     // it will receive the response from the server and deserialize it
 
     // receive the response
     char buffer[MAX_BUFFER_SIZE];
     const ssize_t recvLen = recv(clientSocket, buffer, MAX_BUFFER_SIZE, 0);
-    if (recvLen < 0)
-    {
+    if (recvLen < 0) {
         return ServerResponse::ErrorResponse(
             INVALID_ID, StatusCode::ERROR_RECEIVING_RESPONSE);
     }
@@ -450,8 +416,7 @@ GameRequestManager::receiveResponse()
 }
 
 StatusCode
-GameRequestManager::setSocketOptions()
-{
+GameRequestManager::setSocketOptions() {
     // this method is used to set the socket options
     // it will set the socket options for the client socket
 
@@ -461,8 +426,7 @@ GameRequestManager::setSocketOptions()
     timeout.tv_usec = TIMEOUT_USEC;
 
     if (setsockopt(clientSocket, SOL_SOCKET, SO_RCVTIMEO, &timeout,
-                   sizeof(timeout)) < 0)
-    {
+                   sizeof(timeout)) < 0) {
         return StatusCode::ERROR_SETTING_SOCKET_OPTIONS;
     }
 
@@ -475,13 +439,11 @@ GameRequestManager::setSocketOptions()
 }
 
 int
-GameRequestManager::getCurrentPort()
-{
+GameRequestManager::getCurrentPort() {
     // this method is used to get the current port of the server
     // it will return the port used by the current clientSocket
 
-    if (clientSocket == NO_FILE_DESCRIPTOR)
-    {
+    if (clientSocket == NO_FILE_DESCRIPTOR) {
         return EMPTY_LOBBY_PORT;
     }
 
@@ -489,19 +451,16 @@ GameRequestManager::getCurrentPort()
 }
 
 StatusCode
-GameRequestManager::changePort(int newPort)
-{
+GameRequestManager::changePort(int newPort) {
     // this method is used to change the port of the server
     // it will change the port of the server address
 
-    if (newPort == getCurrentPort())
-    {
+    if (newPort == getCurrentPort()) {
         // do nothing if the port is already the same
         return StatusCode::SUCCESS;
     }
 
-    if (newPort <= 0 || newPort > MAX_PORT)
-    {
+    if (newPort <= 0 || newPort > MAX_PORT) {
         return StatusCode::ERROR_INVALID_PORT;
     }
 
@@ -512,8 +471,7 @@ GameRequestManager::changePort(int newPort)
 }
 
 StatusCode
-GameRequestManager::restoreListeningPort()
-{
+GameRequestManager::restoreListeningPort() {
     // this method is used to restore the listening socket
     // it will change the port of the server address to the lobby server port
 
@@ -522,8 +480,7 @@ GameRequestManager::restoreListeningPort()
 }
 
 int
-GameRequestManager::generateRequestID()
-{
+GameRequestManager::generateRequestID() {
     // this method is used to generate a request ID
     // it will return a random number between 0 and MAX_REQUEST_ID
 

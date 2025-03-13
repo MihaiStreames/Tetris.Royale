@@ -26,7 +26,7 @@ class GameRequestManager
     ~GameRequestManager();
 
     [[nodiscard]] std::string getServerIP();
-    [[nodiscard]] int getPort();
+    [[nodiscard]] int getPort() const;
 
     // methods :
     [[nodiscard]] StatusCode connectToServer();
