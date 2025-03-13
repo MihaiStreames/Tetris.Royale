@@ -1,0 +1,20 @@
+
+# IDE stuff
+/.vscode
+/.idea
+
+# CMake stuff
+/cmake-build-*
+CMakeCache.txt
+
+# Build stuff
+/build/.cmake
+/build/CMakeFiles
+/build
+/lib
+
+# Python stuff
+/.venv
+/.pytest_cache
+__pycache__
+
