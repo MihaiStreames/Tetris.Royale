@@ -294,19 +294,19 @@ set_target_compile_options(TetrisRoyaleMasterServer)
 # 7. Client Executable
 file(GLOB TETRIS_CLIENT_SRC_FILES
     "${TETRIS_SRC_DIR}/client/*.cpp"
-    "${TETRIS_SRC_DIR}/client/TUI/*.cpp"
-    "${TETRIS_SRC_DIR}/client/TUI/data/*.cpp"
-    "${TETRIS_SRC_DIR}/client/TUI/menus/*.cpp"
+    "${TETRIS_SRC_DIR}/client/tui/*.cpp"
+    "${TETRIS_SRC_DIR}/client/tui/data/*.cpp"
+    "${TETRIS_SRC_DIR}/client/tui/menus/*.cpp"
 )
 add_executable(TetrisRoyaleClient
-    "${TETRIS_SRC_DIR}/client/TUI/menuHandler.cpp"
+    "${TETRIS_SRC_DIR}/client/tui/menuHandler.cpp"
     ${TETRIS_CLIENT_SRC_FILES})
 target_include_directories(TetrisRoyaleClient
     PRIVATE
         "${TETRIS_INCLUDE_DIR}/client"
-        "${TETRIS_INCLUDE_DIR}/client/TUI"
-        "${TETRIS_INCLUDE_DIR}/client/TUI/data"
-        "${TETRIS_INCLUDE_DIR}/client/TUI/menus"
+        "${TETRIS_INCLUDE_DIR}/client/tui"
+        "${TETRIS_INCLUDE_DIR}/client/tui/data"
+        "${TETRIS_INCLUDE_DIR}/client/tui/menus"
         "${TETRIS_INCLUDE_DIR}/common"
         "${TETRIS_INCLUDE_DIR}/common/server-common"
         "${TETRIS_INCLUDE_DIR}/server/server-game-logic"
