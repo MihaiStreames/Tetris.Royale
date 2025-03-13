@@ -11,6 +11,7 @@ CMakeCache.txt
 /build/.cmake
 /build/CMakeFiles
 /build
+/lib
 
 # Python stuff
 /.venv

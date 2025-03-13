@@ -11,7 +11,8 @@ if ! command -v unzip > /dev/null; then
 fi
 
 # Configuration
-INSTALL_ROOT="$HOME/tetris-deps"
+CURDIR=$(pwd)
+INSTALL_ROOT="$CURDIR/lib"
 BOOST_VERSION="1.87.0"
 NLOHMANN_JSON_VERSION="3.10.5"
 SQLITE_VERSION="3420000"
