@@ -5,10 +5,9 @@
 set -e # Exit on error
 
 # We check for curl and unzip, as they are required for downloading and extracting dependencies
-if ! command -v unzip &> /dev/null; then
-    echo "unzip could not be found, installing..."
-    sudo apt-get update
-    sudo apt-get install -y unzip
+if ! command -v unzip > /dev/null; then
+    echo "'unzip' is required but not installed. Please install it and try again."
+    exit 1
 fi
 
 # Configuration
@@ -122,19 +121,36 @@ if [ ! -d "$SQLITE_ROOT/include" ]; then
     unzip -q -o "$SQLITE_ARCHIVE" -d "$INSTALL_ROOT/downloads"
 
     # Verify the source file exists
-    if [ ! -f "$INSTALL_ROOT/downloads/sqlite-amalgamation-${SQLITE_VERSION}/sqlite3.c" ]; then
+    SQLITE_SRC_DIR="$INSTALL_ROOT/downloads/sqlite-amalgamation-${SQLITE_VERSION}"
+    if [ ! -f "$SQLITE_SRC_DIR/sqlite3.c" ]; then
         echo "Error: sqlite3.c not found in the extracted archive."
         exit 1
     fi
-    
+
     # Copy header file
-    cp "$INSTALL_ROOT/downloads/sqlite-amalgamation-${SQLITE_VERSION}/sqlite3.h" "$SQLITE_ROOT/include/"
+    cp "$SQLITE_SRC_DIR/sqlite3.h" "$SQLITE_ROOT/include/"
 
     # Compile SQLite
     echo "Compiling SQLite..."
-    gcc -c "$INSTALL_ROOT/downloads/sqlite-amalgamation-${SQLITE_VERSION}/sqlite3.c" -o "$INSTALL_ROOT/downloads/sqlite3.o" -o2 -fPIC
+    gcc -c "$SQLITE_SRC_DIR/sqlite3.c" -o "$INSTALL_ROOT/downloads/sqlite3.o" -O2 -fPIC
+    if [ $? -ne 0 ]; then
+        echo "Error: Compilation of sqlite3.c failed."
+        exit 1
+    fi
+
+    # Create shared library
     gcc -shared -o "$SQLITE_ROOT/lib/libsqlite3.so" "$INSTALL_ROOT/downloads/sqlite3.o" -ldl -lpthread
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to create shared library libsqlite3.so."
+        exit 1
+    fi
+
+    # Create static library
     ar rcs "$SQLITE_ROOT/lib/libsqlite3.a" "$INSTALL_ROOT/downloads/sqlite3.o"
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to create static library libsqlite3.a."
+        exit 1
+    fi
 
     echo "SQLite installed successfully at ${SQLITE_ROOT}"
 else

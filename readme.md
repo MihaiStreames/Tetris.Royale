@@ -6,6 +6,7 @@ For further details, please refer to the following documents:
 
 - [`./team/enonce.pdf`](./team/enonce.pdf)
 - [`./team/consignes.pdf`](./team/consignes.pdf)
+- [`./team/srd/srd.pdf`](./team/srd/srd.pdf)
 
 ## Features
 
@@ -15,6 +16,7 @@ For further details, please refer to the following documents:
 
 ## Installation
 
+Ensure you have **CMake** and a **C++ compiler** installed on your system, as well as the `unzip` package.
 To get **Tetris Royale** up and running on your machine, you must use the `install.sh` installation script:
 
 ```sh
@@ -51,8 +53,8 @@ This script will install any necessary libraries and tools for the project.
 Create a build directory and configure the project using CMake. Then, compile the project using **make**:
 
 ```sh
-mkdir test_build
-cd test_build
+mkdir build
+cd build
 cmake ..
 make
 ```
@@ -81,4 +83,4 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## Acknowledgements
 
-This project was developed for the **`Projet d'informatique 2`** course **`INFO-F209`**. Special thanks to `Alexis Reynouard (ULB)` and `Simon Renard (ULB)` for their guidance and support.
+This project was developed for the **`Projet d'informatique 2`** course **`INFO-F209`**. Special thanks to `Alexis Reynouard (ULB)`, `Simon Renard (ULB)` and `Hugo Callebaut (ULB)` for their guidance and support.

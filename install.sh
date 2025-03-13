@@ -3,10 +3,9 @@
 
 start_time=$(date +%s)
 
-# TODO : fix the find_dependencies.sh script (somehow fails with zip)
 echo "Running find_dependencies.sh..."
 start_dep_time=$(date +%s)
-sh ./build/find_dependencies.sh
+sh ./scripts/find_dependencies.sh
  
 if [ $? -ne 0 ]; then
     echo "find_dependencies.sh failed. Exiting."
@@ -19,8 +18,8 @@ echo "find_dependencies.sh completed in $dep_time seconds."
 source "$HOME/tetris-deps/setup-env.sh"
 
 echo "Creating test_build directory..."
-mkdir -p test_build
-cd test_build
+mkdir -p build
+cd build
 
 echo "Running cmake .."
 start_cmake_time=$(date +%s)
