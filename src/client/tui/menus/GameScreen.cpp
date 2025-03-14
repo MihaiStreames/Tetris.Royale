@@ -5,20 +5,20 @@ using namespace ftxui;
 
 Decorator colorForValue(int value) {
     switch (value) {
-        case 1: return color(Color::Yellow);          // I
+        case 1: return color(Color::Yellow); // I
         case 2: return color(Color::LightGoldenrod1); // O
-        case 3: return color(Color::Green);           // J
-        case 4: return color(Color::Magenta);         // Z
-        case 5: return color(Color::Red);             // S
-        case 6: return color(Color::Cyan);            // T
-        case 7: return color(Color::Blue);            // L
-        case 8: return color(Color::White);           // Ghost/preview
+        case 3: return color(Color::Green); // J
+        case 4: return color(Color::Magenta); // Z
+        case 5: return color(Color::Red); // S
+        case 6: return color(Color::Cyan); // T
+        case 7: return color(Color::Blue); // L
+        case 8: return color(Color::White); // Ghost/preview
         default: return color(Color::Default);
     }
 }
 
 // Render a tetris board
-Element renderBoard(const tetroMat &board, bool darkMode = false) {
+Element renderBoard(const tetroMat &board, bool darkMode, bool isOpponentBoard) {
     if (board.empty()) {
         return text("No board data") | center;
     }
@@ -26,17 +26,21 @@ Element renderBoard(const tetroMat &board, bool darkMode = false) {
     const int height = static_cast<int>(board.size());
     const int width = static_cast<int>(board[0].size());
 
+    // Calculate cell size - smaller for opponent board
+    const std::string cellFull = "██"; // isOpponentBoard ? "█" : "██";
+    const std::string cellEmpty = "  "; // isOpponentBoard ? " " : "  ";
+
     Elements rows;
-    for (int y = 0; y < height; y++) {
+    for (int y = 0; y < height; ++y) {
         Elements cells;
-        for (int x = 0; x < width; x++) {
+        for (int x = 0; x < width; ++x) {
             std::string cellStr;
             if (darkMode && board[y][x] != 0) {
-                cellStr = "██"; // In dark mode, only show filled cells
+                cellStr = cellFull; // In dark mode, only show filled cells
             } else if (!darkMode) {
-                cellStr = board[y][x] == 0 ? "  " : "██";
+                cellStr = board[y][x] == 0 ? cellEmpty : cellFull;
             } else {
-                cellStr = "  "; // Empty in dark mode
+                cellStr = cellEmpty; // Empty in dark mode
             }
 
             cells.push_back(text(cellStr) | colorForValue(board[y][x]));
@@ -44,12 +48,15 @@ Element renderBoard(const tetroMat &board, bool darkMode = false) {
         rows.push_back(hbox(cells));
     }
 
-    return window(text("BOARD") | bold | color(Color::White), vbox(rows));
+    return window(
+        text(isOpponentBoard ? "OPPONENT" : "BOARD") | bold | color(Color::White),
+        vbox(rows)
+    );
 }
 
 // Render energy bar
 Element renderEnergyBar(int energy) {
-    const int maxEnergy = MAX_ENERGY;
+    constexpr int maxEnergy = MAX_ENERGY;
     const int filledCells = (energy * 10) / maxEnergy;
 
     Elements barElements;
@@ -68,9 +75,9 @@ Element renderEnergyBar(int energy) {
 }
 
 // Render a tetromino preview (hold/next)
-Element renderPiece(PieceType type, int height = 4, int width = 5) {
+Element renderPiece(PieceType type, int height, int width) {
     // Initialize an empty canvas grid
-    std::vector<std::vector<bool>> canvas(height, std::vector<bool>(width, false));
+    std::vector<std::vector<bool> > canvas(height, std::vector<bool>(width, false));
 
     // Draw the tetromino shape based on its type
     switch (type) {
@@ -154,23 +161,23 @@ Element renderStats(int score, int level, int linesCleared) {
     });
 
     return window(text("STATS") | bold | color(Color::White),
-        vbox({scoreElement, levelElement, linesElement}));
+                  vbox({scoreElement, levelElement, linesElement}));
 }
 
 // Control help for player view
 Element renderControls() {
     return window(text("CONTROLS") | bold | color(Color::White),
-        vbox({
-            text("←/→: Move") | color(Color::Yellow),
-            text("Q/E: Rotate") | color(Color::Yellow),
-            text("↓: Down") | color(Color::Yellow),
-            text("Space: Drop") | color(Color::Yellow),
-            text("C: Hold") | color(Color::Yellow),
-            text("B: Bonus") | color(Color::Yellow),
-            text("M: Malus") | color(Color::Yellow),
-            text("S/W: Switch View") | color(Color::Yellow),
-            text("Esc: Exit") | color(Color::Yellow)
-        }));
+                  vbox({
+                      text("←/→: Move") | color(Color::Yellow),
+                      text("Q/E: Rotate") | color(Color::Yellow),
+                      text("↓: Down") | color(Color::Yellow),
+                      text("Space: Drop") | color(Color::Yellow),
+                      text("C: Hold") | color(Color::Yellow),
+                      text("B: Bonus") | color(Color::Yellow),
+                      text("M: Malus") | color(Color::Yellow),
+                      text("S/W: Switch View") | color(Color::Yellow),
+                      text("Esc: Exit") | color(Color::Yellow)
+                  }));
 }
 
 void showGameScreen(ClientSession &session) {
@@ -187,38 +194,37 @@ void showGameScreen(ClientSession &session) {
         errorMessage = "Not in game! Current status: " + std::to_string(static_cast<int>(status));
     }
 
-    // For controlling frame rate
+    // For automatic game state polling
     int frameCounter = 0;
-    constexpr int FRAME_RATE = 60;
+    constexpr int POLL_INTERVAL = 5; // How many frames between status checks
 
-    // Create a renderer with key event handling
+    // Create a renderer with continuous polling
     Component empty = Container::Vertical({});
     auto renderer = Renderer(empty, [&] {
-        // Increment frame counter for periodic updates
+        // Poll for game state and status updates on every frame redraw
+        // This happens automatically without requiring user input
         frameCounter++;
-        if (frameCounter >= FRAME_RATE) {
+        if (frameCounter >= POLL_INTERVAL) {
             frameCounter = 0;
-
-            // Periodically check if we're still in game
-            // ClientStatus currentStatus = session.getOwnStatus();
-            // if (currentStatus != ClientStatus::IN_GAME) {
-            //     // If we're no longer in game and not explicitly leaving
-            //     currentScreen = ScreenState::MainMenu;
-            //     screen.Exit();
-            //     return text("Game ended") | center;
-            // }
+            // Check if we're still in game
+            ClientStatus currentStatus = session.getOwnStatus();
+            if (currentStatus != ClientStatus::IN_GAME) {
+                currentScreen = ScreenState::MainMenu;
+                screen.Exit();
+                return text("Game ended") | center;
+            }
         }
 
+        // Try to get player state first
         try {
-            // Try to get player state first
             PlayerState state = session.getPlayerState();
             isSpectator = false;
 
             // Main game board
-            auto mainBoard = renderBoard(state.playerGrid, darkMode);
+            auto mainBoard = renderBoard(state.playerGrid, darkMode, false);
 
-            // Target opponent board
-            auto targetBoard = renderBoard(state.targetGrid);
+            // Target opponent board - smaller version
+            auto targetBoard = renderBoard(state.targetGrid, false, true);
 
             // Energy bar
             auto energyBar = renderEnergyBar(MAX_ENERGY);
@@ -241,7 +247,7 @@ void showGameScreen(ClientSession &session) {
                 content.push_back(text(errorMessage) | color(Color::Red));
             }
 
-            // Add main content
+            // Add main content - centered layout
             content.push_back(
                 hbox({
                     // Left - info panel
@@ -251,18 +257,20 @@ void showGameScreen(ClientSession &session) {
                         nextPieceDisplay,
                         energyBar,
                         controls
-                    }) | size(WIDTH, EQUAL, 20) | color(Color::Green),
+                    }),
 
                     // Center - main board
-                    mainBoard | size(WIDTH, EQUAL, 22) | color(Color::Green),
+                    vbox({
+                        mainBoard
+                    }) | center,
 
                     // Right - opponent view
                     vbox({
                         text("Opponent: " + state.targetUsername) | bold | center,
-                        targetBoard | size(WIDTH, EQUAL, 20),
-                        text("Press S/W to cycle opponents") | center
-                    }) | size(WIDTH, EQUAL, 22) | color(Color::Green)
-                })
+                        targetBoard,
+                        text("Press S/W to cycle") | center
+                    }) | center
+                }) | center
             );
 
             return vbox(content) | border | color(Color::Green);
@@ -294,11 +302,11 @@ void showGameScreen(ClientSession &session) {
                             holdPieceDisplay,
                             nextPieceDisplay,
                             text("Press Esc to exit") | center
-                        }) | size(WIDTH, EQUAL, 20),
+                        }),
 
                         // Center - main board
-                        renderBoard(state.playerGrid, darkMode) | size(WIDTH, EQUAL, 22)
-                    })
+                        renderBoard(state.playerGrid, darkMode, false)
+                    }) | center
                 );
 
                 return vbox(content) | border;
@@ -308,9 +316,9 @@ void showGameScreen(ClientSession &session) {
                 ClientStatus currentStatus = session.getOwnStatus();
                 if (currentStatus != ClientStatus::IN_GAME) {
                     return vbox({
-                        text("Not in game - Status: " + std::to_string(static_cast<int>(currentStatus))),
-                        text("Press Esc to return to menu")
-                    }) | center | border;
+                               text("Not in game - Status: " + std::to_string(static_cast<int>(currentStatus))),
+                               text("Press Esc to return to menu")
+                           }) | center | border;
                 }
 
                 return text("Waiting for game state...") | center | border;
@@ -318,7 +326,7 @@ void showGameScreen(ClientSession &session) {
         }
     });
 
-    // Handle keyboard input
+    // Add key event handler
     auto rendererWithKeys = CatchEvent(renderer, [&](Event event) {
         // Only handle keys if not in spectator mode
         if (isSpectator) {
@@ -357,7 +365,7 @@ void showGameScreen(ClientSession &session) {
             }
             return true;
         }
-        if (event == Event::ArrowUp) {
+        if (event == Event::Character('e')) {
             StatusCode result = session.sendKeyStroke(Action::RotateRight);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
@@ -421,9 +429,8 @@ void showGameScreen(ClientSession &session) {
         if (event == Event::Escape) {
             // Check current status to determine if we're in lobby or game
             ClientStatus currentStatus = session.getOwnStatus();
-
             if (currentStatus == ClientStatus::IN_GAME) {
-                StatusCode result = session.leaveLobby();
+                StatusCode result = session.leaveLobby(); // TODO: LEAVE GAME NOT LEAVE LOBBY
                 if (result == StatusCode::SUCCESS) {
                     currentScreen = ScreenState::MainMenu;
                     screen.Exit();
@@ -431,7 +438,6 @@ void showGameScreen(ClientSession &session) {
                     errorMessage = "Failed to leave lobby: " + getStatusCodeString(result);
                 }
             } else {
-                // If we're in game, just go back to main menu
                 currentScreen = ScreenState::MainMenu;
                 screen.Exit();
             }
@@ -441,6 +447,13 @@ void showGameScreen(ClientSession &session) {
         return false;
     });
 
-    // Main loop with automatic refresh
+    // Main loop with automatic frame update
+    std::thread([&screen]{
+    while (true) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        screen.PostEvent(Event::Custom);
+    }
+    }).detach();
+
     screen.Loop(rendererWithKeys);
 }
