@@ -1,6 +1,5 @@
 #include "LobbyBrowser.hpp"
 #include "Common.hpp"
-#include <sstream>
 
 using namespace ftxui;
 
@@ -32,7 +31,7 @@ void showLobbyBrowser(ClientSession &session) {
     // Error message for display
     std::string errorMessage;
 
-    // Get list of public lobbies
+    // Initial fetch of public lobbies
     auto lobbiesData = session.getPublicLobbiesList();
     auto [lobbyIds, lobbyStates] = parseLobbies(lobbiesData);
 
@@ -82,6 +81,34 @@ void showLobbyBrowser(ClientSession &session) {
         }
     };
     auto lobbyMenu = Menu(&lobbyOptions, &selectedLobby, menuOption);
+
+    std::string lobbyCode;
+    auto lobbyCodeInput = Input(&lobbyCode, "Lobby Code");
+
+    auto joinByCodeButton = Button("Join by Code", [&] {
+        if (!lobbyCode.empty()) {
+            // Assumes session.joinLobby() can also use a lobby code.
+            StatusCode result = session.joinLobby(lobbyCode);
+            if (result == StatusCode::SUCCESS) {
+                currentScreen = ScreenState::InLobby;
+                screen.Exit();
+            } else {
+                errorMessage = "Failed to join lobby by code: " + getStatusCodeString(result);
+            }
+        }
+    });
+
+    auto spectateByCodeButton = Button("Spectate by Code", [&] {
+        if (!lobbyCode.empty()) {
+            StatusCode result = session.spectateLobby(lobbyCode);
+            if (result == StatusCode::SUCCESS) {
+                currentScreen = ScreenState::InGame;
+                screen.Exit();
+            } else {
+                errorMessage = "Failed to spectate lobby by code: " + getStatusCodeString(result);
+            }
+        }
+    });
 
     // Game mode selection for creating a lobby
     int selectedGameMode = 0;
@@ -234,6 +261,9 @@ void showLobbyBrowser(ClientSession &session) {
         publicToggle,
         joinButton,
         spectateButton,
+        lobbyCodeInput,
+        joinByCodeButton,
+        spectateByCodeButton,
         createButton,
         refreshButton,
         backButton
@@ -267,7 +297,10 @@ void showLobbyBrowser(ClientSession &session) {
         mainContent.push_back(hbox({
             joinButton->Render(),
             spectateButton->Render(),
-            refreshButton->Render()
+            refreshButton->Render(),
+            lobbyCodeInput->Render(),
+            joinByCodeButton->Render(),
+            spectateByCodeButton->Render()
         }));
         mainContent.push_back(separator());
         mainContent.push_back(createLobbyPanel);
@@ -277,6 +310,63 @@ void showLobbyBrowser(ClientSession &session) {
         return vbox(mainContent) | border | color(Color::Green);
     });
 
+    // Polling thread to refresh lobbies
+    std::atomic_bool running{true};
+    std::mutex mtx;
+    std::condition_variable cv;
+
+    int fetchLobbyCounter = 0;
+    constexpr int FETCH_LOBBIES_INTERVAL = 100; // ~5 seconds if using 50ms intervals
+
+    std::thread pollingThread([&]() {
+        std::unique_lock<std::mutex> lock(mtx);
+        while (running) {
+            fetchLobbyCounter++;
+            if (fetchLobbyCounter >= FETCH_LOBBIES_INTERVAL) {
+                // Refresh public lobbies.
+                lobbiesData = session.getPublicLobbiesList();
+                auto result = parseLobbies(lobbiesData);
+
+                lobbyIds = result.first;
+                lobbyStates = result.second;
+
+                lobbyOptions.clear();
+                if (lobbyStates.empty()) {
+                    lobbyOptions.push_back("No available lobbies");
+                } else {
+                    for (const auto &state : lobbyStates) {
+                        std::string gameModeName;
+                        switch (state.gameMode) {
+                            case GameMode::CLASSIC: gameModeName = "Classic";   break;
+                            case GameMode::DUEL:    gameModeName = "Duel";      break;
+                            case GameMode::ROYALE:  gameModeName = "Royale";    break;
+                            default:                gameModeName = "Unknown";
+                        }
+                        std::stringstream ss;
+                        ss << "ID: " << state.lobbyID
+                           << " | Mode: " << gameModeName
+                           << " | Players: " << state.players.size() << "/" << state.maxPlayers
+                           << " | Spectators: " << state.spectators.size();
+                        lobbyOptions.push_back(ss.str());
+                    }
+                }
+                if (selectedLobby >= static_cast<int>(lobbyOptions.size())) {
+                    selectedLobby = lobbyOptions.empty() ? 0 : lobbyOptions.size() - 1;
+                }
+                fetchLobbyCounter = 0;
+            }
+            screen.PostEvent(Event::Custom);
+            cv.wait_for(lock, std::chrono::milliseconds(50));
+        }
+    });
+
     // Main loop
     screen.Loop(renderer);
+
+    // Cleanup polling thread
+    running = false;
+    cv.notify_all();
+    if (pollingThread.joinable()) {
+        pollingThread.join();
+    }
 }

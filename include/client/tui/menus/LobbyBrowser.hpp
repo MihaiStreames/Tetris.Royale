@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ClientSession.hpp"
+#include <sstream>
 #include "ftxui/component/captured_mouse.hpp"
 #include "ftxui/component/component.hpp"
 #include "ftxui/component/component_base.hpp"

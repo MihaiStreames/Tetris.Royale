@@ -3,7 +3,7 @@
 
 using namespace ftxui;
 
-Decorator colorForValue(int value) {
+Decorator colorForValue(const int value) {
     switch (value) {
         case 1: return color(Color::Yellow); // I
         case 2: return color(Color::LightGoldenrod1); // O
@@ -18,7 +18,7 @@ Decorator colorForValue(int value) {
 }
 
 // Render a tetris board
-Element renderBoard(const tetroMat &board, bool darkMode, bool isOpponentBoard) {
+Element renderBoard(const tetroMat &board, const bool darkMode, const bool isOpponentBoard) {
     if (board.empty()) {
         return text("No board data") | center;
     }
@@ -55,9 +55,9 @@ Element renderBoard(const tetroMat &board, bool darkMode, bool isOpponentBoard) 
 }
 
 // Render energy bar
-Element renderEnergyBar(int energy) {
+Element renderEnergyBar(const int energy) {
     constexpr int maxEnergy = MAX_ENERGY;
-    const int filledCells = (energy * 10) / maxEnergy;
+    const int filledCells = energy * 10 / maxEnergy;
 
     Elements barElements;
     for (int i = 0; i < 10; i++) {
@@ -75,9 +75,9 @@ Element renderEnergyBar(int energy) {
 }
 
 // Render a tetromino preview (hold/next)
-Element renderPiece(PieceType type, int height, int width) {
+Element renderPiece(PieceType type, const int height, const int width) {
     // Initialize an empty canvas grid
-    std::vector<std::vector<bool> > canvas(height, std::vector<bool>(width, false));
+    std::vector canvas(height, std::vector(width, false));
 
     // Draw the tetromino shape based on its type
     switch (type) {
@@ -144,7 +144,7 @@ Element renderBox(const std::string &title, Element content) {
     return window(text(title) | bold | color(Color::White), vbox({content}));
 }
 
-Element renderStats(int score, int level, int linesCleared) {
+Element renderStats(const int score, const int level, const int linesCleared) {
     Element scoreElement = hbox({
         text("Score: ") | color(Color::White),
         text(std::to_string(score)) | color(Color::Green)
@@ -168,14 +168,13 @@ Element renderStats(int score, int level, int linesCleared) {
 Element renderControls() {
     return window(text("CONTROLS") | bold | color(Color::White),
                   vbox({
-                      text("←/→: Move") | color(Color::Yellow),
+                      text("A/D: Move") | color(Color::Yellow),
                       text("Q/E: Rotate") | color(Color::Yellow),
                       text("↓: Down") | color(Color::Yellow),
                       text("Space: Drop") | color(Color::Yellow),
                       text("C: Hold") | color(Color::Yellow),
                       text("B: Bonus") | color(Color::Yellow),
                       text("M: Malus") | color(Color::Yellow),
-                      text("S/W: Switch View") | color(Color::Yellow),
                       text("Esc: Exit") | color(Color::Yellow)
                   }));
 }
@@ -186,7 +185,7 @@ void showGameScreen(ClientSession &session) {
     // Track player view (for cycling through opponents)
     bool isSpectator = false;
     std::string errorMessage;
-    bool darkMode = false;
+    constexpr bool darkMode = false;
 
     // Check player status to determine if we're already in a game
     ClientStatus status = session.getOwnStatus();
@@ -194,30 +193,12 @@ void showGameScreen(ClientSession &session) {
         errorMessage = "Not in game! Current status: " + std::to_string(static_cast<int>(status));
     }
 
-    // For automatic game state polling
-    int frameCounter = 0;
-    constexpr int POLL_INTERVAL = 5; // How many frames between status checks
-
     // Create a renderer with continuous polling
-    Component empty = Container::Vertical({});
-    auto renderer = Renderer(empty, [&] {
-        // Poll for game state and status updates on every frame redraw
-        // This happens automatically without requiring user input
-        frameCounter++;
-        if (frameCounter >= POLL_INTERVAL) {
-            frameCounter = 0;
-            // Check if we're still in game
-            ClientStatus currentStatus = session.getOwnStatus();
-            if (currentStatus != ClientStatus::IN_GAME) {
-                currentScreen = ScreenState::MainMenu;
-                screen.Exit();
-                return text("Game ended") | center;
-            }
-        }
-
+    const Component empty = Container::Vertical({});
+    const auto renderer = Renderer(empty, [&] {
         // Try to get player state first
         try {
-            PlayerState state = session.getPlayerState();
+            const PlayerState state = session.getPlayerState();
             isSpectator = false;
 
             // Main game board
@@ -277,7 +258,7 @@ void showGameScreen(ClientSession &session) {
         } catch (...) {
             // If player state fails, try spectator state
             try {
-                SpectatorState state = session.getSpectatorState();
+                const SpectatorState state = session.getSpectatorState();
                 isSpectator = true;
 
                 Elements content;
@@ -344,14 +325,14 @@ void showGameScreen(ClientSession &session) {
         }
 
         // Game controls for player mode
-        if (event == Event::ArrowLeft) {
+        if (event == Event::Character('a')) {
             StatusCode result = session.sendKeyStroke(Action::MoveLeft);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::ArrowRight) {
+        if (event == Event::Character('d')) {
             StatusCode result = session.sendKeyStroke(Action::MoveRight);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
@@ -447,13 +428,29 @@ void showGameScreen(ClientSession &session) {
         return false;
     });
 
-    // Main loop with automatic frame update
-    std::thread([&screen]{
-    while (true) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
-        screen.PostEvent(Event::Custom);
-    }
-    }).detach();
+    // Controlled polling
+    std::atomic_bool running{true};
+    std::mutex mtx;
+    std::condition_variable cv;
 
+    // Start the polling thread
+    std::thread pollingThread([&screen, &running, &mtx, &cv] {
+        std::unique_lock lock(mtx);
+        while (running) {
+            // Wait for 50ms or until notified
+            if (cv.wait_for(lock, std::chrono::milliseconds(50)) == std::cv_status::timeout) {
+                screen.PostEvent(Event::Custom);
+            }
+        }
+    });
+
+    // Main event loop
     screen.Loop(rendererWithKeys);
+
+    // After exiting the loop, signal the polling thread to stop.
+    running = false;
+    cv.notify_all();
+    if (pollingThread.joinable()) {
+        pollingThread.join();
+    }
 }

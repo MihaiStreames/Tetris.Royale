@@ -3,12 +3,12 @@
 
 using namespace ftxui;
 
-std::string getGameModeName(GameMode mode) {
+std::string getGameModeName(const GameMode mode) {
     switch (mode) {
         case GameMode::CLASSIC: return "Classic";
-        case GameMode::DUEL: return "Duel";
-        case GameMode::ROYALE: return "Royale";
-        default: return "Unknown";
+        case GameMode::DUEL:    return "Duel";
+        case GameMode::ROYALE:  return "Royale";
+        default:                return "Unknown";
     }
 }
 
@@ -18,8 +18,9 @@ void showInLobbyScreen(ClientSession &session) {
     // Initialize with an empty state
     LobbyState lobbyState = LobbyState::generateEmptyState();
     std::string errorMessage;
+    bool gameStarting = false;
 
-    // Initial fetch with error handling
+    // Initial fetch
     try {
         lobbyState = session.getCurrentLobbyState();
 
@@ -60,86 +61,25 @@ void showInLobbyScreen(ClientSession &session) {
     });
 
     // Container for interactive components
-    auto container = Container::Vertical({
+    const auto container = Container::Vertical({
         readyButton,
         unreadyButton,
         leaveButton
     });
 
-    // Variable to track refresh cycle
-    int refreshCounter = 0;
-    bool gameStarting = false;
-
-    // Main renderer with auto-refresh
-    auto renderer = Renderer(container, [&] {
-        // Refresh the lobby state periodically
-        if (refreshCounter++ % 10 == 0) {
-            // First, check player status to detect if game has started
-            ClientStatus currentStatus = session.getOwnStatus();
-
-            if (currentStatus == ClientStatus::IN_GAME) {
-                // Game has started, transition to game screen
-                gameStarting = true;
-                currentScreen = ScreenState::InGame;
-                screen.Exit();
-                return text("Starting game...") | center;
-            }
-
-            // If still in lobby, try to get lobby state
-            try {
-                LobbyState newState = session.getCurrentLobbyState();
-
-                // Check if we got a valid state
-                if (newState.lobbyID.empty()) {
-                    errorMessage = "Warning: Received empty lobby state";
-                } else {
-                    lobbyState = newState;
-                    errorMessage = ""; // Clear error on successful update
-
-                    // Check if the game is starting - all players ready
-                    bool allReady = true;
-                    int playerCount = 0;
-
-                    for (const auto &[token, isReady]: lobbyState.readyPlayers) {
-                        if (!isReady) {
-                            allReady = false;
-                        }
-                        playerCount++;
-                    }
-
-                    // Start countdown if conditions are met
-                    if (allReady && playerCount >= 2) {
-                        gameStarting = true;
-                        return text("All players ready! Starting game...") | center | bold;
-                    }
-                }
-            } catch (const std::exception &e) {
-                // If we can't get lobby state, check if it's because game started
-                ClientStatus statusCheck = session.getOwnStatus();
-                if (statusCheck == ClientStatus::IN_GAME) {
-                    gameStarting = true;
-                    currentScreen = ScreenState::InGame;
-                    screen.Exit();
-                    return text("Starting game...") | center;
-                } else {
-                    errorMessage = "Error refreshing lobby: " + std::string(e.what());
-                }
-                // Keep the existing state
-            }
-        }
-
+    // Main renderer
+    const auto renderer = Renderer(container, [&] {
         // If game is starting, show countdown
         if (gameStarting) {
             return text("Game starting...") | center | bold;
         }
 
-        // Build player list with safe iteration
+        // Build player list
         Elements playerElements;
         if (lobbyState.players.empty()) {
             playerElements.push_back(text("No players in lobby"));
         } else {
             for (const auto &[token, username]: lobbyState.players) {
-                // Safe lookup in readyPlayers
                 bool isReady = false;
                 auto it = lobbyState.readyPlayers.find(token);
                 if (it != lobbyState.readyPlayers.end()) {
@@ -187,22 +127,70 @@ void showInLobbyScreen(ClientSession &session) {
         return vbox(content) | border | color(Color::Green);
     });
 
-    // Add key event handler to check for game start
-    auto rendererWithKeys = CatchEvent(renderer, [&](Event event) {
-        // Check if game has started
-        if (refreshCounter % 5 == 0) {
+    // Polling thread for lobby state
+    std::atomic_bool running{true};
+    std::mutex mtx;
+    std::condition_variable cv;
+
+    std::thread pollingThread([&] {
+        std::unique_lock lock(mtx);
+        while (running) {
+            // Check if the game has started
             ClientStatus currentStatus = session.getOwnStatus();
             if (currentStatus == ClientStatus::IN_GAME) {
                 gameStarting = true;
                 currentScreen = ScreenState::InGame;
                 screen.Exit();
-                return true;
+                break;
             }
-        }
 
-        return false;
+            // Update lobby state periodically
+            try {
+                LobbyState newState = session.getCurrentLobbyState();
+                if (newState.lobbyID.empty()) {
+                    errorMessage = "Warning: Received empty lobby state";
+                } else {
+                    lobbyState = newState;
+                    errorMessage = "";  // Clear error on success
+
+                    // Check if all players are ready
+                    bool allReady = true;
+                    int playerCount = 0;
+
+                    for (const auto &[token, isReady] : lobbyState.readyPlayers) {
+                        if (!isReady) {
+                            allReady = false;
+                        }
+                        playerCount++;
+                    }
+                    if (allReady && playerCount >= 2) {
+                        gameStarting = true;
+                    }
+                }
+            } catch (const std::exception &e) {
+                // In case of exception, verify if game has started.
+                ClientStatus statusCheck = session.getOwnStatus();
+                if (statusCheck == ClientStatus::IN_GAME) {
+                    gameStarting = true;
+                    currentScreen = ScreenState::InGame;
+                    screen.Exit();
+                    break;
+                }
+                errorMessage = "Error refreshing lobby: " + std::string(e.what());
+            }
+            // Trigger a redraw.
+            screen.PostEvent(Event::Custom);
+            cv.wait_for(lock, std::chrono::milliseconds(50));
+        }
     });
 
     // Main loop
-    screen.Loop(rendererWithKeys);
+    screen.Loop(renderer);
+
+    // Cleanup polling thread
+    running = false;
+    cv.notify_all();
+    if (pollingThread.joinable()) {
+        pollingThread.join();
+    }
 }

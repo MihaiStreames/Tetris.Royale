@@ -11,13 +11,12 @@ void showMainMenu(ClientSession &session) {
 
     // Tab selection
     int activeTab = 0;
-    int previousTab = 0; // Track previous tab to detect changes
-    std::vector<std::string> tabs = {"Home", "Friends", "Messages", "Leaderboard"};
+    const std::vector<std::string> tabs = {"Home", "Friends", "Messages", "Leaderboard"};
     auto tabToggle = Toggle(&tabs, &activeTab);
 
     // Friends tab
     std::vector<std::string> &friendList = session.getFriendList();
-    std::vector<std::string> &pendingRequests = session.getPendingFriendRequests();
+    const std::vector<std::string> &pendingRequests = session.getPendingFriendRequests();
 
     // Friend request management
     std::string friendToAdd;
@@ -50,7 +49,7 @@ void showMainMenu(ClientSession &session) {
 
     auto sendMessageButton = Button("Send", [&] {
         if (!messageInput.empty() && !friendList.empty()) {
-            std::string recipient = friendList[selectedFriendIndex];
+            const std::string recipient = friendList[selectedFriendIndex];
             (void) session.sendMessage(recipient, messageInput);
             messageInput.clear();
 
@@ -100,7 +99,7 @@ void showMainMenu(ClientSession &session) {
     }
 
     // Main container for interactive components
-    auto container = Container::Vertical({
+    const auto container = Container::Vertical({
         tabToggle,
         playButton,
         logoutButton,
@@ -112,66 +111,19 @@ void showMainMenu(ClientSession &session) {
     });
 
     // Add friend request components
-    for (auto &comp: requestComponents) {
+    for (const auto &comp: requestComponents) {
         container->Add(comp);
     }
 
-    // Variables for periodic refresh
-    int refreshCounter = 0;
-    int messageRefreshCounter = 0;
-    constexpr int REFRESH_INTERVAL = 100; // Refresh every 100 render cycles
-    constexpr int MESSAGE_REFRESH_INTERVAL = 5; // Poll for messages very frequently (almost constant polling)
-
     // Main renderer
-    auto renderer = Renderer(container, [&] {
-        // Check for tab change and refresh data if needed
-        if (activeTab != previousTab) {
-            (void) session.fetchPlayerData();
-
-            // If switching to Messages tab, refresh messages for the selected friend
-            if (activeTab == 2 && !friendList.empty()) {
-                std::string selectedFriend = friendList[selectedFriendIndex];
-                (void) session.getPlayerMessages(selectedFriend); // This updates the internal message cache
-            }
-
-            previousTab = activeTab;
-        }
-
-        // Periodic refresh for player data
-        refreshCounter++;
-        if (refreshCounter >= REFRESH_INTERVAL) {
-            (void) session.fetchPlayerData();
-            refreshCounter = 0;
-        }
-
-        // Almost constant polling for messages when in Messages tab
-        if (activeTab == 2 && !friendList.empty()) {
-            messageRefreshCounter++;
-            if (messageRefreshCounter >= MESSAGE_REFRESH_INTERVAL) {
-                std::string selectedFriend = friendList[selectedFriendIndex];
-                (void) session.getPlayerMessages(selectedFriend); // This updates the internal message cache
-                messageRefreshCounter = 0;
-            }
-
-            // Even poll on every frame when user is interacting with message input
-            if (messageTextInput->Focused()) {
-                std::string selectedFriend = friendList[selectedFriendIndex];
-                (void) session.getPlayerMessages(selectedFriend);
-            }
-
-            if (activeTab == 2 && selectedFriendIndex != previousFriendIndex && !friendList.empty()) {
-                std::string selectedFriend = friendList[selectedFriendIndex];
-                // Poll immediately when changing conversation
-                (void) session.getPlayerMessages(selectedFriend);
-                previousFriendIndex = selectedFriendIndex;
-            }
-        }
-
-        // Rebuild friend request components if needed
+    const auto renderer = Renderer(container, [&] {
+        // Rebuild friend request components if pendingRequests have changed
         if (requestComponents.size() != pendingRequests.size()) {
             requestComponents.clear();
+
             for (size_t i = 0; i < pendingRequests.size(); i++) {
                 size_t index = i;
+
                 auto acceptButton = Button("Accept", [&, index] {
                     if (index < pendingRequests.size()) {
                         (void) session.acceptFriendRequest(pendingRequests[index]);
@@ -186,8 +138,8 @@ void showMainMenu(ClientSession &session) {
                     }
                 });
 
-                auto container = Container::Horizontal({acceptButton, declineButton});
-                requestComponents.push_back(container);
+                auto reqContainer = Container::Horizontal({acceptButton, declineButton});
+                requestComponents.push_back(reqContainer);
             }
         }
 
@@ -255,25 +207,28 @@ void showMainMenu(ClientSession &session) {
                 if (friendList.empty()) {
                     content = text("Add friends to start messaging");
                 } else {
-                    std::string selectedFriend = friendList[selectedFriendIndex];
-                    std::string friendUsername = session.getFriendUsername(selectedFriend);
-                    // Force message refresh on every frame when in message tab
+                    const std::string selectedFriend = friendList[selectedFriendIndex];
+                    const std::string friendUsername = session.getFriendUsername(selectedFriend);
                     std::vector<ChatMessage> messages = session.getPlayerMessages(selectedFriend);
 
                     Elements messageElements;
                     if (messages.empty()) {
                         messageElements.push_back(text("No messages yet"));
                     } else {
-                        for (const auto &msg: messages) {
-                            messageElements.push_back(text(msg.from + ": " + msg.text));
+                        for (const auto &it: messages) {
+                            messageElements.push_back(text(it.from + ": " + it.text));
                         }
                     }
+
+                    auto messagesContainer = vbox({
+                                                 vbox(messageElements)
+                                             }) | border | yframe | size(HEIGHT, EQUAL, 10);
 
                     content = vbox({
                         text("Chat with: " + friendUsername) | bold,
                         friendSelector->Render(),
                         separator(),
-                        vbox(messageElements) | border | yframe,
+                        messagesContainer,
                         hbox({
                             messageTextInput->Render(),
                             sendMessageButton->Render()
@@ -310,6 +265,8 @@ void showMainMenu(ClientSession &session) {
                 });
             }
             break;
+            default:
+                break;
         }
 
         return vbox({
@@ -326,6 +283,53 @@ void showMainMenu(ClientSession &session) {
                }) | border | color(Color::Green);
     });
 
+    std::atomic_bool running{true};
+    std::mutex mtx;
+    std::condition_variable cv;
+
+    // Counters for polling intervals
+    int fetchDataCounter = 0;
+    int fetchMessageCounter = 0;
+    constexpr int FETCH_DATA_INTERVAL = 100; // ~5000ms (100 * 50ms)
+    constexpr int FETCH_MESSAGE_INTERVAL = 5; // ~250ms (5 * 50ms)
+
+    std::thread pollingThread([&] {
+        std::unique_lock lock(mtx);
+        while (running) {
+            if (activeTab == 2 && !friendList.empty()) {
+                fetchMessageCounter++;
+
+                if (fetchMessageCounter >= FETCH_MESSAGE_INTERVAL) {
+                    std::string selectedFriend = friendList[selectedFriendIndex];
+                    (void) session.getPlayerMessages(selectedFriend);
+                    fetchMessageCounter = 0;
+                }
+
+                if (selectedFriendIndex != previousFriendIndex) {
+                    std::string selectedFriend = friendList[selectedFriendIndex];
+                    (void) session.getPlayerMessages(selectedFriend);
+                    previousFriendIndex = selectedFriendIndex;
+                }
+            } else {
+                fetchDataCounter++;
+                if (fetchDataCounter >= FETCH_DATA_INTERVAL) {
+                    (void) session.fetchPlayerData();
+                    fetchDataCounter = 0;
+                }
+            }
+
+            screen.PostEvent(Event::Custom);
+            cv.wait_for(lock, std::chrono::milliseconds(50));
+        }
+    });
+
     // Main loop
     screen.Loop(renderer);
+
+    // Cleanup polling thread
+    running = false;
+    cv.notify_all();
+    if (pollingThread.joinable()) {
+        pollingThread.join();
+    }
 }
