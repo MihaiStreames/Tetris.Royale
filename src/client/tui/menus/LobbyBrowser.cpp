@@ -269,7 +269,7 @@ void showLobbyBrowser(ClientSession &session) {
         backButton
     });
 
-    container->SetActiveChild(0);
+    container->SetActiveChild(nullptr);
 
     // Main renderer
     auto renderer = Renderer(container, [&] {
@@ -351,7 +351,7 @@ void showLobbyBrowser(ClientSession &session) {
                     }
                 }
                 if (selectedLobby >= static_cast<int>(lobbyOptions.size())) {
-                    selectedLobby = lobbyOptions.empty() ? 0 : lobbyOptions.size() - 1;
+                    selectedLobby = lobbyOptions.empty() ? 0 : static_cast<int>(lobbyOptions.size()) - 1;
                 }
                 fetchLobbyCounter = 0;
             }
