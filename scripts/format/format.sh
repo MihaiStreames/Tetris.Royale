@@ -62,7 +62,7 @@ to_pascal_case() {
 
 # Find all .hpp and .cpp files in include/ and src/, ignoring cmake-build-* folders
 FILES=$(find "$BASE_DIR" -type f \( -path "*/include/*" -o -path "*/src/*" \) \
-    -regex '.*\.\(cpp\|hpp\)$' ! -path "*/cmake-build-*/*" | sort)
+    -regex '.*\.\(cpp\|hpp\)$' ! -path "*/cmake-build-*/*" ! -path "*/build/*" ! -path "*/lib/*" | sort)
 
 echo "Found $(echo "$FILES" | wc -l) files in include/ and src/ (excluding cmake-build-*):"
 echo "$FILES" | sed 's/^/  /'
@@ -166,7 +166,7 @@ echo "Step 3: Applying clang-format..."
 
 # Find all files again (including renamed ones)
 UPDATED_FILES=$(find "$BASE_DIR" -type f \( -path "*/include/*" -o -path "*/src/*" \) \
-    -regex '.*\.\(cpp\|hpp\)$' ! -path "*/cmake-build-*/*" | sort)
+    -regex '.*\.\(cpp\|hpp\)$' ! -path "*/cmake-build-*/*" ! -path "*/build/*" ! -path "*/lib/*" | sort)
 
 # Apply clang-format using the detected config
 for FILE in $UPDATED_FILES; do

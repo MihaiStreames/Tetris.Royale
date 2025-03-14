@@ -1,9 +1,7 @@
-
 #include "GameState.hpp"
 
 SpectatorState
-SpectatorState::generateEmptyState()
-{
+SpectatorState::generateEmptyState() {
     // generate an empty spectator state
     SpectatorState state;
     state.playerUsername = "";
@@ -14,8 +12,7 @@ SpectatorState::generateEmptyState()
 }
 
 std::string
-SpectatorState::serialize() const
-{
+SpectatorState::serialize() const {
     // serialize the spectator state
 
     nlohmann::json j;
@@ -27,23 +24,18 @@ SpectatorState::serialize() const
 }
 
 SpectatorState
-SpectatorState::deserialize(const std::string& data)
-{
+SpectatorState::deserialize(const std::string &data) {
     // deserialize the spectator state
     nlohmann::json j;
 
-    try
-    {
+    try {
         j = nlohmann::json::parse(data);
-    }
-    catch (nlohmann::json::parse_error& e)
-    {
+    } catch (nlohmann::json::parse_error &e) {
         throw std::runtime_error(
             "[error] Parsing failed while deserializing SpectatorState: " +
             std::string(e.what()));
     }
-    catch (nlohmann::json::exception& e)
-    {
+    catch (nlohmann::json::exception &e) {
         throw std::runtime_error(
             "[error] Unknown json error while deserializing SpectatorState: " +
             std::string(e.what()));
@@ -51,21 +43,17 @@ SpectatorState::deserialize(const std::string& data)
 
     SpectatorState state;
 
-    try
-    {
+    try {
         state.playerUsername = j["playerUsername"].get<std::string>();
         state.playerGrid = j["playerGrid"].get<tetroMat>();
         state.nextTetro = j["nextTetro"].get<PieceType>();
         state.holdTetro = j["holdTetro"].get<PieceType>();
-    }
-    catch (nlohmann::json::exception& e)
-    {
+    } catch (nlohmann::json::exception &e) {
         throw std::runtime_error(
             "[error] Unknown json error while deserializing SpectatorState: " +
             std::string(e.what()));
     }
-    catch (std::exception& e)
-    {
+    catch (std::exception &e) {
         throw std::runtime_error(
             "[error] Unknown error while deserializing SpectatorState: " +
             std::string(e.what()));
@@ -75,8 +63,7 @@ SpectatorState::deserialize(const std::string& data)
 }
 
 PlayerState
-PlayerState::generateEmptyState()
-{
+PlayerState::generateEmptyState() {
     // generate an empty player state
     PlayerState state;
     state.playerUsername = "";
@@ -91,8 +78,7 @@ PlayerState::generateEmptyState()
 }
 
 std::string
-PlayerState::serialize() const
-{
+PlayerState::serialize() const {
     // serialize the player state
     nlohmann::json j;
     j["playerUsername"] = playerUsername;
@@ -107,23 +93,18 @@ PlayerState::serialize() const
 }
 
 PlayerState
-PlayerState::deserialize(const std::string& data)
-{
+PlayerState::deserialize(const std::string &data) {
     // deserialize the player state
     nlohmann::json j;
 
-    try
-    {
+    try {
         j = nlohmann::json::parse(data);
-    }
-    catch (nlohmann::json::parse_error& e)
-    {
+    } catch (nlohmann::json::parse_error &e) {
         throw std::runtime_error(
             "[error] Parsing failed while deserializing PlayerState: " +
             std::string(e.what()));
     }
-    catch (nlohmann::json::exception& e)
-    {
+    catch (nlohmann::json::exception &e) {
         throw std::runtime_error(
             "[error] Unknown json error while deserializing PlayerState: " +
             std::string(e.what()));
@@ -131,8 +112,7 @@ PlayerState::deserialize(const std::string& data)
 
     PlayerState state;
 
-    try
-    {
+    try {
         state.playerUsername = j["playerUsername"].get<std::string>();
         state.playerGrid = j["playerGrid"].get<tetroMat>();
         state.nextTetro = j["nextTetro"].get<PieceType>();
@@ -141,15 +121,12 @@ PlayerState::deserialize(const std::string& data)
         state.playerLevel = j["playerLevel"].get<int>();
         state.targetUsername = j["targetUsername"].get<std::string>();
         state.targetGrid = j["targetGrid"].get<tetroMat>();
-    }
-    catch (nlohmann::json::exception& e)
-    {
+    } catch (nlohmann::json::exception &e) {
         throw std::runtime_error(
             "[error] Unknown json error while deserializing PlayerState: " +
             std::string(e.what()));
     }
-    catch (std::exception& e)
-    {
+    catch (std::exception &e) {
         throw std::runtime_error(
             "[error] Unknown error while deserializing PlayerState: " +
             std::string(e.what()));

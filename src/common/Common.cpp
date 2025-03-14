@@ -1,9 +1,7 @@
 #include "Common.hpp"
 
 std::string
-getStatusCodeString(StatusCode code)
-{
-
+getStatusCodeString(StatusCode code) {
     // return the string representation of the status code
     // this is used for debugging purposes
 
@@ -83,43 +81,40 @@ getStatusCodeString(StatusCode code)
         default:
             return "UNKNOWN_STATUS_CODE";
     }
-
 }
 
 std::string
-getServerMethodString(const ServerMethods method)
-{
-    switch (method)
-    {
-    case ServerMethods::GET_CURRENT_LOBBY:
-        return "GET_CURRENT_LOBBY";
-    case ServerMethods::LEAVE_LOBBY:
-        return "LEAVE_LOBBY";
-    case ServerMethods::READY:
-        return "READY";
-    case ServerMethods::UNREADY:
-        return "UNREADY";
-    case ServerMethods::GET_GAME_STATE:
-        return "GET_GAME_STATE";
-    case ServerMethods::KEY_STROKE:
-        return "KEY_STROKE";
-    case ServerMethods::START_SESSION:
-        return "START_SESSION";
-    case ServerMethods::END_SESSION:
-        return "END_SESSION";
-    case ServerMethods::GET_LOBBY:
-        return "GET_LOBBY";
-    case ServerMethods::GET_PUBLIC_LOBBIES:
-        return "GET_PUBLIC_LOBBIES";
-    case ServerMethods::CREATE_LOBBY:
-        return "CREATE_LOBBY";
-    case ServerMethods::JOIN_LOBBY:
-        return "JOIN_LOBBY";
-    case ServerMethods::SPECTATE_LOBBY:
-        return "SPECTATE_LOBBY";
-    case ServerMethods::NONE:
-        return "NONE";
-    default:
-        return "UNKNOWN_METHOD";
+getServerMethodString(const ServerMethods method) {
+    switch (method) {
+        case ServerMethods::GET_CURRENT_LOBBY:
+            return "GET_CURRENT_LOBBY";
+        case ServerMethods::LEAVE_LOBBY:
+            return "LEAVE_LOBBY";
+        case ServerMethods::READY:
+            return "READY";
+        case ServerMethods::UNREADY:
+            return "UNREADY";
+        case ServerMethods::GET_GAME_STATE:
+            return "GET_GAME_STATE";
+        case ServerMethods::KEY_STROKE:
+            return "KEY_STROKE";
+        case ServerMethods::START_SESSION:
+            return "START_SESSION";
+        case ServerMethods::END_SESSION:
+            return "END_SESSION";
+        case ServerMethods::GET_LOBBY:
+            return "GET_LOBBY";
+        case ServerMethods::GET_PUBLIC_LOBBIES:
+            return "GET_PUBLIC_LOBBIES";
+        case ServerMethods::CREATE_LOBBY:
+            return "CREATE_LOBBY";
+        case ServerMethods::JOIN_LOBBY:
+            return "JOIN_LOBBY";
+        case ServerMethods::SPECTATE_LOBBY:
+            return "SPECTATE_LOBBY";
+        case ServerMethods::NONE:
+            return "NONE";
+        default:
+            return "UNKNOWN_METHOD";
     }
 }

@@ -1,36 +1,31 @@
 #ifndef CONFIG_HPP
 #define CONFIG_HPP
 
-#include <string>
-#include <map>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <stdexcept>
+#include <string>
 
-#include <nlohmann/json.hpp>
 #include "Common.hpp"
+#include <nlohmann/json.hpp>
 
+class Config
+{
 
-class Config {
-
-public:
-
+  public:
     Config(const std::string& filename);
     ~Config();
 
     void load();
     [[nodiscard]] std::string get(const std::string& key);
 
-private:
-
+  private:
     void generateDefaultConfig();
 
     std::string filename;
     std::map<std::string, std::string> configData;
     nlohmann::json defaultConfig;
-
 };
 
-
 #endif
-

@@ -1,17 +1,14 @@
-
 #include "RoyalGame.hpp"
 
 RoyalGame::RoyalGame(const int gWidth, const int gHeight, const int gScore,
                      const int fc, const int lvl, const int totLinesCleared)
-    : ClassicGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared)
-{
+    : ClassicGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared) {
     // this is the constructor of the RoyalGame class
     // might need to modify this later (reverse controls ?)
 }
 
 void
-RoyalGame::spawnThunderStrike()
-{
+RoyalGame::spawnThunderStrike() {
     // this method is called when the player uses the thunder strike power-up
     // it will destroy a 2x2 area of blocks in a random column
 
@@ -23,20 +20,16 @@ RoyalGame::spawnThunderStrike()
     int impactRow = gameMatrix.findHighestBlockInColumn(col);
 
     // if no block was found in the column, return
-    if (impactRow == -1)
-    {
+    if (impactRow == -1) {
         return;
-    }
-    else
-    {
+    } else {
         gameMatrix.destroyAreaAroundBlock({col, impactRow},
                                           THNUDERSTRIKE_BLAST_RADIUS);
     }
 }
 
 void
-RoyalGame::increaseFallingSpeed()
-{
+RoyalGame::increaseFallingSpeed() {
     // this method is called when the player uses the speed power-up
     // it will make the pieces fall faster
 
@@ -44,36 +37,31 @@ RoyalGame::increaseFallingSpeed()
 }
 
 void
-RoyalGame::decreaseFallingSpeed()
-{
+RoyalGame::decreaseFallingSpeed() {
     // this method is called when the player uses the slow power-up
     // it will make the pieces fall slower
 
     speedFactor--;
 
     // if the speed factor is negative, set it to 0
-    if (level + speedFactor < 0)
-    {
+    if (level + speedFactor < 0) {
         speedFactor = 0;
     }
 }
 
 void
-RoyalGame::pushSingleBlock()
-{
+RoyalGame::pushSingleBlock() {
     // this method is called when the player uses the single block power-up
     // it will push 'SINGLE_BLOCKS_TO_PUSH' (2) single blocks to the player's
     // board
 
-    for (int i = 0; i < SINGLE_BLOCKS_TO_PUSH; ++i)
-    {
+    for (int i = 0; i < SINGLE_BLOCKS_TO_PUSH; ++i) {
         factory.pushPiece(Tetromino(PieceType::Single));
     }
 }
 
 void
-RoyalGame::startDarkMode()
-{
+RoyalGame::startDarkMode() {
     // this method is called when the player uses the dark mode power-up
     // it will make the game harder by making the board invisible
 
@@ -85,8 +73,7 @@ RoyalGame::startDarkMode()
 }
 
 void
-RoyalGame::startBlockControls()
-{
+RoyalGame::startBlockControls() {
     // this method is called when the player uses the block controls power-up
     // it will make the controls of the player's board inverted
 
@@ -94,8 +81,7 @@ RoyalGame::startBlockControls()
 }
 
 void
-RoyalGame::startInvertedControls()
-{
+RoyalGame::startInvertedControls() {
     // this method is called when the player uses the inverted controls power-up
     // it will make the controls of the player's board inverted
 

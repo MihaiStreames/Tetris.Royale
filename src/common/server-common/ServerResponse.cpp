@@ -1,8 +1,7 @@
 #include "ServerResponse.hpp"
 
 std::string
-ServerResponse::serialize() const
-{
+ServerResponse::serialize() const {
     // serialize the response to a json string
     nlohmann::json j;
 
@@ -14,24 +13,19 @@ ServerResponse::serialize() const
 }
 
 ServerResponse
-ServerResponse::deserialize(const std::string& data)
-{
+ServerResponse::deserialize(const std::string &data) {
     // deserialize the response from a json string
     nlohmann::json j;
 
     // some try-catch blocks because I'm not lazy anymore (I'm still lazy)
-    try
-    {
+    try {
         j = nlohmann::json::parse(data);
-    }
-    catch (nlohmann::json::parse_error& e)
-    {
+    } catch (nlohmann::json::parse_error &e) {
         throw std::runtime_error(
             "[error] Parsing failed while deserializing Response: " +
             std::string(e.what()));
     }
-    catch (nlohmann::json::exception& e)
-    {
+    catch (nlohmann::json::exception &e) {
         throw std::runtime_error(
             "[error] Unknown json error while deserializing Response: " +
             std::string(e.what()));
@@ -39,21 +33,17 @@ ServerResponse::deserialize(const std::string& data)
 
     ServerResponse response;
 
-    try
-    {
+    try {
         response.id = j["id"];
         response.status = j["status"];
         response.data =
-            j["data"].get<std::unordered_map<std::string, std::string>>();
-    }
-    catch (nlohmann::json::exception& e)
-    {
+                j["data"].get<std::unordered_map<std::string, std::string> >();
+    } catch (nlohmann::json::exception &e) {
         throw std::runtime_error(
             "[error] Unknown json error while deserializing Response: " +
             std::string(e.what()));
     }
-    catch (std::exception& e)
-    {
+    catch (std::exception &e) {
         throw std::runtime_error(
             "[error] Unknown error while deserializing Response: " +
             std::string(e.what()));
@@ -63,8 +53,7 @@ ServerResponse::deserialize(const std::string& data)
 }
 
 ServerResponse
-ServerResponse::ErrorResponse(const int id, const StatusCode status)
-{
+ServerResponse::ErrorResponse(const int id, const StatusCode status) {
     // create an error response with the given id and status
     ServerResponse response;
     response.id = id;
@@ -74,8 +63,7 @@ ServerResponse::ErrorResponse(const int id, const StatusCode status)
 
 ServerResponse
 ServerResponse::ErrorResponse(const int id, const StatusCode status,
-                              const std::string& errorMessage)
-{
+                              const std::string &errorMessage) {
     // create an error response with the given id, status and error message
     ServerResponse response;
     response.id = id;
@@ -85,8 +73,7 @@ ServerResponse::ErrorResponse(const int id, const StatusCode status,
 }
 
 ServerResponse
-ServerResponse::SuccessResponse(const int id, const StatusCode status)
-{
+ServerResponse::SuccessResponse(const int id, const StatusCode status) {
     // create a success response with the given id and status
     ServerResponse response;
     response.id = id;
@@ -96,19 +83,15 @@ ServerResponse::SuccessResponse(const int id, const StatusCode status)
 
 ServerResponse
 ServerResponse::SuccessResponse(const int id, const StatusCode status,
-                                const LobbyState& lobby)
-{
+                                const LobbyState &lobby) {
     // create a success response with the given id, status and lobby state
 
     std::string lobbyContent;
 
-    try
-    {
+    try {
         // try to serialize the lobby state
         lobbyContent = lobby.serialize();
-    }
-    catch ([[maybe_unused]] std::runtime_error& e)
-    {
+    } catch ([[maybe_unused]] std::runtime_error &e) {
         // error, we need to send an empty lobby state
         lobbyContent = LobbyState::generateEmptyState().serialize();
     }
@@ -123,8 +106,7 @@ ServerResponse::SuccessResponse(const int id, const StatusCode status,
 
 ServerResponse
 ServerResponse::SuccessResponse(const int id, const StatusCode status,
-                                const PlayerStatus playerStatus)
-{
+                                const PlayerStatus playerStatus) {
     // create a success response with the given id, status and player status
     ServerResponse response;
     response.id = id;
@@ -136,8 +118,7 @@ ServerResponse::SuccessResponse(const int id, const StatusCode status,
 ServerResponse
 ServerResponse::SuccessResponse(
     const int id, const StatusCode status,
-    const std::unordered_map<std::string, std::string>& data)
-{
+    const std::unordered_map<std::string, std::string> &data) {
     // create a success response with the given id, status and data
     ServerResponse response;
     response.id = id;

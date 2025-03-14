@@ -4,40 +4,47 @@ namespace http = boost::beast::http;
 namespace asio = boost::asio;
 using tcp = asio::ip::tcp;
 
-DBRequestManager::DBRequestManager(const std::string& host, const int& port)
-    : host_(host), port_(port)
-{
+DBRequestManager::DBRequestManager(const std::string &host, const int &port)
+    : host_(host), port_(port) {
 }
 
 DBRequestManager::~DBRequestManager() = default;
 
-std::string DBRequestManager::getServerIP()
-{
+std::string
+DBRequestManager::getServerIP() {
     return host_;
 }
 
-int DBRequestManager::getPort()
-{
+int
+DBRequestManager::getPort() const {
     return port_;
 }
 
-
 std::string
-DBRequestManager::toJSON(const boost::property_tree::ptree& pt)
-{
+DBRequestManager::toJSON(const boost::property_tree::ptree &pt) {
     std::ostringstream oss;
     write_json(oss, pt, false);
     return oss.str();
 }
 
 DBResponse
-DBRequestManager::sendRequest(http::verb method, const std::string& target,
-                              const std::string& body)
-{
+DBRequestManager::getAccountIDByUsername(const std::string &username) const {
+    std::cout << "[DEBUG] Looking up accountID for username: " << username << std::endl;
+    return sendRequest(http::verb::get, "/get_account_id?username=" + username, "");
+}
+
+DBResponse
+DBRequestManager::getUsernameByAccountID(const std::string &accountID) const {
+    std::cout << "[DEBUG] Looking up username for accountID: " << accountID << std::endl;
+    return sendRequest(http::verb::get, "/get_username?accountID=" + accountID, "");
+}
+
+DBResponse
+DBRequestManager::sendRequest(http::verb method, const std::string &target,
+                              const std::string &body) const {
     DBResponse dbResp;
 
-    try
-    {
+    try {
         asio::io_context ioc;
         tcp::resolver resolver(ioc);
         auto const results = resolver.resolve(host_, std::to_string(port_));
@@ -49,8 +56,7 @@ DBRequestManager::sendRequest(http::verb method, const std::string& target,
         req.set(http::field::host, host_);
         req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
 
-        if (method == http::verb::post)
-        {
+        if (method == http::verb::post) {
             req.set(http::field::content_type, "application/json");
             req.body() = body;
             req.prepare_payload();
@@ -69,9 +75,7 @@ DBRequestManager::sendRequest(http::verb method, const std::string& target,
         read_json(iss, dbResp.json);
 
         socket.shutdown(tcp::socket::shutdown_both);
-    }
-    catch (const std::exception& e)
-    {
+    } catch (const std::exception &e) {
         dbResp.status = 500;
         dbResp.json.put("error", e.what());
     }
@@ -79,33 +83,30 @@ DBRequestManager::sendRequest(http::verb method, const std::string& target,
 }
 
 DBResponse
-DBRequestManager::getPlayer(const std::string& accountID)
-{
-    return sendRequest(http::verb::get, "/get_player?accountID=" + accountID,
-                       "");
+DBRequestManager::getPlayer(const std::string &accountID) const {
+    std::cout << "[DEBUG] Fetching player data for accountID: " << accountID << std::endl;
+    DBResponse response = sendRequest(http::verb::get, "/get_player?accountID=" + accountID, "");
+    return response;
 }
 
 DBResponse
-DBRequestManager::getLeaderboard(const int limit)
-{
+DBRequestManager::getLeaderboard(const int limit) const {
     return sendRequest(http::verb::get,
                        "/get_leaderboard?limit=" + std::to_string(limit), "");
 }
 
 DBResponse
-DBRequestManager::getMessages(const std::string& accountID,
-                              const std::string& otherAccountID)
-{
+DBRequestManager::getMessages(const std::string &accountID,
+                              const std::string &otherAccountID) const {
     return sendRequest(http::verb::get,
                        "/get_messages?accountID=" + accountID +
-                           "&otherAccountID=" + otherAccountID,
+                       "&otherAccountID=" + otherAccountID,
                        "");
 }
 
 DBResponse
-DBRequestManager::registerPlayer(const std::string& userName,
-                                 const std::string& password)
-{
+DBRequestManager::registerPlayer(const std::string &userName,
+                                 const std::string &password) const {
     boost::property_tree::ptree pt;
     pt.put("userName", userName);
     pt.put("password", password);
@@ -113,9 +114,8 @@ DBRequestManager::registerPlayer(const std::string& userName,
 }
 
 DBResponse
-DBRequestManager::loginPlayer(const std::string& userName,
-                              const std::string& password)
-{
+DBRequestManager::loginPlayer(const std::string &userName,
+                              const std::string &password) const {
     boost::property_tree::ptree pt;
     pt.put("userName", userName);
     pt.put("password", password);
@@ -123,26 +123,22 @@ DBRequestManager::loginPlayer(const std::string& userName,
 }
 
 DBResponse
-DBRequestManager::updatePlayer(const std::string& accountID,
-                               const std::string& newName,
-                               const std::string& newPassword)
-{
+DBRequestManager::updatePlayer(const std::string &accountID,
+                               const std::string &newName,
+                               const std::string &newPassword) const {
     boost::property_tree::ptree pt;
     pt.put("accountID", accountID);
-    if (!newName.empty())
-    {
+    if (!newName.empty()) {
         pt.put("newName", newName);
     }
-    if (!newPassword.empty())
-    {
+    if (!newPassword.empty()) {
         pt.put("newPassword", newPassword);
     }
     return sendRequest(http::verb::post, "/update", toJSON(pt));
 }
 
 DBResponse
-DBRequestManager::postPlayerScore(const std::string& accountID, const int score)
-{
+DBRequestManager::postPlayerScore(const std::string &accountID, const int score) const {
     boost::property_tree::ptree pt;
     pt.put("accountID", accountID);
     pt.put("score", score);
@@ -150,29 +146,34 @@ DBRequestManager::postPlayerScore(const std::string& accountID, const int score)
 }
 
 DBResponse
-DBRequestManager::sendFriendRequest(const std::string& senderID,
-                                    const std::string& receiverID)
-{
+DBRequestManager::sendFriendRequest(const std::string &senderID,
+                                    const std::string &receiverID) const {
+    std::cout << "[DEBUG] Sending friend request from " << senderID << " to " << receiverID << std::endl;
+
     boost::property_tree::ptree pt;
     pt.put("accountID", senderID);
     pt.put("otherAccountID", receiverID);
-    return sendRequest(http::verb::post, "/send_friend_request", toJSON(pt));
+
+    DBResponse response = sendRequest(http::verb::post, "/send_friend_request", toJSON(pt));
+    return response;
 }
 
 DBResponse
-DBRequestManager::acceptFriendRequest(const std::string& receiverID,
-                                      const std::string& senderID)
-{
+DBRequestManager::acceptFriendRequest(const std::string &receiverID,
+                                      const std::string &senderID) const {
+    std::cout << "[DEBUG] Accepting friend request from " << senderID << " to " << receiverID << std::endl;
+
     boost::property_tree::ptree pt;
     pt.put("accountID", receiverID);
     pt.put("otherAccountID", senderID);
-    return sendRequest(http::verb::post, "/accept_friend_request", toJSON(pt));
+
+    DBResponse response = sendRequest(http::verb::post, "/accept_friend_request", toJSON(pt));
+    return response;
 }
 
 DBResponse
-DBRequestManager::declineFriendRequest(const std::string& receiverID,
-                                       const std::string& senderID)
-{
+DBRequestManager::declineFriendRequest(const std::string &receiverID,
+                                       const std::string &senderID) const {
     boost::property_tree::ptree pt;
     pt.put("accountID", receiverID);
     pt.put("otherAccountID", senderID);
@@ -180,9 +181,8 @@ DBRequestManager::declineFriendRequest(const std::string& receiverID,
 }
 
 DBResponse
-DBRequestManager::removeFriend(const std::string& accountID,
-                               const std::string& removedID)
-{
+DBRequestManager::removeFriend(const std::string &accountID,
+                               const std::string &removedID) const {
     boost::property_tree::ptree pt;
     pt.put("accountID", accountID);
     pt.put("otherAccountID", removedID);
@@ -190,10 +190,9 @@ DBRequestManager::removeFriend(const std::string& accountID,
 }
 
 DBResponse
-DBRequestManager::postMessage(const std::string& senderID,
-                              const std::string& receiverID,
-                              const std::string& messageContent)
-{
+DBRequestManager::postMessage(const std::string &senderID,
+                              const std::string &receiverID,
+                              const std::string &messageContent) const {
     boost::property_tree::ptree pt;
     pt.put("accountID", senderID);
     pt.put("otherAccountID", receiverID);
@@ -202,8 +201,7 @@ DBRequestManager::postMessage(const std::string& senderID,
 }
 
 DBResponse
-DBRequestManager::deleteMessage(const std::string& messageID)
-{
+DBRequestManager::deleteMessage(const std::string &messageID) const {
     boost::property_tree::ptree pt;
     pt.put("messageID", messageID);
     return sendRequest(http::verb::post, "/delete_message", toJSON(pt));

@@ -1,15 +1,13 @@
 #include "LobbyServer.hpp"
 
-LobbyServer::LobbyServer(const std::string& IPAddr, const int listenPort,
+LobbyServer::LobbyServer(const std::string &IPAddr, const int listenPort,
                          const bool debug)
-    : ip(IPAddr), port(listenPort), debug(debug)
-{
+    : ip(IPAddr), port(listenPort), debug(debug) {
     // this is the constructor for the lobby server, I'll leave it blank for now
     // but we might want to do some stuff here later
 }
 
-LobbyServer::~LobbyServer()
-{
+LobbyServer::~LobbyServer() {
     // "some of this code was written by mihai, I'm not sure if it's necessary"
     // YES I SWEAR COPILOT FUCKING WROTE THIS LMAOOOOOOO BRO WTF 🤣🤣🤣🤣🤣🤣
 
@@ -24,16 +22,14 @@ LobbyServer::~LobbyServer()
 }
 
 StatusCode
-LobbyServer::startLobbyServer()
-{
+LobbyServer::startLobbyServer() {
     // this starts the lobby server, and return the status code, as it should
 
     printMessage("Lobby Server starting on " + ip + ":" + std::to_string(port),
                  MessageType::INFO);
 
     // initialize the socket
-    if (initializeSocket() != StatusCode::SUCCESS)
-    {
+    if (initializeSocket() != StatusCode::SUCCESS) {
         printMessage("Failed to initialize the socket", MessageType::CRITICAL);
         return StatusCode::ERROR_INITIALIZING_SOCKET;
     }
@@ -51,8 +47,7 @@ LobbyServer::startLobbyServer()
 }
 
 StatusCode
-LobbyServer::closeLobbyServer()
-{
+LobbyServer::closeLobbyServer() {
     // this closes the lobby server, and return the status code
     // since we don't use many join in the code, this better wait for everything
     // to finish before closing the server, so we don't have any dangling
@@ -73,17 +68,15 @@ LobbyServer::closeLobbyServer()
 
     // we join the listen thread (shoul be done by now since running is false
     // but anyway)
-    if (listenThread.joinable())
-    {
+    if (listenThread.joinable()) {
         listenThread.join();
     }
 
     // we close all the lobbies
     {
         std::lock_guard lock(lobbiesMutex);
-        for (auto& [lobbyID, lobby] : lobbyObjects)
-        {
-            (void)lobby->closeLobby();
+        for (auto &[lobbyID, lobby]: lobbyObjects) {
+            (void) lobby->closeLobby();
         }
 
         // and we clear the maps
@@ -102,21 +95,18 @@ LobbyServer::closeLobbyServer()
 }
 
 void
-LobbyServer::setGameServer(std::shared_ptr<GameServer> gameServer)
-{
+LobbyServer::setGameServer(std::shared_ptr<GameServer> gameServer) {
     // this is used to set the game server that is using this lobby server
     this->gameServer = std::move(gameServer);
 }
 
 StatusCode
-LobbyServer::addClientSession(const std::string& token,
-                              const std::string& username)
-{
+LobbyServer::addClientSession(const std::string &token,
+                              const std::string &username) {
     // this method is used to add a client session to the lobby server
 
     // we check if the maximum number of players is reached
-    if (countPlayers() >= MAX_SESSIONS)
-    {
+    if (countPlayers() >= MAX_SESSIONS) {
         printMessage("Maximum number of players reached", MessageType::ERROR);
         return StatusCode::ERROR_MAX_PLAYERS_REACHED;
     }
@@ -125,8 +115,7 @@ LobbyServer::addClientSession(const std::string& token,
     const auto it = clientTokens.find(token);
 
     // we check if the session already exists
-    if (it != clientTokens.end())
-    {
+    if (it != clientTokens.end()) {
         printMessage("Session already exists", MessageType::ERROR);
         return StatusCode::ERROR_SESSION_ALREADY_EXISTS;
     }
@@ -135,15 +124,11 @@ LobbyServer::addClientSession(const std::string& token,
     // if it does, we remove it and return a slightly different success code
     bool found = false;
     // Shadowing - (smart, thx mihai)
-    for (auto it_ = clientTokens.begin(); it_ != clientTokens.end();)
-    {
-        if (it_->second == username)
-        {
+    for (auto it_ = clientTokens.begin(); it_ != clientTokens.end();) {
+        if (it_->second == username) {
             found = true;
             it_ = clientTokens.erase(it_);
-        }
-        else
-        {
+        } else {
             ++it_;
         }
     }
@@ -155,15 +140,13 @@ LobbyServer::addClientSession(const std::string& token,
 }
 
 StatusCode
-LobbyServer::removeClientSession(const std::string& token)
-{
+LobbyServer::removeClientSession(const std::string &token) {
     // we lock the mutex
     std::lock_guard lock(clientMutex);
     const auto it = clientTokens.find(token);
 
     // we check if the session exists
-    if (it == clientTokens.end())
-    {
+    if (it == clientTokens.end()) {
         printMessage("Session not found", MessageType::ERROR);
         return StatusCode::ERROR_SESSION_NOT_FOUND;
     }
@@ -174,13 +157,11 @@ LobbyServer::removeClientSession(const std::string& token)
 }
 
 std::string
-LobbyServer::getClientSessionUsername(const std::string& token) const
-{
+LobbyServer::getClientSessionUsername(const std::string &token) const {
     // this is used to get the username of a session using the token
     // will throw an error if the session is not found
 
-    if (!isSessionActive(token))
-    {
+    if (!isSessionActive(token)) {
         throw std::runtime_error("Session [" + token + "] is not active");
     }
 
@@ -189,13 +170,11 @@ LobbyServer::getClientSessionUsername(const std::string& token) const
 }
 
 std::string
-LobbyServer::getClientSessionToken(const std::string& username) const
-{
+LobbyServer::getClientSessionToken(const std::string &username) const {
     // this is used to get the token of a session using the username
     // will throw an error if the session is not found
 
-    if (!doesUserHaveSession(username))
-    {
+    if (!doesUserHaveSession(username)) {
         throw std::runtime_error("User [" + username +
                                  "] does not have a session");
     }
@@ -203,10 +182,8 @@ LobbyServer::getClientSessionToken(const std::string& username) const
     std::lock_guard lock(clientMutex);
 
     std::string foundToken;
-    for (const auto& [token, name] : clientTokens)
-    {
-        if (name == username)
-        {
+    for (const auto &[token, name]: clientTokens) {
+        if (name == username) {
             foundToken = token;
             break;
         }
@@ -215,8 +192,7 @@ LobbyServer::getClientSessionToken(const std::string& username) const
 }
 
 std::shared_ptr<Lobby>
-LobbyServer::getLobby(const std::string& lobbyID) const
-{
+LobbyServer::getLobby(const std::string &lobbyID) const {
     // this will return a shared pointer to the lobby if it exists, otherwise a
     // nullptr
 
@@ -225,8 +201,7 @@ LobbyServer::getLobby(const std::string& lobbyID) const
     const auto it = lobbyObjects.find(lobbyID);
 
     // we check if the lobby exists
-    if (it == lobbyObjects.end())
-    {
+    if (it == lobbyObjects.end()) {
         printMessage("Lobby [" + lobbyID + "] not found", MessageType::ERROR);
         return nullptr;
     }
@@ -236,8 +211,7 @@ LobbyServer::getLobby(const std::string& lobbyID) const
 }
 
 int
-LobbyServer::getLobbyPort(const std::string& lobbyID) const
-{
+LobbyServer::getLobbyPort(const std::string &lobbyID) const {
     // this is used to get the port of a lobby using its ID
     // will return NO_LOBBY_PORT_FOUND if the lobby is not found (which is -1)
 
@@ -248,16 +222,14 @@ LobbyServer::getLobbyPort(const std::string& lobbyID) const
 }
 
 StatusCode
-LobbyServer::closeLobby(const std::string& lobbyID)
-{
+LobbyServer::closeLobby(const std::string &lobbyID) {
     // close the lobby using its ID
     // will return an error code if the lobby is not found
     // and another error code if the lobby can't be closed
 
     // we check if the lobby exists
     const auto lobby = getLobby(lobbyID);
-    if (lobby == nullptr)
-    {
+    if (lobby == nullptr) {
         printMessage("Lobby [" + lobbyID + "] not found", MessageType::ERROR);
         return StatusCode::ERROR_LOBBY_NOT_FOUND;
     }
@@ -274,45 +246,39 @@ LobbyServer::closeLobby(const std::string& lobbyID)
 }
 
 int
-LobbyServer::countPlayers() const
-{
+LobbyServer::countPlayers() const {
     // count players in the lobby server
     std::lock_guard lock(clientMutex);
     return static_cast<int>(clientTokens.size());
 }
 
 int
-LobbyServer::countLobbies() const
-{
+LobbyServer::countLobbies() const {
     // count lobbies in the lobby server
     std::lock_guard lock(lobbiesMutex);
     return static_cast<int>(lobbies.size());
 }
 
 bool
-LobbyServer::isRunning()
-{
+LobbyServer::isRunning() {
     // check if the lobby server is running (some kind of getter, but not used
     // internally)
     std::lock_guard lock(runningMutex);
     return running;
 }
 
-std::vector<std::shared_ptr<Lobby>>
-LobbyServer::getReadyLobbies() const
-{
+std::vector<std::shared_ptr<Lobby> >
+LobbyServer::getReadyLobbies() const {
     // this is used to get every lobby that is in a ready state.
     // we get a vector of shared pointers to the lobbies that are ready
 
     // we lock the mutex
-    std::vector<std::shared_ptr<Lobby>> readyLobbies;
+    std::vector<std::shared_ptr<Lobby> > readyLobbies;
     std::lock_guard<std::mutex> lock(lobbiesMutex);
 
     // we iterate through the lobbies and add the ready ones to the vector
-    for (auto& [lobbyID, lobby] : lobbyObjects)
-    {
-        if (lobby->isReady())
-        {
+    for (auto &[lobbyID, lobby]: lobbyObjects) {
+        if (lobby->isReady()) {
             readyLobbies.push_back(lobby);
         }
     }
@@ -320,22 +286,19 @@ LobbyServer::getReadyLobbies() const
     return readyLobbies;
 }
 
-std::vector<std::shared_ptr<Lobby>>
-LobbyServer::getDeadLobbies() const
-{
+std::vector<std::shared_ptr<Lobby> >
+LobbyServer::getDeadLobbies() const {
     // this is used to get every lobby that is dead.
     // we get a vector of shared pointers to the lobbies that are empty
 
     // we lock the mutex
-    std::vector<std::shared_ptr<Lobby>> deadLobbies;
+    std::vector<std::shared_ptr<Lobby> > deadLobbies;
     std::lock_guard<std::mutex> lock(lobbiesMutex);
 
     // we iterate through the lobbies and add the dead ones to the vector
-    for (auto& [lobbyID, lobby] : lobbyObjects)
-    {
+    for (auto &[lobbyID, lobby]: lobbyObjects) {
         lobby->decrementTTL();
-        if (lobby->isLobbyDead())
-        {
+        if (lobby->isLobbyDead()) {
             deadLobbies.push_back(lobby);
         }
     }
@@ -343,22 +306,19 @@ LobbyServer::getDeadLobbies() const
     return deadLobbies;
 }
 
-std::vector<std::shared_ptr<Lobby>>
-LobbyServer::getPublicLobbies() const
-{
+std::vector<std::shared_ptr<Lobby> >
+LobbyServer::getPublicLobbies() const {
     // this is used to get every lobby that is public.
     // we get a vector of shared pointers to the lobbies that are public
 
     // we lock the mutex
-    std::vector<std::shared_ptr<Lobby>> publicLobbies;
+    std::vector<std::shared_ptr<Lobby> > publicLobbies;
     std::lock_guard<std::mutex> lock(lobbiesMutex);
 
     // we iterate through the lobbies and add the public ones to the vector
-    for (auto& [lobbyID, lobby] : lobbyObjects)
-    {
+    for (auto &[lobbyID, lobby]: lobbyObjects) {
         printMessage("Checking lobby [" + lobbyID + "]", MessageType::INFO);
-        if (lobby->isLobbyPublic())
-        {
+        if (lobby->isLobbyPublic()) {
             publicLobbies.push_back(lobby);
         }
     }
@@ -367,8 +327,7 @@ LobbyServer::getPublicLobbies() const
 }
 
 StatusCode
-LobbyServer::listen()
-{
+LobbyServer::listen() {
     // this is the listen function, it will listen for incoming requests
     // this runs while running is true, and will stop when running is false
 
@@ -379,13 +338,11 @@ LobbyServer::listen()
     // set the lobby server as listening
     std::lock_guard lock(listenMutex);
 
-    while (true)
-    {
+    while (true) {
         // first, we need to check if the lobby server is still running
         {
             std::lock_guard lock_(runningMutex);
-            if (!running)
-            {
+            if (!running) {
                 break;
             }
         }
@@ -393,9 +350,8 @@ LobbyServer::listen()
         // if the lobby server is still running, we can receive the request
         const ssize_t recvLen = recvfrom(
             serverSocket, buffer, MAX_BUFFER_SIZE, 0,
-            reinterpret_cast<struct sockaddr*>(&clientAddr), &clientAddrLen);
-        if (recvLen < 0)
-        {
+            reinterpret_cast<struct sockaddr *>(&clientAddr), &clientAddrLen);
+        if (recvLen < 0) {
             continue; // timeout
         }
 
@@ -406,9 +362,8 @@ LobbyServer::listen()
         // send the response
         const ssize_t sentLen = sendto(
             serverSocket, responseContent.c_str(), responseContent.size(), 0,
-            reinterpret_cast<struct sockaddr*>(&clientAddr), clientAddrLen);
-        if (sentLen < 0)
-        {
+            reinterpret_cast<struct sockaddr *>(&clientAddr), clientAddrLen);
+        if (sentLen < 0) {
             continue; // ignore this, player will timeout and try again
         }
     }
@@ -418,31 +373,27 @@ LobbyServer::listen()
 }
 
 StatusCode
-LobbyServer::initializeSocket()
-{
+LobbyServer::initializeSocket() {
     // this initializes the socket for the lobby server
     // (create, set options, bind)
 
     // create the socket
     serverSocket = socket(AF_INET, SOCK_DGRAM, 0);
-    if (serverSocket < 0)
-    {
+    if (serverSocket < 0) {
         printMessage("Failed to create the socket", MessageType::CRITICAL);
         return StatusCode::ERROR_CREATING_SOCKET;
     }
 
     // set the socket options
-    if (setSocketOptions() != StatusCode::SUCCESS)
-    {
+    if (setSocketOptions() != StatusCode::SUCCESS) {
         printMessage("Failed to set the socket options", MessageType::CRITICAL);
         close(serverSocket);
         return StatusCode::ERROR_SETTING_SOCKET_OPTIONS;
     }
 
     // bind the socket
-    if (bind(serverSocket, reinterpret_cast<sockaddr*>(&serverAddr),
-             sizeof(serverAddr)) < 0)
-    {
+    if (bind(serverSocket, reinterpret_cast<sockaddr *>(&serverAddr),
+             sizeof(serverAddr)) < 0) {
         printMessage("Failed to bind the socket", MessageType::CRITICAL);
         close(serverSocket);
         return StatusCode::ERROR_BINDING_SOCKET;
@@ -452,8 +403,7 @@ LobbyServer::initializeSocket()
 }
 
 StatusCode
-LobbyServer::setSocketOptions()
-{
+LobbyServer::setSocketOptions() {
     // some option setting, such as timeout and address / port
 
     // some timeout options
@@ -462,10 +412,9 @@ LobbyServer::setSocketOptions()
     timeout.tv_usec = TIMEOUT_USEC;
 
     if (setsockopt(serverSocket, SOL_SOCKET, SO_RCVTIMEO, &timeout,
-                   sizeof(timeout)) < 0)
-    {
+                   sizeof(timeout)) < 0) {
         printMessage("Failed to set SO_RCVTIMEO: " +
-                         std::string(strerror(errno)),
+                     std::string(strerror(errno)),
                      MessageType::CRITICAL);
         close(serverSocket);
         return StatusCode::ERROR_SETTING_SOCKET_OPTIONS;
@@ -479,85 +428,77 @@ LobbyServer::setSocketOptions()
     return StatusCode::SUCCESS;
 }
 
-std::unordered_map<std::string, std::shared_ptr<Lobby>>
-LobbyServer::getLobbies() const
-{
+std::unordered_map<std::string, std::shared_ptr<Lobby> >
+LobbyServer::getLobbies() const {
     // this is used to get every lobby in the lobby server
     std::lock_guard lock(lobbiesMutex);
     return lobbyObjects;
 }
 
 bool
-LobbyServer::isSessionActive(const std::string& token) const
-{
+LobbyServer::isSessionActive(const std::string &token) const {
     // this is used to check if a session is active
     std::lock_guard lock(clientMutex);
     return clientTokens.contains(token);
 }
 
 bool
-LobbyServer::doesUserHaveSession(const std::string& username) const
-{
+LobbyServer::doesUserHaveSession(const std::string &username) const {
     // this is used to check if a user has a session
     std::lock_guard lock(clientMutex);
     return std::any_of(clientTokens.begin(), clientTokens.end(),
-                       [&username](const auto& pair)
-                       { return pair.second == username; });
+                       [&username](const auto &pair) { return pair.second == username; });
 }
 
 void
-LobbyServer::printMessage(const std::string& message,
-                          const MessageType msgtype) const
-{
+LobbyServer::printMessage(const std::string &message,
+                          const MessageType msgtype) const {
     // this method is used to print messages to the console
     // it will only print if the debug flag is set to true
     // and will print the message with the appropriate type
     // and identifier
 
-    if (!debug)
-    {
+    if (!debug) {
         return;
     }
 
     const std::string lobbyIdentifier = "[Lobby Server] ";
     std::string msgtype_str;
 
-    switch (msgtype)
-    {
-    case MessageType::INFO:
-        msgtype_str = "INFO";
-        break;
+    switch (msgtype) {
+        case MessageType::INFO:
+            msgtype_str = "INFO";
+            break;
 
-    case MessageType::WARNING:
-        msgtype_str = "WARNING";
-        break;
+        case MessageType::WARNING:
+            msgtype_str = "WARNING";
+            break;
 
-    case MessageType::ERROR:
-        msgtype_str = "ERROR";
-        break;
+        case MessageType::ERROR:
+            msgtype_str = "ERROR";
+            break;
 
-    case MessageType::CRITICAL:
-        msgtype_str = "CRITICAL";
-        break;
+        case MessageType::CRITICAL:
+            msgtype_str = "CRITICAL";
+            break;
 
-    default:
-        msgtype_str = "UNKNOWN | DEBUG";
-        break;
+        default:
+            msgtype_str = "UNKNOWN | DEBUG";
+            break;
     }
 
     const std::string messageToPrint =
-        lobbyIdentifier + "[" + msgtype_str + "] " + message;
+            lobbyIdentifier + "[" + msgtype_str + "] " + message;
     std::cout << messageToPrint << std::endl;
 }
 
 std::string
-LobbyServer::generateToken(const size_t length)
-{
+LobbyServer::generateToken(const size_t length) {
     // some random function (absolutely hate working with random
     // numbers in C++ but it's the quickest way to do it ik)
 
     constexpr char charset[] =
-        "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
     // randomizer stuff
     std::random_device rd;
@@ -566,8 +507,7 @@ LobbyServer::generateToken(const size_t length)
 
     // actual distribution
     std::string token;
-    for (size_t i = 0; i < length; ++i)
-    {
+    for (size_t i = 0; i < length; ++i) {
         token += charset[dist(generator)];
     }
 
@@ -575,8 +515,7 @@ LobbyServer::generateToken(const size_t length)
 }
 
 std::string
-LobbyServer::generateLobbyID(const size_t length)
-{
+LobbyServer::generateLobbyID(const size_t length) {
     // same as above, but only with uppercase letters (better for lobby IDs imo)
     constexpr char charset[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -585,8 +524,7 @@ LobbyServer::generateLobbyID(const size_t length)
     std::uniform_int_distribution<> dist(0, sizeof(charset) - 2);
 
     std::string lobbyID;
-    for (size_t i = 0; i < length; ++i)
-    {
+    for (size_t i = 0; i < length; ++i) {
         lobbyID += charset[dist(generator)];
     }
 
@@ -594,8 +532,7 @@ LobbyServer::generateLobbyID(const size_t length)
 }
 
 int
-LobbyServer::findFreePort() const
-{
+LobbyServer::findFreePort() const {
     // this is a bit of a hacky way to do it but it works
     // we just try to bind to a port and if it fails we increment
     // I mean I could set up a proxy server to check for free ports
@@ -611,11 +548,9 @@ LobbyServer::findFreePort() const
     // reserved by the OS or something like that, might be 1024 firsts)
     constexpr int maxPort = MAX_PORT;
 
-    while (currentPort <= maxPort)
-    {
+    while (currentPort <= maxPort) {
         const int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
-        if (sockfd < 0)
-        {
+        if (sockfd < 0) {
             printMessage("Error creating socket to check port availability",
                          MessageType::CRITICAL);
             return NO_FILE_DESCRIPTOR;
@@ -628,8 +563,7 @@ LobbyServer::findFreePort() const
         addr.sin_port = htons(static_cast<uint16_t>(currentPort));
 
         // we try to bind to the port : if fail then next port bc not free
-        if (bind(sockfd, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) == 0)
-        {
+        if (bind(sockfd, reinterpret_cast<sockaddr *>(&addr), sizeof(addr)) == 0) {
             close(sockfd);
             return currentPort;
         }
@@ -644,25 +578,20 @@ LobbyServer::findFreePort() const
 }
 
 void
-LobbyServer::startLobby(const std::string& lobbyID) const
-{
+LobbyServer::startLobby(const std::string &lobbyID) const {
     // find the lobby using its ID
     const auto lobby = getLobby(lobbyID);
 
     // if lobby is found, then we start it
-    if (lobby)
-    {
-        (void)lobby->startLobby();
-    }
-    else
-    {
+    if (lobby) {
+        (void) lobby->startLobby();
+    } else {
         printMessage("Lobby not found", MessageType::ERROR);
     }
 }
 
 std::string
-LobbyServer::handleRequest(const std::string& requestData)
-{
+LobbyServer::handleRequest(const std::string &requestData) {
     // handle the request and return the response
     // the response will be sent back to the client.
 
@@ -672,64 +601,59 @@ LobbyServer::handleRequest(const std::string& requestData)
 
     ServerRequest request;
 
-    try
-    {
+    try {
         request = ServerRequest::deserialize(requestData);
-    }
-    catch (std::runtime_error& e)
-    {
+    } catch (std::runtime_error &e) {
         printMessage(std::string(e.what()), MessageType::ERROR);
         return ServerResponse::ErrorResponse(
-                   INVALID_ID, StatusCode::ERROR_DESERIALIZING_REQUEST)
-            .serialize();
+                    INVALID_ID, StatusCode::ERROR_DESERIALIZING_REQUEST)
+                .serialize();
     }
 
     printMessage("Handling request [" + getServerMethodString(request.method) +
-                     "]",
+                 "]",
                  MessageType::INFO);
 
     // then we handle the request properly according to its method called
     // and return the response to the client
 
-    switch (request.method)
-    {
-    case ServerMethods::GET_PLAYER_STATUS:
-        return handleGetPlayerStatusRequest(request).serialize();
+    switch (request.method) {
+        case ServerMethods::GET_PLAYER_STATUS:
+            return handleGetPlayerStatusRequest(request).serialize();
 
-    case ServerMethods::START_SESSION:
-        return handleStartSessionRequest(request).serialize();
+        case ServerMethods::START_SESSION:
+            return handleStartSessionRequest(request).serialize();
 
-    case ServerMethods::END_SESSION:
-        return handleEndSessionRequest(request).serialize();
+        case ServerMethods::END_SESSION:
+            return handleEndSessionRequest(request).serialize();
 
-    case ServerMethods::GET_LOBBY:
-        return handleGetLobbyRequest(request).serialize();
+        case ServerMethods::GET_LOBBY:
+            return handleGetLobbyRequest(request).serialize();
 
-    case ServerMethods::GET_PUBLIC_LOBBIES:
-        return handleGetPublicLobbiesRequest(request).serialize();
+        case ServerMethods::GET_PUBLIC_LOBBIES:
+            return handleGetPublicLobbiesRequest(request).serialize();
 
-    case ServerMethods::CREATE_LOBBY:
-        return handleCreateLobbyRequest(request).serialize();
+        case ServerMethods::CREATE_LOBBY:
+            return handleCreateLobbyRequest(request).serialize();
 
-    case ServerMethods::JOIN_LOBBY:
-        return handleJoinLobbyRequest(request).serialize();
+        case ServerMethods::JOIN_LOBBY:
+            return handleJoinLobbyRequest(request).serialize();
 
-    case ServerMethods::SPECTATE_LOBBY:
-        return handleSpectateLobbyRequest(request).serialize();
+        case ServerMethods::SPECTATE_LOBBY:
+            return handleSpectateLobbyRequest(request).serialize();
 
-    default:
-        printMessage("Request [" + getServerMethodString(request.method) +
+        default:
+            printMessage("Request [" + getServerMethodString(request.method) +
                          "] not implemented",
-                     MessageType::WARNING);
-        return ServerResponse::ErrorResponse(request.id,
-                                             StatusCode::ERROR_UNKNOWN_METHOD)
-            .serialize();
+                         MessageType::WARNING);
+            return ServerResponse::ErrorResponse(request.id,
+                                                 StatusCode::ERROR_UNKNOWN_METHOD)
+                    .serialize();
     }
 }
 
 ServerResponse
-LobbyServer::handleStartSessionRequest(const ServerRequest& request)
-{
+LobbyServer::handleStartSessionRequest(const ServerRequest &request) {
     // handle the start session request
     // return the response to the client
 
@@ -744,29 +668,27 @@ LobbyServer::handleStartSessionRequest(const ServerRequest& request)
     const StatusCode ret = addClientSession(token, username);
 
     // and we return the response to the client
-    switch (ret)
-    {
-    case StatusCode::ERROR_SESSION_ALREADY_EXISTS:
-        return ServerResponse::ErrorResponse(request.id, ret);
+    switch (ret) {
+        case StatusCode::ERROR_SESSION_ALREADY_EXISTS:
+            return ServerResponse::ErrorResponse(request.id, ret);
 
-    case StatusCode::SUCCESS:
-        return ServerResponse::SuccessResponse(request.id, ret,
-                                               {{"token", token}});
+        case StatusCode::SUCCESS:
+            return ServerResponse::SuccessResponse(request.id, ret,
+                                                   {{"token", token}});
 
-    case StatusCode::SUCCESS_REPLACED_SESSION:
-        return ServerResponse::SuccessResponse(request.id, ret,
-                                               {{"token", token}});
+        case StatusCode::SUCCESS_REPLACED_SESSION:
+            return ServerResponse::SuccessResponse(request.id, ret,
+                                                   {{"token", token}});
 
-    default:
-        // debug purpose, should never happen
-        throw std::runtime_error(
-            "Unexpected StatusCode returned from addClientSession");
+        default:
+            // debug purpose, should never happen
+            throw std::runtime_error(
+                "Unexpected StatusCode returned from addClientSession");
     }
 }
 
 ServerResponse
-LobbyServer::handleEndSessionRequest(const ServerRequest& request)
-{
+LobbyServer::handleEndSessionRequest(const ServerRequest &request) {
     // handle the end session request
     // return the response to the client
 
@@ -777,24 +699,22 @@ LobbyServer::handleEndSessionRequest(const ServerRequest& request)
     const StatusCode ret = removeClientSession(request.params.at("token"));
 
     // and we return the response to the client
-    switch (ret)
-    {
-    case StatusCode::ERROR_SESSION_NOT_FOUND:
-        return ServerResponse::ErrorResponse(request.id, ret);
+    switch (ret) {
+        case StatusCode::ERROR_SESSION_NOT_FOUND:
+            return ServerResponse::ErrorResponse(request.id, ret);
 
-    case StatusCode::SUCCESS:
-        return ServerResponse::SuccessResponse(request.id, ret);
+        case StatusCode::SUCCESS:
+            return ServerResponse::SuccessResponse(request.id, ret);
 
-    default:
-        // debug purpose, should never happen
-        throw std::runtime_error(
-            "Unexpected StatusCode returned from removeClientSession");
+        default:
+            // debug purpose, should never happen
+            throw std::runtime_error(
+                "Unexpected StatusCode returned from removeClientSession");
     }
 }
 
 ServerResponse
-LobbyServer::handleGetLobbyRequest(const ServerRequest& request) const
-{
+LobbyServer::handleGetLobbyRequest(const ServerRequest &request) const {
     // handle the get lobby request
     // return the response to the client
 
@@ -806,15 +726,15 @@ LobbyServer::handleGetLobbyRequest(const ServerRequest& request) const
     const std::shared_ptr<Lobby> lobby = getLobby(lobbyID);
 
     // and we return the response to the client (if pointer is not nullptr)
-    return lobby ? ServerResponse::SuccessResponse(
-                       request.id, StatusCode::SUCCESS, lobby->getState())
-                 : ServerResponse::ErrorResponse(
-                       request.id, StatusCode::ERROR_LOBBY_NOT_FOUND);
+    return lobby
+               ? ServerResponse::SuccessResponse(
+                   request.id, StatusCode::SUCCESS, lobby->getState())
+               : ServerResponse::ErrorResponse(
+                   request.id, StatusCode::ERROR_LOBBY_NOT_FOUND);
 }
 
 ServerResponse
-LobbyServer::handleGetPublicLobbiesRequest(const ServerRequest& request)
-{
+LobbyServer::handleGetPublicLobbiesRequest(const ServerRequest &request) {
     // handle the get public lobbies request
     // return the response to the client
 
@@ -822,12 +742,11 @@ LobbyServer::handleGetPublicLobbiesRequest(const ServerRequest& request)
     // Then, we return the public lobbies to the client
 
     std::unordered_map<std::string, std::string> data;
-    std::vector<std::shared_ptr<Lobby>> publicLobbies = getPublicLobbies();
+    std::vector<std::shared_ptr<Lobby> > publicLobbies = getPublicLobbies();
 
     // we add the public lobbies to the data
     int i = 0;
-    for (const auto& lobby : publicLobbies)
-    {
+    for (const auto &lobby: publicLobbies) {
         data[std::to_string(i)] = lobby->getState().serialize();
         i++;
     }
@@ -838,8 +757,7 @@ LobbyServer::handleGetPublicLobbiesRequest(const ServerRequest& request)
 }
 
 ServerResponse
-LobbyServer::handleCreateLobbyRequest(const ServerRequest& request)
-{
+LobbyServer::handleCreateLobbyRequest(const ServerRequest &request) {
     // handle the create lobby request
     // return the response to the client
 
@@ -849,15 +767,13 @@ LobbyServer::handleCreateLobbyRequest(const ServerRequest& request)
     // Finally, we return the lobbyState to the client
 
     // but first, we need to check if the client has a session
-    if (!isSessionActive(request.params.at("token")))
-    {
+    if (!isSessionActive(request.params.at("token"))) {
         return ServerResponse::ErrorResponse(
             request.id, StatusCode::ERROR_NO_SESSION_TOKEN);
     }
 
     // we check if the maximum number of lobbies is reached
-    if (countLobbies() >= MAX_LOBBIES)
-    {
+    if (countLobbies() >= MAX_LOBBIES) {
         return ServerResponse::ErrorResponse(
             request.id, StatusCode::ERROR_MAX_LOBBIES_REACHED);
     }
@@ -867,21 +783,19 @@ LobbyServer::handleCreateLobbyRequest(const ServerRequest& request)
     int port = findFreePort();
 
     // if we can't find a free port, we return an error response
-    if (port == NO_PORT_AVAILABLE)
-    {
+    if (port == NO_PORT_AVAILABLE) {
         return ServerResponse::ErrorResponse(
             request.id, StatusCode::ERROR_NO_AVAILABLE_PORT);
     }
 
-    if (port == NO_FILE_DESCRIPTOR)
-    {
+    if (port == NO_FILE_DESCRIPTOR) {
         return ServerResponse::ErrorResponse(request.id,
                                              StatusCode::ERROR_CREATING_SOCKET);
     }
 
     // we create the lobby and add it to the lobby server
     GameMode gameMode =
-        static_cast<GameMode>(std::stoi(request.params.at("gameMode")));
+            static_cast<GameMode>(std::stoi(request.params.at("gameMode")));
     int maxPlayers = std::stoi(request.params.at("maxPlayers"));
     bool publicLobby = request.params.at("visibility") == "public";
 
@@ -890,24 +804,17 @@ LobbyServer::handleCreateLobbyRequest(const ServerRequest& request)
     // (Duel should be DUAL_LOBBY_SIZE)
     // if it's not the case, then return ERROR_INVALID_LOBBY_SIZE
 
-    if (gameMode == GameMode::CLASSIC || gameMode == GameMode::ROYALE)
-    {
-        if (maxPlayers < MIN_LOBBY_SIZE || maxPlayers > MAX_LOBBY_SIZE)
-        {
+    if (gameMode == GameMode::CLASSIC || gameMode == GameMode::ROYALE) {
+        if (maxPlayers < MIN_LOBBY_SIZE || maxPlayers > MAX_LOBBY_SIZE) {
             return ServerResponse::ErrorResponse(
                 request.id, StatusCode::ERROR_INVALID_LOBBY_SIZE);
         }
-    }
-    else if (gameMode == GameMode::DUEL)
-    {
-        if (maxPlayers != DUAL_LOBBY_SIZE)
-        {
+    } else if (gameMode == GameMode::DUEL) {
+        if (maxPlayers != DUAL_LOBBY_SIZE) {
             return ServerResponse::ErrorResponse(
                 request.id, StatusCode::ERROR_INVALID_LOBBY_SIZE);
         }
-    }
-    else
-    {
+    } else {
         throw std::runtime_error(
             "[err] Invalid GameMode in createLobbyRequest");
     }
@@ -930,8 +837,7 @@ LobbyServer::handleCreateLobbyRequest(const ServerRequest& request)
 }
 
 ServerResponse
-LobbyServer::handleJoinLobbyRequest(const ServerRequest& request) const
-{
+LobbyServer::handleJoinLobbyRequest(const ServerRequest &request) const {
     // handle the join lobby request
     // return the response to the client
 
@@ -941,8 +847,7 @@ LobbyServer::handleJoinLobbyRequest(const ServerRequest& request) const
     // Finally, we return the response to the client
 
     // but first, we need to check if the client has a session
-    if (!isSessionActive(request.params.at("token")))
-    {
+    if (!isSessionActive(request.params.at("token"))) {
         return ServerResponse::ErrorResponse(
             request.id, StatusCode::ERROR_NO_SESSION_TOKEN);
     }
@@ -952,8 +857,7 @@ LobbyServer::handleJoinLobbyRequest(const ServerRequest& request) const
     const std::shared_ptr<Lobby> lobby = getLobby(lobbyID);
 
     // if the lobby is not found, we return an error response
-    if (!lobby)
-    {
+    if (!lobby) {
         return ServerResponse::ErrorResponse(request.id,
                                              StatusCode::ERROR_LOBBY_NOT_FOUND);
     }
@@ -961,34 +865,32 @@ LobbyServer::handleJoinLobbyRequest(const ServerRequest& request) const
     // we add the player to the lobby, using its token and the username the
     // server knows about
     const std::string username =
-        getClientSessionUsername(request.params.at("token"));
+            getClientSessionUsername(request.params.at("token"));
     const StatusCode ret =
-        lobby->addPlayer(request.params.at("token"), username);
+            lobby->addPlayer(request.params.at("token"), username);
 
     // and we return the response to the client containing the port to connect
     // to
-    switch (ret)
-    {
-    case StatusCode::ERROR_CLIENT_ALREADY_IN_LOBBY:
-        return ServerResponse::ErrorResponse(request.id, ret);
+    switch (ret) {
+        case StatusCode::ERROR_CLIENT_ALREADY_IN_LOBBY:
+            return ServerResponse::ErrorResponse(request.id, ret);
 
-    case StatusCode::ERROR_LOBBY_FULL:
-        return ServerResponse::ErrorResponse(request.id, ret);
+        case StatusCode::ERROR_LOBBY_FULL:
+            return ServerResponse::ErrorResponse(request.id, ret);
 
-    case StatusCode::SUCCESS:
-        return ServerResponse::SuccessResponse(
-            request.id, ret, {{"port", std::to_string(lobby->getPort())}});
+        case StatusCode::SUCCESS:
+            return ServerResponse::SuccessResponse(
+                request.id, ret, {{"port", std::to_string(lobby->getPort())}});
 
-    default:
-        // debug purpose, should never happen
-        throw std::runtime_error(
-            "Unexpected StatusCode returned from addPlayer");
+        default:
+            // debug purpose, should never happen
+            throw std::runtime_error(
+                "Unexpected StatusCode returned from addPlayer");
     }
 }
 
 ServerResponse
-LobbyServer::handleSpectateLobbyRequest(const ServerRequest& request) const
-{
+LobbyServer::handleSpectateLobbyRequest(const ServerRequest &request) const {
     // handle the spectate lobby request
     // return the response to the client
 
@@ -998,8 +900,7 @@ LobbyServer::handleSpectateLobbyRequest(const ServerRequest& request) const
     // Finally, we return the response to the client
 
     // but first, we need to check if the client has a session
-    if (!isSessionActive(request.params.at("token")))
-    {
+    if (!isSessionActive(request.params.at("token"))) {
         return ServerResponse::ErrorResponse(
             request.id, StatusCode::ERROR_NO_SESSION_TOKEN);
     }
@@ -1009,8 +910,7 @@ LobbyServer::handleSpectateLobbyRequest(const ServerRequest& request) const
     const std::shared_ptr<Lobby> lobby = getLobby(lobbyID);
 
     // if the lobby is not found, we return an error response
-    if (!lobby)
-    {
+    if (!lobby) {
         return ServerResponse::ErrorResponse(request.id,
                                              StatusCode::ERROR_LOBBY_NOT_FOUND);
     }
@@ -1018,30 +918,28 @@ LobbyServer::handleSpectateLobbyRequest(const ServerRequest& request) const
     // we add the spectator to the lobby, using its token and the username the
     // server knows about
     const std::string username =
-        getClientSessionUsername(request.params.at("token"));
+            getClientSessionUsername(request.params.at("token"));
     const StatusCode ret =
-        lobby->addSpectator(request.params.at("token"), username);
+            lobby->addSpectator(request.params.at("token"), username);
 
     // and we return the response to the client
-    switch (ret)
-    {
-    case StatusCode::ERROR_CLIENT_ALREADY_IN_LOBBY:
-        return ServerResponse::ErrorResponse(request.id, ret);
+    switch (ret) {
+        case StatusCode::ERROR_CLIENT_ALREADY_IN_LOBBY:
+            return ServerResponse::ErrorResponse(request.id, ret);
 
-    case StatusCode::SUCCESS:
-        return ServerResponse::SuccessResponse(
-            request.id, ret, {{"port", std::to_string(lobby->getPort())}});
+        case StatusCode::SUCCESS:
+            return ServerResponse::SuccessResponse(
+                request.id, ret, {{"port", std::to_string(lobby->getPort())}});
 
-    default:
-        // debug purpose, should never happen
-        throw std::runtime_error(
-            "Unexpected StatusCode returned from addSpectator");
+        default:
+            // debug purpose, should never happen
+            throw std::runtime_error(
+                "Unexpected StatusCode returned from addSpectator");
     }
 }
 
 ServerResponse
-LobbyServer::handleGetPlayerStatusRequest(const ServerRequest& request) const
-{
+LobbyServer::handleGetPlayerStatusRequest(const ServerRequest &request) const {
     // handle the get player status request
     // return the response to the client
 
@@ -1052,8 +950,7 @@ LobbyServer::handleGetPlayerStatusRequest(const ServerRequest& request) const
     const std::string username = request.params.at("username");
 
     // we check if the player is connected to the lobby server
-    if (!doesUserHaveSession(username))
-    {
+    if (!doesUserHaveSession(username)) {
         return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS,
                                                PlayerStatus::OFFLINE);
     }
@@ -1067,16 +964,13 @@ LobbyServer::handleGetPlayerStatusRequest(const ServerRequest& request) const
     {
         std::lock_guard lock(lobbiesMutex);
 
-        for (const auto& [lobbyID, lobby] : lobbyObjects)
-        {
-            if (lobby->isPlayerInLobby(token))
-            {
+        for (const auto &[lobbyID, lobby]: lobbyObjects) {
+            if (lobby->isPlayerInLobby(token)) {
                 return ServerResponse::SuccessResponse(
                     request.id, StatusCode::SUCCESS, PlayerStatus::IN_LOBBY);
             }
 
-            if (lobby->isSpectatorInLobby(token))
-            {
+            if (lobby->isSpectatorInLobby(token)) {
                 return ServerResponse::SuccessResponse(
                     request.id, StatusCode::SUCCESS, PlayerStatus::IN_LOBBY);
             }
@@ -1086,8 +980,7 @@ LobbyServer::handleGetPlayerStatusRequest(const ServerRequest& request) const
     // if reached this point, the player is connected and might be in a game
     // we check if the player is in a game
 
-    if (gameServer->isSessionInAnyGame(token))
-    {
+    if (gameServer->isSessionInAnyGame(token)) {
         return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS,
                                                PlayerStatus::IN_GAME);
     }

@@ -18,26 +18,27 @@
 #include <openssl/sha.h>
 #include <sqlite3.h>
 
-class TetrisDBServer final : public TetrisHTTPServer
-{
-  public:
+class TetrisDBServer final : public TetrisHTTPServer {
+public:
     // The constructor opens the SQLite DB file
-    TetrisDBServer(const std::string& address, unsigned short port,
-                   const std::string& dbFile);
+    TetrisDBServer(const std::string &address, unsigned short port,
+                   const std::string &dbFile);
 
     ~TetrisDBServer() override;
 
     [[nodiscard]] StatusCode startDBServer();
+
     [[nodiscard]] StatusCode closeDBServer();
+
     [[nodiscard]] bool isDBServerRunning() const;
 
-  protected:
+protected:
     // Overrides the HTTP server request handler
     void handleRequest(http::request<http::string_body> req,
-                       http::response<http::string_body>& res) override;
+                       http::response<http::string_body> &res) override;
 
-  private:
-    sqlite3* db_;
+private:
+    sqlite3 *db_;
     std::mutex dbMutex_;
     std::thread dbThread_;
     std::atomic<bool> stopFlag_;
@@ -48,78 +49,86 @@ class TetrisDBServer final : public TetrisHTTPServer
     void initializeDatabase() const;
 
     // Utility functions
-    static void sendJSONResponse(http::response<http::string_body>& res,
+    static void sendJSONResponse(http::response<http::string_body> &res,
                                  http::status status,
-                                 const boost::property_tree::ptree& pt,
+                                 const boost::property_tree::ptree &pt,
                                  unsigned int version);
 
-    static void sendErrorResponse(http::response<http::string_body>& res,
+    static void sendErrorResponse(http::response<http::string_body> &res,
                                   http::status status,
-                                  const std::string& message,
+                                  const std::string &message,
                                   unsigned int version);
 
     static std::unordered_map<std::string, std::string>
-    parseQuery(const std::string& query);
+    parseQuery(const std::string &query);
 
     // Request dispatch functions
-    void handleGetRequest(const http::request<http::string_body>& req,
-                          http::response<http::string_body>& res);
+    void handleGetRequest(const http::request<http::string_body> &req,
+                          http::response<http::string_body> &res);
 
-    void handlePostRequest(const std::string& target,
-                           const boost::property_tree::ptree& pt,
+    void handlePostRequest(const std::string &target,
+                           const boost::property_tree::ptree &pt,
                            unsigned int version,
-                           http::response<http::string_body>& res);
+                           http::response<http::string_body> &res);
 
     // Endpoint handlers
-    void handleRegister(const boost::property_tree::ptree& pt,
+    void handleRegister(const boost::property_tree::ptree &pt,
                         unsigned int version,
-                        http::response<http::string_body>& res);
+                        http::response<http::string_body> &res);
 
-    void handleLogin(const boost::property_tree::ptree& pt,
+    void handleLogin(const boost::property_tree::ptree &pt,
                      unsigned int version,
-                     http::response<http::string_body>& res);
+                     http::response<http::string_body> &res);
 
-    void handleUpdate(const boost::property_tree::ptree& pt,
+    void handleUpdate(const boost::property_tree::ptree &pt,
                       unsigned int version,
-                      http::response<http::string_body>& res);
+                      http::response<http::string_body> &res);
 
-    void handlePostScore(const boost::property_tree::ptree& pt,
+    void handlePostScore(const boost::property_tree::ptree &pt,
                          unsigned int version,
-                         http::response<http::string_body>& res);
+                         http::response<http::string_body> &res);
 
     void handleGetLeaderboard(unsigned int version,
-                              http::response<http::string_body>& res,
-                              const std::string& query);
+                              http::response<http::string_body> &res,
+                              const std::string &query);
 
-    void handleGetPlayer(const std::string& accountID, unsigned int version,
-                         http::response<http::string_body>& res);
+    void handleGetPlayer(const std::string &accountID, unsigned int version,
+                         http::response<http::string_body> &res);
 
-    void handleSendFriendRequest(const boost::property_tree::ptree& pt,
+    void handleGetAccountIDByUsername(const std::string &username,
+                                      unsigned int version,
+                                      http::response<http::string_body> &res);
+
+    void handleGetUsernameByAccountID(const std::string &accountID,
+                                      unsigned int version,
+                                      http::response<http::string_body> &res);
+
+    void handleSendFriendRequest(const boost::property_tree::ptree &pt,
                                  unsigned int version,
-                                 http::response<http::string_body>& res);
+                                 http::response<http::string_body> &res);
 
-    void handleAcceptFriendRequest(const boost::property_tree::ptree& pt,
+    void handleAcceptFriendRequest(const boost::property_tree::ptree &pt,
                                    unsigned int version,
-                                   http::response<http::string_body>& res);
+                                   http::response<http::string_body> &res);
 
-    void handleDeclineFriendRequest(const boost::property_tree::ptree& pt,
+    void handleDeclineFriendRequest(const boost::property_tree::ptree &pt,
                                     unsigned int version,
-                                    http::response<http::string_body>& res);
+                                    http::response<http::string_body> &res);
 
-    void handleRemoveFriend(const boost::property_tree::ptree& pt,
+    void handleRemoveFriend(const boost::property_tree::ptree &pt,
                             unsigned int version,
-                            http::response<http::string_body>& res);
+                            http::response<http::string_body> &res);
 
-    void handleGetMessages(const std::string& query, unsigned int version,
-                           http::response<http::string_body>& res);
+    void handleGetMessages(const std::string &query, unsigned int version,
+                           http::response<http::string_body> &res);
 
-    void handlePostMessage(const boost::property_tree::ptree& pt,
+    void handlePostMessage(const boost::property_tree::ptree &pt,
                            unsigned int version,
-                           http::response<http::string_body>& res);
+                           http::response<http::string_body> &res);
 
-    void handleDeleteMessage(const boost::property_tree::ptree& pt,
+    void handleDeleteMessage(const boost::property_tree::ptree &pt,
                              unsigned int version,
-                             http::response<http::string_body>& res);
+                             http::response<http::string_body> &res);
 };
 
 #endif // DBSERVER_SQLITE_HPP

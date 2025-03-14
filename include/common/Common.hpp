@@ -59,6 +59,23 @@ enum class StatusCode
 
     ERROR_NOT_SUPPOSED_TO_HAPPEN,
 
+    ERROR_LOGGING_IN,
+    ERROR_USERNAME_TAKEN,
+    ERROR_REGISTERING,
+
+    ERROR_INVALID_MESSAGE,
+    ERROR_SENDING_MESSAGE,
+    ERROR_USER_NOT_FOUND,
+
+};
+
+// gamemode for the lobby
+enum class GameMode
+{
+    CLASSIC,
+    ROYALE,
+    DUEL,
+    NONE, // default value
 };
 
 // status codes in string format
@@ -73,20 +90,35 @@ const std::unordered_map<Action, Action> REVERSE_ACTIONS_MAP = {
     {Action::RotateRight, Action::RotateLeft},
 };
 
-const std::vector<Action> BLOCKED_ACTIONS = {
+const std::vector BLOCKED_ACTIONS = {
     Action::MoveDown,   Action::MoveLeft,    Action::MoveRight,
     Action::RotateLeft, Action::RotateRight, Action::InstantFall,
     Action::UseBag,     Action::UseMalus,    Action::UseBonus,
 };
 
-// gamemode for the lobby
-enum class GameMode
-{
-    CLASSIC,
-    ROYALE,
-    DUEL,
-    NONE, // default value
+
+const std::unordered_map<GameMode, std::string> GAMEMODE_DESCRIPTIONS = {
+        {GameMode::CLASSIC,     "Play against others in classic Tetris mode. Clear lines to score points."},
+        {GameMode::DUEL,        "Play against a single opponent in a head-to-head battle."},
+        {GameMode::ROYALE,      "Battle royale mode with power-ups and special abilities."},
+        {GameMode::NONE,        "No description available."},
 };
+
+
+struct PlayerScore
+{
+    int rank;
+    std::string name;
+    int score;
+};
+
+struct ChatMessage
+{
+    std::string from;
+    std::string text;
+};
+
+
 
 // message type for debugging
 enum class MessageType
@@ -181,11 +213,13 @@ const int MAX_GAMES = 20;
 const int MAX_LOBBIES = 20;
 
 const int DUAL_LOBBY_SIZE = 2;
-const int MIN_LOBBY_SIZE = 3;
+const int MIN_LOBBY_SIZE = 2;
 const int MAX_LOBBY_SIZE = 9;
 
 const int LOBBY_TTL = 1000000; // ttl for the lobby
 const int MAX_REQUEST_ID = 4096;
+
+const int MAX_ENERGY = 200;
 
 // rules for tokens
 const int LOBBY_ID_LENGTH = 6;
@@ -195,6 +229,12 @@ const int TOKEN_LENGTH = 16;
 const int INDENT_SIZE_CONFIG = 4;
 
 // IP address for the servers
-const std::string MASTER_SERVER_IP = "0.0.0.0";  // all interfaces (was set to something prior but oh well)
+const std::string MASTER_SERVER_IP =
+    "0.0.0.0"; // all interfaces (was set to something prior but oh well)
+
+
+// default values for the game
+const std::string GAME_TITLE = "TETRIS ROYALE";
+const std::string CONFIG_FILE_NAME = "config.json";
 
 #endif

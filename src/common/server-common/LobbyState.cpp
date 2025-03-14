@@ -1,8 +1,7 @@
 #include "LobbyState.hpp"
 
 std::string
-LobbyState::serialize() const
-{
+LobbyState::serialize() const {
     // serialize the lobby state to a JSON string
     nlohmann::json j;
 
@@ -20,22 +19,17 @@ LobbyState::serialize() const
 }
 
 LobbyState
-LobbyState::deserialize(const std::string& data)
-{
+LobbyState::deserialize(const std::string &data) {
     // deserialize the JSON string to a lobby state
     nlohmann::json j;
 
-    try
-    {
+    try {
         j = nlohmann::json::parse(data);
-    }
-    catch (nlohmann::json::parse_error& e)
-    {
+    } catch (nlohmann::json::parse_error &e) {
         throw std::runtime_error("JSON Error parsing LobbyState: " +
                                  std::string(e.what()));
     }
-    catch (nlohmann::json::exception& e)
-    {
+    catch (nlohmann::json::exception &e) {
         throw std::runtime_error("Unknown Error parsing LobbyState: " +
                                  std::string(e.what()));
     }
@@ -43,33 +37,28 @@ LobbyState::deserialize(const std::string& data)
     LobbyState state;
 
     // see, I'm not lazy anymore :)
-    try
-    {
+    try {
         state.lobbyID = j.at("lobbyID").get<std::string>();
         state.port = j.at("port").get<int>();
         state.maxPlayers = j.at("maxPlayers").get<int>();
         state.gameMode = static_cast<GameMode>(j.at("gameMode").get<int>());
         state.isPublic = j.at("public").get<bool>();
         state.players =
-            j.at("players").get<std::unordered_map<std::string, std::string>>();
+                j.at("players").get<std::unordered_map<std::string, std::string> >();
         state.readyPlayers =
-            j.at("readyPlayers").get<std::unordered_map<std::string, bool>>();
+                j.at("readyPlayers").get<std::unordered_map<std::string, bool> >();
         state.spectators =
-            j.at("spectators")
-                .get<std::unordered_map<std::string, std::string>>();
-    }
-    catch (nlohmann::json::type_error& e)
-    {
+                j.at("spectators")
+                .get<std::unordered_map<std::string, std::string> >();
+    } catch (nlohmann::json::type_error &e) {
         throw std::runtime_error("Type Error deserializing LobbyState: " +
                                  std::string(e.what()));
     }
-    catch (nlohmann::json::out_of_range& e)
-    {
+    catch (nlohmann::json::out_of_range &e) {
         throw std::runtime_error("OutofRange Error deserializing LobbyState: " +
                                  std::string(e.what()));
     }
-    catch (nlohmann::json::exception& e)
-    {
+    catch (nlohmann::json::exception &e) {
         throw std::runtime_error("JSON Error deserializing LobbyState: " +
                                  std::string(e.what()));
     }
@@ -78,8 +67,7 @@ LobbyState::deserialize(const std::string& data)
 }
 
 LobbyState
-LobbyState::generateEmptyState()
-{
+LobbyState::generateEmptyState() {
     // generate an empty lobby state
     LobbyState state;
     state.lobbyID = "";
