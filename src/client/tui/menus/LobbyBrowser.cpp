@@ -211,7 +211,7 @@ void showLobbyBrowser(ClientSession &session) {
 
             // Reset selection if needed
             if (selectedLobby >= static_cast<int>(lobbyOptions.size())) {
-                selectedLobby = lobbyOptions.empty() ? 0 : lobbyOptions.size() - 1;
+                selectedLobby = lobbyOptions.empty() ? 0 : static_cast<int>(lobbyOptions.size()) - 1;
             }
 
             // Clear any error message on successful refresh

@@ -12,6 +12,20 @@ ClientSession::ClientSession(const std::string &server_ip, int lobby_port,
     }
 }
 
+ClientSession::ClientSession(Config &config, bool debug)
+    : dbRequestManager(config.get("server_ip"), std::stoi(config.get("db_port"))),
+      gameRequestManager(config.get("server_ip"), std::stoi(config.get("lobby_port"))),
+      debug_(debug) {
+
+    // this is the constructor of the ClientSession class
+    // it will initialize the DBRequestManager and the GameRequestManager
+
+    if (gameRequestManager.connectToServer() != StatusCode::SUCCESS) {
+        throw std::runtime_error("[err] Failed to connect to game server.");
+    }
+
+}
+
 ClientSession::~ClientSession() {
     // this is the destructor of the ClientSession class
     // I really doubt that we need to do anything here
@@ -415,7 +429,7 @@ ClientSession::postScore(int score) {
 
     if (response.status == 200) {
         // Refresh local data after score update
-        fetchPlayerData();
+        (void) fetchPlayerData();
         return StatusCode::SUCCESS;
     }
     std::cerr << "Error posting score (" << response.status << "): "
@@ -508,7 +522,7 @@ ClientSession::acceptFriendRequest(const std::string &senderID) {
 
     if (response.status == 200) {
         // Optionally, update local friend list
-        fetchPlayerData();
+        (void) fetchPlayerData();
         return StatusCode::SUCCESS;
     }
     std::cerr << "Error accepting friend request (" << response.status
@@ -531,7 +545,7 @@ ClientSession::declineFriendRequest(const std::string &senderID) {
 
     if (response.status == 200) {
         // Optionally, update local pending list
-        fetchPlayerData();
+        (void) fetchPlayerData();
         return StatusCode::SUCCESS;
     }
     std::cerr << "Error declining friend request (" << response.status
@@ -553,7 +567,7 @@ ClientSession::removeFriend(const std::string &friendID) {
 
     if (response.status == 200) {
         // Optionally, update local friend list
-        fetchPlayerData();
+        (void) fetchPlayerData();
         return StatusCode::SUCCESS;
     }
     std::cerr << "Error removing friend (" << response.status << "): "

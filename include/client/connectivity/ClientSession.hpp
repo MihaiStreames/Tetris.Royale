@@ -5,6 +5,7 @@
 #include "DBRequestManager.hpp"
 #include "GameRequestManager.hpp"
 #include "GameState.hpp"
+#include "Config.hpp"
 
 #include <iostream>
 #include <random>
@@ -22,6 +23,7 @@ public:
     // public here
     ClientSession(const std::string &server_ip, int lobby_port, int db_port,
                   bool debug = false);
+    ClientSession(Config &config, bool debug = false);
 
     ~ClientSession();
 

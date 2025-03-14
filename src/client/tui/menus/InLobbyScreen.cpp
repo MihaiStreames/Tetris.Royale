@@ -34,24 +34,32 @@ void showInLobbyScreen(ClientSession &session) {
 
     // Create buttons
     auto readyButton = Button("Ready", [&] {
-        session.readyUp();
+        if (session.readyUp() != StatusCode::SUCCESS) {
+            errorMessage = "Error setting ready status";
+        }
     });
 
     auto unreadyButton = Button("Unready", [&] {
-        session.unreadyUp();
+        if (session.unreadyUp() != StatusCode::SUCCESS) {
+            errorMessage = "Error setting unready status";
+        }
     });
 
     auto leaveButton = Button("Leave Lobby", [&] {
         try {
-            session.leaveLobby();
-            currentScreen = ScreenState::LobbyBrowser;
-            screen.Exit();
+
+            if (session.leaveLobby() == StatusCode::SUCCESS) {
+                currentScreen = ScreenState::LobbyBrowser;
+                screen.Exit();
+            } else {
+                errorMessage = "Error leaving lobby";
+            }
+        
         } catch (const std::exception &e) {
+
             errorMessage = "Error leaving lobby: ";
             errorMessage += e.what();
-            // Try to exit anyway if there was an error
-            currentScreen = ScreenState::LobbyBrowser;
-            screen.Exit();
+
         }
     });
 

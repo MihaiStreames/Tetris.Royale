@@ -235,5 +235,6 @@ const std::string MASTER_SERVER_IP =
 
 // default values for the game
 const std::string GAME_TITLE = "TETRIS ROYALE";
+const std::string CONFIG_FILE_NAME = "config.json";
 
 #endif

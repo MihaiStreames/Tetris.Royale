@@ -1,7 +1,11 @@
 #pragma once
 
-#include "ClientSession.hpp"
+#include <iostream>
 #include <string>
+
+#include "ClientSession.hpp"
+#include "Common.hpp"
+
 
 // Enum for the different screens in the application
 enum class ScreenState {
@@ -26,4 +30,4 @@ void showGameScreen(ClientSession& session);
 extern ScreenState currentScreen;
 
 // Main application loop
-void runTetrisClient();
+void runTetrisClient(ClientSession &session);

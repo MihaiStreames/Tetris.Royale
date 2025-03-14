@@ -203,8 +203,8 @@ set(TETRIS_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 # Add the FTXUI include directories for local development
 include_directories(${TETRIS_INCLUDE_DIR})
 include_directories(${TETRIS_INCLUDE_DIR}/client/tui)
-include_directories(${TETRIS_INCLUDE_DIR}/client/tui/data)
 include_directories(${TETRIS_INCLUDE_DIR}/client/tui/menus)
+include_directories(${TETRIS_INCLUDE_DIR}/client/connectivity)
 include_directories(${TETRIS_INCLUDE_DIR}/common)
 include_directories(${TETRIS_INCLUDE_DIR}/common/server-common)
 include_directories(${TETRIS_INCLUDE_DIR}/server/server-game-logic)
@@ -322,19 +322,19 @@ set_target_compile_options(TetrisRoyaleMasterServer)
 # 7. Client Executable
 file(GLOB TETRIS_CLIENT_SRC_FILES
         "${TETRIS_SRC_DIR}/client/*.cpp"
+        "${TETRIS_SRC_DIR}/client/connectivity/*.cpp"
         "${TETRIS_SRC_DIR}/client/tui/*.cpp"
-        "${TETRIS_SRC_DIR}/client/tui/data/*.cpp"
         "${TETRIS_SRC_DIR}/client/tui/menus/*.cpp"
 )
 add_executable(TetrisRoyaleClient
-        "${TETRIS_SRC_DIR}/client/tui/MenuHandler.cpp"
+        "${TETRIS_SRC_DIR}/client/Client.cpp"
         ${TETRIS_CLIENT_SRC_FILES})
 target_include_directories(TetrisRoyaleClient
         PRIVATE
         "${TETRIS_INCLUDE_DIR}/client"
         "${TETRIS_INCLUDE_DIR}/client/tui"
-        "${TETRIS_INCLUDE_DIR}/client/tui/data"
         "${TETRIS_INCLUDE_DIR}/client/tui/menus"
+        "${TETRIS_INCLUDE_DIR}/client/connectivity"
         "${TETRIS_INCLUDE_DIR}/common"
         "${TETRIS_INCLUDE_DIR}/common/server-common"
         "${TETRIS_INCLUDE_DIR}/server/server-game-logic"

@@ -1,13 +1,10 @@
 #include "MenuHandler.hpp"
-#include "Common.hpp"
-#include <iostream>
+
 
 // Initialize the current screen to Login
 ScreenState currentScreen = ScreenState::Login;
 
-void runTetrisClient() {
-    // Create the client session
-    ClientSession session(MASTER_SERVER_IP, LOBBY_SERVER_PORT, DB_SERVER_PORT);
+void runTetrisClient(ClientSession &session) {
 
     // Main application loop
     while (currentScreen != ScreenState::Exit) {
@@ -43,10 +40,5 @@ void runTetrisClient() {
     }
 
     std::cout << "Thank you for playing Tetris Royale!" << std::endl;
-}
 
-// The main entry point
-int main() {
-    runTetrisClient();
-    return 0;
 }

@@ -7,7 +7,7 @@ void showMainMenu(ClientSession &session) {
     auto screen = ScreenInteractive::Fullscreen();
 
     // Fetch player data initially
-    session.fetchPlayerData();
+    (void) session.fetchPlayerData();
 
     // Tab selection
     int activeTab = 0;
@@ -25,10 +25,10 @@ void showMainMenu(ClientSession &session) {
 
     auto addFriendButton = Button("Add Friend", [&] {
         if (!friendToAdd.empty()) {
-            session.sendFriendRequest(friendToAdd);
+            (void) session.sendFriendRequest(friendToAdd);
             friendToAdd.clear();
             // Refresh data
-            session.fetchPlayerData();
+            (void) session.fetchPlayerData();
         }
     });
 
@@ -51,12 +51,12 @@ void showMainMenu(ClientSession &session) {
     auto sendMessageButton = Button("Send", [&] {
         if (!messageInput.empty() && !friendList.empty()) {
             std::string recipient = friendList[selectedFriendIndex];
-            session.sendMessage(recipient, messageInput);
+            (void) session.sendMessage(recipient, messageInput);
             messageInput.clear();
 
-            // Poll multiple times after sending to ensure message appears
+            // Poll multiple times after sending to ensure message appears (magic numbers, sorta)
             for (int i = 0; i < 3; i++) {
-                session.getPlayerMessages(recipient);
+                (void) session.getPlayerMessages(recipient);
                 std::this_thread::sleep_for(std::chrono::milliseconds(50));
             }
         }
@@ -69,9 +69,10 @@ void showMainMenu(ClientSession &session) {
     });
 
     auto logoutButton = Button("Logout", [&] {
-        session.endSession();
-        currentScreen = ScreenState::Login;
-        screen.Exit();
+        if (session.endSession() == StatusCode::SUCCESS) {
+            currentScreen = ScreenState::Login;
+            screen.Exit();
+        }
     });
 
     // Notifications for friend requests
@@ -82,15 +83,15 @@ void showMainMenu(ClientSession &session) {
 
         auto acceptButton = Button("Accept", [&, index] {
             if (index < pendingRequests.size()) {
-                session.acceptFriendRequest(pendingRequests[index]);
-                session.fetchPlayerData();
+                (void) session.acceptFriendRequest(pendingRequests[index]);
+                (void) session.fetchPlayerData();
             }
         });
 
         auto declineButton = Button("Decline", [&, index] {
             if (index < pendingRequests.size()) {
-                session.declineFriendRequest(pendingRequests[index]);
-                session.fetchPlayerData();
+                (void) session.declineFriendRequest(pendingRequests[index]);
+                (void) session.fetchPlayerData();
             }
         });
 
@@ -125,12 +126,12 @@ void showMainMenu(ClientSession &session) {
     auto renderer = Renderer(container, [&] {
         // Check for tab change and refresh data if needed
         if (activeTab != previousTab) {
-            session.fetchPlayerData();
+            (void) session.fetchPlayerData();
 
             // If switching to Messages tab, refresh messages for the selected friend
             if (activeTab == 2 && !friendList.empty()) {
                 std::string selectedFriend = friendList[selectedFriendIndex];
-                session.getPlayerMessages(selectedFriend); // This updates the internal message cache
+                (void) session.getPlayerMessages(selectedFriend); // This updates the internal message cache
             }
 
             previousTab = activeTab;
@@ -139,7 +140,7 @@ void showMainMenu(ClientSession &session) {
         // Periodic refresh for player data
         refreshCounter++;
         if (refreshCounter >= REFRESH_INTERVAL) {
-            session.fetchPlayerData();
+            (void) session.fetchPlayerData();
             refreshCounter = 0;
         }
 
@@ -148,20 +149,20 @@ void showMainMenu(ClientSession &session) {
             messageRefreshCounter++;
             if (messageRefreshCounter >= MESSAGE_REFRESH_INTERVAL) {
                 std::string selectedFriend = friendList[selectedFriendIndex];
-                session.getPlayerMessages(selectedFriend); // This updates the internal message cache
+                (void) session.getPlayerMessages(selectedFriend); // This updates the internal message cache
                 messageRefreshCounter = 0;
             }
 
             // Even poll on every frame when user is interacting with message input
             if (messageTextInput->Focused()) {
                 std::string selectedFriend = friendList[selectedFriendIndex];
-                session.getPlayerMessages(selectedFriend);
+                (void) session.getPlayerMessages(selectedFriend);
             }
 
             if (activeTab == 2 && selectedFriendIndex != previousFriendIndex && !friendList.empty()) {
                 std::string selectedFriend = friendList[selectedFriendIndex];
                 // Poll immediately when changing conversation
-                session.getPlayerMessages(selectedFriend);
+                (void) session.getPlayerMessages(selectedFriend);
                 previousFriendIndex = selectedFriendIndex;
             }
         }
@@ -173,15 +174,15 @@ void showMainMenu(ClientSession &session) {
                 size_t index = i;
                 auto acceptButton = Button("Accept", [&, index] {
                     if (index < pendingRequests.size()) {
-                        session.acceptFriendRequest(pendingRequests[index]);
-                        session.fetchPlayerData();
+                        (void) session.acceptFriendRequest(pendingRequests[index]);
+                        (void) session.fetchPlayerData();
                     }
                 });
 
                 auto declineButton = Button("Decline", [&, index] {
                     if (index < pendingRequests.size()) {
-                        session.declineFriendRequest(pendingRequests[index]);
-                        session.fetchPlayerData();
+                        (void) session.declineFriendRequest(pendingRequests[index]);
+                        (void) session.fetchPlayerData();
                     }
                 });
 
