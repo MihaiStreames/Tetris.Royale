@@ -1,8 +1,6 @@
 # Tetris Royale
 
-Welcome to **Tetris Royale**, a modern multiplayer version of the classic **Tetris** game. This project is developed
-using **C++** and **CMake**, and it incorporates a range of libraries such as **FTXUI**, **Boost**, and others to
-provide an immersive and scalable gaming experience.
+Welcome to **Tetris Royale**, a modern multiplayer version of the classic **Tetris** game. This project is developed using **C++** and **CMake**, and it incorporates a range of libraries such as **FTXUI**, **Boost**, and others to provide an immersive and scalable gaming experience.
 
 For further details, please refer to the following documents:
 
@@ -12,10 +10,9 @@ For further details, please refer to the following documents:
 
 ## Features
 
-- **Multiplayer Support**: Play with or against other players in real-time.
+- **Battle Royale**: Play against up to 9 other players in real-time!
 - **Modern C++**: Developed with modern C++ features, following an **Object-Oriented Programming (OOP)** approach.
-- **Cross-Platform**: The project is designed to be cross-platform, allowing you to build and run it on various
-  platforms using **CMake**.
+- **Cross-Platform**: The project is designed to be cross-platform, allowing you to build and run it on various platforms using **CMake**.
 
 ## Installation
 
@@ -26,8 +23,7 @@ To get **Tetris Royale** up and running on your machine, you must use the `insta
 ./install.sh
 ```
 
-This should install all the **dependencies**, launch the **CMake** and the **Makefile** to build the project. If this
-fails, you might want to use the **`Manual Installation Guide`** for this part.
+This should install all the **dependencies**, launch the **CMake** and the **Makefile** to build the project. If this fails, you might want to use the **`Manual Installation Guide`** for this part.
 
 ## Manual Installation Guide
 
@@ -44,8 +40,7 @@ cd ./group-1
 
 ### 2 Install Dependencies
 
-Ensure you have **CMake** and a **C++ compiler** installed on your system. You can use the provided script to
-automatically install the required dependencies:
+Ensure you have **CMake** and a **C++ compiler** installed on your system. You can use the provided script to automatically install the required dependencies:
 
 ```sh
 sh ./build/find_dependencies.sh
@@ -88,5 +83,15 @@ This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) f
 
 ## Acknowledgements
 
-This project was developed for the **`Projet d'informatique 2`** course **`INFO-F209`**. Special thanks to
-`Alexis Reynouard (ULB)`, `Simon Renard (ULB)` and `Hugo Callebaut (ULB)` for their guidance and support.
+This project was developed for the **`Projet d'informatique 2`** course **`INFO-F209`**. Special thanks to `Alexis Reynouard (ULB)`, `Simon Renard (ULB)` and `Hugo Callebaut (ULB)` for their guidance and support.
+
+## Team Members
+
+- **`Antoine Berthion`** (<antoine.berthion@ulb.be>)
+- **`Ali Umar Babar`** (<ali.babar@ulb.be>)
+- **`Ayman Benaim`** (<ayman.benaim@ulb.be>)
+- **`Mamadou Barry`** (<mamadou.barry5@ulb.be>)
+- **`Roberto Rabei`** (<roberto.rabei@ulb.be>)
+- **`Rares Bors`** (<rares.bors@ulb.be>)
+- **`Oleksandra Omelyanyuk`** (<oleksandra.omelyanyuk@ulb.be>)
+- **`Taha Es-saâdouni`** (<taha.essaadouni@ulb.be>)
