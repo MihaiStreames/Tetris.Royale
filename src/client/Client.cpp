@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     
     // run the gui
     runTetrisClient(session);
-    return 0;
+    return EXIT_SUCCESS;
 
 }
 

@@ -1,14 +1,21 @@
 #include "MenuHandler.hpp"
 
 
-// Initialize the current screen to Login
+// this will initialize the currentScreen variable
+// at launch on the login screen
+
 ScreenState currentScreen = ScreenState::Login;
+
+
+// this function will be called in the main loop
+// and will display the current screen @ 'currentScreen'
 
 void runTetrisClient(ClientSession &session) {
 
-    // Main application loop
     while (currentScreen != ScreenState::Exit) {
+        
         switch (currentScreen) {
+
             case ScreenState::Login:
                 showLoginScreen(session);
                 break;
@@ -37,8 +44,10 @@ void runTetrisClient(ClientSession &session) {
                 currentScreen = ScreenState::Exit;
                 break;
         }
+        
     }
 
+    // funny exit message, sticked with us during the refactoring process
     std::cout << "Thank you for playing Tetris Royale!" << std::endl;
 
 }

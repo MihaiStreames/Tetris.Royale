@@ -36,8 +36,7 @@ GameEngine::handleAction(TetrisGame &game, const Action action) {
             return false;
 
         default:
-            throw std::runtime_error("[err] Invalid action: " +
-                                     static_cast<int>(action));
+            return false;
     }
 }
 

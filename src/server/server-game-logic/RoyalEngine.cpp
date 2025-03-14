@@ -42,8 +42,7 @@ RoyalEngine::handleAction(TetrisGame &game, const Action action) {
         case Action::None:
             return false;
         default:
-            throw std::runtime_error("[err] Invalid action: " +
-                                     static_cast<int>(action));
+            return false;
     }
 }
 
