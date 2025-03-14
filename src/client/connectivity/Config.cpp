@@ -20,7 +20,7 @@ Config::~Config() {
         nlohmann::json configJson(configData);
         configFile << configJson.dump(INDENT_SIZE_CONFIG);
     } else {
-        std::cerr << "[err] Unable to save config file." << std::endl;
+        // unable to save the configuration file
     }
 }
 
@@ -76,6 +76,6 @@ Config::generateDefaultConfig() {
 
         // store the default configuration in the configData map
     } else {
-        std::cerr << "Unable to create default config file." << std::endl;
+        // unable to create default config
     }
 }

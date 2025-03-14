@@ -29,13 +29,11 @@ DBRequestManager::toJSON(const boost::property_tree::ptree &pt) {
 
 DBResponse
 DBRequestManager::getAccountIDByUsername(const std::string &username) const {
-    std::cout << "[DEBUG] Looking up accountID for username: " << username << std::endl;
     return sendRequest(http::verb::get, "/get_account_id?username=" + username, "");
 }
 
 DBResponse
 DBRequestManager::getUsernameByAccountID(const std::string &accountID) const {
-    std::cout << "[DEBUG] Looking up username for accountID: " << accountID << std::endl;
     return sendRequest(http::verb::get, "/get_username?accountID=" + accountID, "");
 }
 
@@ -84,7 +82,6 @@ DBRequestManager::sendRequest(http::verb method, const std::string &target,
 
 DBResponse
 DBRequestManager::getPlayer(const std::string &accountID) const {
-    std::cout << "[DEBUG] Fetching player data for accountID: " << accountID << std::endl;
     DBResponse response = sendRequest(http::verb::get, "/get_player?accountID=" + accountID, "");
     return response;
 }
@@ -148,7 +145,6 @@ DBRequestManager::postPlayerScore(const std::string &accountID, const int score)
 DBResponse
 DBRequestManager::sendFriendRequest(const std::string &senderID,
                                     const std::string &receiverID) const {
-    std::cout << "[DEBUG] Sending friend request from " << senderID << " to " << receiverID << std::endl;
 
     boost::property_tree::ptree pt;
     pt.put("accountID", senderID);
@@ -161,7 +157,6 @@ DBRequestManager::sendFriendRequest(const std::string &senderID,
 DBResponse
 DBRequestManager::acceptFriendRequest(const std::string &receiverID,
                                       const std::string &senderID) const {
-    std::cout << "[DEBUG] Accepting friend request from " << senderID << " to " << receiverID << std::endl;
 
     boost::property_tree::ptree pt;
     pt.put("accountID", receiverID);

@@ -134,12 +134,8 @@ ClientSession::loginPlayer(const std::string &username,
     if (response.status == 200) {
         setAccountID(response.json.get<std::string>("accountID"));
         setUsername(response.json.get<std::string>("userName"));
-        // std::cout << "Login successful. AccountID: " << getAccountID() << std::endl;
         return StatusCode::SUCCESS;
     } else {
-        std::cerr << "Login error (" << response.status << "): "
-                << response.json.get<std::string>("error", "Unknown error")
-                << std::endl;
         return StatusCode::ERROR_LOGGING_IN;
     }
 }
@@ -158,14 +154,8 @@ ClientSession::registerPlayer(const std::string &username,
     }
     if (response.status == 400) {
         // Bad request
-        std::cerr << "Registration error (" << response.status << "): "
-                << response.json.get<std::string>("error", "Unknown error")
-                << std::endl;
         return StatusCode::ERROR_USERNAME_TAKEN;
     }
-    std::cerr << "Registration error (" << response.status << "): "
-            << response.json.get<std::string>("error", "Unknown error")
-            << std::endl;
     return StatusCode::ERROR_REGISTERING;
 }
 
@@ -197,14 +187,11 @@ ClientSession::getLeaderboard(const int limit) const {
                 leaderboard.push_back(score);
             }
 
-            // std::cout << "Fetched leaderboard with " << leaderboard.size() << " entries" << std::endl;
         } catch (std::exception &e) {
-            std::cerr << "Error parsing leaderboard data: " << e.what() << std::endl;
+            // error parsing leaderboard data
         }
     } else {
-        std::cerr << "Error fetching leaderboard (" << response.status << "): "
-                << response.json.get<std::string>("error", "Unknown error")
-                << std::endl;
+        // error fetching leaderboard
     }
 
     return leaderboard;
@@ -214,7 +201,6 @@ std::vector<ChatMessage>
 ClientSession::getPlayerMessages(const std::string &otherAccountID) {
     // Check if we have a valid accountID
     if (getAccountID().empty()) {
-        std::cerr << "No accountID set; cannot fetch messages." << std::endl;
         return std::vector<ChatMessage>();
     }
 
@@ -254,12 +240,10 @@ ClientSession::getPlayerMessages(const std::string &otherAccountID) {
             }
             // std::cout << "Fetched " << messages.size() << " messages with " << otherAccountID << std::endl;
         } catch (std::exception &e) {
-            std::cerr << "Error parsing messages data: " << e.what() << std::endl;
+            // error parsing messages data
         }
     } else {
-        std::cerr << "Error fetching messages (" << response.status << "): "
-                << response.json.get<std::string>("error", "Unknown error")
-                << std::endl;
+        // error fetching messages
     }
 
     return messages;
@@ -267,7 +251,6 @@ ClientSession::getPlayerMessages(const std::string &otherAccountID) {
 
 std::string
 ClientSession::getAccountIDFromUsername(const std::string &username) const {
-    std::cout << "[ClientSession] Looking up accountID for username: " << username << std::endl;
 
     // Send request to get account ID by username
     const DBResponse response = dbRequestManager.getAccountIDByUsername(username);
@@ -275,14 +258,12 @@ ClientSession::getAccountIDFromUsername(const std::string &username) const {
     if (response.status == 200) {
         try {
             const std::string accountID = response.json.get<std::string>("accountID", "");
-            std::cout << "[ClientSession] Found accountID: " << accountID << " for username: " << username << std::endl;
             return accountID;
         } catch (const std::exception &e) {
-            std::cerr << "[ClientSession] Error parsing account ID response: " << e.what() << std::endl;
+            // error parsing account ID
         }
     } else {
-        std::cerr << "[ClientSession] Failed to get accountID for username " << username
-                << " (status: " << response.status << ")" << std::endl;
+        // failed to get account ID
     }
 
     return ""; // Return empty string on failure
@@ -307,11 +288,9 @@ ClientSession::getRequestUsername(const std::string &requestID) {
 StatusCode
 ClientSession::fetchPlayerData() {
     if (getAccountID().empty()) {
-        std::cerr << "No accountID set; cannot fetch player data." << std::endl;
         return StatusCode::ERROR_NO_SESSION_TOKEN;
     }
 
-    std::cout << "[ClientSession] Fetching data for accountID: " << getAccountID() << std::endl;
     DBResponse response = dbRequestManager.getPlayer(getAccountID());
 
     if (response.status == 200) {
@@ -323,7 +302,6 @@ ClientSession::fetchPlayerData() {
             // Print raw JSON for debugging
             std::ostringstream oss;
             write_json(oss, response.json, false);
-            std::cout << "[ClientSession] Received JSON: " << oss.str() << std::endl;
 
             // Clear existing maps
             friendIDToUsername.clear();
@@ -343,17 +321,13 @@ ClientSession::fetchPlayerData() {
                         if (nameResponse.status == 200) {
                             std::string username = nameResponse.json.get<std::string>("username", "Unknown");
                             friendIDToUsername[friendID] = username;
-                            std::cout << "[ClientSession] Added friend: " << username
-                                    << " (ID: " << friendID << ")" << std::endl;
                         } else {
                             friendIDToUsername[friendID] = "Unknown";
-                            std::cout << "[ClientSession] Added friend with unknown username"
-                                    << " (ID: " << friendID << ")" << std::endl;
                         }
                     }
                 }
             } catch (const std::exception &e) {
-                std::cerr << "[ClientSession] Error parsing friend list: " << e.what() << std::endl;
+                // error parsing friend list
             }
             setFriendList(friends);
 
@@ -371,28 +345,22 @@ ClientSession::fetchPlayerData() {
                         if (nameResponse.status == 200) {
                             std::string username = nameResponse.json.get<std::string>("username", "Unknown");
                             pendingRequestIDToUsername[requestID] = username;
-                            std::cout << "[ClientSession] Added pending request: " << username
-                                    << " (ID: " << requestID << ")" << std::endl;
                         } else {
                             pendingRequestIDToUsername[requestID] = "Unknown";
-                            std::cout << "[ClientSession] Added pending request with unknown username"
-                                    << " (ID: " << requestID << ")" << std::endl;
                         }
                     }
                 }
             } catch (const std::exception &e) {
-                std::cerr << "[ClientSession] Error parsing pending requests: " << e.what() << std::endl;
+                // error parsing pending friend requests
             }
             setPendingFriendRequests(pending);
 
             return StatusCode::SUCCESS;
         } catch (const std::exception &e) {
-            std::cerr << "[ClientSession] Error parsing player data: " << e.what() << std::endl;
             return StatusCode::ERROR;
         }
     }
 
-    std::cerr << "[ClientSession] Error fetching player data (" << response.status << ")" << std::endl;
     return StatusCode::ERROR;
 }
 
@@ -400,7 +368,6 @@ StatusCode
 ClientSession::updatePlayer(const std::string &newName,
                             const std::string &newPassword) {
     if (getAccountID().empty()) {
-        std::cerr << "No accountID set; cannot update player." << std::endl;
         return StatusCode::ERROR_NO_SESSION_TOKEN;
     }
 
@@ -411,16 +378,12 @@ ClientSession::updatePlayer(const std::string &newName,
         setUsername(response.json.get<std::string>("userName", username_));
         return StatusCode::SUCCESS;
     }
-    std::cerr << "Error updating player (" << response.status << "): "
-            << response.json.get<std::string>("error", "Unknown error")
-            << std::endl;
     return StatusCode::ERROR;
 }
 
 StatusCode
 ClientSession::postScore(int score) {
     if (getAccountID().empty()) {
-        std::cerr << "No accountID set; cannot post score." << std::endl;
         return StatusCode::ERROR_NO_SESSION_TOKEN;
     }
 
@@ -432,21 +395,16 @@ ClientSession::postScore(int score) {
         (void) fetchPlayerData();
         return StatusCode::SUCCESS;
     }
-    std::cerr << "Error posting score (" << response.status << "): "
-            << response.json.get<std::string>("error", "Unknown error")
-            << std::endl;
     return StatusCode::ERROR;
 }
 
 StatusCode
 ClientSession::sendMessage(const std::string &receiverID, const std::string &messageContent) {
     if (getAccountID().empty()) {
-        std::cerr << "No accountID set; cannot send message." << std::endl;
         return StatusCode::ERROR_NO_SESSION_TOKEN;
     }
 
     if (messageContent.empty()) {
-        std::cerr << "Cannot send empty message." << std::endl;
         return StatusCode::ERROR_INVALID_MESSAGE;
     }
 
@@ -466,16 +424,12 @@ ClientSession::sendMessage(const std::string &receiverID, const std::string &mes
 
         return StatusCode::SUCCESS;
     }
-    std::cerr << "Error sending message (" << response.status << "): "
-            << response.json.get<std::string>("error", "Unknown error")
-            << std::endl;
     return StatusCode::ERROR_SENDING_MESSAGE;
 }
 
 StatusCode
 ClientSession::sendFriendRequest(const std::string &receiverIdentifier) {
     if (getAccountID().empty()) {
-        std::cerr << "No accountID set; cannot send friend request." << std::endl;
         return StatusCode::ERROR_NO_SESSION_TOKEN;
     }
 
@@ -486,34 +440,27 @@ ClientSession::sendFriendRequest(const std::string &receiverIdentifier) {
     if (receiverIdentifier.length() == 36 && receiverIdentifier.find('-') != std::string::npos) {
         // This looks like an account ID already
         receiverAccountID = receiverIdentifier;
-        std::cout << "[ClientSession] Using provided accountID: " << receiverAccountID << std::endl;
     } else {
         // This is probably a username, so we need to look up the account ID
         receiverAccountID = getAccountIDFromUsername(receiverIdentifier);
         if (receiverAccountID.empty()) {
-            std::cerr << "[ClientSession] Could not find accountID for username: " << receiverIdentifier << std::endl;
             return StatusCode::ERROR_USER_NOT_FOUND;
         }
     }
 
     // Now we can send the friend request with the proper account ID
-    std::cout << "[ClientSession] Sending friend request to accountID: " << receiverAccountID << std::endl;
     const DBResponse response = dbRequestManager.sendFriendRequest(getAccountID(), receiverAccountID);
 
     if (response.status == 200) {
-        std::cout << "[ClientSession] Friend request sent successfully. Refreshing data..." << std::endl;
         return fetchPlayerData(); // Refresh data after sending request
     }
 
-    std::cerr << "[ClientSession] Error sending friend request (" << response.status << ")" << std::endl;
     return StatusCode::ERROR;
 }
 
 StatusCode
 ClientSession::acceptFriendRequest(const std::string &senderID) {
     if (getAccountID().empty()) {
-        std::cerr << "No accountID set; cannot accept friend request."
-                << std::endl;
         return StatusCode::ERROR_NO_SESSION_TOKEN;
     }
 
@@ -525,18 +472,12 @@ ClientSession::acceptFriendRequest(const std::string &senderID) {
         (void) fetchPlayerData();
         return StatusCode::SUCCESS;
     }
-    std::cerr << "Error accepting friend request (" << response.status
-            << "): "
-            << response.json.get<std::string>("error", "Unknown error")
-            << std::endl;
     return StatusCode::ERROR;
 }
 
 StatusCode
 ClientSession::declineFriendRequest(const std::string &senderID) {
     if (getAccountID().empty()) {
-        std::cerr << "No accountID set; cannot decline friend request."
-                << std::endl;
         return StatusCode::ERROR_NO_SESSION_TOKEN;
     }
 
@@ -548,17 +489,12 @@ ClientSession::declineFriendRequest(const std::string &senderID) {
         (void) fetchPlayerData();
         return StatusCode::SUCCESS;
     }
-    std::cerr << "Error declining friend request (" << response.status
-            << "): "
-            << response.json.get<std::string>("error", "Unknown error")
-            << std::endl;
     return StatusCode::ERROR;
 }
 
 StatusCode
 ClientSession::removeFriend(const std::string &friendID) {
     if (getAccountID().empty()) {
-        std::cerr << "No accountID set; cannot remove friend." << std::endl;
         return StatusCode::ERROR_NO_SESSION_TOKEN;
     }
 
@@ -570,9 +506,6 @@ ClientSession::removeFriend(const std::string &friendID) {
         (void) fetchPlayerData();
         return StatusCode::SUCCESS;
     }
-    std::cerr << "Error removing friend (" << response.status << "): "
-            << response.json.get<std::string>("error", "Unknown error")
-            << std::endl;
     return StatusCode::ERROR;
 }
 
@@ -592,8 +525,6 @@ ClientSession::getPlayerStatus(const std::string &username) {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return ClientStatus::OFFLINE;
     }
 
@@ -611,8 +542,6 @@ ClientSession::startSession() {
         this->setToken(response.data.at("token"));
         return StatusCode::SUCCESS;
     }
-    std::cerr << "Error: " << getStatusCodeString(response.status)
-            << std::endl;
     return response.status;
 }
 
@@ -626,8 +555,6 @@ ClientSession::endSession() {
         this->setToken("");
         return StatusCode::SUCCESS;
     }
-    std::cerr << "Error: " << getStatusCodeString(response.status)
-            << std::endl;
     return response.status;
 }
 
@@ -637,8 +564,6 @@ ClientSession::getPublicLobbiesList() {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return {};
     }
 
@@ -654,8 +579,6 @@ ClientSession::createAndJoinLobby(GameMode gameMode, int maxPlayers,
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return response.status;
     }
     return StatusCode::SUCCESS;
@@ -668,8 +591,6 @@ ClientSession::joinLobby(const std::string &lobbyID) {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return response.status;
     }
 
@@ -683,8 +604,6 @@ ClientSession::spectateLobby(const std::string &lobbyID) {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return response.status;
     }
 
@@ -698,8 +617,6 @@ ClientSession::getCurrentLobbyState() {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return LobbyState::generateEmptyState();
     }
 
@@ -714,8 +631,6 @@ ClientSession::leaveLobby() {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return response.status;
     }
 
@@ -728,8 +643,6 @@ ClientSession::readyUp() {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return response.status;
     }
 
@@ -742,8 +655,6 @@ ClientSession::unreadyUp() {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return response.status;
     }
 
@@ -760,8 +671,6 @@ ClientSession::sendKeyStroke(const Action &keyStroke) {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return response.status;
     }
 
@@ -774,8 +683,6 @@ ClientSession::getPlayerState() {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return PlayerState::generateEmptyState();
     }
 
@@ -790,8 +697,6 @@ ClientSession::getSpectatorState() {
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {
-        std::cerr << "Error: " << getStatusCodeString(response.status)
-                << std::endl;
         return SpectatorState::generateEmptyState();
     }
 
