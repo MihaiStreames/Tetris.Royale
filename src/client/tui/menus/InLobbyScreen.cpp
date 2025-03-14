@@ -47,19 +47,15 @@ void showInLobbyScreen(ClientSession &session) {
 
     auto leaveButton = Button("Leave Lobby", [&] {
         try {
-
             if (session.leaveLobby() == StatusCode::SUCCESS) {
                 currentScreen = ScreenState::LobbyBrowser;
                 screen.Exit();
             } else {
                 errorMessage = "Error leaving lobby";
             }
-        
         } catch (const std::exception &e) {
-
             errorMessage = "Error leaving lobby: ";
             errorMessage += e.what();
-
         }
     });
 
@@ -72,11 +68,24 @@ void showInLobbyScreen(ClientSession &session) {
 
     // Variable to track refresh cycle
     int refreshCounter = 0;
+    bool gameStarting = false;
 
     // Main renderer with auto-refresh
     auto renderer = Renderer(container, [&] {
         // Refresh the lobby state periodically
         if (refreshCounter++ % 10 == 0) {
+            // First, check player status to detect if game has started
+            ClientStatus currentStatus = session.getOwnStatus();
+
+            if (currentStatus == ClientStatus::IN_GAME) {
+                // Game has started, transition to game screen
+                gameStarting = true;
+                currentScreen = ScreenState::InGame;
+                screen.Exit();
+                return text("Starting game...") | center;
+            }
+
+            // If still in lobby, try to get lobby state
             try {
                 LobbyState newState = session.getCurrentLobbyState();
 
@@ -98,18 +107,30 @@ void showInLobbyScreen(ClientSession &session) {
                         playerCount++;
                     }
 
-                    // Only transition if we have enough ready players
+                    // Start countdown if conditions are met
                     if (allReady && playerCount >= 2) {
-                        currentScreen = ScreenState::InGame;
-                        screen.Exit();
-                        return text("Starting game...") | center;
+                        gameStarting = true;
+                        return text("All players ready! Starting game...") | center | bold;
                     }
                 }
             } catch (const std::exception &e) {
-                errorMessage = "Error refreshing lobby: ";
-                errorMessage += e.what();
+                // If we can't get lobby state, check if it's because game started
+                ClientStatus statusCheck = session.getOwnStatus();
+                if (statusCheck == ClientStatus::IN_GAME) {
+                    gameStarting = true;
+                    currentScreen = ScreenState::InGame;
+                    screen.Exit();
+                    return text("Starting game...") | center;
+                } else {
+                    errorMessage = "Error refreshing lobby: " + std::string(e.what());
+                }
                 // Keep the existing state
             }
+        }
+
+        // If game is starting, show countdown
+        if (gameStarting) {
+            return text("Game starting...") | center | bold;
         }
 
         // Build player list with safe iteration
@@ -166,6 +187,22 @@ void showInLobbyScreen(ClientSession &session) {
         return vbox(content) | border | color(Color::Green);
     });
 
+    // Add key event handler to check for game start
+    auto rendererWithKeys = CatchEvent(renderer, [&](Event event) {
+        // Check if game has started
+        if (refreshCounter % 5 == 0) {
+            ClientStatus currentStatus = session.getOwnStatus();
+            if (currentStatus == ClientStatus::IN_GAME) {
+                gameStarting = true;
+                currentScreen = ScreenState::InGame;
+                screen.Exit();
+                return true;
+            }
+        }
+
+        return false;
+    });
+
     // Main loop
-    screen.Loop(renderer);
+    screen.Loop(rendererWithKeys);
 }

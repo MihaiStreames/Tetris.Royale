@@ -213,7 +213,7 @@ const int MAX_GAMES = 20;
 const int MAX_LOBBIES = 20;
 
 const int DUAL_LOBBY_SIZE = 2;
-const int MIN_LOBBY_SIZE = 3;
+const int MIN_LOBBY_SIZE = 2;
 const int MAX_LOBBY_SIZE = 9;
 
 const int LOBBY_TTL = 1000000; // ttl for the lobby
