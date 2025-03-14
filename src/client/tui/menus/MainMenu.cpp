@@ -32,8 +32,12 @@ void showMainMenu(ClientSession &session) {
     });
 
     // Messaging
+    std::vector<std::string> friendNames;
+    for (const auto &id : friendList) {
+        friendNames.push_back(session.getFriendUsername(id));
+    }
     int selectedFriendIndex = 0;
-    auto friendSelector = Menu(&friendList, &selectedFriendIndex);
+    auto friendSelector = Menu(&friendNames, &selectedFriendIndex);
 
     // Track friend selection changes to refresh messages
     int previousFriendIndex = -1; // Force initial refresh
@@ -207,9 +211,9 @@ void showMainMenu(ClientSession &session) {
                 if (friendList.empty()) {
                     content = text("Add friends to start messaging");
                 } else {
-                    const std::string selectedFriend = friendList[selectedFriendIndex];
-                    const std::string friendUsername = session.getFriendUsername(selectedFriend);
-                    std::vector<ChatMessage> messages = session.getPlayerMessages(selectedFriend);
+                    const std::string selectedFriendID = friendList[selectedFriendIndex];
+                    const std::string friendUsername   = friendNames[selectedFriendIndex];
+                    std::vector<ChatMessage> messages = session.getPlayerMessages(selectedFriendID);
 
                     Elements messageElements;
                     if (messages.empty()) {
@@ -221,8 +225,8 @@ void showMainMenu(ClientSession &session) {
                     }
 
                     auto messagesContainer = vbox({
-                                                 vbox(messageElements)
-                                             }) | border | yframe | size(HEIGHT, EQUAL, 10);
+                                                vbox(messageElements)
+                                            }) | border | yframe | size(HEIGHT, EQUAL, 10);
 
                     content = vbox({
                         text("Chat with: " + friendUsername) | bold,
