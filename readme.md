@@ -43,7 +43,7 @@ cd ./group-1
 Ensure you have **CMake** and a **C++ compiler** installed on your system. You can use the provided script to automatically install the required dependencies:
 
 ```sh
-sh ./build/find_dependencies.sh
+sh ./scripts/find_dependencies.sh
 ```
 
 This script will install any necessary libraries and tools for the project.
