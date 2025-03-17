@@ -515,13 +515,13 @@ ClientStatus
 ClientSession::getOwnStatus() {
     // this method is used to get the status of the client
     // it will return the status of the client
-    return getPlayerStatus(getUsername());
+    return getClientStatus(getUsername());
 }
 
 ClientStatus
-ClientSession::getPlayerStatus(const std::string &username) {
+ClientSession::getClientStatus(const std::string &username) {
     ServerResponse response =
-            this->gameRequestManager.getPlayerStatus(username);
+            this->gameRequestManager.getClientStatus(username);
 
     // we have to check if the response was successful
     if (response.status != StatusCode::SUCCESS) {

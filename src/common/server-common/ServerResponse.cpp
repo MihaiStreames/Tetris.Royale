@@ -106,12 +106,12 @@ ServerResponse::SuccessResponse(const int id, const StatusCode status,
 
 ServerResponse
 ServerResponse::SuccessResponse(const int id, const StatusCode status,
-                                const PlayerStatus playerStatus) {
-    // create a success response with the given id, status and player status
+                                const ClientStatus clientStatus) {
+    // create a success response with the given id, status and client status
     ServerResponse response;
     response.id = id;
     response.status = status;
-    response.data["status"] = std::to_string(static_cast<int>(playerStatus));
+    response.data["status"] = std::to_string(static_cast<int>(clientStatus));
     return response;
 }
 

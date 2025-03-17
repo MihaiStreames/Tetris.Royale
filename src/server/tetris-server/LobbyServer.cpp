@@ -618,8 +618,8 @@ LobbyServer::handleRequest(const std::string &requestData) {
     // and return the response to the client
 
     switch (request.method) {
-        case ServerMethods::GET_PLAYER_STATUS:
-            return handleGetPlayerStatusRequest(request).serialize();
+        case ServerMethods::GET_CLIENT_STATUS:
+            return handleGetClientStatusRequest(request).serialize();
 
         case ServerMethods::START_SESSION:
             return handleStartSessionRequest(request).serialize();
@@ -939,8 +939,8 @@ LobbyServer::handleSpectateLobbyRequest(const ServerRequest &request) const {
 }
 
 ServerResponse
-LobbyServer::handleGetPlayerStatusRequest(const ServerRequest &request) const {
-    // handle the get player status request
+LobbyServer::handleGetClientStatusRequest(const ServerRequest &request) const {
+    // handle the get client status request
     // return the response to the client
 
     // we check if the player is connected to the lobby server. if it is, we
@@ -952,7 +952,7 @@ LobbyServer::handleGetPlayerStatusRequest(const ServerRequest &request) const {
     // we check if the player is connected to the lobby server
     if (!doesUserHaveSession(username)) {
         return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS,
-                                               PlayerStatus::OFFLINE);
+            ClientStatus::OFFLINE);
     }
 
     // if the player is connected, we get the token
@@ -967,12 +967,12 @@ LobbyServer::handleGetPlayerStatusRequest(const ServerRequest &request) const {
         for (const auto &[lobbyID, lobby]: lobbyObjects) {
             if (lobby->isPlayerInLobby(token)) {
                 return ServerResponse::SuccessResponse(
-                    request.id, StatusCode::SUCCESS, PlayerStatus::IN_LOBBY);
+                    request.id, StatusCode::SUCCESS, ClientStatus::IN_LOBBY);
             }
 
             if (lobby->isSpectatorInLobby(token)) {
                 return ServerResponse::SuccessResponse(
-                    request.id, StatusCode::SUCCESS, PlayerStatus::IN_LOBBY);
+                    request.id, StatusCode::SUCCESS, ClientStatus::IN_LOBBY);
             }
         }
     }
@@ -982,11 +982,11 @@ LobbyServer::handleGetPlayerStatusRequest(const ServerRequest &request) const {
 
     if (gameServer->isSessionInAnyGame(token)) {
         return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS,
-                                               PlayerStatus::IN_GAME);
+            ClientStatus::IN_GAME);
     }
 
     // if reached this point, the player is connected but not in a lobby or a
     // game
     return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS,
-                                           PlayerStatus::IDLING);
+        ClientStatus::IN_MENU);
 }

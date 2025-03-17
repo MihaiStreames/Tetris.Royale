@@ -100,7 +100,7 @@ public:
     // ================== Game operations ================== //
     [[nodiscard]] ClientStatus getOwnStatus();
 
-    [[nodiscard]] ClientStatus getPlayerStatus(const std::string &username);
+    [[nodiscard]] ClientStatus getClientStatus(const std::string &username);
 
     [[nodiscard]] StatusCode startSession();
 

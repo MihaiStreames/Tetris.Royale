@@ -73,14 +73,14 @@ GameRequestManager::disconnectFromServer() {
 // status thing
 
 ServerResponse
-GameRequestManager::getPlayerStatus(const std::string &username) {
+GameRequestManager::getClientStatus(const std::string &username) {
     // this method is used to get some status from a player having the username
     // [username]
 
     // create the request
     ServerRequest request;
     request.id = generateRequestID();
-    request.method = ServerMethods::GET_PLAYER_STATUS;
+    request.method = ServerMethods::GET_CLIENT_STATUS;
     request.params["username"] = username;
 
     // this is a special case, we want to send the request specifically to the

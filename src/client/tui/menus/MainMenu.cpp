@@ -174,8 +174,15 @@ void showMainMenu(ClientSession &session) {
                     friendElements.push_back(text("You have no friends yet"));
                 } else {
                     for (const auto &friendID: friendList) {
+                        // we get the username from the friendID and it's status
                         std::string friendUsername = session.getFriendUsername(friendID);
-                        friendElements.push_back(text(friendUsername));
+                        std::string status = getClientStatusString(session.getClientStatus(friendUsername));
+                        friendElements.push_back(
+                            hbox({
+                                text(friendUsername),
+                                text(" (" + status + ")")
+                            })
+                        );
                     }
                 }
 

@@ -101,7 +101,7 @@ class LobbyServer
     [[nodiscard]] ServerResponse
     handleSpectateLobbyRequest(const ServerRequest& request) const;
     [[nodiscard]] ServerResponse
-    handleGetPlayerStatusRequest(const ServerRequest& request) const;
+    handleGetClientStatusRequest(const ServerRequest& request) const;
 
     // attributes
 

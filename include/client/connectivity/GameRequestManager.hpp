@@ -33,7 +33,7 @@ class GameRequestManager
     [[nodiscard]] StatusCode disconnectFromServer();
 
     // status thing
-    [[nodiscard]] ServerResponse getPlayerStatus(const std::string& username);
+    [[nodiscard]] ServerResponse getClientStatus(const std::string& username);
 
     // main menu stuff
     [[nodiscard]] ServerResponse startSession(const std::string& username);

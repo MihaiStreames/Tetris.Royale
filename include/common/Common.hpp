@@ -137,7 +137,7 @@ enum class ServerMethods
 {
 
     // status thing
-    GET_PLAYER_STATUS,
+    GET_CLIENT_STATUS,
 
     // Lobby methods
     GET_CURRENT_LOBBY,
@@ -172,17 +172,9 @@ enum class ClientStatus
     NONE, // default value
 };
 
-enum class PlayerStatus
-{
-    IDLING,
-    IN_LOBBY,
-    IN_GAME,
-    OFFLINE,
-    NONE, // default value
-};
-
 // method type in string format
 std::string getServerMethodString(ServerMethods method);
+std::string getClientStatusString(ClientStatus status);
 
 // stuff for the request / response id
 const int INVALID_ID = -1;

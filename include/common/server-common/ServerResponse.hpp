@@ -40,7 +40,7 @@ struct ServerResponse : public ServerResponseInterface
     [[nodiscard]] static ServerResponse
     SuccessResponse(int id, StatusCode status, const LobbyState& lobby);
     [[nodiscard]] static ServerResponse
-    SuccessResponse(int id, StatusCode status, PlayerStatus playerStatus);
+    SuccessResponse(int id, StatusCode status, ClientStatus clientStatus);
     [[nodiscard]] static ServerResponse
     SuccessResponse(int id, StatusCode status,
                     const std::unordered_map<std::string, std::string>& data);

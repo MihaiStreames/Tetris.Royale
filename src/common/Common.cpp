@@ -118,3 +118,23 @@ getServerMethodString(const ServerMethods method) {
             return "UNKNOWN_METHOD";
     }
 }
+
+
+std::string
+getClientStatusString(const ClientStatus status) {
+    switch (status) {
+        case ClientStatus::IN_MENU:
+            return "Online";
+        case ClientStatus::IN_LOBBY:
+            return "In Lobby";
+        case ClientStatus::IN_GAME:
+            return "In Game";
+        case ClientStatus::OFFLINE:
+            return "Offline";
+        case ClientStatus::NONE:
+            return "NONE";
+        default:
+            return "UNKNOWN_STATUS";
+    }
+}
+
