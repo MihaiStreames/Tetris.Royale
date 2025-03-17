@@ -5,6 +5,20 @@
 // at launch on the login screen
 
 ScreenState currentScreen = ScreenState::Login;
+std::atomic_bool running = true;
+
+
+void signalHandler(int signum) {
+
+    // if the user presses CTRL+C, we want to exit the application
+    if (signum == SIGINT) {
+
+        currentScreen = ScreenState::Exit;
+        running = false;
+
+    }
+
+}
 
 
 // this function will be called in the main loop
@@ -12,7 +26,10 @@ ScreenState currentScreen = ScreenState::Login;
 
 void runTetrisClient(ClientSession &session) {
 
-    while (currentScreen != ScreenState::Exit) {
+    // set the signal handler for SIGINT
+    signal(SIGINT, signalHandler);
+
+    while (currentScreen != ScreenState::Exit && running) {
         
         switch (currentScreen) {
 
@@ -42,6 +59,7 @@ void runTetrisClient(ClientSession &session) {
 
             default:
                 currentScreen = ScreenState::Exit;
+                (void) session.endSession();
                 break;
         }
         
