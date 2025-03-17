@@ -376,6 +376,33 @@ GameRequestManager::getGameState(const std::string &token) {
     return receiveResponse();
 }
 
+ServerResponse
+GameRequestManager::leaveGame(const std::string &token) {
+    // this method is used to leave the current game
+    // it will send a request to the game server to leave the current game
+    // it will return the response from the server
+
+    // create the request
+    ServerRequest request;
+    request.id = generateRequestID();
+    request.method = ServerMethods::LEAVE_GAME;
+    request.params["token"] = token;
+
+    // send the request
+    (void) sendRequest(request);
+    ServerResponse response = receiveResponse();
+
+    // restore the port if the request is successful
+    if (response.status != StatusCode::SUCCESS) {
+        return response;
+    } else {
+        return restoreListeningPort() == StatusCode::SUCCESS
+                   ? response
+                   : ServerResponse::ErrorResponse(
+                       INVALID_ID, StatusCode::ERROR_RESTORING_PORT);
+    }
+}
+
 // connectivity
 
 StatusCode

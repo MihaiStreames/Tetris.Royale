@@ -411,7 +411,7 @@ void showGameScreen(ClientSession &session) {
             // Check current status to determine if we're in lobby or game
             ClientStatus currentStatus = session.getOwnStatus();
             if (currentStatus == ClientStatus::IN_GAME) {
-                StatusCode result = session.leaveLobby(); // TODO: LEAVE GAME NOT LEAVE LOBBY
+                StatusCode result = session.leaveGame();
                 if (result == StatusCode::SUCCESS) {
                     currentScreen = ScreenState::MainMenu;
                     screen.Exit();

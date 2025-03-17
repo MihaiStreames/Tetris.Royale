@@ -10,9 +10,9 @@ ClassicGame::ClassicGame(const int gWidth, const int gHeight, const int gScore,
     // initializes the opponents vector and targetIndex (to 0)
 
     // ?? initialize opponents correctly or else this game will be boring (lol
-    // what a great copilt auto comment)
+    // ?? what a great copilt auto comment)
 
-    opponents = std::vector<TetrisGame *>();
+    opponents = std::vector<TetrisGame*>();
     targetIndex = 0;
 }
 

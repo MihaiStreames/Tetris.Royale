@@ -50,16 +50,14 @@ class Game
 
     void printMessage(const std::string& message, MessageType msgtype) const;
 
-    [[nodiscard]] std::string
-    handleServerRequest(const std::string& requestContent);
-    [[nodiscard]] ServerResponse
-    handleKeyStrokeRequest(const ServerRequest& request);
-    [[nodiscard]] ServerResponse handleKeyStroke(const KeyStrokePacket& packet,
-                                                 const ServerRequest& request);
-    [[nodiscard]] ServerResponse
-    handleGetGameStateRequest(const ServerRequest& request);
+    [[nodiscard]] std::string handleServerRequest(const std::string& requestContent);
+    [[nodiscard]] ServerResponse handleKeyStrokeRequest(const ServerRequest& request);
+    [[nodiscard]] ServerResponse handleKeyStroke(const KeyStrokePacket& packet, const ServerRequest& request);
+    [[nodiscard]] ServerResponse handleGetGameStateRequest(const ServerRequest& request);
     [[nodiscard]] std::string getGameState(const std::string& token);
-
+    [[nodiscard]] ServerResponse handleLeaveGame(const ServerRequest& request);
+    [[nodiscard]] ServerResponse removePlayerFromGame(const ServerRequest& request);
+    [[nodiscard]] ServerResponse removeSpectatorFromGame(const ServerRequest& request);
     [[nodiscard]] Action getActionFromKeyStroke(const KeyStrokePacket& packet);
 
     std::string ip;

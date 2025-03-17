@@ -704,3 +704,11 @@ ClientSession::getSpectatorState() {
             SpectatorState::deserialize(response.data.at("gamestate"));
     return spectatorState;
 }
+
+StatusCode
+ClientSession::leaveGame() {
+
+    ServerResponse response = this->gameRequestManager.leaveGame(getToken());
+    return response.status;
+    
+}

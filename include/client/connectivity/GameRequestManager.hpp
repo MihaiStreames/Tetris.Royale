@@ -58,6 +58,7 @@ class GameRequestManager
     [[nodiscard]] ServerResponse
     sendKeyStroke(const std::string& token, const KeyStrokePacket& keyStroke);
     [[nodiscard]] ServerResponse getGameState(const std::string& token);
+    [[nodiscard]] ServerResponse leaveGame(const std::string& token);
 
   private:
     // private here

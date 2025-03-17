@@ -67,6 +67,8 @@ enum class StatusCode
     ERROR_SENDING_MESSAGE,
     ERROR_USER_NOT_FOUND,
 
+    UNKNOWN_PLAYER_TRIED_TO_LEAVE,
+
 };
 
 // gamemode for the lobby
@@ -146,6 +148,7 @@ enum class ServerMethods
     // Game methods
     GET_GAME_STATE,
     KEY_STROKE,
+    LEAVE_GAME,
 
     // Lobby server methods
     START_SESSION,

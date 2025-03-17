@@ -128,6 +128,8 @@ public:
 
     [[nodiscard]] SpectatorState getSpectatorState();
 
+    [[nodiscard]] StatusCode leaveGame();
+
 private:
     // private here
     std::string username_;

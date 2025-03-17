@@ -448,6 +448,8 @@ Game::handleServerRequest(const std::string &requestContent) {
             return handleKeyStrokeRequest(request).serialize();
         case ServerMethods::GET_GAME_STATE:
             return handleGetGameStateRequest(request).serialize();
+        case ServerMethods::LEAVE_GAME:
+            return handleLeaveGame(request).serialize();
         default:
             printMessage("Request [" + getServerMethodString(request.method) +
                          "] not implemented",
@@ -595,6 +597,101 @@ Game::getGameState(const std::string &token) {
     return rawState;
 }
 
+ServerResponse
+Game::handleLeaveGame(const ServerRequest &request) {
+
+    // this function will handle the leave game request
+    // it will handle the leave game request and return a response
+
+    // we need to check if the token is in the players or spectators
+    // if it is, we remove it from the players or spectators
+
+    const std::string token = request.params.at("token");
+
+    if (getPlayers().contains(token)) {
+        return removePlayerFromGame(request);
+    } else if (getSpectators().contains(token)) {
+        return removeSpectatorFromGame(request);
+    } else {
+        printMessage("Unknown token tried to leave the game: " + token,
+                     MessageType::ERROR);
+    }
+
+    return ServerResponse::ErrorResponse(request.id, StatusCode::UNKNOWN_PLAYER_TRIED_TO_LEAVE);
+
+}
+
+ServerResponse
+Game::removePlayerFromGame(const ServerRequest& request) {
+    // this function will remove the player from the game
+    // it will remove the player from the game and return a response
+
+    // we remove the player from the lobbystate, and the action map
+    // when it's done, we want to remove it from every game it's an opponent in
+
+    {
+        // remove the player from the lobby state
+        std::lock_guard lock(gameMutex);
+        lobbyState.players.erase(request.params.at("token"));
+    }
+
+    {
+        // remove the player from the action map
+        std::lock_guard lock(actionMutex);
+        if (actionMap.contains(request.params.at("token"))) {
+            actionMap.erase(request.params.at("token"));
+        }
+    }
+
+    {
+
+        // get the player game (to remove from every other games)
+        std::shared_ptr<TetrisGame> playerGame = getGame(request.params.at("token"));
+        TetrisGame *playerGamePointer = playerGame.get();
+
+        // remove the player from every game it's an opponent in
+        for (auto &game : games) {
+            {
+                // remove the player from the game
+                std::lock_guard lock(gameMutex);
+                game.second->removeOpponent(playerGamePointer);
+            }
+        }
+
+        // delete the game (at last)
+        std::lock_guard lock(gameMutex);
+        games.erase(request.params.at("token"));
+
+    }
+
+    return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS);
+
+}
+
+ServerResponse
+Game::removeSpectatorFromGame(const ServerRequest& request) {
+
+    // this function will remove the spectator from the game
+    // it will remove the spectator from the game and return a response
+
+    {
+        // remove the spectator from the lobby state
+        std::lock_guard lock(gameMutex);
+        lobbyState.spectators.erase(request.params.at("token"));
+    }
+
+    {
+        // remove the spectator from the action map
+        std::lock_guard lock(actionMutex);
+        if (actionMap.contains(request.params.at("token"))) {
+            actionMap.erase(request.params.at("token"));
+        }
+    }
+
+    return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS);
+
+}
+
 Action
 Game::getActionFromKeyStroke(const KeyStrokePacket &packet) {
     // this function will get the action from the key stroke
@@ -627,3 +724,4 @@ Game::getActionFromKeyStroke(const KeyStrokePacket &packet) {
 
     return action;
 }
+
