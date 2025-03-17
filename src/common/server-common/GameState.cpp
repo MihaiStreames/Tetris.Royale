@@ -72,6 +72,8 @@ PlayerState::generateEmptyState() {
     state.holdTetro = PieceType::None;
     state.playerScore = 0;
     state.playerLevel = 0;
+    state.playerLines = 0;
+    state.playerEnergy = 0;
     state.targetUsername = "";
     state.targetGrid = tetroMat();
     return state;
@@ -87,6 +89,8 @@ PlayerState::serialize() const {
     j["holdTetro"] = holdTetro;
     j["playerScore"] = playerScore;
     j["playerLevel"] = playerLevel;
+    j["playerLines"] = playerLines;
+    j["playerEnergy"] = playerEnergy;
     j["targetUsername"] = targetUsername;
     j["targetGrid"] = targetGrid;
     return j.dump();
@@ -119,6 +123,8 @@ PlayerState::deserialize(const std::string &data) {
         state.holdTetro = j["holdTetro"].get<PieceType>();
         state.playerScore = j["playerScore"].get<int>();
         state.playerLevel = j["playerLevel"].get<int>();
+        state.playerLines = j["playerLines"].get<int>();
+        state.playerEnergy = j["playerEnergy"].get<int>();
         state.targetUsername = j["targetUsername"].get<std::string>();
         state.targetGrid = j["targetGrid"].get<tetroMat>();
     } catch (nlohmann::json::exception &e) {

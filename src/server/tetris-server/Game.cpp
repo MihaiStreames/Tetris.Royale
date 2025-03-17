@@ -564,11 +564,16 @@ Game::getGameState(const std::string &token) {
                 game->getGameMatrix().getBoardWithCurrentPiece();
         playerState.playerLevel = game->getLevel();
         playerState.playerScore = game->getScore();
+        playerState.playerLines = game->getLinesCleared();
+        // get the energy if the game is a battle royale
+        if (game->getGameMode() == GameMode::ROYALE) {
+            playerState.playerEnergy = game->getEnergy();
+        }
         playerState.playerUsername = getPlayers().at(token);
         playerState.targetGrid =
                 (target)
                     ? target->getGameMatrix().getBoardWithCurrentPiece()
-                    : std::vector<std::vector<int> >();
+                    : std::vector<std::vector<int>>();
         playerState.targetUsername =
                 "unknown"; // TODO : get the target username
 

@@ -6,6 +6,7 @@ TetrisGame::TetrisGame(const int gWidth, const int gHeight, const int gScore,
       totalLinesCleared(totLinesCleared) {
     // this is the constructor of the TetrisGame class
     // might need to write some code here someday
+    gameMode = GameMode::NONE;
 }
 
 GameMatrix &
@@ -26,6 +27,11 @@ TetrisGame::getBag() {
 int
 TetrisGame::getScore() const noexcept {
     return score;
+}
+
+GameMode
+TetrisGame::getGameMode() const noexcept {
+    return gameMode;
 }
 
 int

@@ -3,6 +3,7 @@
 #include "Bag.hpp"
 #include "GameMatrix.hpp"
 #include "TetrisFactory.hpp"
+#include "Common.hpp"
 
 #include <iostream>
 #include <map>
@@ -37,7 +38,7 @@ class TetrisGame
     bool gameOver = false;
 
     // some logic variables for powers ups
-    int energy = MAX_ENERGY; // !! this is a debug value, used to test
+    int energy = 0;
                              // bonus/malus (set to 0 in prod)
     int darkModeTimer = -1;  // default
     int speedFactor = 0;
@@ -47,6 +48,7 @@ class TetrisGame
     bool blockControlsFlag = false;
     bool reverseControlsFlag = false;
     bool darkModeFlag = false;
+    GameMode gameMode;
 
   public:
     TetrisGame(const int gWidth, const int gHeight, const int gScore = 0,
@@ -59,6 +61,7 @@ class TetrisGame
     [[nodiscard]] virtual TetrisFactory& getFactory();
     [[nodiscard]] virtual Bag& getBag();
     [[nodiscard]] virtual int getScore() const noexcept;
+    [[nodiscard]] virtual GameMode getGameMode() const noexcept;
 
     [[nodiscard]] virtual int getFrameCount() const noexcept;
     [[nodiscard]] virtual int getLevel() const noexcept;

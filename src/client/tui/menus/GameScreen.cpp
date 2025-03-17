@@ -208,10 +208,12 @@ void showGameScreen(ClientSession &session) {
             auto targetBoard = renderBoard(state.targetGrid, false, true);
 
             // Energy bar
-            auto energyBar = renderEnergyBar(MAX_ENERGY);
-
+            Element energyBar = text("Energy: N/A") | center;
+            if (state.playerEnergy != -1) {
+                energyBar = renderEnergyBar(state.playerEnergy);
+            }
             // Score and level info
-            auto statsPanel = renderStats(state.playerScore, state.playerLevel, 0);
+            auto statsPanel = renderStats(state.playerScore, state.playerLevel, state.playerLines);
 
             // Hold and next pieces
             auto holdPieceDisplay = renderBox("HOLD", renderPiece(state.holdTetro, 4, 5));

@@ -219,7 +219,7 @@ const int DUAL_LOBBY_SIZE = 2;
 const int MIN_LOBBY_SIZE = 2;
 const int MAX_LOBBY_SIZE = 9;
 
-const int LOBBY_TTL = 1000000; // ttl for the lobby
+const int LOBBY_TTL = 1000000; // ttl for the lobby DISGUSTING PLEASE CHANGE
 const int MAX_REQUEST_ID = 4096;
 
 const int MAX_ENERGY = 200;

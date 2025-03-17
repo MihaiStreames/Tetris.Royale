@@ -36,6 +36,8 @@ struct PlayerState : public GameState
   public:
     int playerScore;
     int playerLevel;
+    int playerLines;
+    int playerEnergy = -1;
     std::string targetUsername;
     tetroMat targetGrid;
 

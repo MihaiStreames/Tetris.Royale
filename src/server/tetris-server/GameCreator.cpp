@@ -29,7 +29,7 @@ std::unordered_map<std::string, std::shared_ptr<TetrisGame> >
 GameCreator::createClassicGames(std::vector<std::string> &players) {
     // create a map of classic games with the player token as the key
 
-    std::unordered_map<std::string, std::shared_ptr<TetrisGame> > games;
+    std::unordered_map<std::string, std::shared_ptr<TetrisGame>> games;
 
     for (auto &player: players) {
         games[player] =

@@ -14,6 +14,7 @@ ClassicGame::ClassicGame(const int gWidth, const int gHeight, const int gScore,
 
     opponents = std::vector<TetrisGame*>();
     targetIndex = 0;
+    gameMode = GameMode::CLASSIC;
 }
 
 int
