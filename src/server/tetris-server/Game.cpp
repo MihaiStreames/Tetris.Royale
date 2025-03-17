@@ -211,6 +211,12 @@ Game::initializeGames() {
         return StatusCode::ERROR_CREATING_GAMES;
     }
 
+    // set the correct names for the games
+    for (auto &game: games) {
+        std::string gameToken = game.second->getPlayerName();
+        game.second->setPlayerName(lobbyState.players.at(gameToken));
+    }
+
     return StatusCode::SUCCESS;
 }
 
@@ -574,8 +580,7 @@ Game::getGameState(const std::string &token) {
                 (target)
                     ? target->getGameMatrix().getBoardWithCurrentPiece()
                     : std::vector<std::vector<int>>();
-        playerState.targetUsername =
-                "unknown"; // TODO : get the target username
+        playerState.targetUsername = (target) ? target->getPlayerName() : DEFAULT_NAME;
 
         rawState = playerState.serialize();
     } else if (getSpectators().find(token) != getSpectators().end()) {

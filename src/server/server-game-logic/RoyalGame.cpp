@@ -1,8 +1,8 @@
 #include "RoyalGame.hpp"
 
 RoyalGame::RoyalGame(const int gWidth, const int gHeight, const int gScore,
-                     const int fc, const int lvl, const int totLinesCleared)
-    : ClassicGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared) {
+                     const int fc, const int lvl, const int totLinesCleared, const std::string &name)
+    : ClassicGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared, name) {
     // this is the constructor of the RoyalGame class
     // might need to write some code here someday
     gameMode = GameMode::ROYALE;

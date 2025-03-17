@@ -3,8 +3,8 @@
 // #include "[[nodiscard]]lassicGame.hpp"  ->  funny copy paste error
 
 ClassicGame::ClassicGame(const int gWidth, const int gHeight, const int gScore,
-                         const int fc, const int lvl, const int totLinesCleared)
-    : TetrisGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared) {
+                         const int fc, const int lvl, const int totLinesCleared, const std::string &name)
+    : TetrisGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared, name) {
     // this is the constructor for the ClassicGame class which is a subclass of
     // TetrisGame it initializes the game with the given parameters and
     // initializes the opponents vector and targetIndex (to 0)

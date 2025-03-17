@@ -33,7 +33,7 @@ GameCreator::createClassicGames(std::vector<std::string> &players) {
 
     for (auto &player: players) {
         games[player] =
-                std::make_shared<ClassicGame>(GAME_WIDTH, GAME_HEIGHT, 0, 0, 0, 0);
+                std::make_shared<ClassicGame>(GAME_WIDTH, GAME_HEIGHT, 0, 0, 0, 0, player);
     }
 
     // initialize the opponents for each player
@@ -56,7 +56,7 @@ GameCreator::createRoyaleGames(std::vector<std::string> &players) {
 
     for (auto &player: players) {
         games[player] =
-                std::make_shared<RoyalGame>(GAME_WIDTH, GAME_HEIGHT, 0, 0, 0, 0);
+                std::make_shared<RoyalGame>(GAME_WIDTH, GAME_HEIGHT, 0, 0, 0, 0, player);
     }
 
     // initialize the opponents for each player

@@ -15,7 +15,7 @@ class ClassicGame : public TetrisGame
   public:
     ClassicGame(const int gWidth, const int gHeight, const int gScore = 0,
                 const int fc = 0, const int lvl = 0,
-                const int totLinesCleared = 0);
+                const int totLinesCleared = 0, const std::string& name = DEFAULT_NAME);
     ~ClassicGame() override = default;
 
     [[nodiscard]] virtual std::vector<TetrisGame*> getOpponents() override;

@@ -44,6 +44,9 @@ class TetrisGame
     int speedFactor = 0;
     int malusCooldown = 0;
 
+    // name of the player
+    std::string playerName;
+
     // flags for powers ups
     bool blockControlsFlag = false;
     bool reverseControlsFlag = false;
@@ -53,7 +56,7 @@ class TetrisGame
   public:
     TetrisGame(const int gWidth, const int gHeight, const int gScore = 0,
                const int fc = 0, const int lvl = 0,
-               const int totLinesCleared = 0);
+               const int totLinesCleared = 0, const std::string& name = DEFAULT_NAME);
     virtual ~TetrisGame() = default;
 
     // getters
@@ -61,6 +64,7 @@ class TetrisGame
     [[nodiscard]] virtual TetrisFactory& getFactory();
     [[nodiscard]] virtual Bag& getBag();
     [[nodiscard]] virtual int getScore() const noexcept;
+    [[nodiscard]] virtual std::string getPlayerName() const noexcept;
     [[nodiscard]] virtual GameMode getGameMode() const noexcept;
 
     [[nodiscard]] virtual int getFrameCount() const noexcept;
@@ -96,6 +100,7 @@ class TetrisGame
     virtual void setLevel(const int lvl);
     virtual void setTotalLinesCleared(const int lines);
     virtual void setGameOver(const bool flag);
+    virtual void setPlayerName(const std::string& name);
 
     virtual void setEnergy(int setEnergy);
     virtual void setDarkModeTimer(int time);

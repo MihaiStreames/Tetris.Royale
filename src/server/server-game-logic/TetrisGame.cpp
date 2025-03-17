@@ -1,9 +1,9 @@
 #include "TetrisGame.hpp"
 
 TetrisGame::TetrisGame(const int gWidth, const int gHeight, const int gScore,
-                       const int fc, const int lvl, const int totLinesCleared)
+                       const int fc, const int lvl, const int totLinesCleared, const std::string &name)
     : gameMatrix(gWidth, gHeight), score(gScore), frameCount(fc), level(lvl),
-      totalLinesCleared(totLinesCleared) {
+      totalLinesCleared(totLinesCleared), playerName(name) {
     // this is the constructor of the TetrisGame class
     // might need to write some code here someday
     gameMode = GameMode::NONE;
@@ -27,6 +27,11 @@ TetrisGame::getBag() {
 int
 TetrisGame::getScore() const noexcept {
     return score;
+}
+
+std::string
+TetrisGame::getPlayerName() const noexcept {
+    return playerName;
 }
 
 GameMode
@@ -174,6 +179,11 @@ TetrisGame::setTotalLinesCleared(const int lines) {
 void
 TetrisGame::setGameOver(const bool flag) {
     gameOver = flag;
+}
+
+void
+TetrisGame::setPlayerName(const std::string &name) {
+    playerName = name;
 }
 
 void
