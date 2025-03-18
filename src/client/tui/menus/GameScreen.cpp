@@ -165,21 +165,21 @@ Element renderStats(const int score, const int level, const int linesCleared) {
 }
 
 // Control help for player view
-Element renderControls() {
+Element renderControls(Config &config) {
     return window(text("CONTROLS") | bold | color(Color::White),
                   vbox({
-                      text("A/D: Move") | color(Color::Yellow),
-                      text("Q/E: Rotate") | color(Color::Yellow),
-                      text("↓: Down") | color(Color::Yellow),
-                      text("Space: Drop") | color(Color::Yellow),
-                      text("C: Hold") | color(Color::Yellow),
-                      text("B: Bonus") | color(Color::Yellow),
-                      text("M: Malus") | color(Color::Yellow),
+                      text(config.get("MoveLeft") + "/" + config.get("MoveRight") + ": Move") | color(Color::Yellow),
+                      text(config.get("MoveDown") + "/↓ : Down") | color(Color::Yellow),
+                      text(config.get("RotateLeft") + "/" + config.get("RotateRight") + ": Rotate") | color(Color::Yellow),
+                      text(config.get("InstantFall") + "/Space : Drop") | color(Color::Yellow),
+                      text(config.get("UseBag") + ": Bag") | color(Color::Yellow),
+                      text(config.get("UseBonus") + ": Bonus") | color(Color::Yellow),
+                      text(config.get("UseMalus") + ": Malus") | color(Color::Yellow),
                       text("Esc: Exit") | color(Color::Yellow)
                   }));
 }
 
-void showGameScreen(ClientSession &session) {
+void showGameScreen(ClientSession &session, Config &config) {
 
     auto screen = ScreenInteractive::TerminalOutput();
     currentScreen = ScreenState::Exit;
@@ -222,7 +222,7 @@ void showGameScreen(ClientSession &session) {
             auto nextPieceDisplay = renderBox("NEXT", renderPiece(state.nextTetro, 4, 5));
 
             // Control help
-            auto controls = renderControls();
+            auto controls = renderControls(config);
 
             // Display layout
             Elements content;
@@ -253,7 +253,7 @@ void showGameScreen(ClientSession &session) {
                     vbox({
                         text("Opponent: " + state.targetUsername) | bold | center,
                         targetBoard,
-                        text("Press S/W to cycle") | center
+                        text("Press " + config.get("SeePreviousOpponent") + "/" + config.get("SeeNextOpponent") + " to cycle") | center
                     }) | center
                 }) | center
             );
@@ -329,88 +329,84 @@ void showGameScreen(ClientSession &session) {
         }
 
         // Game controls for player mode
-        if (event == Event::Character('a')) {
+        if (event == Event::ArrowLeft || event == Event::Character(config.get("MoveLeft"))) {
             StatusCode result = session.sendKeyStroke(Action::MoveLeft);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::Character('d')) {
+        if (event == Event::ArrowRight || event == Event::Character(config.get("MoveRight"))) {
             StatusCode result = session.sendKeyStroke(Action::MoveRight);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::ArrowDown) {
+        if (event == Event::ArrowDown || event == Event::Character(config.get("MoveDown"))) {
             StatusCode result = session.sendKeyStroke(Action::MoveDown);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::Character('e')) {
+        if (event == Event::Character(config.get("RotateRight"))) {
             StatusCode result = session.sendKeyStroke(Action::RotateRight);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::Character('q')) {
+        if (event == Event::Character(config.get("RotateLeft"))) {
             StatusCode result = session.sendKeyStroke(Action::RotateLeft);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::Character(' ')) {
+        if (event == Event::Character(' ') || event == Event::Character(config.get("InstantFall"))) {
             StatusCode result = session.sendKeyStroke(Action::InstantFall);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::Character('c')) {
+        if (event == Event::Character(config.get("UseBag"))) {
             StatusCode result = session.sendKeyStroke(Action::UseBag);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::Character('b')) {
+        if (event == Event::Character(config.get("UseBonus"))) {
             StatusCode result = session.sendKeyStroke(Action::UseBonus);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::Character('m')) {
+        if (event == Event::Character(config.get("UseMalus"))) {
             StatusCode result = session.sendKeyStroke(Action::UseMalus);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::Character('s')) {
+        if (event == Event::Character(config.get("SeePreviousOpponent"))) {
             StatusCode result = session.sendKeyStroke(Action::SeePreviousOpponent);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        if (event == Event::Character('w')) {
+        if (event == Event::Character(config.get("SeeNextOpponent"))) {
             StatusCode result = session.sendKeyStroke(Action::SeeNextOpponent);
             if (result != StatusCode::SUCCESS) {
                 errorMessage = "Command failed: " + getStatusCodeString(result);
             }
             return true;
         }
-        // if (event == Event::Character('d')) {
-        //     // Toggle dark mode (for testing)
-        //     darkMode = !darkMode;
-        //     return true;
-        // }
+
         if (event == Event::Escape) {
             // Check current status to determine if we're in lobby or game
             ClientStatus currentStatus = session.getOwnStatus();

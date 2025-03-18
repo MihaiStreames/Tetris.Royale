@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 #include "MenuHandler.hpp"
 #include "ClientSession.hpp"
@@ -23,7 +24,7 @@ extern ScreenState currentScreen;
  *
  * @param session The client session used to interact with the game server
  */
-void showGameScreen(ClientSession &session);
+void showGameScreen(ClientSession &session, Config &config);
 
 /**
  * Helper function to render a tetris board
@@ -77,7 +78,7 @@ ftxui::Element renderEnergyBar(int energy);
  *
  * @return An ftxui Element representing the game controls
  */
-ftxui::Element renderControls();
+ftxui::Element renderControls(Config &config);
 
 /**
  * Helper function to get the appropriate color for a tetromino block

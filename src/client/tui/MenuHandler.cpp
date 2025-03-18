@@ -11,7 +11,7 @@ std::atomic_bool running = true;
 // this function will be called in the main loop
 // and will display the current screen @ 'currentScreen'
 
-void runTetrisClient(ClientSession &session) {
+void runTetrisClient(ClientSession &session, Config &config) {
 
 
     while (currentScreen != ScreenState::Exit && running) {
@@ -39,7 +39,7 @@ void runTetrisClient(ClientSession &session) {
                 break;
 
             case ScreenState::InGame:
-                showGameScreen(session);
+                showGameScreen(session, config);
                 break;
 
             default:

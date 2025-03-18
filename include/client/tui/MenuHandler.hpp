@@ -25,11 +25,11 @@ void showRegisterScreen(ClientSession& session);
 void showMainMenu(ClientSession& session);
 void showLobbyBrowser(ClientSession& session);
 void showInLobbyScreen(ClientSession& session);
-void showGameScreen(ClientSession& session);
+void showGameScreen(ClientSession& session, Config &config);
 
 // Global current screen state
 extern ScreenState currentScreen;
 
 
 // Main application loop
-void runTetrisClient(ClientSession &session);
+void runTetrisClient(ClientSession &session, Config &config);

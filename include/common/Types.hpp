@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+#include <string>
+
 
 struct Position2D
 {
@@ -54,3 +56,5 @@ extern std::vector<TypePowerUps> bonusVector;
 using tetroMat = std::vector<std::vector<int>>;
 using pieceVec = std::vector<PieceType>;
 using tetroShape = std::vector<std::vector<bool>>;
+
+std::string actionToString(Action action);

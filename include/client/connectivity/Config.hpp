@@ -13,6 +13,25 @@
 class Config
 {
 
+  std::unordered_map<std::string, std::string> DEFAULT_CONFIG = {
+    // connection settings
+    {"server_ip", MASTER_SERVER_IP},
+    {"lobby_port", std::to_string(LOBBY_SERVER_PORT)},
+    {"db_port", std::to_string(DB_SERVER_PORT)},
+    // keybinds
+    {actionToString(Action::MoveDown), "s"},
+    {actionToString(Action::MoveLeft), "a"},
+    {actionToString(Action::MoveRight), "d"},
+    {actionToString(Action::RotateLeft), "q"},
+    {actionToString(Action::RotateRight), "e"},
+    {actionToString(Action::InstantFall), "v"},
+    {actionToString(Action::UseBag), "c"},
+    {actionToString(Action::UseMalus), "m"},
+    {actionToString(Action::UseBonus), "b"},
+    {actionToString(Action::SeePreviousOpponent), "w"},
+    {actionToString(Action::SeeNextOpponent), "s"},
+  };
+
   public:
     Config(const std::string& filename);
     ~Config();

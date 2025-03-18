@@ -4,11 +4,7 @@ Config::Config(const std::string &filename) : filename(filename) {
     // constructor for config class
     // Initialize default configuration values
 
-    defaultConfig = {
-        {"server_ip", MASTER_SERVER_IP},
-        {"lobby_port", std::to_string(LOBBY_SERVER_PORT)},
-        {"db_port", std::to_string(DB_SERVER_PORT)},
-    };
+    defaultConfig = DEFAULT_CONFIG;
 }
 
 Config::~Config() {
