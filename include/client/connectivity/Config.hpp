@@ -28,8 +28,8 @@ class Config
     {actionToString(Action::UseBag), "c"},
     {actionToString(Action::UseMalus), "m"},
     {actionToString(Action::UseBonus), "b"},
-    {actionToString(Action::SeePreviousOpponent), "w"},
-    {actionToString(Action::SeeNextOpponent), "s"},
+    {actionToString(Action::SeePreviousOpponent), "o"},
+    {actionToString(Action::SeeNextOpponent), "p"},
   };
 
   public:
