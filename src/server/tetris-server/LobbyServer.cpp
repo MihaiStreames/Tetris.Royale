@@ -297,7 +297,6 @@ LobbyServer::getDeadLobbies() const {
 
     // we iterate through the lobbies and add the dead ones to the vector
     for (auto &[lobbyID, lobby]: lobbyObjects) {
-        lobby->decrementTTL();
         if (lobby->isLobbyDead()) {
             deadLobbies.push_back(lobby);
         }

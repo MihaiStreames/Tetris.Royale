@@ -34,11 +34,9 @@ class Lobby
     [[nodiscard]] StatusCode closeLobby();
 
     // player management
-    [[nodiscard]] StatusCode addPlayer(const std::string& sessionToken,
-                                       const std::string& username);
+    [[nodiscard]] StatusCode addPlayer(const std::string& sessionToken, const std::string& username);
     [[nodiscard]] StatusCode removePlayer(const std::string& sessionToken);
-    [[nodiscard]] StatusCode addSpectator(const std::string& sessionToken,
-                                          const std::string& username);
+    [[nodiscard]] StatusCode addSpectator(const std::string& sessionToken, const std::string& username);
     [[nodiscard]] StatusCode removeSpectator(const std::string& sessionToken);
 
     // info that we might want to use outside of the class
@@ -46,14 +44,12 @@ class Lobby
     [[nodiscard]] int getPort();
     [[nodiscard]] std::string getLobbyID();
     [[nodiscard]] bool isReady();
-    void decrementTTL();
     [[nodiscard]] bool isLobbyDead();
     [[nodiscard]] bool isLobbyPublic();
 
     // utility
     [[nodiscard]] bool isPlayerInLobby(const std::string& sessionToken) const;
-    [[nodiscard]] bool
-    isSpectatorInLobby(const std::string& sessionToken) const;
+    [[nodiscard]] bool isSpectatorInLobby(const std::string& sessionToken) const;
     [[nodiscard]] bool isLobbyFull() const;
 
   private:
@@ -66,14 +62,14 @@ class Lobby
 
     // handling requests stuff
     [[nodiscard]] std::string handleRequest(const std::string& requestContent);
-    [[nodiscard]] ServerResponse
-    handleGetCurrentLobbyRequest(const ServerRequest& request);
-    [[nodiscard]] ServerResponse
-    handleLeaveLobbyRequest(const ServerRequest& request);
-    [[nodiscard]] ServerResponse
-    handleReadyRequest(const ServerRequest& request);
-    [[nodiscard]] ServerResponse
-    handleUnreadyRequest(const ServerRequest& request);
+    [[nodiscard]] ServerResponse handleGetCurrentLobbyRequest(const ServerRequest& request);
+    [[nodiscard]] ServerResponse handleLeaveLobbyRequest(const ServerRequest& request);
+    [[nodiscard]] ServerResponse handleReadyRequest(const ServerRequest& request);
+    [[nodiscard]] ServerResponse handleUnreadyRequest(const ServerRequest& request);
+
+    // dead lobby stuff
+    void setHasEverBeenJoined(bool flag);
+    [[nodiscard]] bool getHasEverBeenJoined() const;
 
     std::string ip;
     int port;
@@ -92,7 +88,7 @@ class Lobby
     bool isPublic;
     bool debug;
     bool running = false;
-    int ttl = LOBBY_TTL;
+    bool hasEverBeenJoined = false;
     std::unordered_map<std::string, bool> readyPlayers;
 
     // we keep track of the players and spectators in the lobby, associated with

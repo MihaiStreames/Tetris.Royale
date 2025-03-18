@@ -102,6 +102,11 @@ Lobby::addPlayer(const std::string &sessionToken, const std::string &username) {
     players[sessionToken] = username;
     readyPlayers[sessionToken] = false;
 
+    // if the player is the first one to join, we set the hasEverBeenJoined flag
+    if (!getHasEverBeenJoined()) {
+        setHasEverBeenJoined(true);
+    }
+
     printMessage("Player " + sessionToken + " added to the lobby",
                  MessageType::INFO);
     return StatusCode::SUCCESS;
@@ -149,6 +154,11 @@ Lobby::addSpectator(const std::string &sessionToken,
 
     // if we get here, we can add the spectator to the lobby
     spectators[sessionToken] = username;
+
+    // if the spectator is the first one to join, we set the hasEverBeenJoined flag
+    if (!getHasEverBeenJoined()) {
+        setHasEverBeenJoined(true);
+    }
 
     printMessage("Spectator " + sessionToken + " added to the lobby",
                  MessageType::INFO);
@@ -233,22 +243,13 @@ Lobby::isReady() {
                                [](const auto &pair) { return pair.second; });
 }
 
-void
-Lobby::decrementTTL() {
-    // This method is used to decrement the TTL of the lobby.
-    // It will decrement the TTL of the lobby by 1.
-
-    std::lock_guard lock(stateMutex);
-    ttl--;
-}
-
 bool
 Lobby::isLobbyDead() {
     // This method is used to check if the lobby is empty.
     // It will return true if the lobby is empty, false otherwise.
 
     std::lock_guard lock(stateMutex);
-    bool isDead = players.empty() && spectators.empty() && ttl <= 0;
+    bool isDead = players.empty() && spectators.empty() && getHasEverBeenJoined();
     return isDead;
 }
 
@@ -595,3 +596,20 @@ Lobby::handleUnreadyRequest(const ServerRequest &request) {
                  MessageType::INFO);
     return ServerResponse::SuccessResponse(request.id, StatusCode::SUCCESS);
 }
+
+
+void
+Lobby::setHasEverBeenJoined(const bool flag) {
+    // This method is used to set the hasEverBeenJoined flag of the lobby.
+    // It will set the hasEverBeenJoined flag of the lobby to the specified
+    // value.
+    hasEverBeenJoined = flag;
+}
+
+bool
+Lobby::getHasEverBeenJoined() const {
+    // This method is used to get the hasEverBeenJoined flag of the lobby.
+    // It will return the hasEverBeenJoined flag of the lobby.
+    return hasEverBeenJoined;
+}
+
