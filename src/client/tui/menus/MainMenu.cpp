@@ -284,7 +284,7 @@ void showMainMenu(ClientSession &session) {
         return vbox({
                    text("TETRIS ROYALE") | bold | center,
                    separator(),
-                   tabToggle->Render(),
+                   tabToggle->Render() | border,
                    content,
                    separator(),
                    hbox({
