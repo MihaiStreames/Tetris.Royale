@@ -1,10 +1,11 @@
 #include "MainMenu.hpp"
-#include "Common.hpp"
+
 
 using namespace ftxui;
 
 void showMainMenu(ClientSession &session) {
     auto screen = ScreenInteractive::Fullscreen();
+    currentScreen = ScreenState::Exit;
 
     // Fetch player data initially
     (void) session.fetchPlayerData();

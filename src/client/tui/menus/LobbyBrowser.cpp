@@ -1,5 +1,5 @@
 #include "LobbyBrowser.hpp"
-#include "Common.hpp"
+
 
 using namespace ftxui;
 
@@ -27,6 +27,7 @@ parseLobbies(const std::unordered_map<std::string, std::string> &lobbyData) {
 
 void showLobbyBrowser(ClientSession &session) {
     auto screen = ScreenInteractive::Fullscreen();
+    currentScreen = ScreenState::Exit;
 
     // Error message for display
     std::string errorMessage;

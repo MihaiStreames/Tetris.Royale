@@ -9,6 +9,7 @@ void showLoginScreen(ClientSession &session) {
     // and then try to login with the provided credentials
 
     auto screen = ScreenInteractive::Fullscreen();
+    currentScreen = ScreenState::Exit;
 
     // input fields
     std::string username;

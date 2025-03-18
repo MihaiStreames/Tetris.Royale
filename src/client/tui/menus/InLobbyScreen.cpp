@@ -1,5 +1,5 @@
 #include "InLobbyScreen.hpp"
-#include "Common.hpp"
+
 
 using namespace ftxui;
 
@@ -14,6 +14,7 @@ std::string getGameModeName(const GameMode mode) {
 
 void showInLobbyScreen(ClientSession &session) {
     auto screen = ScreenInteractive::Fullscreen();
+    currentScreen = ScreenState::Exit;
 
     // Initialize with an empty state
     LobbyState lobbyState = LobbyState::generateEmptyState();

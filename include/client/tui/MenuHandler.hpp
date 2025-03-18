@@ -1,9 +1,8 @@
 #pragma once
 
-#include <csignal>
+
 #include <iostream>
 #include <string>
-#include <atomic>
 
 #include "ClientSession.hpp"
 #include "Common.hpp"
@@ -31,8 +30,6 @@ void showGameScreen(ClientSession& session);
 // Global current screen state
 extern ScreenState currentScreen;
 
-// handler
-void signalHandler(int signum);
 
 // Main application loop
 void runTetrisClient(ClientSession &session);

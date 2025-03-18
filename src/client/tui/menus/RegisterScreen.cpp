@@ -14,6 +14,7 @@ void showRegisterScreen(ClientSession &session) {
     // the user will also be able to click a back button to go back to the login screen
 
     auto screen = ScreenInteractive::Fullscreen();
+    currentScreen = ScreenState::Exit;
 
     // input fields
     std::string username;

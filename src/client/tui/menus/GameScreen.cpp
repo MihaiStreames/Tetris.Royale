@@ -1,5 +1,5 @@
 #include "GameScreen.hpp"
-#include "Common.hpp"
+
 
 using namespace ftxui;
 
@@ -180,7 +180,9 @@ Element renderControls() {
 }
 
 void showGameScreen(ClientSession &session) {
+
     auto screen = ScreenInteractive::TerminalOutput();
+    currentScreen = ScreenState::Exit;
 
     // Track player view (for cycling through opponents)
     bool isSpectator = false;
