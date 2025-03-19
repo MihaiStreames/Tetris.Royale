@@ -92,7 +92,7 @@ function(setup_ftxui)
         message(STATUS "FTXUI not found locally, fetching...")
         FetchContent_Declare(ftxui
                 GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
-                GIT_TAG main
+                GIT_TAG v5.0.0
                 GIT_SHALLOW ON
         )
         FetchContent_MakeAvailable(ftxui)
