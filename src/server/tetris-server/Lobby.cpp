@@ -233,8 +233,13 @@ Lobby::isReady() {
     std::lock_guard lock(stateMutex);
 
     // first, we check if the number of players in the lobby is enough to start
-    // the game
-    if (static_cast<int>(players.size()) < MIN_LOBBY_SIZE) {
+    // the game, but if the game mode is dual then we allow 2 players to start
+    // the game if they are ready
+
+    if (
+        (gameMode == GameMode::DUEL && static_cast<int>(players.size()) != DUAL_LOBBY_SIZE) ||
+        (gameMode != GameMode::DUEL && static_cast<int>(players.size()) < MIN_LOBBY_SIZE)
+    ) {
         return false;
     }
 

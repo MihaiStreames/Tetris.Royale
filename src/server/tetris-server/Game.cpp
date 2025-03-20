@@ -356,6 +356,9 @@ Game::updateGame() {
 
                     {
                         std::lock_guard lock_(gameMutex);
+                        if (currentAction != Action::None) {
+                            printMessage("Handling action: " + std::to_string(static_cast<int>(currentAction)) + " from " + game.first, MessageType::INFO);
+                        }
                         engine->handlingRoutine(*game.second, currentAction);
                     }
                 }
