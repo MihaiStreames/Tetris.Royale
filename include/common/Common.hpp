@@ -77,6 +77,7 @@ enum class GameMode
     CLASSIC,
     ROYALE,
     DUEL,
+    ENDLESS,
     NONE, // default value
 };
 
@@ -103,6 +104,7 @@ const std::unordered_map<GameMode, std::string> GAMEMODE_DESCRIPTIONS = {
         {GameMode::CLASSIC,     "Play against others in classic Tetris mode. Clear lines to score points."},
         {GameMode::DUEL,        "Play against a single opponent in a head-to-head battle."},
         {GameMode::ROYALE,      "Battle royale mode with power-ups and special abilities."},
+        {GameMode::ENDLESS,     "Play solo in endless mode. Clear lines to score points."},
         {GameMode::NONE,        "No description available."},
 };
 
