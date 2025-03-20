@@ -41,6 +41,7 @@ class Game
     [[nodiscard]] StatusCode initializeGames();
     [[nodiscard]] StatusCode initializeEngine();
     [[nodiscard]] StatusCode listen();
+    [[nodiscard]] bool isGameDead();
 
     std::shared_ptr<TetrisGame> getGame(const std::string& token);
     void updateGame();

@@ -293,6 +293,15 @@ Game::listen() {
     return StatusCode::SUCCESS;
 }
 
+bool
+Game::isGameDead() {
+    // This method is used to check if the game is dead.
+    // It will return true if the game is dead, and false otherwise.
+    std::lock_guard lock(gameMutex);
+    // printMessage("Number of games still running: " + std::to_string(games.size()), MessageType::INFO);
+    return games.empty();
+}
+
 std::shared_ptr<TetrisGame>
 Game::getGame(const std::string &token) {
     // This method is used to get the game of a player.
@@ -366,8 +375,16 @@ Game::updateGame() {
         }
 
         // sleep for a while (thx)
-        std::this_thread::sleep_for(
-            std::chrono::milliseconds(GAME_UPDATE_INTERVAL));
+        std::this_thread::sleep_for(std::chrono::milliseconds(GAME_UPDATE_INTERVAL));
+
+        // cleanup the games if game is dead
+        if (isGameDead()) {
+            {
+                std::lock_guard lock_(runningMutex);
+                running = false;
+                printMessage("Cleaning this game.", MessageType::INFO);
+            }
+        }
     }
 }
 
@@ -674,6 +691,7 @@ Game::removePlayerFromGame(const ServerRequest& request) {
         // delete the game (at last)
         std::lock_guard lock(gameMutex);
         games.erase(request.params.at("token"));
+
 
     }
 

@@ -189,6 +189,8 @@ void showLobbyBrowser(ClientSession &session) {
             default: mode = GameMode::CLASSIC;
         }
 
+        // !! hardcoded for now, will be replaced with bar freezing when the gamemode is duel
+        if (mode == GameMode::DUEL) {initPlayers = DUAL_LOBBY_SIZE;}
         StatusCode result = session.createAndJoinLobby(mode, initPlayers, isPublic);
 
         if (result == StatusCode::SUCCESS) {
