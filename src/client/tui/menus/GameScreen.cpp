@@ -417,8 +417,15 @@ void showGameScreen(ClientSession &session, Config &config) {
                 const PlayerState state = session.getPlayerState();
                 if (state.gameMode == GameMode::ENDLESS) {
                     // update score if solo
-                    if (session.postScore(state.playerScore) != StatusCode::SUCCESS) {
-                        errorMessage = "Failed to update score";
+                    int currentScore = state.playerScore;
+                    int bestScore = session.getBestScore();
+                    if (currentScore > bestScore) {
+                        StatusCode postScoreResult = session.postScore(currentScore);
+                        if (postScoreResult != StatusCode::SUCCESS) {
+                            errorMessage = "Failed to update score: " + getStatusCodeString(postScoreResult);
+                        } else {
+                            session.setBestScore(currentScore);
+                        }
                     }
                 }
                 StatusCode result = session.leaveGame();
