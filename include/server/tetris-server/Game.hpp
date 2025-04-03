@@ -56,6 +56,8 @@ class Game
     [[nodiscard]] ServerResponse handleKeyStroke(const KeyStrokePacket& packet, const ServerRequest& request);
     [[nodiscard]] ServerResponse handleGetGameStateRequest(const ServerRequest& request);
     [[nodiscard]] std::string getGameState(const std::string& token);
+    [[nodiscard]] std::string getPlayerGameState(const std::string& token);
+    [[nodiscard]] std::string getSpectatorGameState(const std::string& token);
     [[nodiscard]] ServerResponse handleLeaveGame(const ServerRequest& request);
     [[nodiscard]] ServerResponse removePlayerFromGame(const ServerRequest& request);
     [[nodiscard]] ServerResponse removeSpectatorFromGame(const ServerRequest& request);

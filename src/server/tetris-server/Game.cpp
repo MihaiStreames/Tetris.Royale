@@ -561,8 +561,8 @@ Game::handleGetGameStateRequest(const ServerRequest &request) {
                    {{"gamestate", gameStateContent}});
 }
 
-std::string
-Game::getGameState(const std::string &token) {
+std::string Game::getGameState(const std::string &token) {
+
     // this function will get the game state
     // it will get the game state and return it
 
@@ -570,61 +570,69 @@ Game::getGameState(const std::string &token) {
     // if it's a spectator, will return a string spectator state
     // if it's a player, will return a string player state
 
-    std::string rawState = "";
-
     if (getPlayers().find(token) != getPlayers().end()) {
-        // PlayerState needed
-        std::shared_ptr<TetrisGame> game = getGame(token);
-        if (!game) {
-            return rawState;
-        }
-        TetrisGame *target = game->getTarget();
-
-        PlayerState playerState;
-
-        playerState.holdTetro = (game->getHoldPiece())
-                                    ? game->getHoldPiece()->getPieceType()
-                                    : PieceType::None;
-        playerState.nextTetro = game->getNextPiece().getPieceType();
-        playerState.playerGrid =
-                game->getGameMatrix().getBoardWithCurrentPiece();
-        playerState.playerLevel = game->getLevel();
-        playerState.playerScore = game->getScore();
-        playerState.playerLines = game->getLinesCleared();
-        // get the energy if the game is a battle royale
-        if (game->getGameMode() == GameMode::ROYALE) {
-            playerState.playerEnergy = game->getEnergy();
-        }
-        playerState.playerUsername = getPlayers().at(token);
-        playerState.targetGrid =
-                (target)
-                    ? target->getGameMatrix().getBoardWithCurrentPiece()
-                    : std::vector<std::vector<int>>();
-        playerState.targetUsername = (target) ? target->getPlayerName() : DEFAULT_NAME;
-
-        rawState = playerState.serialize();
-    } else if (getSpectators().find(token) != getSpectators().end()) {
-        // SpectatorState needed
-        std::shared_ptr<TetrisGame> game = getGame(token);
-        if (!game) {
-            return rawState;
-        }
-
-        SpectatorState spectatorState;
-        spectatorState.holdTetro = (game->getHoldPiece())
-                                       ? game->getHoldPiece()->getPieceType()
-                                       : PieceType::None;
-        spectatorState.nextTetro = game->getNextPiece().getPieceType();
-        spectatorState.playerGrid =
-                game->getGameMatrix().getBoardWithCurrentPiece();
-        spectatorState.playerUsername = getSpectators().at(token);
-
-        rawState = spectatorState.serialize();
-    } else {
-        printMessage("Unknown token asked for GameState", MessageType::ERROR);
+        return getPlayerGameState(token);
     }
 
-    return rawState;
+    if (getSpectators().find(token) != getSpectators().end()) {
+        return getSpectatorGameState(token);
+    }
+
+    // unknown token asked for gamestate
+    printMessage("Unknown token asked for GameState", MessageType::ERROR);
+    return "";
+}
+
+std::string Game::getPlayerGameState(const std::string &token) {
+    
+    std::shared_ptr<TetrisGame> game = getGame(token);
+    if (!game) {
+        return "";
+    }
+
+    TetrisGame *target = game->getTarget();
+    PlayerState playerState;
+
+    playerState.holdTetro = (game->getHoldPiece())
+                                ? game->getHoldPiece()->getPieceType()
+                                : PieceType::None;
+    playerState.nextTetro = game->getNextPiece().getPieceType();
+    playerState.playerGrid = game->getGameMatrix().getBoardWithCurrentPiece();
+    playerState.playerLevel = game->getLevel();
+    playerState.playerScore = game->getScore();
+    playerState.playerLines = game->getLinesCleared();
+    playerState.isGameOver = game->isGameOver();
+
+    // get the energy if the game is a battle royale
+    if (game->getGameMode() == GameMode::ROYALE) {
+        playerState.playerEnergy = game->getEnergy();
+    }
+
+    playerState.playerUsername = getPlayers().at(token);
+    playerState.targetGrid = (target)
+                                 ? target->getGameMatrix().getBoardWithCurrentPiece()
+                                 : std::vector<std::vector<int>>();
+    playerState.targetUsername = (target) ? target->getPlayerName() : DEFAULT_NAME;
+
+    return playerState.serialize();
+}
+
+std::string Game::getSpectatorGameState(const std::string &token) {
+    
+    std::shared_ptr<TetrisGame> game = getGame(token);
+    if (!game) {
+        return "";
+    }
+
+    SpectatorState spectatorState;
+    spectatorState.holdTetro = (game->getHoldPiece())
+                                   ? game->getHoldPiece()->getPieceType()
+                                   : PieceType::None;
+    spectatorState.nextTetro = game->getNextPiece().getPieceType();
+    spectatorState.playerGrid = game->getGameMatrix().getBoardWithCurrentPiece();
+    spectatorState.playerUsername = getSpectators().at(token);
+
+    return spectatorState.serialize();
 }
 
 ServerResponse
