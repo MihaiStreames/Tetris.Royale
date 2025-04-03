@@ -604,8 +604,6 @@ std::string Game::getPlayerGameState(const std::string &token) {
     playerState.isGameOver = game->isGameOver();
     playerState.gameMode = game->getGameMode();
 
-    printMessage("Game mode: " + static_cast<int>(game->getGameMode()), MessageType::INFO);
-
     // get the energy if the game is a battle royale
     if (game->getGameMode() == GameMode::ROYALE) {
         playerState.playerEnergy = game->getEnergy();
