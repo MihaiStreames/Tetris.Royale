@@ -210,6 +210,7 @@ const int MAX_GAMES = 20;
 const int MAX_LOBBIES = 20;
 
 const int DUAL_LOBBY_SIZE = 2;
+const int ENDLESS_LOBBY_SIZE = 1;
 const int MIN_LOBBY_SIZE = 3;
 const int MAX_LOBBY_SIZE = 9;
 

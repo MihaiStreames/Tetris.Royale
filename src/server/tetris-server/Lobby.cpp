@@ -238,6 +238,7 @@ Lobby::isReady() {
 
     if (
         (gameMode == GameMode::DUEL && static_cast<int>(players.size()) != DUAL_LOBBY_SIZE) ||
+        (gameMode == GameMode::ENDLESS && static_cast<int>(players.size()) != ENDLESS_LOBBY_SIZE) ||
         (gameMode != GameMode::DUEL && static_cast<int>(players.size()) < MIN_LOBBY_SIZE)
     ) {
         return false;

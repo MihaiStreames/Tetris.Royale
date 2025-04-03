@@ -8,6 +8,7 @@ SpectatorState::generateEmptyState() {
     state.playerGrid = tetroMat();
     state.nextTetro = PieceType::None;
     state.holdTetro = PieceType::None;
+    state.isGameOver = false;
     return state;
 }
 
@@ -20,6 +21,7 @@ SpectatorState::serialize() const {
     j["playerGrid"] = playerGrid;
     j["nextTetro"] = nextTetro;
     j["holdTetro"] = holdTetro;
+    j["isGameOver"] = isGameOver;
     return j.dump();
 }
 
@@ -48,6 +50,7 @@ SpectatorState::deserialize(const std::string &data) {
         state.playerGrid = j["playerGrid"].get<tetroMat>();
         state.nextTetro = j["nextTetro"].get<PieceType>();
         state.holdTetro = j["holdTetro"].get<PieceType>();
+        state.isGameOver = j["isGameOver"].get<bool>();
     } catch (nlohmann::json::exception &e) {
         throw std::runtime_error(
             "[error] Unknown json error while deserializing SpectatorState: " +
@@ -76,6 +79,7 @@ PlayerState::generateEmptyState() {
     state.playerEnergy = 0;
     state.targetUsername = "";
     state.targetGrid = tetroMat();
+    state.isGameOver = false;
     return state;
 }
 
@@ -93,6 +97,7 @@ PlayerState::serialize() const {
     j["playerEnergy"] = playerEnergy;
     j["targetUsername"] = targetUsername;
     j["targetGrid"] = targetGrid;
+    j["isGameOver"] = isGameOver;
     return j.dump();
 }
 
@@ -127,6 +132,7 @@ PlayerState::deserialize(const std::string &data) {
         state.playerEnergy = j["playerEnergy"].get<int>();
         state.targetUsername = j["targetUsername"].get<std::string>();
         state.targetGrid = j["targetGrid"].get<tetroMat>();
+        state.isGameOver = j["isGameOver"].get<bool>();
     } catch (nlohmann::json::exception &e) {
         throw std::runtime_error(
             "[error] Unknown json error while deserializing PlayerState: " +

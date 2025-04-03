@@ -18,6 +18,7 @@ struct GameState
     tetroMat playerGrid;
     PieceType nextTetro;
     PieceType holdTetro;
+    bool isGameOver = false;
 
     virtual ~GameState() = default;
     [[nodiscard]] virtual std::string serialize() const = 0;
