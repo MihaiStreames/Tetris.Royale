@@ -250,6 +250,12 @@ GameEngine::handlingRoutine(TetrisGame &game, const Action action) {
     // placing piece and the game logic
 
     (void) handleAction(game, action);
+
+    // if player is in a game over state, don't do anything
+    if (game.isGameOver()) {
+        return;
+    }
+
     // if the piece could not fall, try to place it
     if (!handleFallingPiece(game)) {
         (void) handlePlacingPiece(game);

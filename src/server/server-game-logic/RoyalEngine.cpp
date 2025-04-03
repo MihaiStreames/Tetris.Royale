@@ -108,6 +108,11 @@ RoyalEngine::handlingRoutine(TetrisGame &game, const Action action) {
         royalGame.setDarkModeTimer(-1);
     }
 
+    // if the player is in a game over state, don't do anything
+    if (royalGame.isGameOver()) {
+        return;
+    }
+
     // if the piece's is not falling, then try to place the piece
     if (!handleFallingPiece(royalGame)) {
         bool couldPlace = handlePlacingPiece(royalGame);
