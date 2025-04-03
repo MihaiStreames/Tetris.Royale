@@ -813,6 +813,11 @@ LobbyServer::handleCreateLobbyRequest(const ServerRequest &request) {
             return ServerResponse::ErrorResponse(
                 request.id, StatusCode::ERROR_INVALID_LOBBY_SIZE);
         }
+    } else if (gameMode == GameMode::ENDLESS) {
+        if (maxPlayers != ENDLESS_LOBBY_SIZE) {
+            return ServerResponse::ErrorResponse(
+                request.id, StatusCode::ERROR_INVALID_LOBBY_SIZE);
+        }
     } else {
         throw std::runtime_error(
             "[err] Invalid GameMode in createLobbyRequest");

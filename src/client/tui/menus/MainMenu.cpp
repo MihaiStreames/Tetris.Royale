@@ -67,7 +67,7 @@ void showMainMenu(ClientSession &session) {
     });
 
     // Navigation buttons
-    auto playButton = Button("Play", [&] {
+    auto playButton = Button("Multiplayer", [&] {
         currentScreen = ScreenState::LobbyBrowser;
         screen.Exit();
     });
@@ -103,16 +103,27 @@ void showMainMenu(ClientSession &session) {
         requestComponents.push_back(container);
     }
 
+    // solo play button
+    auto soloButton = Button("Solo", [&] {
+        // create and join a solo endless lobby (not public by default)
+        StatusCode result = session.createAndJoinLobby(GameMode::ENDLESS, 1, false);
+        if (result == StatusCode::SUCCESS) {
+            currentScreen = ScreenState::InLobby;
+            screen.Exit();
+        }
+    });
+
     // Main container for interactive components
     const auto container = Container::Vertical({
         tabToggle,
         playButton,
+        soloButton,
         logoutButton,
         friendSelector,
         friendInput,
         addFriendButton,
         messageTextInput,
-        sendMessageButton
+        sendMessageButton,
     });
 
     // Add friend request components
@@ -163,7 +174,6 @@ void showMainMenu(ClientSession &session) {
                     text("Welcome, " + session.getUsername()) | bold,
                     text("Best Score: " + std::to_string(session.getBestScore())),
                     separator(),
-                    playButton->Render() | center
                 });
                 break;
 
@@ -288,9 +298,9 @@ void showMainMenu(ClientSession &session) {
                    content,
                    separator(),
                    hbox({
-                       filler(),
-                       logoutButton->Render(),
-                       filler()
+                        soloButton->Render() | center,
+                        playButton->Render() | center,
+                        logoutButton->Render() | center,
                    })
                }) | border | color(Color::Green);
     });
