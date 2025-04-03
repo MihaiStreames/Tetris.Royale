@@ -5,7 +5,7 @@ RoyalGame::RoyalGame(const int gWidth, const int gHeight, const int gScore,
     : ClassicGame(gWidth, gHeight, gScore, fc, lvl, totLinesCleared, name) {
     // this is the constructor of the RoyalGame class
     // might need to write some code here someday
-    gameMode = GameMode::ROYALE;
+    setGameMode(GameMode::ROYALE);
 }
 
 void

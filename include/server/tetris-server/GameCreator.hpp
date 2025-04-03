@@ -30,6 +30,9 @@ class GameCreator
     createClassicGames(std::vector<std::string>& players);
 
     static std::unordered_map<std::string, std::shared_ptr<TetrisGame>>
+    createEndlessGame(std::vector<std::string>& players);
+
+    static std::unordered_map<std::string, std::shared_ptr<TetrisGame>>
     createRoyaleGames(std::vector<std::string>& players);
 
     // engine creator stuff

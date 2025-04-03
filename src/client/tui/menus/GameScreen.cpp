@@ -414,6 +414,13 @@ void showGameScreen(ClientSession &session, Config &config) {
             // Check current status to determine if we're in lobby or game
             ClientStatus currentStatus = session.getOwnStatus();
             if (currentStatus == ClientStatus::IN_GAME) {
+                const PlayerState state = session.getPlayerState();
+                if (state.gameMode == GameMode::ENDLESS) {
+                    // update score if solo
+                    if (session.postScore(state.playerScore) != StatusCode::SUCCESS) {
+                        errorMessage = "Failed to update score";
+                    }
+                }
                 StatusCode result = session.leaveGame();
                 if (result == StatusCode::SUCCESS) {
                     currentScreen = ScreenState::MainMenu;

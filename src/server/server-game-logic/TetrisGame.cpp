@@ -35,7 +35,7 @@ TetrisGame::getPlayerName() const noexcept {
 }
 
 GameMode
-TetrisGame::getGameMode() const noexcept {
+TetrisGame::getGameMode() noexcept {
     return gameMode;
 }
 
@@ -184,6 +184,11 @@ TetrisGame::setGameOver(const bool flag) {
 void
 TetrisGame::setPlayerName(const std::string &name) {
     playerName = name;
+}
+
+void
+TetrisGame::setGameMode(const GameMode mode) {
+    gameMode = mode;
 }
 
 void

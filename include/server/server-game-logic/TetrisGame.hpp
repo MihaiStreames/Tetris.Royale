@@ -65,7 +65,7 @@ class TetrisGame
     [[nodiscard]] virtual Bag& getBag();
     [[nodiscard]] virtual int getScore() const noexcept;
     [[nodiscard]] virtual std::string getPlayerName() const noexcept;
-    [[nodiscard]] virtual GameMode getGameMode() const noexcept;
+    [[nodiscard]] virtual GameMode getGameMode() noexcept;
 
     [[nodiscard]] virtual int getFrameCount() const noexcept;
     [[nodiscard]] virtual int getLevel() const noexcept;
@@ -101,6 +101,7 @@ class TetrisGame
     virtual void setTotalLinesCleared(const int lines);
     virtual void setGameOver(const bool flag);
     virtual void setPlayerName(const std::string& name);
+    virtual void setGameMode(const GameMode mode);
 
     virtual void setEnergy(int setEnergy);
     virtual void setDarkModeTimer(int time);

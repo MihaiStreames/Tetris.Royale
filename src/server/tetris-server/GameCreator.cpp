@@ -18,7 +18,7 @@ GameCreator::createGames(const GameMode &gameMode,
         case GameMode::ROYALE:
             return createRoyaleGames(players);
         case GameMode::ENDLESS:
-            return createClassicGames(players);  // will a classic game work ? ig
+            return createEndlessGame(players);
 
         case GameMode::NONE:
             throw std::invalid_argument("[err] Invalid game mode");
@@ -49,6 +49,20 @@ GameCreator::createClassicGames(std::vector<std::string> &players) {
 
     return games;
 }
+
+std::unordered_map<std::string, std::shared_ptr<TetrisGame> >
+GameCreator::createEndlessGame(std::vector<std::string> &players) {
+    // create a map of classic games with the player token as the key
+
+    std::unordered_map<std::string, std::shared_ptr<TetrisGame>> games;
+
+    std::string player = players[0];  // there's only one player in endless mode
+    games[player] = std::make_shared<ClassicGame>(GAME_WIDTH, GAME_HEIGHT, 0, 0, 0, 0, player);
+    games[player]->setGameMode(GameMode::ENDLESS);
+
+    return games;
+}
+
 
 std::unordered_map<std::string, std::shared_ptr<TetrisGame> >
 GameCreator::createRoyaleGames(std::vector<std::string> &players) {

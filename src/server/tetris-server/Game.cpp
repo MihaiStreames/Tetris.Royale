@@ -602,6 +602,9 @@ std::string Game::getPlayerGameState(const std::string &token) {
     playerState.playerScore = game->getScore();
     playerState.playerLines = game->getLinesCleared();
     playerState.isGameOver = game->isGameOver();
+    playerState.gameMode = game->getGameMode();
+
+    printMessage("Game mode: " + static_cast<int>(game->getGameMode()), MessageType::INFO);
 
     // get the energy if the game is a battle royale
     if (game->getGameMode() == GameMode::ROYALE) {
@@ -631,6 +634,8 @@ std::string Game::getSpectatorGameState(const std::string &token) {
     spectatorState.nextTetro = game->getNextPiece().getPieceType();
     spectatorState.playerGrid = game->getGameMatrix().getBoardWithCurrentPiece();
     spectatorState.playerUsername = getSpectators().at(token);
+    spectatorState.gameMode = game->getGameMode();
+    spectatorState.isGameOver = game->isGameOver();
 
     return spectatorState.serialize();
 }
