@@ -174,6 +174,9 @@ void showMainMenu(ClientSession &session) {
                     text("Welcome, " + session.getUsername()) | bold,
                     text("Best Score: " + std::to_string(session.getBestScore())),
                     separator(),
+                    soloButton->Render() | center,
+                    playButton->Render() | center,
+                    logoutButton->Render() | center,
                 });
                 break;
 
@@ -296,12 +299,6 @@ void showMainMenu(ClientSession &session) {
                    separator(),
                    tabToggle->Render() | border,
                    content,
-                   separator(),
-                   hbox({
-                        soloButton->Render() | center,
-                        playButton->Render() | center,
-                        logoutButton->Render() | center,
-                   })
                }) | border | color(Color::Green);
     });
 

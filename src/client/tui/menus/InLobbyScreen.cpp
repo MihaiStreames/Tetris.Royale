@@ -8,6 +8,7 @@ std::string getGameModeName(const GameMode mode) {
         case GameMode::CLASSIC: return "Classic";
         case GameMode::DUEL:    return "Duel";
         case GameMode::ROYALE:  return "Royale";
+        case GameMode::ENDLESS: return "Endless";
         default:                return "Unknown";
     }
 }

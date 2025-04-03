@@ -119,7 +119,6 @@ getServerMethodString(const ServerMethods method) {
     }
 }
 
-
 std::string
 getClientStatusString(const ClientStatus status) {
     switch (status) {
