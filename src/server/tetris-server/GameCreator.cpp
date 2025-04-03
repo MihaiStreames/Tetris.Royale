@@ -17,6 +17,8 @@ GameCreator::createGames(const GameMode &gameMode,
             return createClassicGames(players);
         case GameMode::ROYALE:
             return createRoyaleGames(players);
+        case GameMode::ENDLESS:
+            return createClassicGames(players);  // will a classic game work ? ig
 
         case GameMode::NONE:
             throw std::invalid_argument("[err] Invalid game mode");
@@ -84,6 +86,8 @@ GameCreator::createEngine(const GameMode &gameMode) {
             return createClassicEngine();
         case GameMode::ROYALE:
             return createRoyalEngine();
+        case GameMode::ENDLESS:
+            return createClassicEngine();  // will a classic engine work ? ig yea
 
         case GameMode::NONE:
             throw std::invalid_argument("[err] Invalid game mode");

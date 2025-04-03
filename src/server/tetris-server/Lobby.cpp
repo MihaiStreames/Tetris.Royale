@@ -236,12 +236,18 @@ Lobby::isReady() {
     // the game, but if the game mode is dual then we allow 2 players to start
     // the game if they are ready
 
-    if (
-        (gameMode == GameMode::DUEL && static_cast<int>(players.size()) != DUAL_LOBBY_SIZE) ||
-        (gameMode == GameMode::ENDLESS && static_cast<int>(players.size()) != ENDLESS_LOBBY_SIZE) ||
-        (gameMode != GameMode::DUEL && static_cast<int>(players.size()) < MIN_LOBBY_SIZE)
-    ) {
-        return false;
+    if (gameMode == GameMode::DUEL) {
+        if (static_cast<int>(players.size()) != DUAL_LOBBY_SIZE) {
+            return false;
+        }
+    } else if (gameMode == GameMode::ENDLESS) {
+        if (static_cast<int>(players.size()) != ENDLESS_LOBBY_SIZE) {
+            return false;
+        }
+    } else {
+        if (static_cast<int>(players.size()) < MIN_LOBBY_SIZE) {
+            return false;
+        }
     }
 
     // then if we have enough players, we check if all of them are ready

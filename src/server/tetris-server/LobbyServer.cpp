@@ -279,6 +279,7 @@ LobbyServer::getReadyLobbies() const {
     // we iterate through the lobbies and add the ready ones to the vector
     for (auto &[lobbyID, lobby]: lobbyObjects) {
         if (lobby->isReady()) {
+            printMessage("Lobby [" + lobbyID + "] is ready", MessageType::INFO);
             readyLobbies.push_back(lobby);
         }
     }
