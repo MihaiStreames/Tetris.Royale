@@ -50,7 +50,7 @@ Element renderBoard(const tetroMat &board, const bool darkMode, const bool isOpp
 
     // lets add game over message if applicable
     if (isGameOver) {
-        rows.insert(rows.begin() + height / 2, text("GAME OVER") | bold | center | color(Color::Red));
+        rows.insert(rows.begin(), text("GAME OVER") | bold | center | color(Color::Red));
     }
 
     return window(
