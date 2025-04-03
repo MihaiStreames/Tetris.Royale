@@ -18,7 +18,7 @@ Decorator colorForValue(const int value) {
 }
 
 // Render a tetris board
-Element renderBoard(const tetroMat &board, const bool darkMode, const bool isOpponentBoard) {
+Element renderBoard(const tetroMat &board, const bool darkMode, const bool isOpponentBoard, const bool isGameOver) {
     if (board.empty()) {
         return text("No board data") | center;
     }
@@ -46,6 +46,11 @@ Element renderBoard(const tetroMat &board, const bool darkMode, const bool isOpp
             cells.push_back(text(cellStr) | colorForValue(board[y][x]));
         }
         rows.push_back(hbox(cells));
+    }
+
+    // lets add game over message if applicable
+    if (isGameOver) {
+        rows.insert(rows.begin() + height / 2, text("GAME OVER") | bold | center | color(Color::Red));
     }
 
     return window(
@@ -203,11 +208,9 @@ void showGameScreen(ClientSession &session, Config &config) {
             const PlayerState state = session.getPlayerState();
             isSpectator = false;
 
-            // Main game board
-            auto mainBoard = renderBoard(state.playerGrid, darkMode, false);
-
-            // Target opponent board - smaller version
-            auto targetBoard = renderBoard(state.targetGrid, false, true);
+            // main game board & opponent view
+            auto mainBoard = renderBoard(state.playerGrid, darkMode, false, state.isGameOver);
+            auto targetBoard = renderBoard(state.targetGrid, false, true, false);
 
             // Energy bar
             Element energyBar = text("Energy: N/A") | center;
@@ -290,7 +293,7 @@ void showGameScreen(ClientSession &session, Config &config) {
                         }),
 
                         // Center - main board
-                        renderBoard(state.playerGrid, darkMode, false)
+                        renderBoard(state.playerGrid, darkMode, false, state.isGameOver) 
                     }) | center
                 );
 

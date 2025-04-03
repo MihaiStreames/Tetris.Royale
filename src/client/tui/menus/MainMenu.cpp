@@ -116,8 +116,8 @@ void showMainMenu(ClientSession &session) {
     // Main container for interactive components
     const auto container = Container::Vertical({
         tabToggle,
-        playButton,
         soloButton,
+        playButton,
         logoutButton,
         friendSelector,
         friendInput,

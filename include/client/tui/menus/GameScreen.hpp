@@ -34,7 +34,7 @@ void showGameScreen(ClientSession &session, Config &config);
  * @param isOpponentBoard Whether this is an opponent board (smaller cells)
  * @return An ftxui Element representing the tetris board
  */
-ftxui::Element renderBoard(const tetroMat &board, bool darkMode, bool isOpponentBoard);
+ftxui::Element renderBoard(const tetroMat &board, bool darkMode, bool isOpponentBoard, bool isGameOver);
 
 /**
  * Helper function to render a tetromino piece
