@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.22...4.0)
 
 # This is a revised version of Mihai's CMake template,
 # rewritten by Antoine & Mihai to include boost stuff
