@@ -28,3 +28,4 @@ endfunction()
 
 # actual tests
 add_tetris_test(BagTest)
+add_tetris_test(TetrominoTest)
