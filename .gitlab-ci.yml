@@ -1,6 +1,5 @@
 stages:
-  - install
-  - build
+  - install-and-build
   - test
   - cleanup
 
@@ -9,27 +8,25 @@ variables:
   CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release"
   MAKE_ARGS: "-j$(nproc)"
 
-install_dependencies:
+cache:
+  key: "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG"
+  paths:
+    - $BUILD_DIR/
+    - lib/
+
+install-and-build:
   stage: install
   image: ubuntu:latest
   before_script:
     - apt-get update
-    - apt-get install -y curl build-essential cmake git unzip libssl-dev libboost-all-dev libsqlite3-dev
+    - apt-get install -y curl build-essential cmake git unzip libssl-dev
   script:
     - chmod +x ./install.sh
     - ./install.sh --enable-tests
-
-build:
-  stage: build
-  image: gcc:latest
-  script:
-    - mkdir -p $BUILD_DIR
-    - cd $BUILD_DIR
-    - cmake $CMAKE_ARGS ..
-    - make $MAKE_ARGS
   artifacts:
     paths:
-      - $BUILD_DIR
+      - $BUILD_DIR/
+    expire_in: 1 week
 
 test:
   stage: test
@@ -38,7 +35,7 @@ test:
     - cd $BUILD_DIR
     - ctest --output-on-failure
   dependencies:
-    - build
+    - install-and-build
 
 cleanup:
   stage: cleanup
