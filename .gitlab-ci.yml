@@ -1,5 +1,5 @@
 stages:
-  - installandbuild
+  - install-and-build
   - test
   - cleanup
 
@@ -14,8 +14,8 @@ cache:
     - $BUILD_DIR/
     - lib/
 
-installandbuild:
-  stage: install
+install-and-build:
+  stage: install-and-build
   image: ubuntu:latest
   before_script:
     - apt-get update
