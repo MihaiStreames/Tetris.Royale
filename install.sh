@@ -8,6 +8,7 @@ DEPS_SCRIPT="./scripts/find_dependencies.sh"
 DEPS_ENV_PATH="./lib/setup-env.sh"
 CMAKE_ARGS=""
 MAKE_ARGS="-j$(nproc)" # Use all available CPU cores by default
+RUN_TESTS=false
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -24,6 +25,11 @@ while [[ $# -gt 0 ]]; do
       CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release"
       shift
       ;;
+    --enable-tests)
+      CMAKE_ARGS="$CMAKE_ARGS -DTETRIS_ENABLE_TESTS=ON"
+      RUN_TESTS=true
+      shift
+      ;;
     --jobs=*)
       MAKE_ARGS="-j${1#*=}"
       shift
@@ -34,6 +40,7 @@ while [[ $# -gt 0 ]]; do
       echo "  --clean        Clean the build directory before building"
       echo "  --debug        Build in debug mode"
       echo "  --release      Build in release mode"
+      echo "  --enable-tests Enable and run tests after building"
       echo "  --jobs=N       Use N jobs for make (default: all cores)"
       echo "  --help         Show this help message"
       exit 0
@@ -123,6 +130,11 @@ run_timed_command "CMake configuration" "cmake $CMAKE_ARGS .."
 
 # Run Make
 run_timed_command "build process" "make $MAKE_ARGS"
+
+if [ "$RUN_TESTS" = true ]; then
+    print_header "Running tests"
+    run_timed_command "test suite" "ctest --output-on-failure"
+fi
 
 # Run tests if they exist
 if [ -f "ctest" ] || [ -f "make test" ]; then
