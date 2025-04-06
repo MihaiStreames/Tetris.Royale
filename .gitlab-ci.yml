@@ -8,12 +8,6 @@ variables:
   CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release"
   MAKE_ARGS: "-j$(nproc)"
 
-cache:
-  key: "$CI_PROJECT_NAME-$CI_COMMIT_REF_SLUG"
-  paths:
-    - $BUILD_DIR/
-    - lib/
-
 install-and-build:
   stage: install-and-build
   image: ubuntu:latest
@@ -23,10 +17,6 @@ install-and-build:
   script:
     - chmod +x ./install.sh
     - ./install.sh --enable-tests
-  artifacts:
-    paths:
-      - $BUILD_DIR/
-    expire_in: 1 week
 
 test:
   stage: test
