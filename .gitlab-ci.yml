@@ -1,5 +1,5 @@
 stages:
-  - install-and-build
+  - install_and_build
   - test
   - cleanup
 
@@ -14,7 +14,7 @@ cache:
     - $BUILD_DIR/
     - lib/
 
-install-and-build:
+install_and_build:
   stage: install
   image: ubuntu:latest
   before_script:
