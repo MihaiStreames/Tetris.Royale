@@ -14,7 +14,7 @@ install_dependencies:
   image: ubuntu:latest
   before_script:
     - apt-get update
-    - apt-get install -y curl build-essential cmake git unzip libssl-dev libboost-all-dev
+    - apt-get install -y curl build-essential cmake git unzip libssl-dev libboost-all-dev libsqlite3-dev
   script:
     - chmod +x ./install.sh
     - ./install.sh --enable-tests
