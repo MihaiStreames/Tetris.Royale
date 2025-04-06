@@ -13,7 +13,8 @@ install_dependencies:
   stage: install
   image: ubuntu:latest
   before_script:
-    - apt-get update && apt-get install -y curl build-essential cmake git unzip
+    - apt-get update
+    - apt-get install -y curl build-essential cmake git unzip libssl-dev
   script:
     - chmod +x ./install.sh
     - ./install.sh --enable-tests
