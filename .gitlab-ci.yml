@@ -17,6 +17,11 @@ install-and-build:
   script:
     - chmod +x ./install.sh
     - ./install.sh --enable-tests
+  artifacts:
+    paths:
+      - $BUILD_DIR/
+      - lib/
+    expire_in: 1 hour
 
 test:
   stage: test
