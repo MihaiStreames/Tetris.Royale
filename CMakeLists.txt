@@ -11,7 +11,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Options
-option(TETRIS_ENABLE_TESTS "Enable tests" OFF)
 option(TETRIS_USE_SANITIZERS "Enable sanitizers in debug mode" OFF)
 
 # Set output directories
@@ -190,6 +189,14 @@ function(setup_sqlite)
     endif ()
 endfunction()
 
+include(FetchContent)
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/release-1.12.1.zip
+)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(googletest)
+
 # Fetch all dependencies
 setup_ftxui()
 setup_json()
@@ -355,18 +362,26 @@ target_compile_definitions(TetrisRoyaleClient PRIVATE
         BOOST_BEAST_HEADER_ONLY
 )
 
-# Install targets
-install(TARGETS
-        TetrisRoyaleMasterServer
-        TetrisRoyaleClient
-        DESTINATION bin
-)
+# 8. Tests
 
-# Optionally enable testing
-if (TETRIS_ENABLE_TESTS)
-    enable_testing()
-    add_subdirectory(tests)
-endif ()
+function(add_tetris_test TEST_FILE)
+  get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
+  add_executable(${TEST_NAME} ${TEST_FILE})
+  target_include_directories(${TEST_NAME} PRIVATE ${TETRIS_INCLUDE_DIR})
+  target_link_libraries(${TEST_NAME}
+    gtest_main
+    TetrisRoyaleCommon
+    TetrisRoyaleServerLogic
+  )
+  add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
+endfunction()
+
+file(GLOB TEST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+foreach(TEST_FILE ${TEST_FILES})
+  add_tetris_test(${TEST_FILE})
+endforeach()
+
+enable_testing()
 
 # Print configuration summary
 message(STATUS "CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")

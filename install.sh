@@ -26,7 +26,7 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --enable-tests)
-      CMAKE_ARGS="$CMAKE_ARGS -DTETRIS_ENABLE_TESTS=ON"
+      CMAKE_ARGS="$CMAKE_ARGS -DCMAKE_BUILD_TYPE=Release"
       RUN_TESTS=true
       shift
       ;;
