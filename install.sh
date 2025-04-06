@@ -93,6 +93,9 @@ if [ ! -f "$DEPS_SCRIPT" ]; then
     exit 1
 fi
 
+# Make the dependencies script executable
+chmod +x "$DEPS_SCRIPT"
+
 # Run the dependencies finder script
 run_timed_command "dependencies script" "$DEPS_SCRIPT"
 
