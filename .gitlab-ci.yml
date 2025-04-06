@@ -19,8 +19,9 @@ install-and-build:
     - ./install.sh --enable-tests
   artifacts:
     paths:
-      - $BUILD_DIR/
-      - lib/
+      - $BUILD_DIR/bin
+      - $BUILD_DIR/tests
+      - $BUILD_DIR/CTestTestfile.cmake
     expire_in: 1 hour
 
 test:
