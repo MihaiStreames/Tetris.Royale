@@ -1,0 +1,45 @@
+stages:
+  - install
+  - build
+  - test
+  - cleanup
+
+variables:
+  BUILD_DIR: "build"
+  CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release"
+  MAKE_ARGS: "-j$(nproc)"
+
+install_dependencies:
+  stage: install
+  image: ubuntu:latest
+  before_script:
+    - apt-get update && apt-get install -y curl build-essential cmake git unzip
+  script:
+    - chmod +x ./install.sh
+    - ./install.sh --enable-tests
+
+build:
+  stage: build
+  image: gcc:latest
+  script:
+    - mkdir -p $BUILD_DIR
+    - cd $BUILD_DIR
+    - cmake $CMAKE_ARGS ..
+    - make $MAKE_ARGS
+  artifacts:
+    paths:
+      - $BUILD_DIR
+
+test:
+  stage: test
+  image: gcc:latest
+  script:
+    - cd $BUILD_DIR
+    - ctest --output-on-failure
+  dependencies:
+    - build
+
+cleanup:
+  stage: cleanup
+  script:
+    - rm -rf $BUILD_DIR
