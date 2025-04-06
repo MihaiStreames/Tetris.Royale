@@ -81,6 +81,45 @@ After successfully building the project, you can run **Tetris Royale** as either
 
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more details.
 
+## Tests
+
+To ensure the project works as expected, you can run the unit tests included in the repository. Follow these steps to enable and execute the tests:
+
+### 1. Enable Tests During Installation
+
+When running the `install.sh` script, include the `--enable-tests` flag to enable the tests:
+
+```sh
+./install.sh --enable-tests
+```
+
+This will configure the project to include the test suite during the build process.
+
+### 2. Run the Tests
+
+After the build is complete, navigate to the `build` directory and run the tests using `ctest`:
+
+```sh
+cd build
+ctest --output-on-failure
+```
+
+This will execute all the tests and display detailed output for any failures.
+
+### 3. Manual Test Configuration (Optional)
+
+If you prefer to configure the tests manually, you can enable them directly with CMake:
+
+```sh
+mkdir build
+cd build
+cmake -DTETRIS_ENABLE_TESTS=ON ..
+make
+ctest --output-on-failure
+```
+
+This approach gives you more control over the build process.
+
 ## Acknowledgements
 
 This project was developed for the **`Projet d'informatique 2`** course **`INFO-F209`**. Special thanks to `Alexis Reynouard (ULB)`, `Simon Renard (ULB)` and `Hugo Callebaut (ULB)` for their guidance and support.
