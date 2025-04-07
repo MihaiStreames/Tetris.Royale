@@ -8,6 +8,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QFont>
+#include <QString>
 
 class LoginScreen : public QWidget {
 public:
