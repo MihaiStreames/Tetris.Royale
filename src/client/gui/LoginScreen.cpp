@@ -3,7 +3,8 @@
 LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
 
     // Create main layout
-    setStyleSheet("background-color:rgb(30, 38, 63); color:rgb(0, 238, 32);");
+    int orbitronFont = QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
+    setStyleSheet("background-color: transparent; color:rgb(202, 237, 241);");
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->setAlignment(Qt::AlignTop);
@@ -17,10 +18,12 @@ LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
     titleInputLayout->setSpacing(10);
 
     QLabel *title = new QLabel("TETRIS ROYALE", titleContainer);
-    QFont fontTitle("Andale Mono", 80);
+    QFont fontTitle("Orbitron", 80);
+    fontTitle.setLetterSpacing(QFont::AbsoluteSpacing, 6);
+    fontTitle.setBold(true);
     title->setAlignment(Qt::AlignHCenter);
     title->setFont(fontTitle);
-    title->setStyleSheet("border: 2px solid rgb(0, 238, 32); border-radius: 7px; padding: 7px;");
+    title->setStyleSheet("border: 2px solid rgb(0, 225, 255); border-radius: 7px; padding: 7px;");
     titleInputLayout->addWidget(title);
     
     // Username and password input boxes
@@ -37,7 +40,7 @@ LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
     titleInputLayout->addWidget(username);
     titleInputLayout->addWidget(password);
     
-    titleContainer->setStyleSheet("border: 2px solid rgb(0,238,32); padding: 10px; border-radius: 7px;");
+    titleContainer->setStyleSheet("border: 2px solid rgb(0,255,255); padding: 10px; border-radius: 7px;");
 
     mainLayout->addWidget(titleContainer);
 
@@ -51,14 +54,16 @@ LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
 
     QString buttonStyle = R"(
         QPushButton {
-            background-color:rgb(47, 59, 97);
-            border: 2px solid rgb(0, 255, 21);
-            border-radius: 5px;
-            padding: 8px;
+            font-family: 'Orbitron', sans-serif;
+            background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 88, 219, 150), stop:1 rgba(31, 203, 255, 150));
+            color: white;
+            border: 2px solid rgb(0, 225, 255);
+            border-radius: 10px;
+            padding: 10px 20px;
         }
 
         QPushButton:hover {
-            background-color:rgb(29, 30, 58);
+            background-color:qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 64, 182, 150), stop:1 rgba(0, 155, 226, 150));
         }
     )";
 
@@ -79,4 +84,15 @@ LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
     setLayout(mainLayout);
 
     setWindowTitle("Login Screen");
+}
+
+void LoginScreen::paintEvent(QPaintEvent *event) {
+    // Paints the background
+
+    QPainter painter(this);
+    QPixmap screenPixmap("./tetris_main.png");
+
+    painter.drawPixmap(this->rect(), screenPixmap);
+
+    QWidget::paintEvent(event);
 }
