@@ -46,7 +46,11 @@ Ensure you have **CMake** and a **C++ compiler** installed on your system. You c
 sh ./scripts/find_dependencies.sh
 ```
 
-This script will install any necessary libraries and tools for the project.
+This script will install any necessary libraries and tools for the project. You will then need to setup the environnement to let the CMake know where your dependencies are:
+
+```sh
+sh ./lib/setup-env.sh
+```
 
 ### 3. Build the Project
 
