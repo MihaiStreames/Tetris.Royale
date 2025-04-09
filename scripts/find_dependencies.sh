@@ -69,6 +69,7 @@ USING_SYSTEM_JSON=false
 USING_SYSTEM_SQLITE=false
 USING_SYSTEM_OPENSSL=false
 USING_SYSTEM_GTEST=false
+USING_SYSTEM_FTXUI=false
 
 # ==================================
 # Check and Install Boost

@@ -1,4 +1,4 @@
-# This is a revised version of mihai's CMake template,
+# This is a heavily revised version of mihai's CMake template,
 # rewritten by antoine to be more modular and easier to maintain <3
 
 # Project name and standard
@@ -58,9 +58,10 @@ find_lib_or_exit("Boost" "BOOST_ROOT")
 find_lib_or_exit("OpenSSL" "OPENSSL_ROOT")
 find_lib_or_exit("SQLite3" "SQLITE_ROOT")
 find_lib_or_exit("GTest" "GTEST_ROOT")
+find_lib_or_exit("nlohmann_json" "NLOHMANN_JSON_ROOT")
 
 
-# TODO : Setup this outside of the cmake
+# TODO : Setup this outside of the cmake (maybe? im super lazy)
 
 # Setup FTXUI
 function(setup_ftxui)
@@ -103,37 +104,7 @@ function(setup_ftxui)
         FetchContent_MakeAvailable(ftxui)
     endif ()
 endfunction()
-
-# Setup nlohmann_json
-function(setup_json)
-    find_package(nlohmann_json 3.10.5 QUIET)
-    if (nlohmann_json_FOUND)
-        message(STATUS "Found nlohmann_json: ${nlohmann_json_VERSION}")
-    else ()
-        # Check for environment variable pointing to local installation
-        if (DEFINED ENV{NLOHMANN_JSON_ROOT} AND EXISTS "$ENV{NLOHMANN_JSON_ROOT}/include/nlohmann/json.hpp")
-            message(STATUS "Using locally installed nlohmann_json from $ENV{NLOHMANN_JSON_ROOT}")
-            include_directories("$ENV{NLOHMANN_JSON_ROOT}/include")
-            # Create an imported target for nlohmann_json
-            add_library(nlohmann_json::nlohmann_json INTERFACE IMPORTED)
-            set_target_properties(nlohmann_json::nlohmann_json PROPERTIES
-                    INTERFACE_INCLUDE_DIRECTORIES "$ENV{NLOHMANN_JSON_ROOT}/include"
-            )
-        else ()
-            message(STATUS "nlohmann_json not found locally, fetching...")
-            FetchContent_Declare(json
-                    GIT_REPOSITORY https://github.com/nlohmann/json.git
-                    GIT_TAG v3.10.5
-                    GIT_SHALLOW ON
-            )
-            FetchContent_MakeAvailable(json)
-        endif ()
-    endif ()
-endfunction()
-
-# Fetch all dependencies
 setup_ftxui()
-setup_json()
 
 # Define the include directories structure
 set(TETRIS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -169,73 +140,64 @@ function(set_target_compile_options target)
     endif ()
 endfunction()
 
+# Compiler Libraries function
+function(add_tetris_library name type sources includes)
+    set(options "")
+    set(oneValueArgs "")
+    set(multiValueArgs libs)
+    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-# 1. Shared Common Library
+    add_library(${name} ${type} ${sources})
+    target_include_directories(${name} PUBLIC ${includes})
+
+    if (ARG_libs)
+        target_link_libraries(${name} PUBLIC ${ARG_libs})
+    endif ()
+
+    set_target_compile_options(${name})
+endfunction()
+
+# Compiler Executables function
+function(add_tetris_executable name sources includes)
+    set(options "")
+    set(oneValueArgs "")
+    set(multiValueArgs libs)
+    cmake_parse_arguments(ARG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    add_executable(${name} ${sources})
+    target_include_directories(${name} PUBLIC ${includes})
+
+    if (ARG_libs)
+        target_link_libraries(${name} PUBLIC ${ARG_libs})
+    endif ()
+
+    set_target_compile_options(${name})
+endfunction()
+
+
+# Files
 file(GLOB COMMON_SRC_FILES "${TETRIS_SRC_DIR}/common/*.cpp")
-add_library(TetrisRoyaleCommon ${COMMON_SRC_FILES})
-target_include_directories(TetrisRoyaleCommon PUBLIC "${TETRIS_INCLUDE_DIR}/common")
-set_target_compile_options(TetrisRoyaleCommon)
-
-# 2. Server Common Library
 file(GLOB SERVER_COMMON_SRC_FILES "${TETRIS_SRC_DIR}/common/server-common/*.cpp")
-add_library(TetrisRoyaleCommonServer ${SERVER_COMMON_SRC_FILES})
-target_include_directories(TetrisRoyaleCommonServer PUBLIC "${TETRIS_INCLUDE_DIR}/common/server-common")
-target_link_libraries(TetrisRoyaleCommonServer PUBLIC TetrisRoyaleCommon Boost::boost OpenSSL::Crypto nlohmann_json::nlohmann_json)
-set_target_compile_options(TetrisRoyaleCommonServer)
-
-# 3. Game Logic Library
 file(GLOB SERVER_LOGIC_SRC_FILES "${TETRIS_SRC_DIR}/server/server-game-logic/*.cpp")
-add_library(TetrisRoyaleGameLogic STATIC ${SERVER_LOGIC_SRC_FILES})
-target_include_directories(TetrisRoyaleGameLogic PUBLIC "${TETRIS_INCLUDE_DIR}/server/server-game-logic")
-target_link_libraries(TetrisRoyaleGameLogic PUBLIC TetrisRoyaleCommon)
-set_target_compile_options(TetrisRoyaleGameLogic)
-
-# 4. HTTP Server Library
 file(GLOB HTTP_SERVER_SRC_FILES "${TETRIS_SRC_DIR}/server/http-server/*.cpp")
-add_library(TetrisRoyaleHTTPServer STATIC ${HTTP_SERVER_SRC_FILES})
-target_include_directories(TetrisRoyaleHTTPServer PUBLIC "${TETRIS_INCLUDE_DIR}/server/http-server")
-target_link_libraries(TetrisRoyaleHTTPServer PUBLIC Boost::boost)
-set_target_compile_options(TetrisRoyaleHTTPServer)
-
-# 5. DB Server Library
 file(GLOB DB_SERVER_SRC_FILES "${TETRIS_SRC_DIR}/server/db-server/*.cpp")
-add_library(TetrisRoyaleDBServer STATIC ${DB_SERVER_SRC_FILES})
-target_include_directories(TetrisRoyaleDBServer PUBLIC "${TETRIS_INCLUDE_DIR}/server/db-server")
-target_link_libraries(TetrisRoyaleDBServer PUBLIC TetrisRoyaleHTTPServer TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost SQLite::SQLite3 OpenSSL::Crypto)
-set_target_compile_options(TetrisRoyaleDBServer)
-
-# 6. Tetris Server Library
 file(GLOB TETRIS_SERVER_SRC_FILES "${TETRIS_SRC_DIR}/server/tetris-server/*.cpp")
-add_library(TetrisRoyaleTetrisServer ${TETRIS_SERVER_SRC_FILES})
-target_include_directories(TetrisRoyaleTetrisServer PUBLIC "${TETRIS_INCLUDE_DIR}/server/tetris-server")
-target_link_libraries(TetrisRoyaleTetrisServer PUBLIC TetrisRoyaleGameLogic TetrisRoyaleCommonServer TetrisRoyaleCommon)
-set_target_compile_options(TetrisRoyaleTetrisServer)
-
-# 7. Master Server Executable
-add_executable(TetrisRoyaleMasterServer "${TETRIS_SRC_DIR}/server/MasterServer.cpp")
-target_include_directories(TetrisRoyaleMasterServer PUBLIC "${TETRIS_INCLUDE_DIR}/server")
-target_link_libraries(TetrisRoyaleMasterServer PUBLIC TetrisRoyaleTetrisServer TetrisRoyaleDBServer TetrisRoyaleCommon)
-set_target_compile_options(TetrisRoyaleMasterServer)
-
-# 8. Client Connectivity Library
 file(GLOB CLIENT_CONNECTIVITY_SRC_FILES "${TETRIS_SRC_DIR}/client/connectivity/*.cpp")
-add_library(TetrisRoyaleClientConnectivity ${CLIENT_CONNECTIVITY_SRC_FILES})
-target_include_directories(TetrisRoyaleClientConnectivity PUBLIC "${TETRIS_INCLUDE_DIR}/client/connectivity")
-target_link_libraries(TetrisRoyaleClientConnectivity PUBLIC nlohmann_json::nlohmann_json TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost)
-set_target_compile_options(TetrisRoyaleClientConnectivity)
-
-# 9. Client TUI Library
 file(GLOB CLIENT_TUI_SRC_FILES "${TETRIS_SRC_DIR}/client/tui/*.cpp" "${TETRIS_SRC_DIR}/client/tui/menus/*.cpp")
-add_library(TetrisRoyaleClientTUI ${CLIENT_TUI_SRC_FILES})
-target_include_directories(TetrisRoyaleClientTUI PUBLIC "${TETRIS_INCLUDE_DIR}/client/tui" "${TETRIS_INCLUDE_DIR}/client/tui/menus")
-target_link_libraries(TetrisRoyaleClientTUI PUBLIC TetrisRoyaleClientConnectivity ftxui::screen ftxui::dom ftxui::component)
-set_target_compile_options(TetrisRoyaleClientTUI)
 
-# 10. Client Executable
-add_executable(TetrisRoyaleClient "${TETRIS_SRC_DIR}/client/Client.cpp")
-target_include_directories(TetrisRoyaleClient PUBLIC "${TETRIS_INCLUDE_DIR}/client")
-target_link_libraries(TetrisRoyaleClient PUBLIC TetrisRoyaleClientTUI TetrisRoyaleClientConnectivity)
-set_target_compile_options(TetrisRoyaleClient)
+# Libraries
+add_tetris_library(TetrisRoyaleCommon "" "${COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common")
+add_tetris_library(TetrisRoyaleCommonServer "" "${SERVER_COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common/server-common" libs TetrisRoyaleCommon Boost::boost OpenSSL::Crypto nlohmann_json::nlohmann_json)
+add_tetris_library(TetrisRoyaleGameLogic STATIC "${SERVER_LOGIC_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/server-game-logic" libs TetrisRoyaleCommon)
+add_tetris_library(TetrisRoyaleHTTPServer STATIC "${HTTP_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/http-server" libs Boost::boost)
+add_tetris_library(TetrisRoyaleDBServer STATIC "${DB_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/db-server" libs TetrisRoyaleHTTPServer TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost SQLite::SQLite3 OpenSSL::Crypto)
+add_tetris_library(TetrisRoyaleTetrisServer "" "${TETRIS_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/tetris-server" libs TetrisRoyaleGameLogic TetrisRoyaleCommonServer TetrisRoyaleCommon)
+add_tetris_library(TetrisRoyaleClientConnectivity "" "${CLIENT_CONNECTIVITY_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/connectivity" libs nlohmann_json::nlohmann_json TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost)
+add_tetris_library(TetrisRoyaleClientTUI "" "${CLIENT_TUI_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/tui;${TETRIS_INCLUDE_DIR}/client/tui/menus" libs TetrisRoyaleClientConnectivity ftxui::screen ftxui::dom ftxui::component)
+
+# Executables
+add_tetris_executable(TetrisRoyaleMasterServer "${TETRIS_SRC_DIR}/server/MasterServer.cpp" "${TETRIS_INCLUDE_DIR}/server" libs TetrisRoyaleTetrisServer TetrisRoyaleDBServer TetrisRoyaleCommon)
+add_tetris_executable(TetrisRoyaleClient "${TETRIS_SRC_DIR}/client/Client.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientTUI TetrisRoyaleClientConnectivity)
 
 
 # ====================================================
