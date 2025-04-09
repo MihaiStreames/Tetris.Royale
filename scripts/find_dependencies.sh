@@ -11,6 +11,7 @@ NLOHMANN_JSON_VERSION="3.10.5"
 SQLITE_VERSION="3420000"
 OPENSSL_VERSION="3.5.0"
 GTEST_VERSION="release-1.12.1"
+FTXUI_VERSION="5.0.0"
 mkdir -p "$INSTALL_ROOT/downloads"
 
 
@@ -310,6 +311,48 @@ else
 fi
 
 # ==================================
+# Check and Install FTXUI
+# ==================================
+
+if check_system_lib "ftxui" "ftxui/component/component.hpp" ""; then
+    print_header "Using system FTXUI"
+    FTXUI_ROOT="/usr"
+    USING_SYSTEM_FTXUI=true
+elif [ -d "$INSTALL_ROOT/ftxui/include/ftxui" ]; then
+    print_header "Using previously installed FTXUI"
+    FTXUI_ROOT="$INSTALL_ROOT/ftxui"
+    USING_SYSTEM_FTXUI=true
+else
+    print_header "Installing FTXUI $FTXUI_VERSION locally"
+    FTXUI_ROOT="$INSTALL_ROOT/ftxui"
+    mkdir -p "$FTXUI_ROOT"
+
+    # Create installation directory
+    cd "$INSTALL_ROOT/downloads"
+
+    # Download and extract FTXUI
+    FTXUI_URL="https://github.com/ArthurSonzogni/FTXUI/releases/download/v${FTXUI_VERSION}/ftxui-${FTXUI_VERSION}-Linux.tar.gz"
+    FTXUI_ARCHIVE="ftxui-${FTXUI_VERSION}-Linux.tar.gz"
+
+    if [ ! -f "$FTXUI_ARCHIVE" ]; then
+        echo "Downloading FTXUI..."
+        curl -L "${FTXUI_URL}" -o "$FTXUI_ARCHIVE"
+    fi
+
+    echo "Extracting FTXUI..."
+    tar -xzf "$FTXUI_ARCHIVE" -C "$FTXUI_ROOT"
+
+    mv "$INSTALL_ROOT/ftxui/ftxui-${FTXUI_VERSION}-Linux/include" "$INSTALL_ROOT/ftxui/include"
+    mv "$INSTALL_ROOT/ftxui/ftxui-${FTXUI_VERSION}-Linux/lib" "$INSTALL_ROOT/ftxui/lib"
+
+    # Remove the temporary folder that was created during extraction
+    rm -rf "$INSTALL_ROOT/ftxui/ftxui-${FTXUI_VERSION}-Linux"
+
+    cd "$CURDIR"
+    echo "FTXUI installed successfully at ${FTXUI_ROOT}"
+fi
+
+# ==================================
 # Generate environment script
 # ==================================
 
@@ -333,6 +376,9 @@ fi
 if ! $USING_SYSTEM_GTEST; then
     CMAKE_PREFIX_PATH="${GTEST_ROOT}:${CMAKE_PREFIX_PATH}"
 fi
+if ! $USING_SYSTEM_FTXUI; then
+    CMAKE_PREFIX_PATH="${FTXUI_ROOT}:${CMAKE_PREFIX_PATH}"
+fi
 
 # remove trailing colon if exists (I had a fucking bug with this once and it took me a while to figure out)
 CMAKE_PREFIX_PATH=$(echo $CMAKE_PREFIX_PATH | sed 's/:$//')
@@ -350,6 +396,7 @@ ENV_SCRIPT="$INSTALL_ROOT/setup-env.sh"
     [ "$USING_SYSTEM_SQLITE" = false ] && echo "export SQLITE_ROOT=\"$SQLITE_ROOT\""
     [ "$USING_SYSTEM_OPENSSL" = false ] && echo "export OPENSSL_ROOT=\"$OPENSSL_ROOT\""
     [ "$USING_SYSTEM_GTEST" = false ] && echo "export GTEST_ROOT=\"$GTEST_ROOT\""
+    [ "$USING_SYSTEM_FTXUI" = false ] && echo "export FTXUI_ROOT=\"$FTXUI_ROOT\""
 
     # add CMAKE_PREFIX_PATH if it's set
     if [ -n "$CMAKE_PREFIX_PATH" ]; then
@@ -375,12 +422,14 @@ if $USING_SYSTEM_JSON; then echo "  - nlohmann_json"; fi
 if $USING_SYSTEM_SQLITE; then echo "  - SQLite"; fi
 if $USING_SYSTEM_OPENSSL; then echo "  - OpenSSL"; fi
 if $USING_SYSTEM_GTEST; then echo "  - GoogleTest"; fi
+if $USING_SYSTEM_FTXUI; then echo "  - FTXUI"; fi
 echo "Locally installed libraries:"
 if ! $USING_SYSTEM_BOOST; then echo "  - Boost: $BOOST_ROOT"; fi
 if ! $USING_SYSTEM_JSON; then echo "  - nlohmann_json: $NLOHMANN_JSON_ROOT"; fi
 if ! $USING_SYSTEM_SQLITE; then echo "  - SQLite: $SQLITE_ROOT"; fi
 if ! $USING_SYSTEM_OPENSSL; then echo "  - OpenSSL: $OPENSSL_ROOT"; fi
 if ! $USING_SYSTEM_GTEST; then echo "  - GoogleTest: $GTEST_ROOT"; fi
+if ! $USING_SYSTEM_FTXUI; then echo "  - FTXUI: $FTXUI_ROOT"; fi
 
 
 # end of the script

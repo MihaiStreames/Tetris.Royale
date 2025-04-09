@@ -59,11 +59,11 @@ find_lib_or_exit("Boost" "BOOST_ROOT")
 find_lib_or_exit("OpenSSL" "OPENSSL_ROOT")
 find_lib_or_exit("SQLite3" "SQLITE_ROOT")
 find_lib_or_exit("GTest" "GTEST_ROOT")
+find_lib_or_exit("ftxui" "FTXUI_ROOT")
 
 
-# TODO : Setup ftxui outside of the cmake (maybe? im super lazy)
 
-# Setup JSON
+# Setup JSON - TODO : do that properly (but for some reason it's hard af to do idfk what's the problem)
 function(setup_json)
     if (DEFINED ENV{NLOHMANN_JSON_ROOT} AND EXISTS "$ENV{NLOHMANN_JSON_ROOT}/include/nlohmann/json.hpp")
         message(STATUS "Using locally installed nlohmann_json from $ENV{NLOHMANN_JSON_ROOT}")
@@ -81,51 +81,7 @@ function(setup_json)
     message(STATUS "nlohmann_json found!")
     
 endfunction()
-
-# Setup FTXUI
-function(setup_ftxui)
-    # Try to find a pre-installed FTXUI
-    # Note: FTXUI doesn't provide standard CMake config files,
-    # so we'll need to fetch it if custom paths aren't provided
-    if (DEFINED ENV{FTXUI_ROOT} AND EXISTS "$ENV{FTXUI_ROOT}/include/ftxui")
-        message(STATUS "Using locally installed FTXUI from $ENV{FTXUI_ROOT}")
-        # Create imported targets for FTXUI
-        add_library(ftxui-screen STATIC IMPORTED)
-        add_library(ftxui-dom STATIC IMPORTED)
-        add_library(ftxui-component STATIC IMPORTED)
-
-        set_target_properties(ftxui-screen PROPERTIES
-                IMPORTED_LOCATION "$ENV{FTXUI_ROOT}/lib/libftxui-screen.a"
-                INTERFACE_INCLUDE_DIRECTORIES "$ENV{FTXUI_ROOT}/include")
-
-        set_target_properties(ftxui-dom PROPERTIES
-                IMPORTED_LOCATION "$ENV{FTXUI_ROOT}/lib/libftxui-dom.a"
-                INTERFACE_INCLUDE_DIRECTORIES "$ENV{FTXUI_ROOT}/include")
-
-        set_target_properties(ftxui-component PROPERTIES
-                IMPORTED_LOCATION "$ENV{FTXUI_ROOT}/lib/libftxui-component.a"
-                INTERFACE_INCLUDE_DIRECTORIES "$ENV{FTXUI_ROOT}/include")
-
-        # Create aliased targets
-        add_library(ftxui::screen ALIAS ftxui-screen)
-        add_library(ftxui::dom ALIAS ftxui-dom)
-        add_library(ftxui::component ALIAS ftxui-component)
-
-        # Add include directory globally
-        include_directories("$ENV{FTXUI_ROOT}/include")
-    else ()
-        message(STATUS "FTXUI not found locally, fetching...")
-        FetchContent_Declare(ftxui
-                GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
-                GIT_TAG v5.0.0
-                GIT_SHALLOW ON
-        )
-        FetchContent_MakeAvailable(ftxui)
-    endif ()
-endfunction()
-
 setup_json()
-setup_ftxui()
 
 
 
