@@ -4,7 +4,7 @@ set -e  # Exit immediately if a command exits with a non-zero status
 
 # Base directory (relative to script location)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BASE_DIR="$(realpath "$SCRIPT_DIR/../../")"
+BASE_DIR="$(realpath "$SCRIPT_DIR/../")"
 cd "$BASE_DIR"
 
 # List of acronyms to preserve their uppercase form
