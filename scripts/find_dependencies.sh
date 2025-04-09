@@ -119,19 +119,18 @@ fi
 # Check and Install nlohmann_json
 # ==================================
 
-if check_system_lib "nlohmann_json" "nlohmann/json.hpp" ""; then
+if check_system_lib "nlohmann" "nlohmann/json.hpp" ""; then
     print_header "Using system nlohmann_json"
     NLOHMANN_JSON_ROOT="/usr"
     USING_SYSTEM_JSON=true
-elif [ -d "$INSTALL_ROOT/json/include/nlohmann" ]; then
+elif [ -d "$INSTALL_ROOT/nlohmann/include/nlohmann" ]; then
     print_header "Using previously installed nlohmann_json"
-    NLOHMANN_JSON_ROOT="$INSTALL_ROOT/json"
+    NLOHMANN_JSON_ROOT="$INSTALL_ROOT/nlohmann"
 else
     print_header "Installing nlohmann_json $NLOHMANN_JSON_VERSION locally"
-    NLOHMANN_JSON_ROOT="$INSTALL_ROOT/json"
+    NLOHMANN_JSON_ROOT="$INSTALL_ROOT/nlohmann"
 
     # Create installation directory
-    mkdir -p "$NLOHMANN_JSON_ROOT/include"
     cd "$INSTALL_ROOT/downloads"
 
     # Download and extract
@@ -144,7 +143,7 @@ else
     fi
 
     echo "Extracting nlohmann_json..."
-    unzip -q -o "$JSON_ARCHIVE" -d "$NLOHMANN_JSON_ROOT/include"
+    unzip -q -o "$JSON_ARCHIVE" -d "$NLOHMANN_JSON_ROOT"
 
     cd "$CURDIR"
     echo "nlohmann_json installed successfully at ${NLOHMANN_JSON_ROOT}"
