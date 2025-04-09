@@ -53,38 +53,34 @@ macro(find_lib_or_exit lib_name env_var)
 
 endmacro()
 
-# Function to find header-only libraries (no CMake config or find_package support)
-function(add_header_only_lib lib_name header_subpath env_var)
-    if(DEFINED ENV{${env_var}})
-        set(${lib_name}_INCLUDE_DIR "$ENV{${env_var}}" CACHE PATH "Include path for ${lib_name}")
-        message(STATUS "Using locally installed ${lib_name} from $ENV{${env_var}}")
-    else()
-        find_path(${lib_name}_INCLUDE_DIR
-            NAMES ${header_subpath}
-            PATHS /usr/include /usr/local/include
-            NO_DEFAULT_PATH
-        )
-    endif()
-
-    if(NOT ${lib_name}_INCLUDE_DIR)
-        message(FATAL_ERROR "${lib_name} not found. Please install it or set the ${env_var} environment variable.")
-    endif()
-
-    add_library(${lib_name} INTERFACE)
-    target_include_directories(${lib_name} INTERFACE ${${lib_name}_INCLUDE_DIR})
-    message(STATUS "${lib_name} found!")
-endfunction()
 
 # Find dependencies
 find_lib_or_exit("Boost" "BOOST_ROOT")
 find_lib_or_exit("OpenSSL" "OPENSSL_ROOT")
 find_lib_or_exit("SQLite3" "SQLITE_ROOT")
 find_lib_or_exit("GTest" "GTEST_ROOT")
-add_header_only_lib(nlohmann_json "nlohmann/json.hpp" NLOHMANN_JSON_ROOT)
 
 
+# TODO : Setup ftxui outside of the cmake (maybe? im super lazy)
 
-# TODO : Setup this outside of the cmake (maybe? im super lazy)
+# Setup JSON
+function(setup_json)
+    if (DEFINED ENV{NLOHMANN_JSON_ROOT} AND EXISTS "$ENV{NLOHMANN_JSON_ROOT}/include/nlohmann/json.hpp")
+        message(STATUS "Using locally installed nlohmann_json from $ENV{NLOHMANN_JSON_ROOT}")
+        include_directories("$ENV{NLOHMANN_JSON_ROOT}/include")
+        add_library(nlohmann_json::nlohmann_json INTERFACE IMPORTED)
+        set_target_properties(nlohmann_json::nlohmann_json PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "$ENV{NLOHMANN_JSON_ROOT}/include")
+    else ()
+        # Search for nlohmann_json in the system
+        find_package(nlohmann_json REQUIRED)
+        if (NOT nlohmann_json_FOUND)
+            message(FATAL_ERROR "nlohmann_json not found, and no valid custom path provided. Please install it or set NLOHMANN_JSON_ROOT correctly.")
+        endif()
+    endif()
+
+    message(STATUS "nlohmann_json found!")
+    
+endfunction()
 
 # Setup FTXUI
 function(setup_ftxui)
@@ -127,11 +123,10 @@ function(setup_ftxui)
         FetchContent_MakeAvailable(ftxui)
     endif ()
 endfunction()
+
+setup_json()
 setup_ftxui()
 
-# Define the include directories structure
-set(TETRIS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(TETRIS_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 
 # Build components
@@ -197,6 +192,9 @@ function(add_tetris_executable name sources includes)
     set_target_compile_options(${name})
 endfunction()
 
+# Include & Source directories
+set(TETRIS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(TETRIS_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 # Files
 file(GLOB COMMON_SRC_FILES "${TETRIS_SRC_DIR}/common/*.cpp")
@@ -210,12 +208,12 @@ file(GLOB CLIENT_TUI_SRC_FILES "${TETRIS_SRC_DIR}/client/tui/*.cpp" "${TETRIS_SR
 
 # Libraries
 add_tetris_library(TetrisRoyaleCommon "" "${COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common")
-add_tetris_library(TetrisRoyaleCommonServer "" "${SERVER_COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common/server-common" libs TetrisRoyaleCommon Boost::boost OpenSSL::Crypto nlohmann_json)
+add_tetris_library(TetrisRoyaleCommonServer "" "${SERVER_COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common/server-common" libs TetrisRoyaleCommon Boost::boost OpenSSL::Crypto nlohmann_json::nlohmann_json)
 add_tetris_library(TetrisRoyaleGameLogic STATIC "${SERVER_LOGIC_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/server-game-logic" libs TetrisRoyaleCommon)
 add_tetris_library(TetrisRoyaleHTTPServer STATIC "${HTTP_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/http-server" libs Boost::boost)
 add_tetris_library(TetrisRoyaleDBServer STATIC "${DB_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/db-server" libs TetrisRoyaleHTTPServer TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost SQLite::SQLite3 OpenSSL::Crypto)
 add_tetris_library(TetrisRoyaleTetrisServer "" "${TETRIS_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/tetris-server" libs TetrisRoyaleGameLogic TetrisRoyaleCommonServer TetrisRoyaleCommon)
-add_tetris_library(TetrisRoyaleClientConnectivity "" "${CLIENT_CONNECTIVITY_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/connectivity" libs nlohmann_json TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost)
+add_tetris_library(TetrisRoyaleClientConnectivity "" "${CLIENT_CONNECTIVITY_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/connectivity" libs nlohmann_json::nlohmann_json TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost)
 add_tetris_library(TetrisRoyaleClientTUI "" "${CLIENT_TUI_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/tui;${TETRIS_INCLUDE_DIR}/client/tui/menus" libs TetrisRoyaleClientConnectivity ftxui::screen ftxui::dom ftxui::component)
 
 # Executables
