@@ -6,7 +6,14 @@ pipeline:
   image: ubuntu:latest
   before_script:
     - apt-get update
-    - apt-get install -y curl build-essential cmake git unzip libssl-dev
+    - apt-get install -y curl build-essential cmake git unzip
   script:
     - chmod +x ./install.sh
     - ./install.sh --enable-tests
+  cache:
+    key: "$CI_COMMIT_REF_NAME"  # allow caching for different branches
+    paths:
+      - lib/*
+    exclude:
+      - lib/downloads
+    expire_in: 1 week

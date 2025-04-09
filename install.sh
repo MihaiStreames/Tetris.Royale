@@ -123,15 +123,23 @@ fi
 # navigate to build directory
 cd "$BUILD_DIR"
 
-# and then finally run CMake and make
+# then finally run CMake and make
 run_timed_command "CMake configuration" "cmake $CMAKE_ARGS .."
 run_timed_command "build process" "make $MAKE_ARGS"
 
-# run tests if requested
+# clean the lib/downloads directory if it exists
+if [ -d "../lib/downloads" ]; then
+    print_header "Cleaning downloads directory"
+    echo "Removing existing lib/downloads directory..."
+    rm -rf ../lib/downloads
+fi
+
+# and finally run tests if requested
 if [ "$RUN_TESTS" = true ]; then
     print_header "Running tests"
     run_timed_command "test suite" "ctest --output-on-failure"
 fi
+
 
 # calculate and display total build time
 end_time=$(date +%s)
