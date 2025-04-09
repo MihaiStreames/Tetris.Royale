@@ -1,3 +1,5 @@
+# This is a GitLab CI/CD configuration file for building and testing TetrisRoyale.
+
 stages:
   - pipeline
 
