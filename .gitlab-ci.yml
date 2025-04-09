@@ -6,7 +6,7 @@ pipeline:
   image: ubuntu:latest
   before_script:
     - apt-get update
-    - apt-get install -y curl build-essential cmake git unzip
+    - apt-get install -y curl build-essential cmake git unzip  # essential packages for building the project
   script:
     - chmod +x ./install.sh
     - ./install.sh --enable-tests
