@@ -13,4 +13,5 @@ pipeline:
   cache:
     key: "$CI_COMMIT_REF_NAME"  # allow caching for different branches
     paths:
-      - lib/*
+      - lib/**/*  # cache the lib directory to all levels
+
