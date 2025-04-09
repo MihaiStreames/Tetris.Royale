@@ -110,6 +110,13 @@ fi
 echo "Sourcing environment from $DEPS_ENV_PATH"
 source "$DEPS_ENV_PATH"
 
+# run the environment setup script
+if [ ! -f "$DEPS_ENV_PATH" ]; then
+    echo "Error: Environment setup script not found at $DEPS_ENV_PATH"
+    exit 1
+fi
+run_timed_command "environment setup" "source $DEPS_ENV_PATH"
+
 # Clean build directory if requested
 if [ "$CLEAN_BUILD" = true ]; then
     print_header "Cleaning build directory"

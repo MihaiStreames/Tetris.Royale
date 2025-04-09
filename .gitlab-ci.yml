@@ -1,17 +1,12 @@
 stages:
   - pipeline
 
-variables:
-  BUILD_DIR: "build"
-  CMAKE_ARGS: "-DCMAKE_BUILD_TYPE=Release"
-  MAKE_ARGS: "-j$(nproc)"
-
 pipeline:
   stage: pipeline
   image: ubuntu:latest
   before_script:
     - apt-get update
-    - apt-get install -y curl build-essential cmake git unzip libssl-dev libboost-all-dev libsqlite3-dev
+    - apt-get install -y curl build-essential cmake git unzip libssl-dev
   script:
     - chmod +x ./install.sh
     - ./install.sh --enable-tests

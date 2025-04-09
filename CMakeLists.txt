@@ -5,6 +5,17 @@ cmake_minimum_required(VERSION 3.22...4.0)
 
 # Project name and standard
 project(TetrisRoyale VERSION 1.0.0 LANGUAGES CXX)
+
+# Append custom paths ONLY IF env vars are defined
+if(DEFINED ENV{CMAKE_PREFIX_PATH})
+    list(APPEND CMAKE_PREFIX_PATH $ENV{CMAKE_PREFIX_PATH})
+endif()
+
+# Boost fallback only if needed
+if(DEFINED ENV{BOOST_ROOT})
+    set(BOOST_ROOT $ENV{BOOST_ROOT})
+endif()
+
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
