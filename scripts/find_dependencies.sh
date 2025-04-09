@@ -321,7 +321,6 @@ if check_system_lib "ftxui" "ftxui/component/component.hpp" ""; then
 elif [ -d "$INSTALL_ROOT/ftxui/include/ftxui" ]; then
     print_header "Using previously installed FTXUI"
     FTXUI_ROOT="$INSTALL_ROOT/ftxui"
-    USING_SYSTEM_FTXUI=true
 else
     print_header "Installing FTXUI $FTXUI_VERSION locally"
     FTXUI_ROOT="$INSTALL_ROOT/ftxui"
