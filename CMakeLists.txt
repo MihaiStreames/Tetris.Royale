@@ -33,7 +33,7 @@ endif()
 include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
 
-# Function to find a package, fallback to local if not found
+# Function to find a package compatible with cmake, fallback to local if not found
 macro(find_lib_or_exit lib_name env_var)
     
     # Check if the environment variable is defined
@@ -53,12 +53,35 @@ macro(find_lib_or_exit lib_name env_var)
 
 endmacro()
 
+# Function to find header-only libraries (no CMake config or find_package support)
+function(add_header_only_lib lib_name header_subpath env_var)
+    if(DEFINED ENV{${env_var}})
+        set(${lib_name}_INCLUDE_DIR "$ENV{${env_var}}" CACHE PATH "Include path for ${lib_name}")
+        message(STATUS "Using locally installed ${lib_name} from $ENV{${env_var}}")
+    else()
+        find_path(${lib_name}_INCLUDE_DIR
+            NAMES ${header_subpath}
+            PATHS /usr/include /usr/local/include
+            NO_DEFAULT_PATH
+        )
+    endif()
+
+    if(NOT ${lib_name}_INCLUDE_DIR)
+        message(FATAL_ERROR "${lib_name} not found. Please install it or set the ${env_var} environment variable.")
+    endif()
+
+    add_library(${lib_name} INTERFACE)
+    target_include_directories(${lib_name} INTERFACE ${${lib_name}_INCLUDE_DIR})
+    message(STATUS "${lib_name} found!")
+endfunction()
+
 # Find dependencies
 find_lib_or_exit("Boost" "BOOST_ROOT")
 find_lib_or_exit("OpenSSL" "OPENSSL_ROOT")
 find_lib_or_exit("SQLite3" "SQLITE_ROOT")
 find_lib_or_exit("GTest" "GTEST_ROOT")
-find_lib_or_exit("nlohmann_json" "NLOHMANN_JSON_ROOT")
+add_header_only_lib(nlohmann_json "nlohmann/json.hpp" NLOHMANN_JSON_ROOT)
+
 
 
 # TODO : Setup this outside of the cmake (maybe? im super lazy)
@@ -187,12 +210,12 @@ file(GLOB CLIENT_TUI_SRC_FILES "${TETRIS_SRC_DIR}/client/tui/*.cpp" "${TETRIS_SR
 
 # Libraries
 add_tetris_library(TetrisRoyaleCommon "" "${COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common")
-add_tetris_library(TetrisRoyaleCommonServer "" "${SERVER_COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common/server-common" libs TetrisRoyaleCommon Boost::boost OpenSSL::Crypto nlohmann_json::nlohmann_json)
+add_tetris_library(TetrisRoyaleCommonServer "" "${SERVER_COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common/server-common" libs TetrisRoyaleCommon Boost::boost OpenSSL::Crypto nlohmann_json)
 add_tetris_library(TetrisRoyaleGameLogic STATIC "${SERVER_LOGIC_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/server-game-logic" libs TetrisRoyaleCommon)
 add_tetris_library(TetrisRoyaleHTTPServer STATIC "${HTTP_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/http-server" libs Boost::boost)
 add_tetris_library(TetrisRoyaleDBServer STATIC "${DB_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/db-server" libs TetrisRoyaleHTTPServer TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost SQLite::SQLite3 OpenSSL::Crypto)
 add_tetris_library(TetrisRoyaleTetrisServer "" "${TETRIS_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/tetris-server" libs TetrisRoyaleGameLogic TetrisRoyaleCommonServer TetrisRoyaleCommon)
-add_tetris_library(TetrisRoyaleClientConnectivity "" "${CLIENT_CONNECTIVITY_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/connectivity" libs nlohmann_json::nlohmann_json TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost)
+add_tetris_library(TetrisRoyaleClientConnectivity "" "${CLIENT_CONNECTIVITY_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/connectivity" libs nlohmann_json TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost)
 add_tetris_library(TetrisRoyaleClientTUI "" "${CLIENT_TUI_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/tui;${TETRIS_INCLUDE_DIR}/client/tui/menus" libs TetrisRoyaleClientConnectivity ftxui::screen ftxui::dom ftxui::component)
 
 # Executables
@@ -200,9 +223,9 @@ add_tetris_executable(TetrisRoyaleMasterServer "${TETRIS_SRC_DIR}/server/MasterS
 add_tetris_executable(TetrisRoyaleClient "${TETRIS_SRC_DIR}/client/Client.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientTUI TetrisRoyaleClientConnectivity)
 
 
-# ====================================================
-#                      Testing
-# ====================================================
+# ==================================================== #
+#                      Testing                         #
+# ==================================================== #
 function(add_tetris_test TEST_FILE)
   get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
   add_executable(${TEST_NAME} ${TEST_FILE})
