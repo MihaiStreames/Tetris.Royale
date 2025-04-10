@@ -3,6 +3,12 @@
 # dependency installation script for TetrisRoyale
 set -e
 
+# check if the script is run from the correct directory
+if [ ! -f "CMakeLists.txt" ]; then
+    echo "Error: This script must be run from the root directory of the project."
+    exit 1
+fi
+
 # configuration (versions and paths)
 CURDIR=$(pwd)
 INSTALL_ROOT="$CURDIR/lib"
@@ -13,6 +19,7 @@ OPENSSL_VERSION="3.5.0"
 GTEST_VERSION="release-1.12.1"
 FTXUI_VERSION="5.0.0"
 mkdir -p "$INSTALL_ROOT/downloads"
+NPROC=$(./scripts/get_nproc.sh)
 
 
 # few functions to help with the installation process
@@ -111,7 +118,7 @@ else
 
     # Build and install locally
     echo "Building and installing Boost (this may take a while)..."
-    ./b2 install --with-filesystem --with-system -j$(nproc)
+    ./b2 install --with-filesystem --with-system -j$(NPROC)
 
     cd "$CURDIR"
     echo "Boost installed successfully at ${BOOST_ROOT}"
@@ -251,7 +258,7 @@ else
     ./config --prefix="$OPENSSL_ROOT" no-shared
 
     echo "Building OpenSSL..."
-    make -j$(nproc)
+    make -j$(NPROC)
     make install_sw
 
     cd "$CURDIR"
@@ -303,7 +310,7 @@ else
 
     # Build and install GoogleTest
     echo "Building and installing GoogleTest (this may take a while)..."
-    make -j$(nproc)
+    make -j$(NPROC)
     make install
 
     cd "$CURDIR"

@@ -2,13 +2,60 @@
 # enable error handling
 set -e
 
+
+# function to print section headers
+print_header() {
+    local title="$1"
+    local line=$(printf "%0.s=" $(seq 1 50))
+    echo -e "\n$line"
+    echo "  $title"
+    echo "$line"
+}
+
+# function to time a command and report results
+run_timed_command() {
+
+    local command_name="$1"
+    local command="$2"
+    local start_time=$(date +%s)
+
+    print_header "Running $command_name"
+    echo "$ $command"
+
+    eval "$command"
+    local status=$?
+    local end_time=$(date +%s)
+    local duration=$((end_time - start_time))
+
+    echo "$command_name completed in $duration seconds."
+    return $status
+}
+
+
+# check if the script is run from the correct directory
+if [ ! -f "CMakeLists.txt" ]; then
+    echo "Error: This script must be run from the root directory of the project."
+    exit 1
+fi
+
+# check if the script 'scripts/get_nproc.sh' exists
+if [ ! -f "scripts/get_nproc.sh" ]; then
+    echo "Error: The script 'scripts/get_nproc.sh' is missing."
+    exit 1
+fi
+
+# make the script executable
+chmod +x scripts/get_nproc.sh
+
+
 # some variables
 BUILD_DIR="build"
 DEPENDENCIES_SCRIPT="./scripts/find_dependencies.sh"
 ENV_SETUP_SCRIPT="./lib/setup-env.sh"
 CMAKE_ARGS=""
-MAKE_ARGS="-j$(nproc)" # use all available CPU cores by default
+MAKE_ARGS="-j$(./scripts/get_nproc.sh)" # use all available CPU cores by default
 RUN_TESTS=false
+
 
 # parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -52,34 +99,6 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
-
-# function to print section headers
-print_header() {
-    local title="$1"
-    local line=$(printf "%0.s=" $(seq 1 50))
-    echo -e "\n$line"
-    echo "  $title"
-    echo "$line"
-}
-
-# function to time a command and report results
-run_timed_command() {
-
-    local command_name="$1"
-    local command="$2"
-    local start_time=$(date +%s)
-
-    print_header "Running $command_name"
-    echo "$ $command"
-
-    eval "$command"
-    local status=$?
-    local end_time=$(date +%s)
-    local duration=$((end_time - start_time))
-
-    echo "$command_name completed in $duration seconds."
-    return $status
-}
 
 # start measuring total time
 start_time=$(date +%s)
