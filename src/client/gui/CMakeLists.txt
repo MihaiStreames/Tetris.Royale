@@ -16,6 +16,7 @@ add_executable(TetrisGame
     main.cpp
     LoginScreen.cpp
     RegisterScreen.cpp
+    LeaderScreen.cpp
     resources/qrc_resources.cpp
 )
 
