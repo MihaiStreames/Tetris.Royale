@@ -1,7 +1,7 @@
-#ifndef LOGINSCREEN_HPP
-#define LOGINSCREEN_HPP
+#ifndef REGISTERSCREEN_HPP
+#define REGISTERSCREEN_HPP
 
-#include "RegisterScreen.hpp"
+#include "LoginScreen.hpp"
 
 #include <QtWidgets>
 #include <QLabel>
@@ -14,20 +14,19 @@
 #include <QPainter>
 #include <QFontDatabase>
 
-class LoginScreen : public QWidget {
+class RegisterScreen : public QWidget {
 public:
-    explicit LoginScreen(QWidget *parent = nullptr);
+    explicit RegisterScreen(QWidget *parent = nullptr);
 protected:
     void paintEvent(QPaintEvent *event) override;
 private:
     QLineEdit *username;
     QLineEdit *password;
-    QPushButton *loginButton;
+    QLineEdit *confirmedPassword;
     QPushButton *registerButton;
-    QPushButton *exitButton;
+    QPushButton *backToLoginButton;
 private slots:
-    void openRegisterScreen();
-    void exitScreen();
+    void openLoginScreen();
 };
 
 #endif

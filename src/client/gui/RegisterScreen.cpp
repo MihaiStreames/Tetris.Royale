@@ -1,6 +1,6 @@
-#include "LoginScreen.hpp"
+#include "RegisterScreen.hpp"
 
-LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
+RegisterScreen::RegisterScreen(QWidget *parent) : QWidget(parent){
 
     // Create main layout
     int orbitronFont = QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
@@ -26,7 +26,7 @@ LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
     title->setStyleSheet("border: 2px solid rgb(0, 225, 255); border-radius: 7px; padding: 7px;");
     titleInputLayout->addWidget(title);
     
-    // Username and password input boxes
+    // Username, password and password confirmation input boxes
     QFont fontInteractions("Andale Mono", 26);
     username = new QLineEdit(this);
     username->setPlaceholderText("Username");
@@ -37,8 +37,14 @@ LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
     password->setEchoMode(QLineEdit::Password);
     password->setFont(fontInteractions);
 
+    confirmedPassword = new QLineEdit(this);
+    confirmedPassword->setPlaceholderText("Confirm Password");
+    confirmedPassword->setEchoMode(QLineEdit::Password);
+    confirmedPassword->setFont(fontInteractions);
+
     titleInputLayout->addWidget(username);
     titleInputLayout->addWidget(password);
+    titleInputLayout->addWidget(confirmedPassword);
     
     titleContainer->setStyleSheet("border: 2px solid rgb(0,255,255); padding: 10px; border-radius: 7px;");
 
@@ -48,9 +54,8 @@ LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
     QHBoxLayout *buttonsLayout = new QHBoxLayout(this);
     buttonsLayout->setSpacing(10);
 
-    loginButton = new QPushButton("Login", this);
     registerButton = new QPushButton("Register", this);
-    exitButton = new QPushButton("Exit", this);
+    backToLoginButton = new QPushButton("Back to Login", this);
 
     QString buttonStyle = R"(
         QPushButton {
@@ -68,25 +73,22 @@ LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
         }
     )";
 
-    loginButton->setStyleSheet(buttonStyle);
     registerButton->setStyleSheet(buttonStyle);
-    exitButton->setStyleSheet(buttonStyle);
+    backToLoginButton->setStyleSheet(buttonStyle);
 
-    buttonsLayout->addWidget(loginButton);
     buttonsLayout->addWidget(registerButton);
-    buttonsLayout->addWidget(exitButton);
+    buttonsLayout->addWidget(backToLoginButton);
 
-    connect(registerButton, &QPushButton::clicked, this, &LoginScreen::openRegisterScreen);
-    connect(exitButton, &QPushButton::clicked, this, &LoginScreen::exitScreen);
+    connect(backToLoginButton, &QPushButton::clicked, this, &RegisterScreen::openLoginScreen);
 
     mainLayout->addLayout(buttonsLayout);
 
     setLayout(mainLayout);
 
-    setWindowTitle("Login Screen");
+    setWindowTitle("Register Screen");
 }
 
-void LoginScreen::paintEvent(QPaintEvent *event) {
+void RegisterScreen::paintEvent(QPaintEvent *event) {
     // Paints the background
 
     QPainter painter(this);
@@ -97,17 +99,11 @@ void LoginScreen::paintEvent(QPaintEvent *event) {
     QWidget::paintEvent(event);
 }
 
-void LoginScreen::openRegisterScreen(){
-    // Opens the register screen and closes the login screen when clicked
+void RegisterScreen::openLoginScreen(){
+    // Opens the login screen and closes the register screen when clicked
 
-    RegisterScreen *registerScreen = new RegisterScreen;
-    registerScreen->showMaximized();
-
-    this->hide();
-}
-
-void LoginScreen::exitScreen(){
-    // Closes the app
+    LoginScreen *loginScreen = new LoginScreen;
+    loginScreen->showMaximized();
 
     this->close();
 }
