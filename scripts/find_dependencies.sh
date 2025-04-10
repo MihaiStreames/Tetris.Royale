@@ -329,30 +329,34 @@ elif [ -d "$INSTALL_ROOT/ftxui/include/ftxui" ]; then
     print_header "Using previously installed FTXUI"
     FTXUI_ROOT="$INSTALL_ROOT/ftxui"
 else
+
     print_header "Installing FTXUI $FTXUI_VERSION locally"
     FTXUI_ROOT="$INSTALL_ROOT/ftxui"
-    mkdir -p "$FTXUI_ROOT"
-
-    # Create installation directory
+    
     cd "$INSTALL_ROOT/downloads"
 
-    # Download and extract FTXUI
-    FTXUI_URL="https://github.com/ArthurSonzogni/FTXUI/releases/download/v${FTXUI_VERSION}/ftxui-${FTXUI_VERSION}-Linux.tar.gz"
-    FTXUI_ARCHIVE="ftxui-${FTXUI_VERSION}-Linux.tar.gz"
+    FTXUI_ZIP="ftxui-${FTXUI_VERSION}.zip"
+    FTXUI_URL="https://github.com/ArthurSonzogni/FTXUI/archive/refs/tags/v${FTXUI_VERSION}.zip"
 
-    if [ ! -f "$FTXUI_ARCHIVE" ]; then
-        echo "Downloading FTXUI..."
-        curl -L "${FTXUI_URL}" -o "$FTXUI_ARCHIVE"
+    if [ ! -f "$FTXUI_ZIP" ]; then
+        echo "Downloading FTXUI source..."
+        curl -L "$FTXUI_URL" -o "$FTXUI_ZIP"
     fi
 
     echo "Extracting FTXUI..."
-    tar -xzf "$FTXUI_ARCHIVE" -C "$FTXUI_ROOT"
+    unzip -q -o "$FTXUI_ZIP"
 
-    mv "$INSTALL_ROOT/ftxui/ftxui-${FTXUI_VERSION}-Linux/include" "$INSTALL_ROOT/ftxui/include"
-    mv "$INSTALL_ROOT/ftxui/ftxui-${FTXUI_VERSION}-Linux/lib" "$INSTALL_ROOT/ftxui/lib"
+    # Build and install
+    FTXUI_SRC_DIR="$INSTALL_ROOT/downloads/FTXUI-${FTXUI_VERSION}"
+    mkdir -p "$FTXUI_SRC_DIR/build"
+    cd "$FTXUI_SRC_DIR/build"
 
-    # Remove the temporary folder that was created during extraction
-    rm -rf "$INSTALL_ROOT/ftxui/ftxui-${FTXUI_VERSION}-Linux"
+    echo "Configuring FTXUI..."
+    cmake .. -DCMAKE_INSTALL_PREFIX="$FTXUI_ROOT"
+
+    echo "Building FTXUI..."
+    make -j"${NPROC}"
+    make install
 
     cd "$CURDIR"
     echo "FTXUI installed successfully at ${FTXUI_ROOT}"
