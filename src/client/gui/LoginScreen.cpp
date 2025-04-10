@@ -3,7 +3,7 @@
 LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
 
     // Create main layout
-    int orbitronFont = QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
+    QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
     setStyleSheet("background-color: transparent; color:rgb(202, 237, 241);");
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
