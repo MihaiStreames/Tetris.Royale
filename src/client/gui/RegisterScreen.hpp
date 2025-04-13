@@ -2,6 +2,8 @@
 #define REGISTERSCREEN_HPP
 
 #include "LoginScreen.hpp"
+#include "../../../include/client/connectivity/ClientSession.hpp"
+#include "../../../include/client/connectivity/Common.hpp"
 
 #include <QtWidgets>
 #include <QLabel>
@@ -13,6 +15,7 @@
 #include <QString>
 #include <QPainter>
 #include <QFontDatabase>
+#include <QMessageBox>
 
 class RegisterScreen : public QWidget {
 public:
@@ -27,6 +30,7 @@ private:
     QPushButton *backToLoginButton;
 private slots:
     void openLoginScreen();
+    void registerUser();
 };
 
 #endif

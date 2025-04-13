@@ -18,6 +18,8 @@ add_executable(TetrisGame
     RegisterScreen.cpp
     LeaderScreen.cpp
     resources/qrc_resources.cpp
+    ../connectivity/ClientSession.cpp
+    ../../common/Common.cpp
 )
 
 # Libraries

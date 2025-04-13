@@ -80,6 +80,7 @@ RegisterScreen::RegisterScreen(QWidget *parent) : QWidget(parent){
     buttonsLayout->addWidget(backToLoginButton);
 
     connect(backToLoginButton, &QPushButton::clicked, this, &RegisterScreen::openLoginScreen);
+    connect(registerButton, &QPushButton::clicked, this, &RegisterScreen::registerUser);
 
     mainLayout->addLayout(buttonsLayout);
 
@@ -106,4 +107,41 @@ void RegisterScreen::openLoginScreen(){
     loginScreen->showMaximized();
 
     this->close();
+}
+
+void RegisterScreen::registerUser(){
+    // Registers a user when "Register" button clicked
+
+    // Get user input
+    QString usernameInput = username->text();
+    QString passwordInput = password->text();
+    QString confirmedPasswordInput = confirmedPassword->text();
+
+    // Check possible errors
+    if (usernameInput.empty() || passwordInput.empty() || confirmedPasswordInput.empty()) {
+        QMessageBox::warning(this, "Error", "All fields are required.");
+        return;
+    }
+
+    if (passwordInput != confirmedPasswordInput) {
+        QMessageBox::warning(this, "Error", "Passwords do nto match.");
+        return;
+    }
+
+    // Try to register the player
+    StatusCode result = session.registerPlayer(username, password);
+
+    if (result == StatusCode::SUCCESS) {
+        openLoginScreen();
+    
+    // if the username is already taken, show an error message
+    } else if (result == StatusCode::ERROR_USERNAME_TAKEN) {
+        QMessageBox::warning(this, "Error", "Username already taken.");
+        return;
+
+    // if there was an error, show a generic error message
+    } else {
+        QMessageBox::warning(this, "Error", "Registration failed. Please try again.");
+        return;
+    }
 }
