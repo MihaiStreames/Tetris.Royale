@@ -170,11 +170,11 @@ add_tetris_library(TetrisRoyaleHTTPServer STATIC "${HTTP_SERVER_SRC_FILES}" "${T
 add_tetris_library(TetrisRoyaleDBServer STATIC "${DB_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/db-server" libs TetrisRoyaleHTTPServer TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost SQLite::SQLite3 OpenSSL::Crypto)
 add_tetris_library(TetrisRoyaleTetrisServer "" "${TETRIS_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/tetris-server" libs TetrisRoyaleGameLogic TetrisRoyaleCommonServer TetrisRoyaleCommon)
 add_tetris_library(TetrisRoyaleClientConnectivity "" "${CLIENT_CONNECTIVITY_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/connectivity" libs nlohmann_json::nlohmann_json TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost)
-add_tetris_library(TetrisRoyaleClientTUI "" "${CLIENT_TUI_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/tui;${TETRIS_INCLUDE_DIR}/client/tui/menus" libs TetrisRoyaleClientConnectivity ftxui::screen ftxui::dom ftxui::component)
+add_tetris_library(TetrisRoyaleClientTUILib "" "${CLIENT_TUI_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/tui;${TETRIS_INCLUDE_DIR}/client/tui/menus" libs TetrisRoyaleClientConnectivity ftxui::screen ftxui::dom ftxui::component)
 
 # Executables
 add_tetris_executable(TetrisRoyaleMasterServer "${TETRIS_SRC_DIR}/server/MasterServer.cpp" "${TETRIS_INCLUDE_DIR}/server" libs TetrisRoyaleTetrisServer TetrisRoyaleDBServer TetrisRoyaleCommon)
-add_tetris_executable(TetrisRoyaleClient "${TETRIS_SRC_DIR}/client/Client.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientTUI TetrisRoyaleClientConnectivity)
+add_tetris_executable(TetrisRoyaleClientTUI "${TETRIS_SRC_DIR}/client/ClientTUI.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientTUILib TetrisRoyaleClientConnectivity)
 
 
 # ==================================================== #

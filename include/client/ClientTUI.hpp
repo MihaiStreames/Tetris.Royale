@@ -7,6 +7,6 @@
 #include "MenuHandler.hpp"
 
 
-// This is the Client entry point
+// This is the Client TUI entry point
 int main(int argc, char *argv[]);
 
