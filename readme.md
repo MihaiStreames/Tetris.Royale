@@ -1,10 +1,12 @@
+<!-- markdownlint-disable MD033 -->
+
 # Tetris Royale
 
 Welcome to **Tetris Royale**, a modern multiplayer version of the classic **Tetris** game. This project is developed using **C++** and **CMake**, and it incorporates a range of libraries such as **FTXUI**, **Boost**, **Qt5**, and others to provide an immersive and scalable gaming experience.
 
 <div align="center">
-  <img src="./assets/screenshots/ingame.png" width="45%" />
-  <img src="./assets/screenshots/lobby.png" width="45%" />
+  <img src="./assets/screenshots/ingame.png" alt="Ingame screenshot" width="45%" height="auto" />
+  <img src="./assets/screenshots/lobby.png" alt="Lobby screenshot" width="45%" height="auto" />
 </div>
 
 ---
@@ -19,7 +21,7 @@ For further details, please refer to the following documents:
 
 - **Battle Royale**: Play against up to 8 other players in real-time!
 - **Modern C++**: Developed with modern C++ features, following an **Object-Oriented Programming (OOP)** approach.
-- **Cross-Platform**: The project is designed to be cross-platform, allowing you to build and run it on various platforms (MacOS, Unix, Terminux, ...) using **CMake**.
+- **Cross-Platform**: The project is designed to be cross-platform, allowing you to build and run it on various platforms (i.e. MacOS, Unix, Terminux) using **CMake**.
 - **Cross-Interface**: The client can be launched either in a terminal or with a graphical user interface (GUI) for a better experience.
 
 ## Installation
