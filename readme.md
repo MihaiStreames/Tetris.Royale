@@ -7,6 +7,7 @@ Welcome to **Tetris Royale**, a modern multiplayer version of the classic **Tetr
 <div align="center">
   <img src="./assets/screenshots/ingame.png" alt="Ingame screenshot" width="45%" height="auto" />
   <img src="./assets/screenshots/lobby.png" alt="Lobby screenshot" width="45%" height="auto" />
+  <p align="center"><em>In-game view and multiplayer lobby</em></p>
 </div>
 
 ---
