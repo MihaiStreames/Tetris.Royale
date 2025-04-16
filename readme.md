@@ -1,6 +1,13 @@
 # Tetris Royale
 
-Welcome to **Tetris Royale**, a modern multiplayer version of the classic **Tetris** game. This project is developed using **C++** and **CMake**, and it incorporates a range of libraries such as **FTXUI**, **Boost**, and others to provide an immersive and scalable gaming experience.
+Welcome to **Tetris Royale**, a modern multiplayer version of the classic **Tetris** game. This project is developed using **C++** and **CMake**, and it incorporates a range of libraries such as **FTXUI**, **Boost**, **Qt5**, and others to provide an immersive and scalable gaming experience.
+
+<div align="center">
+  <img src="./assets/screenshots/ingame.png" width="45%" />
+  <img src="./assets/screenshots/lobby.png" width="45%" />
+</div>
+
+---
 
 For further details, please refer to the following documents:
 
@@ -10,13 +17,14 @@ For further details, please refer to the following documents:
 
 ## Features
 
-- **Battle Royale**: Play against up to 9 other players in real-time!
+- **Battle Royale**: Play against up to 8 other players in real-time!
 - **Modern C++**: Developed with modern C++ features, following an **Object-Oriented Programming (OOP)** approach.
-- **Cross-Platform**: The project is designed to be cross-platform, allowing you to build and run it on various platforms using **CMake**.
+- **Cross-Platform**: The project is designed to be cross-platform, allowing you to build and run it on various platforms (MacOS, Unix, Terminux, ...) using **CMake**.
+- **Cross-Interface**: The client can be launched either in a terminal or with a graphical user interface (GUI) for a better experience.
 
 ## Installation
 
-Ensure you have **CMake** and a **C++ compiler** installed on your system, as well as the `unzip` package.
+Ensure you have **CMake** and a **C++ compiler** installed on your system, as well as the `unzip` and `curl` packages.
 To get **Tetris Royale** up and running on your machine, you must use the `install.sh` installation script:
 
 ```sh
@@ -78,7 +86,7 @@ After successfully building the project, you can run **Tetris Royale** as either
 - For **Client** (to connect to the server and play):
 
     ```sh
-    ./bin/TetrisRoyaleClient
+    ./bin/TetrisRoyaleClientTUI
     ```
 
 ## License
