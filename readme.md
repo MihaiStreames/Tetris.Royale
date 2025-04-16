@@ -13,7 +13,7 @@ For further details, please refer to the following documents:
 
 - [`./team/enonce.pdf`](./team/enonce.pdf)
 - [`./team/consignes.pdf`](./team/consignes.pdf)
-- [`./team/srd/srd.pdf`](./team/srd/srd.pdf)
+- [`./team/srd/srd.pdf`](./team/srd.pdf)
 
 ## Features
 
