@@ -34,7 +34,7 @@ include(FetchContent)
 set(FETCHCONTENT_QUIET OFF)
 
 # Function to find a package compatible with cmake, fallback to local if not found
-macro(find_lib_or_exit lib_name env_var)
+macro(find_lib_or_exit lib_name env_var components)
     
     # Check if the environment variable is defined
     if(DEFINED ENV{${env_var}})
@@ -43,7 +43,7 @@ macro(find_lib_or_exit lib_name env_var)
     endif()
 
     # then we use the standard find_package method
-    find_package(${lib_name} REQUIRED)
+    find_package(${lib_name} REQUIRED ${components})
 
     if(NOT ${lib_name}_FOUND)
         message(FATAL_ERROR "${lib_name} not found, and no valid custom path provided. Please install it or set ${env_var} correctly.")
@@ -55,12 +55,12 @@ endmacro()
 
 
 # Find dependencies
-find_lib_or_exit("Boost" "BOOST_ROOT")
-find_lib_or_exit("OpenSSL" "OPENSSL_ROOT")
-find_lib_or_exit("SQLite3" "SQLITE_ROOT")
-find_lib_or_exit("GTest" "GTEST_ROOT")
-find_lib_or_exit("ftxui" "FTXUI_ROOT")
-
+find_lib_or_exit("Boost" "BOOST_ROOT" "")
+find_lib_or_exit("OpenSSL" "OPENSSL_ROOT" "")
+find_lib_or_exit("SQLite3" "SQLITE_ROOT" "")
+find_lib_or_exit("GTest" "GTEST_ROOT" "")
+find_lib_or_exit("ftxui" "FTXUI_ROOT" "")
+find_lib_or_exit("Qt5" "QT5_ROOT" "Core;Gui;Widgets")
 
 
 # Setup JSON - TODO : do that properly (but for some reason it's hard af to do idfk what's the problem)
@@ -175,6 +175,7 @@ add_tetris_library(TetrisRoyaleClientTUILib "" "${CLIENT_TUI_SRC_FILES}" "${TETR
 # Executables
 add_tetris_executable(TetrisRoyaleMasterServer "${TETRIS_SRC_DIR}/server/MasterServer.cpp" "${TETRIS_INCLUDE_DIR}/server" libs TetrisRoyaleTetrisServer TetrisRoyaleDBServer TetrisRoyaleCommon)
 add_tetris_executable(TetrisRoyaleClientTUI "${TETRIS_SRC_DIR}/client/ClientTUI.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientTUILib TetrisRoyaleClientConnectivity)
+add_tetris_executable(TetrisRoyaleClientGUI "${TETRIS_SRC_DIR}/client/ClientGUI.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientConnectivity Qt5::Widgets Qt5::Gui Qt5::Core)
 
 
 # ==================================================== #

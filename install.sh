@@ -169,6 +169,7 @@ print_header "Build Summary"
 echo "Build completed successfully in $total_time seconds!"
 echo "You can run the application with:"
 echo "  ./$BUILD_DIR/bin/TetrisRoyaleClientTUI"
+echo "  ./$BUILD_DIR/bin/TetrisRoyaleClientGUI"
 echo "  ./$BUILD_DIR/bin/TetrisRoyaleMasterServer"
 echo -e "\nBuilt executables:"
 find . -maxdepth 1 -type f -executable -not -name "*.o" -not -name "*.a" | sort

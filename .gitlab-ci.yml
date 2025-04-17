@@ -9,6 +9,7 @@ pipeline:
   before_script:
     - apt-get update
     - apt-get install -y curl build-essential cmake unzip  # essential packages for building the project
+    - apt-get install -y qtbase5-dev qtbase5-dev-tools qtchooser qt5-qmake qtbase5-dev-tools  # qt packages
   script:
     - chmod +x ./install.sh
     - ./install.sh --enable-tests
