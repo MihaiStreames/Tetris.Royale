@@ -5,8 +5,8 @@
 Welcome to **Tetris Royale**, a modern multiplayer version of the classic **Tetris** game. This project is developed using **C++** and **CMake**, and it incorporates a range of libraries such as **FTXUI**, **Boost**, **Qt5**, and others to provide an immersive and scalable gaming experience.
 
 <div align="center">
-  <img src="./assets/screenshots/ingame.png" alt="Ingame screenshot" width="45%" height="auto" />
-  <img src="./assets/screenshots/lobby.png" alt="Lobby screenshot" width="45%" height="auto" />
+  <img src="./assets/screenshots/ingame.png" alt="Ingame screenshot" width="26%" height="100%" />
+  <img src="./assets/screenshots/lobby.png" alt="Lobby screenshot" width="65%" height="100%" />
   <p align="center"><em>In-game view and multiplayer lobby</em></p>
 </div>
 
