@@ -1,8 +1,9 @@
 <!-- markdownlint-disable MD033 MD041 -->
 
+<!-- pretty badges -->
 <div align="center">
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License Badge"/>
-  <img src="https://gitlab.ulb.be/infof209/2024-25/group-1/badges/main/pipeline.svg" alt="Pipeline Status"/>
+  <img src="https://gitlab.ulb.be/infof209/2024-25/group-1/badges/main/pipeline.svg" alt="Pipeline Badge"/>
 </div>
 
 # 🎮 Tetris Royale
@@ -10,8 +11,8 @@
 Welcome to **Tetris Royale**, a modern multiplayer version of the classic **Tetris** game. This project is developed using **C++** and **CMake**, and it incorporates a range of libraries such as **FTXUI**, **Boost**, **Qt5**, and others to provide an immersive and scalable gaming experience.
 
 <div align="center">
-  <img src="./res/screenshots/ingame.png" alt="Ingame screenshot" width="26%" height="100%" />
-  <img src="./res/screenshots/lobby.png" alt="Lobby screenshot" width="65%" height="100%" />
+  <img src="./res/screenshots/ingame.png" alt="Ingame screenshot" width="40%" />
+  <img src="./res/screenshots/lobby.png" alt="Lobby screenshot" width="59%" />
   <p align="center"><em>In-game view and multiplayer lobby</em></p>
 </div>
 
