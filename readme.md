@@ -2,7 +2,10 @@
 
 <!-- pretty badges -->
 <div align="center">
-  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License Badge"/>
+  <img src="https://img.shields.io/badge/Version-1.0.0_alpha-red" alt="Version Badge">
+  <img src="https://img.shields.io/badge/License-MIT-dark_green.svg" alt="License Badge"/>
+  <img src="https://img.shields.io/badge/Language-C++-blue" alt="Language Badge"/>
+  <img src="https://img.shields.io/badge/School-ULB-yellow" alt="School Badge"/>
   <img src="https://gitlab.ulb.be/infof209/2024-25/group-1/badges/main/pipeline.svg" alt="Pipeline Badge"/>
 </div>
 
@@ -13,7 +16,7 @@ Welcome to **Tetris Royale**, a modern multiplayer version of the classic **Tetr
 <div align="center">
   <img src="./res/screenshots/ingame.png" alt="Ingame screenshot" width="40%" />
   <img src="./res/screenshots/lobby.png" alt="Lobby screenshot" width="59%" />
-  <p align="center"><em>In-game view and multiplayer lobby</em></p>
+  <p align="center"><em>In-game view and lobby browser</em></p>
 </div>
 
 ---
@@ -34,11 +37,11 @@ For further details, please refer to the following documents:
 ## 💻 Installation
 
 Ensure you have **CMake** and a **C++ compiler** installed on your system, as well as the `unzip` and `curl` packages.
-Qt5 also needs to be pre-installed. You can install it with your package manager, such as `apt` or `pacman`.
+**`Qt5`** also needs to be pre-installed. You can install it with your package manager, such as `apt` or `pacman`.
 To get **Tetris Royale** up and running on your machine, you must use the `install.sh` installation script:
 
 ```sh
-./install.sh
+sh ./install.sh
 ```
 
 This should install all the **dependencies**, launch the **CMake** and the **Makefile** to build the project. If this fails, you might want to use the **`Manual Installation Guide`** for this part.
@@ -90,13 +93,14 @@ After successfully building the project, you can run **Tetris Royale** as either
 - For **Server** (to host the game):
 
     ```sh
-    ./bin/TetrisRoyaleMasterServer
+    sh ./bin/TetrisRoyaleMasterServer
     ```
 
 - For **Client** (to connect to the server and play):
 
     ```sh
-    ./bin/TetrisRoyaleClientTUI
+    sh ./bin/TetrisRoyaleClientTUI  # Terminal version
+    sh ./bin/TetrisRoyaleClientGUI  # GUI version
     ```
 
 ## 📄 License
@@ -112,7 +116,7 @@ To ensure the project works as expected, you can run the unit tests included in 
 When running the `install.sh` script, include the `--enable-tests` flag to enable the tests:
 
 ```sh
-./install.sh --enable-tests
+sh ./install.sh --enable-tests
 ```
 
 This will configure the project to include the test suite during the build process.
