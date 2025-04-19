@@ -192,8 +192,8 @@ function(add_tetris_test TEST_FILE)
   add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 endfunction()
 
-# Create a test executable for each test file in /tests directory
-file(GLOB TEST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+# Create a test executable for each test file in /test directory
+file(GLOB TEST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp")
 foreach(TEST_FILE ${TEST_FILES})
   add_tetris_test(${TEST_FILE})
 endforeach()
