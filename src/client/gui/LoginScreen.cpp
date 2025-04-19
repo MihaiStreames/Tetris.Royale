@@ -1,6 +1,6 @@
 #include "LoginScreen.hpp"
 
-LoginScreen::LoginScreen(QWidget *parent) : QWidget(parent){
+LoginScreen::LoginScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){
 
     // Create main layout
     QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
@@ -90,7 +90,7 @@ void LoginScreen::paintEvent(QPaintEvent *event) {
     // Paints the background
 
     QPainter painter(this);
-    QPixmap screenPixmap("resources/tetris_main.png");
+    QPixmap screenPixmap("../resources/tetris_main.png");
 
     painter.drawPixmap(this->rect(), screenPixmap);
 
@@ -100,7 +100,7 @@ void LoginScreen::paintEvent(QPaintEvent *event) {
 void LoginScreen::openRegisterScreen(){
     // Opens the register screen and closes the login screen when clicked
 
-    RegisterScreen *registerScreen = new RegisterScreen;
+    RegisterScreen *registerScreen = new RegisterScreen(session);
     registerScreen->showMaximized();
 
     this->hide();

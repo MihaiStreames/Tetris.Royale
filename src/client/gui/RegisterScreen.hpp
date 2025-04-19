@@ -2,8 +2,8 @@
 #define REGISTERSCREEN_HPP
 
 #include "LoginScreen.hpp"
-#include "../../../include/client/connectivity/ClientSession.hpp"
-#include "../../../include/client/connectivity/Common.hpp"
+#include "ClientSession.hpp"
+#include "Common.hpp"
 
 #include <QtWidgets>
 #include <QLabel>
@@ -19,10 +19,11 @@
 
 class RegisterScreen : public QWidget {
 public:
-    explicit RegisterScreen(QWidget *parent = nullptr);
+    explicit RegisterScreen(ClientSession &session, QWidget *parent = nullptr);
 protected:
     void paintEvent(QPaintEvent *event) override;
 private:
+    ClientSession &session;
     QLineEdit *username;
     QLineEdit *password;
     QLineEdit *confirmedPassword;

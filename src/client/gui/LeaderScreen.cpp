@@ -81,7 +81,7 @@ void LeaderScreen::paintEvent(QPaintEvent *event) {
     // Paints the background
 
     QPainter painter(this);
-    QPixmap screenPixmap("resources/tetris_main.png");
+    QPixmap screenPixmap("../resources/tetris_main.png");
 
     painter.drawPixmap(this->rect(), screenPixmap);
 

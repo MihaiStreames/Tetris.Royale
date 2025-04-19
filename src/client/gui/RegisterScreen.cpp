@@ -1,6 +1,6 @@
 #include "RegisterScreen.hpp"
 
-RegisterScreen::RegisterScreen(QWidget *parent) : QWidget(parent){
+RegisterScreen::RegisterScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){
 
     // Create main layout
     QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
@@ -93,7 +93,7 @@ void RegisterScreen::paintEvent(QPaintEvent *event) {
     // Paints the background
 
     QPainter painter(this);
-    QPixmap screenPixmap("resources/tetris_main.png");
+    QPixmap screenPixmap("../resources/tetris_main.png");
 
     painter.drawPixmap(this->rect(), screenPixmap);
 
@@ -103,7 +103,7 @@ void RegisterScreen::paintEvent(QPaintEvent *event) {
 void RegisterScreen::openLoginScreen(){
     // Opens the login screen and closes the register screen when clicked
 
-    LoginScreen *loginScreen = new LoginScreen;
+    LoginScreen *loginScreen = new LoginScreen(session);
     loginScreen->showMaximized();
 
     this->close();
@@ -113,9 +113,9 @@ void RegisterScreen::registerUser(){
     // Registers a user when "Register" button clicked
 
     // Get user input
-    QString usernameInput = username->text();
-    QString passwordInput = password->text();
-    QString confirmedPasswordInput = confirmedPassword->text();
+    auto usernameInput = username->text().toStdString();
+    auto passwordInput = password->text().toStdString();
+    auto confirmedPasswordInput = confirmedPassword->text().toStdString();
 
     // Check possible errors
     if (usernameInput.empty() || passwordInput.empty() || confirmedPasswordInput.empty()) {
@@ -124,12 +124,12 @@ void RegisterScreen::registerUser(){
     }
 
     if (passwordInput != confirmedPasswordInput) {
-        QMessageBox::warning(this, "Error", "Passwords do nto match.");
+        QMessageBox::warning(this, "Error", "Passwords do not match.");
         return;
     }
 
     // Try to register the player
-    StatusCode result = session.registerPlayer(username, password);
+    StatusCode result = session.registerPlayer(usernameInput, passwordInput);
 
     if (result == StatusCode::SUCCESS) {
         openLoginScreen();
@@ -144,4 +144,5 @@ void RegisterScreen::registerUser(){
         QMessageBox::warning(this, "Error", "Registration failed. Please try again.");
         return;
     }
+
 }

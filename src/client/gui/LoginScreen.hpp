@@ -2,6 +2,7 @@
 #define LOGINSCREEN_HPP
 
 #include "RegisterScreen.hpp"
+#include "ClientSession.hpp"
 
 #include <QtWidgets>
 #include <QLabel>
@@ -16,10 +17,11 @@
 
 class LoginScreen : public QWidget {
 public:
-    explicit LoginScreen(QWidget *parent = nullptr);
+    explicit LoginScreen(ClientSession &session, QWidget *parent = nullptr);
 protected:
     void paintEvent(QPaintEvent *event) override;
 private:
+    ClientSession &session;
     QLineEdit *username;
     QLineEdit *password;
     QPushButton *loginButton;
