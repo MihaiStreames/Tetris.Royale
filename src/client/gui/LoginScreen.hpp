@@ -16,6 +16,7 @@
 #include <QFontDatabase>
 
 class LoginScreen : public QWidget {
+    Q_OBJECT
 public:
     explicit LoginScreen(ClientSession &session, QWidget *parent = nullptr);
 protected:
@@ -29,6 +30,7 @@ private:
     QPushButton *exitButton;
 private slots:
     void openRegisterScreen();
+    void loginUser();
     void exitScreen();
 };
 

@@ -76,6 +76,7 @@ LoginScreen::LoginScreen(ClientSession &session, QWidget *parent) : QWidget(pare
     buttonsLayout->addWidget(registerButton);
     buttonsLayout->addWidget(exitButton);
 
+    connect(loginButton, &QPushButton::clicked, this, &LoginScreen::loginUser);
     connect(registerButton, &QPushButton::clicked, this, &LoginScreen::openRegisterScreen);
     connect(exitButton, &QPushButton::clicked, this, &LoginScreen::exitScreen);
 
@@ -104,6 +105,43 @@ void LoginScreen::openRegisterScreen(){
     registerScreen->showMaximized();
 
     this->hide();
+}
+
+void LoginScreen::loginUser(){
+    // Logs user in when "Login" button clicked
+
+    // Get user input
+    auto usernameInput = username->text().toStdString();
+    auto passwordInput = password->text().toStdString();
+
+    // Check possible errors
+    if (usernameInput.empty() || passwordInput.empty()) {
+        QMessageBox::warning(this, "Error", "Please enter both username and password");
+        return;
+    }
+
+    // try to login and fetch the status code
+    StatusCode result = session.loginPlayer(usernameInput, passwordInput);
+
+    if (result == StatusCode::SUCCESS) {
+
+        StatusCode sessionResult = session.startSession();
+
+        // if login was successful, we will try to start a new session
+        if (sessionResult == StatusCode::SUCCESS) {
+
+            // TODO: CHANGE SCREEN HERE
+            exitScreen();
+        
+        // if starting a session failed, we will display an error message
+        } else {
+            QMessageBox::warning(this, "Error", "Failed to start session.");
+        }
+
+    // if login failed, we will display an error message
+    } else {
+        QMessageBox::warning(this, "Error", "Login failed. Please check your credentials.");
+    }
 }
 
 void LoginScreen::exitScreen(){

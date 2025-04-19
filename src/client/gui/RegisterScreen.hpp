@@ -18,6 +18,7 @@
 #include <QMessageBox>
 
 class RegisterScreen : public QWidget {
+    Q_OBJECT
 public:
     explicit RegisterScreen(ClientSession &session, QWidget *parent = nullptr);
 protected:
