@@ -1,6 +1,9 @@
 #ifndef LEADERSCREEN_HPP
 #define LEADERSCREEN_HPP
 
+#include "Common.hpp"
+#include "ClientSession.hpp"
+
 #include <QtWidgets>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -12,9 +15,11 @@
 
 class LeaderScreen : public QWidget {
 public:
-    explicit LeaderScreen(QWidget *parent = nullptr);
+    explicit LeaderScreen(ClientSession &session, QWidget *parent = nullptr);
 protected:
     void paintEvent(QPaintEvent *event) override;
+private:
+    ClientSession &session;
 };
 
 #endif

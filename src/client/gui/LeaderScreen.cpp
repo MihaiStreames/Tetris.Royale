@@ -1,9 +1,9 @@
 #include "LeaderScreen.hpp"
 
-LeaderScreen::LeaderScreen(QWidget *parent) : QWidget(parent){
+LeaderScreen::LeaderScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){
 
     // Create main layout
-    QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
+    QFontDatabase::addApplicationFont("src/client/gui/resources/orbitron.ttf");
     setStyleSheet("background-color: transparent; color:rgb(202, 237, 241);");
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -60,14 +60,18 @@ LeaderScreen::LeaderScreen(QWidget *parent) : QWidget(parent){
         "}"
     );
 
-    // Examples
-    table->insertRow(0);
-    table->insertRow(1);
+    // Show leaderboard data
+    std::vector<PlayerScore> leaderboard = session.getLeaderboard(10);
+    for (int i = 0; i < static_cast<int>(leaderboard.size()); ++i) {
+        const auto &player = leaderboard[i];
+    
+        table->insertRow(i);
+    
+        table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(player.name)));
+        table->setItem(i, 1, new QTableWidgetItem(QString::number(player.score)));
+    }
+    
 
-    table->setItem(0, 0, new QTableWidgetItem("John Doe"));
-    table->setItem(0, 1, new QTableWidgetItem("3000"));
-    table->setItem(1, 0, new QTableWidgetItem("Jane Doe"));
-    table->setItem(1, 1, new QTableWidgetItem("2900"));
 
     mainLayout->addWidget(titleContainer);
     mainLayout->addWidget(table);
@@ -81,7 +85,7 @@ void LeaderScreen::paintEvent(QPaintEvent *event) {
     // Paints the background
 
     QPainter painter(this);
-    QPixmap screenPixmap("../resources/tetris_main.png");
+    QPixmap screenPixmap("src/client/gui/resources/tetris_main.png");
 
     painter.drawPixmap(this->rect(), screenPixmap);
 
