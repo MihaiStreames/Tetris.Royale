@@ -166,6 +166,10 @@ file(GLOB CLIENT_TUI_SRC_FILES "${TETRIS_SRC_DIR}/client/tui/*.cpp" "${TETRIS_SR
 # GUI sources
 file(GLOB GUI_SRC
     "${TETRIS_SRC_DIR}/client/gui/*.cpp"
+    "${TETRIS_SRC_DIR}/client/gui/GameMenus/*.cpp"
+    "${TETRIS_SRC_DIR}/client/gui/LobbyMenus/*.cpp"
+    "${TETRIS_SRC_DIR}/client/gui/LoginMenus/*.cpp"
+    "${TETRIS_SRC_DIR}/client/gui/MainMenus/*.cpp"
 )
 
 

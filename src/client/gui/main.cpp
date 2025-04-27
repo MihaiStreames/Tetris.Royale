@@ -1,5 +1,4 @@
-#include "LoginScreen.hpp"
-#include "LeaderScreen.hpp"
+#include "LoginMenus/LoginScreen.hpp"
 #include <QApplication>
 
 int main(int argc, char *argv[]){
@@ -11,8 +10,8 @@ int main(int argc, char *argv[]){
     // load the session
     ClientSession session(config);
 
-    MainWindow mainW(session);
-    mainW.show();
+    LoginScreen loginScreen(session);
+    loginScreen.showMaximized();
 
     return a.exec();
 }

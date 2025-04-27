@@ -103,7 +103,11 @@ void RegisterScreen::paintEvent(QPaintEvent *event) {
 void RegisterScreen::openLoginScreen(){
     // Opens the login screen and closes the register screen when clicked
 
-    currentScreen = ScreenState::Login;
+    LoginScreen *loginScreen = new LoginScreen(session);
+    loginScreen->showMaximized();
+
+    this->close();
+
 }
 
 void RegisterScreen::registerUser(){

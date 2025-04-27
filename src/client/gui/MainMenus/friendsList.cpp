@@ -1,0 +1,269 @@
+#include "friendsList.hpp"
+
+
+FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(parent),session(session)
+{
+    setWindowTitle("Friends List");
+    setFixedSize(windowWidth, windowHeight);
+
+    QFontDatabase::addApplicationFont("/resources/orbitron.ttf");
+    setStyleSheet(windowStyle);
+
+    // window widget 
+    centralWidget = new QWidget(this);
+    setCentralWidget(centralWidget);
+
+
+    mainLayout = new QHBoxLayout(centralWidget);
+
+    leftSectionLayout = new QVBoxLayout();
+    mainLayout->addLayout(leftSectionLayout, 2); 
+
+
+    //-----FRIENDS LIST SECTION-----//
+    friendsSection = new QWidget(this);
+    friendsSection->setStyleSheet("border: 2px solid white; background-color: transparent;");
+    leftSectionLayout->addWidget(friendsSection, 3);
+
+    friendsSectionLayout = new QVBoxLayout(friendsSection);
+    addTitle("Friends List", friendsSectionLayout, friendsSection);
+
+    // Créer une zone scrollable
+    scrollArea = new QScrollArea(this);
+    scrollArea->setWidgetResizable(true); 
+    scrollArea->setStyleSheet("border: none;");
+
+    friendsList = new QWidget(this);
+    friendsList->setStyleSheet("border: 2px solid white; background-color: transparent;");
+
+    friendsListLayout = new QVBoxLayout(friendsList);
+    scrollArea->setWidget(friendsList);
+    friendsSectionLayout->addWidget(scrollArea);
+
+    // Ajouter la barre de recherche et le layout inférieur
+    createSearchBar();
+    createBottomLayout();
+
+    //-----LOBBY INVITES SECTION-----//
+    lobbySection = new QWidget(this);
+    lobbySection->setStyleSheet("border: 2px solid white; background-color: transparent;");
+    leftSectionLayout->addWidget(lobbySection, 1); 
+
+    lobbySectionLayout = new QVBoxLayout(lobbySection);
+    addTitle("Lobby Invites", lobbySectionLayout, lobbySection);
+
+    lobbyInvitesList = new QWidget(this);
+    lobbyInvitesList->setStyleSheet("border: 2px solid white; background-color: transparent;");
+    lobbyInvitesLayout = new QVBoxLayout(lobbyInvitesList);
+    lobbySectionLayout->addWidget(lobbyInvitesList);
+
+    // Conteneur pour le chat (initialement masqué)
+    chatWidget = new QWidget(this);
+    chatWidget->setStyleSheet("background-color: rgb(30, 30, 30); color: white;");
+    chatWidget->setFixedWidth(300); // Largeur du chat
+    chatWidget->hide(); // Masquer le chat au départ
+    mainLayout->addWidget(chatWidget, 1); // Le chat occupe 1/3 de l'espace
+
+    populateFriends();
+}
+
+void FriendsList::createSearchBar() {
+    // Conteneur pour la barre de recherche
+    QWidget *searchBarWidget = new QWidget(this);
+    searchBarWidget->setStyleSheet("border: none; background-color: transparent;");
+    searchBarWidget->setFixedHeight(50);
+
+    // Layout horizontal pour la barre de recherche
+    QHBoxLayout *searchBarLayout = new QHBoxLayout(searchBarWidget);
+    searchBarLayout->setContentsMargins(0, 0, 0, 0);
+    searchBarLayout->setSpacing(10);
+
+    // Champ de recherche
+    QLineEdit *searchInput = new QLineEdit(searchBarWidget);
+    searchInput->setPlaceholderText("Add a friend...");
+    searchInput->setStyleSheet(searchBarStyle);
+    searchBarLayout->addWidget(searchInput);
+
+    // Bouton de recherche
+    QPushButton *searchButton = new QPushButton("Search", searchBarWidget);
+    searchButton->setStyleSheet(buttonStyle);
+    searchBarLayout->addWidget(searchButton);
+
+    // Connecter le bouton de recherche
+    connect(searchButton, &QPushButton::clicked, this, [this, searchInput]() {
+        QString searchText = searchInput->text().trimmed();
+    });
+
+    // Ajouter la barre de recherche au layout cible
+    friendsSectionLayout->addWidget(searchBarWidget);
+}
+
+void FriendsList::showChat(const QString &friendName) {
+    // Effacer le contenu existant de chatWidget
+    QLayout *existingLayout = chatWidget->layout();
+    if (existingLayout) {
+        QLayoutItem *item;
+        while ((item = existingLayout->takeAt(0)) != nullptr) {
+            delete item->widget();
+            delete item;
+        }
+        delete existingLayout;
+    }
+
+    // Créer un nouveau layout pour le chat
+    QVBoxLayout *chatLayout = new QVBoxLayout(chatWidget);
+
+    // Ajouter un titre avec le nom de l'ami
+    QLabel *chatTitle = new QLabel("Chatting with " + friendName, chatWidget);
+    chatTitle->setStyleSheet(titleStyle);
+    chatLayout->addWidget(chatTitle);
+
+    // Zone pour afficher les messages
+    QListWidget *messageList = new QListWidget(chatWidget);
+    messageList->setStyleSheet(messageStyle);
+    chatLayout->addWidget(messageList);
+
+    // Zone de saisie pour envoyer des messages
+    QHBoxLayout *inputLayout = new QHBoxLayout();
+    QLineEdit *messageInput = new QLineEdit(chatWidget);
+    messageInput->setPlaceholderText("Write a message ...");
+    messageInput->setStyleSheet(searchBarStyle);
+
+    QPushButton *sendButton = new QPushButton("Send", chatWidget);
+    sendButton->setStyleSheet(buttonStyle);
+
+    inputLayout->addWidget(messageInput);
+    inputLayout->addWidget(sendButton);
+    chatLayout->addLayout(inputLayout);
+
+    // Connecter le bouton "Envoyer" pour ajouter un message
+    connect(sendButton, &QPushButton::clicked, this, [messageInput, messageList, friendName]() {
+        QString message = messageInput->text();
+        if (!message.isEmpty()) {
+            messageList->addItem("You : " + message);
+            messageInput->clear();
+            // TODO: Envoyer le message au serveur ou à l'ami
+        }
+    });
+
+    // Ajouter le widget de chat à la section droite
+    chatWidget->show();
+    mainLayout->addWidget(chatWidget);
+}
+
+void FriendsList::createBottomLayout(){
+    QWidget *bottomWidget = new QWidget(this);
+    bottomWidget->setStyleSheet("border: transparent;");
+    bottomWidget->setFixedHeight(90);
+    QHBoxLayout *bottomLayout = new QHBoxLayout(bottomWidget);
+
+    QPushButton *exitButton = new QPushButton("Exit");
+    exitButton->setStyleSheet(buttonStyle);
+
+    connect(exitButton, &QPushButton::clicked, this, &QMainWindow::close);
+    bottomLayout->addWidget(exitButton, 0, Qt::AlignLeft);
+
+    // Demande d'ami la plus récente
+    //const std::vector<std::string> &pendingRequests = session.getPendingFriendRequests();
+
+    //std::string friendName = pendingRequests.pop_back();
+    QString friendName = "Joseph";
+    FriendWidget *recentFriendRequest = new FriendWidget(friendName, FriendWidget::FriendRequest,FriendWidget::Offline, this);
+
+    // boucle a faire
+    /*connect(recentFriendRequest, &FriendWidget::firstButtonClicked, this, [this] {
+        (void) session.acceptFriendRequest(friendName);
+        (void) session.fetchPlayerData();
+        bottomLayout->removeWidget(recentFriendRequest); // Retirer le widget de la liste
+        friendWidget->deleteLater();
+    });
+
+    connect(recentFriendRequest, &FriendWidget::secondButtonClicked, this, [this]{
+        (void) session.declineFriendRequest(friendName);
+        (void) session.fetchPlayerData();
+        bottomLayout->removeWidget(recentFriendRequest); 
+        friendWidget->deleteLater();
+    });*/
+
+    bottomLayout->addWidget(recentFriendRequest, 1);
+    friendsSectionLayout->addWidget(bottomWidget);
+}
+
+void FriendsList::addFriendWidget(const QString &friendName) {
+    FriendWidget::State state;
+
+    //Pas sur mais faire cette appel à ClientSession pour pouvoir récupérer le state du joueur(problème la methode getplayerstate ne prend pas de paramètre)
+    //FriendWidget::State state = session.getPlayerState(friendName);
+
+    //Hardcode de test 
+    if (friendName == "Alice") {
+        state = FriendWidget::Online;
+    } else if (friendName == "Bob") {
+        state = FriendWidget::InLobby;
+    } else if (friendName == "Charlie") {
+        state = FriendWidget::InGame;
+    } else {
+        state = FriendWidget::Offline;
+    }
+
+    QString fullName = friendName;
+    switch (state) {
+        case FriendWidget::Online:
+            fullName += " [Online]";
+            break;
+        case FriendWidget::InLobby:
+            fullName += " [In Lobby]";
+            break;
+        case FriendWidget::InGame:
+            fullName += " [In Game]";
+            break;
+        case FriendWidget::Offline:
+            fullName += " [Offline]";
+            break;
+    }
+
+    FriendWidget *friendWidget = new FriendWidget(fullName, FriendWidget::FriendsList,state, this);
+
+    connect(friendWidget, &FriendWidget::firstButtonClicked, this, [this, friendName]() {
+        showChat(friendName);
+    });
+
+    connect(friendWidget, &FriendWidget::secondButtonClicked, this, [this, friendWidget]() {
+        // Supprimer l'ami
+        friendsListLayout->removeWidget(friendWidget); 
+        friendWidget->deleteLater(); 
+    });
+
+    // Connecter boutton 3 et 4
+
+    friendsListLayout->addWidget(friendWidget);
+    friendsListLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
+}
+
+void FriendsList::populateFriends() {
+    // Liste fictive d'amis
+    QStringList friendsList = {"Alice", "Bob", "Charlie","TEST"};
+    
+
+    for (const QString &friendName : friendsList) {
+        addFriendWidget(friendName);
+    }
+}
+
+void FriendsList::addTitle(const QString &title, QVBoxLayout *targetLayout, QWidget *targetWidget) {
+    QLabel *boxTitle = new QLabel(title, targetWidget);
+    boxTitle->setStyleSheet(titleStyle);
+    boxTitle->setFixedHeight(30); 
+    boxTitle->setAlignment(Qt::AlignLeft | Qt::AlignTop); 
+
+    targetLayout->addWidget(boxTitle);
+}
+
+void FriendsList::paintEvent(QPaintEvent *event) {
+    QPainter painter(this);
+
+    QPixmap backgroundPixmap("/resources/tetris_main.png");
+    painter.drawPixmap(this->rect(), backgroundPixmap);
+
+    QMainWindow::paintEvent(event);
+}

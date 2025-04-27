@@ -4,7 +4,8 @@
 #pragma once
 
 #include "ClientSession.hpp"
-#include "mainWindow.hpp"
+#include "../MainMenus/mainMenu.hpp"
+#include "RegisterScreen.hpp"
 
 #include <QtWidgets>
 #include <QLabel>

@@ -101,7 +101,11 @@ void LoginScreen::paintEvent(QPaintEvent *event) {
 void LoginScreen::openRegisterScreen(){
     // Opens the register screen and closes the login screen when clicked
 
-    currentScreen = ScreenState::Register;
+    RegisterScreen *registerScreen = new RegisterScreen(session);
+    registerScreen->showMaximized();
+
+    this->hide();
+
 }
 
 void LoginScreen::loginUser(){
@@ -127,8 +131,11 @@ void LoginScreen::loginUser(){
         // if login was successful, we will try to start a new session
         if (sessionResult == StatusCode::SUCCESS) {
 
-            // TODO: CHANGE SCREEN HERE
-            exitScreen();
+            // if session started successfully, we will open the main menu
+            MainMenu *mainMenu = new MainMenu(session);
+            mainMenu->showMaximized();
+
+            this->hide();
         
         // if starting a session failed, we will display an error message
         } else {
