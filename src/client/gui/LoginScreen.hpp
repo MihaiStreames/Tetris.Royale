@@ -1,8 +1,10 @@
 #ifndef LOGINSCREEN_HPP
 #define LOGINSCREEN_HPP
 
-#include "RegisterScreen.hpp"
+#pragma once
+
 #include "ClientSession.hpp"
+#include "mainWindow.hpp"
 
 #include <QtWidgets>
 #include <QLabel>

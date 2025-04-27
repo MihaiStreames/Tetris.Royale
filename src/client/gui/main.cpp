@@ -11,8 +11,8 @@ int main(int argc, char *argv[]){
     // load the session
     ClientSession session(config);
 
-    LoginScreen l(session);
+    MainWindow mainW(session);
+    mainW.show();
 
-    l.showMaximized();
     return a.exec();
 }
