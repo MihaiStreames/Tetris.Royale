@@ -1,65 +1,88 @@
 #!/bin/bash
 
-# Dependency installation script for TetrisRoyale
+# dependency installation script for TetrisRoyale
+set -e
 
-set -e # Exit on error
-
-# We check for curl and unzip, as they are required for downloading and extracting dependencies
-if ! command -v curl > /dev/null; then
-    echo "'curl' is required but not installed. Please install it and try again."
+# check if the script is run from the correct directory
+if [ ! -f "CMakeLists.txt" ]; then
+    echo "Error: This script must be run from the root directory of the project."
     exit 1
 fi
 
-if ! command -v unzip > /dev/null; then
-    echo "'unzip' is required but not installed. Please install it and try again."
-    exit 1
-fi
-
-# Configuration
+# configuration (versions and paths)
 CURDIR=$(pwd)
 INSTALL_ROOT="$CURDIR/lib"
 BOOST_VERSION="1.87.0"
 NLOHMANN_JSON_VERSION="3.10.5"
 SQLITE_VERSION="3420000"
-
-# Create installation directory if needed
+OPENSSL_VERSION="3.5.0"
+GTEST_VERSION="release-1.12.1"
+FTXUI_VERSION="5.0.0"
 mkdir -p "$INSTALL_ROOT/downloads"
+NPROC=$(./scripts/get_nproc.sh)
 
-# Print status header function
+
+# few functions to help with the installation process
+
 print_header() {
     echo ""
-    echo "=============================="
-    echo "  $1"
-    echo "=============================="
+    echo "=================================================="
+    echo "$1"
+    echo "=================================================="
 }
 
-# Function to check if a library exists in system paths
 check_system_lib() {
+
     local lib_name="$1"
     local header_path="$2"
     local lib_file="$3"
 
-    # Check if header exists
+    # return 1  # debug to default all libs to not found -> local
+
+    # check if header exists
     if [ -f "/usr/include/$header_path" ] || [ -f "/usr/local/include/$header_path" ]; then
-        # Check if library exists
+        # check if library exists
         if [ -z "$lib_file" ] || ldconfig -p | grep -q "$lib_file"; then
-            return 0  # Library found
+            return 0  # library found
         fi
     fi
 
-    return 1  # Library not found
+    return 1  # library not found
+
 }
+
+check_command() {
+    local command="$1"
+    if ! command -v "$command" > /dev/null; then
+        echo "'$command' is required but not installed. Please install it and try again."
+        exit 1
+    fi
+}
+
+
+# we check for gcc, cmake, make, curl and unzip, as they are required for downloading, extracting and building dependencies
+check_command "gcc"
+check_command "cmake"
+check_command "make"
+check_command "curl"
+check_command "unzip"
+
 
 # ============================
 # Setup Environment Variables
 # ============================
+
 USING_SYSTEM_BOOST=false
 USING_SYSTEM_JSON=false
 USING_SYSTEM_SQLITE=false
+USING_SYSTEM_OPENSSL=false
+USING_SYSTEM_GTEST=false
+USING_SYSTEM_FTXUI=false
 
-# ============================
+# ==================================
 # Check and Install Boost
-# ============================
+# ==================================
+
 if check_system_lib "boost" "boost/version.hpp" "libboost_system"; then
     print_header "Using system Boost"
     BOOST_ROOT="/usr"
@@ -95,28 +118,28 @@ else
 
     # Build and install locally
     echo "Building and installing Boost (this may take a while)..."
-    ./b2 install --with-filesystem --with-system -j$(nproc)
+    ./b2 install --with-filesystem --with-system -j"${NPROC}"
 
     cd "$CURDIR"
     echo "Boost installed successfully at ${BOOST_ROOT}"
 fi
 
-# ============================
+# ==================================
 # Check and Install nlohmann_json
-# ============================
-if check_system_lib "nlohmann_json" "nlohmann/json.hpp" ""; then
+# ==================================
+
+if check_system_lib "nlohmann" "nlohmann/json.hpp" ""; then
     print_header "Using system nlohmann_json"
     NLOHMANN_JSON_ROOT="/usr"
     USING_SYSTEM_JSON=true
-elif [ -d "$INSTALL_ROOT/json/include/nlohmann" ]; then
+elif [ -d "$INSTALL_ROOT/nlohmann/include/nlohmann" ]; then
     print_header "Using previously installed nlohmann_json"
-    NLOHMANN_JSON_ROOT="$INSTALL_ROOT/json"
+    NLOHMANN_JSON_ROOT="$INSTALL_ROOT/nlohmann"
 else
     print_header "Installing nlohmann_json $NLOHMANN_JSON_VERSION locally"
-    NLOHMANN_JSON_ROOT="$INSTALL_ROOT/json"
+    NLOHMANN_JSON_ROOT="$INSTALL_ROOT/nlohmann"
 
     # Create installation directory
-    mkdir -p "$NLOHMANN_JSON_ROOT/include"
     cd "$INSTALL_ROOT/downloads"
 
     # Download and extract
@@ -129,15 +152,16 @@ else
     fi
 
     echo "Extracting nlohmann_json..."
-    unzip -q -o "$JSON_ARCHIVE" -d "$NLOHMANN_JSON_ROOT/include"
+    unzip -q -o "$JSON_ARCHIVE" -d "$NLOHMANN_JSON_ROOT"
 
     cd "$CURDIR"
     echo "nlohmann_json installed successfully at ${NLOHMANN_JSON_ROOT}"
 fi
 
-# ============================
+# ==================================
 # Check and Install SQLite
-# ============================
+# ==================================
+
 if check_system_lib "sqlite3" "sqlite3.h" "libsqlite3.so"; then
     print_header "Using system SQLite"
     SQLITE_ROOT="/usr"
@@ -202,13 +226,151 @@ else
     echo "SQLite installed successfully at ${SQLITE_ROOT}"
 fi
 
-# ============================
+# ==================================
+# Check and Install OpenSSL
+# ==================================
+
+if check_system_lib "openssl" "openssl/ssl.h" "libssl.so"; then
+    print_header "Using system OpenSSL"
+    OPENSSL_ROOT="/usr"
+    USING_SYSTEM_OPENSSL=true
+elif [ -d "$INSTALL_ROOT/openssl" ]; then
+    print_header "Using previously installed OpenSSL"
+    OPENSSL_ROOT="$INSTALL_ROOT/openssl"
+else
+    print_header "Installing OpenSSL $OPENSSL_VERSION locally"
+    OPENSSL_ROOT="$INSTALL_ROOT/openssl"
+    cd "$INSTALL_ROOT/downloads"
+
+    OPENSSL_TAR="openssl-${OPENSSL_VERSION}.tar.gz"
+    OPENSSL_URL="https://www.openssl.org/source/$OPENSSL_TAR"
+
+    if [ ! -f "$OPENSSL_TAR" ]; then
+        echo "Downloading OpenSSL..."
+        curl -LO "$OPENSSL_URL"
+    fi
+
+    echo "Extracting OpenSSL..."
+    tar xf "$OPENSSL_TAR"
+    cd "openssl-${OPENSSL_VERSION}"
+
+    echo "Configuring OpenSSL..."
+    ./config --prefix="$OPENSSL_ROOT" no-shared
+
+    echo "Building OpenSSL..."
+    make -j"${NPROC}"
+    make install_sw
+
+    cd "$CURDIR"
+    echo "OpenSSL installed successfully at $OPENSSL_ROOT"
+fi
+
+# ==================================
+# Check and Install GoogleTest
+# ==================================
+
+if check_system_lib "gtest" "gtest/gtest.h" "libgtest.a"; then
+    print_header "Using system GoogleTest"
+    GTEST_ROOT="/usr"
+    USING_SYSTEM_GTEST=true
+elif [ -d "$INSTALL_ROOT/googletest" ]; then
+    print_header "Using previously installed GoogleTest"
+    GTEST_ROOT="$INSTALL_ROOT/googletest"
+else
+    print_header "Installing GoogleTest locally"
+    GTEST_ROOT="$INSTALL_ROOT/googletest"
+
+    # Create installation directory
+    mkdir -p "$GTEST_ROOT"
+    cd "$INSTALL_ROOT/downloads"
+
+    # Download and extract GoogleTest
+    GTEST_URL="https://github.com/google/googletest/archive/${GTEST_VERSION}.zip"
+    GTEST_ARCHIVE="googletest-${GTEST_VERSION}.zip"
+
+    if [ ! -f "$GTEST_ARCHIVE" ]; then
+        echo "Downloading GoogleTest..."
+        curl -L "${GTEST_URL}" -o "$GTEST_ARCHIVE"
+    fi
+
+    echo "Extracting GoogleTest..."
+    unzip -q -o "$GTEST_ARCHIVE" -d "$INSTALL_ROOT/downloads"
+
+    # Navigate into the extracted folder
+    GTEST_SRC_DIR="$INSTALL_ROOT/downloads/googletest-${GTEST_VERSION}"
+    cd "$GTEST_SRC_DIR" || exit
+
+    # Create and enter the build directory
+    mkdir -p build
+    cd build
+
+    # Run CMake to configure the build
+    echo "Configuring GoogleTest..."
+    cmake .. -DCMAKE_INSTALL_PREFIX="$GTEST_ROOT"
+
+    # Build and install GoogleTest
+    echo "Building and installing GoogleTest (this may take a while)..."
+    make -j"${NPROC}"
+    make install
+
+    cd "$CURDIR"
+    echo "GoogleTest installed successfully at ${GTEST_ROOT}"
+fi
+
+# ==================================
+# Check and Install FTXUI
+# ==================================
+
+if check_system_lib "ftxui" "ftxui/component/component.hpp" ""; then
+    print_header "Using system FTXUI"
+    FTXUI_ROOT="/usr"
+    USING_SYSTEM_FTXUI=true
+elif [ -d "$INSTALL_ROOT/ftxui/include/ftxui" ]; then
+    print_header "Using previously installed FTXUI"
+    FTXUI_ROOT="$INSTALL_ROOT/ftxui"
+else
+
+    print_header "Installing FTXUI $FTXUI_VERSION locally"
+    FTXUI_ROOT="$INSTALL_ROOT/ftxui"
+    
+    cd "$INSTALL_ROOT/downloads"
+
+    FTXUI_ZIP="ftxui-${FTXUI_VERSION}.zip"
+    FTXUI_URL="https://github.com/ArthurSonzogni/FTXUI/archive/refs/tags/v${FTXUI_VERSION}.zip"
+
+    if [ ! -f "$FTXUI_ZIP" ]; then
+        echo "Downloading FTXUI source..."
+        curl -L "$FTXUI_URL" -o "$FTXUI_ZIP"
+    fi
+
+    echo "Extracting FTXUI..."
+    unzip -q -o "$FTXUI_ZIP"
+
+    # Build and install
+    FTXUI_SRC_DIR="$INSTALL_ROOT/downloads/FTXUI-${FTXUI_VERSION}"
+    mkdir -p "$FTXUI_SRC_DIR/build"
+    cd "$FTXUI_SRC_DIR/build"
+
+    echo "Configuring FTXUI..."
+    cmake .. -DCMAKE_INSTALL_PREFIX="$FTXUI_ROOT"
+
+    echo "Building FTXUI..."
+    make -j"${NPROC}"
+    make install
+
+    cd "$CURDIR"
+    echo "FTXUI installed successfully at ${FTXUI_ROOT}"
+fi
+
+# ==================================
 # Generate environment script
-# ============================
+# ==================================
+
 print_header "Generating environment script"
 
-# Set CMAKE_PREFIX_PATH conditionally
+# set CMAKE_PREFIX_PATH if not using system libraries
 CMAKE_PREFIX_PATH=""
+
 if ! $USING_SYSTEM_BOOST; then
     CMAKE_PREFIX_PATH="${BOOST_ROOT}:${CMAKE_PREFIX_PATH}"
 fi
@@ -218,70 +380,67 @@ fi
 if ! $USING_SYSTEM_SQLITE; then
     CMAKE_PREFIX_PATH="${SQLITE_ROOT}:${CMAKE_PREFIX_PATH}"
 fi
-# Remove trailing colon if exists
+if ! $USING_SYSTEM_OPENSSL; then
+    CMAKE_PREFIX_PATH="${OPENSSL_ROOT}:${CMAKE_PREFIX_PATH}"
+fi
+if ! $USING_SYSTEM_GTEST; then
+    CMAKE_PREFIX_PATH="${GTEST_ROOT}:${CMAKE_PREFIX_PATH}"
+fi
+if ! $USING_SYSTEM_FTXUI; then
+    CMAKE_PREFIX_PATH="${FTXUI_ROOT}:${CMAKE_PREFIX_PATH}"
+fi
+
+# remove trailing colon if exists (I had a fucking bug with this once and it took me a while to figure out)
 CMAKE_PREFIX_PATH=$(echo $CMAKE_PREFIX_PATH | sed 's/:$//')
 
+
+# create the environment script and make it executable
 ENV_SCRIPT="$INSTALL_ROOT/setup-env.sh"
-cat > "$ENV_SCRIPT" << EOF
-#!/bin/bash
-# Environment setup for TetrisRoyale build
+{
+    echo "#!/bin/bash"
+    echo "# Environment setup for TetrisRoyale build"
 
-EOF
+    # export variables for non-system libraries if needed
+    [ "$USING_SYSTEM_BOOST" = false ] && echo "export BOOST_ROOT=\"$BOOST_ROOT\""
+    [ "$USING_SYSTEM_JSON" = false ] && echo "export NLOHMANN_JSON_ROOT=\"$NLOHMANN_JSON_ROOT\""
+    [ "$USING_SYSTEM_SQLITE" = false ] && echo "export SQLITE_ROOT=\"$SQLITE_ROOT\""
+    [ "$USING_SYSTEM_OPENSSL" = false ] && echo "export OPENSSL_ROOT=\"$OPENSSL_ROOT\""
+    [ "$USING_SYSTEM_GTEST" = false ] && echo "export GTEST_ROOT=\"$GTEST_ROOT\""
+    [ "$USING_SYSTEM_FTXUI" = false ] && echo "export FTXUI_ROOT=\"$FTXUI_ROOT\""
 
-# Add variables only for non-system libraries
-if ! $USING_SYSTEM_BOOST; then
-    echo "export BOOST_ROOT=\"$BOOST_ROOT\"" >> "$ENV_SCRIPT"
-fi
-if ! $USING_SYSTEM_JSON; then
-    echo "export NLOHMANN_JSON_ROOT=\"$NLOHMANN_JSON_ROOT\"" >> "$ENV_SCRIPT"
-fi
-if ! $USING_SYSTEM_SQLITE; then
-    echo "export SQLITE_ROOT=\"$SQLITE_ROOT\"" >> "$ENV_SCRIPT"
-fi
-if [ ! -z "$CMAKE_PREFIX_PATH" ]; then
-    echo "export CMAKE_PREFIX_PATH=\"$CMAKE_PREFIX_PATH:\$CMAKE_PREFIX_PATH\"" >> "$ENV_SCRIPT"
-fi
+    # add CMAKE_PREFIX_PATH if it's set
+    if [ -n "$CMAKE_PREFIX_PATH" ]; then
+        echo "export CMAKE_PREFIX_PATH=\"$CMAKE_PREFIX_PATH:\$CMAKE_PREFIX_PATH\""
+    fi
 
-cat >> "$ENV_SCRIPT" << EOF
+    # confirmation message
+    echo 'echo "Environment variables set for TetrisRoyale build"'
 
-echo "Environment variables set for TetrisRoyale build"
-EOF
-
-# Add echo statements only for non-system libraries
-if ! $USING_SYSTEM_BOOST; then
-    echo "echo \"  BOOST_ROOT=$BOOST_ROOT\"" >> "$ENV_SCRIPT"
-else
-    echo "echo \"  Using system Boost\"" >> "$ENV_SCRIPT"
-fi
-if ! $USING_SYSTEM_JSON; then
-    echo "echo \"  NLOHMANN_JSON_ROOT=$NLOHMANN_JSON_ROOT\"" >> "$ENV_SCRIPT"
-else
-    echo "echo \"  Using system nlohmann_json\"" >> "$ENV_SCRIPT"
-fi
-if ! $USING_SYSTEM_SQLITE; then
-    echo "echo \"  SQLITE_ROOT=$SQLITE_ROOT\"" >> "$ENV_SCRIPT"
-else
-    echo "echo \"  Using system SQLite\"" >> "$ENV_SCRIPT"
-fi
-
+} > "$ENV_SCRIPT"
 chmod +x "$ENV_SCRIPT"
+
+# print the environment script path
 echo "Environment script created at $ENV_SCRIPT"
 echo "Source this script before running CMake:"
 echo "  source $ENV_SCRIPT"
 
+# some cool looking output to show the user what libraries were used
 print_header "Dependencies resolved"
 echo "System libraries used:"
 if $USING_SYSTEM_BOOST; then echo "  - Boost"; fi
 if $USING_SYSTEM_JSON; then echo "  - nlohmann_json"; fi
 if $USING_SYSTEM_SQLITE; then echo "  - SQLite"; fi
-
+if $USING_SYSTEM_OPENSSL; then echo "  - OpenSSL"; fi
+if $USING_SYSTEM_GTEST; then echo "  - GoogleTest"; fi
+if $USING_SYSTEM_FTXUI; then echo "  - FTXUI"; fi
 echo "Locally installed libraries:"
 if ! $USING_SYSTEM_BOOST; then echo "  - Boost: $BOOST_ROOT"; fi
 if ! $USING_SYSTEM_JSON; then echo "  - nlohmann_json: $NLOHMANN_JSON_ROOT"; fi
 if ! $USING_SYSTEM_SQLITE; then echo "  - SQLite: $SQLITE_ROOT"; fi
+if ! $USING_SYSTEM_OPENSSL; then echo "  - OpenSSL: $OPENSSL_ROOT"; fi
+if ! $USING_SYSTEM_GTEST; then echo "  - GoogleTest: $GTEST_ROOT"; fi
+if ! $USING_SYSTEM_FTXUI; then echo "  - FTXUI: $FTXUI_ROOT"; fi
 
-echo "You can now build TetrisRoyale with:"
-echo "  source $ENV_SCRIPT"
-echo "  mkdir -p build && cd build"
-echo "  cmake .."
-echo "  make"
+
+# end of the script
+exit 0
