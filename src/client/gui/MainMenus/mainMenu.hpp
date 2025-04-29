@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QFontDatabase>
 #include <QLineEdit>
+#include <QMessageBox>
 
 #include "ClientSession.hpp"
 #include "../LoginMenus/LoginScreen.hpp"

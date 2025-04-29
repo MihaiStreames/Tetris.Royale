@@ -37,13 +37,13 @@ ModeSelection::ModeSelection(ClientSession &session, MainMenu* mainMenuView, QWi
     connect(backToMainButton, &QPushButton::clicked, this, &ModeSelection::backToMainMenu);
     
     connect(soloButton, &QPushButton::clicked, this, [this, &session]() {
-         // create and join a solo endless lobby (not public by default)
+        // create and join a solo endless lobby (not public by default)
         StatusCode result = session.createAndJoinLobby(GameMode::ENDLESS, 1, false);
         if (result == StatusCode::SUCCESS){
             Config config(CONFIG_FILE_NAME);
             config.load();
             // Forcer ready state
-            session.readyUp();
+            (void) session.readyUp();
             GameScreen *soloGameScreen = new GameScreen(config, session);
             soloGameScreen->showMaximized();
             this->close();
@@ -52,12 +52,10 @@ ModeSelection::ModeSelection(ClientSession &session, MainMenu* mainMenuView, QWi
     });
     
     connect(multiplayerButton, &QPushButton::clicked, this, [this, &session]() {
-        
         Lobby *lobby = new Lobby(session);
         lobby->showMaximized();
 
         this->hide();
-        
     });
     
 

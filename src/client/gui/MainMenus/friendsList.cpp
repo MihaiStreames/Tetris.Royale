@@ -66,6 +66,7 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
     
     (void) session.fetchPlayerData();
     populateFriends();
+    checkInvites();    
     // Refresh la page
     refreshTimer = new QTimer(this);
     connect(refreshTimer, &QTimer::timeout, this, [this, &session]() {
@@ -77,6 +78,7 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
         (void) session.fetchPlayerData();
         populateFriends();
         createBottomLayout();
+        checkInvites();
     });
     refreshTimer->start(5000); 
 }
@@ -159,7 +161,7 @@ void FriendsList::showChat(const QString &friendName) {
     connect(sendButton, &QPushButton::clicked, this, [this, messageInput, friendID]() {
         QString message = messageInput->text();
         if (!message.isEmpty()) {
-            session.sendMessage(friendID, message.toStdString());
+            (void) session.sendMessage(friendID, message.toStdString());
             messageInput->clear();
         }
     });
@@ -179,9 +181,13 @@ void FriendsList::showChat(const QString &friendName) {
         } else {
             safeMessageList->clear();
             // Plus ancien en haut
-            for (const auto &message : messages) {
-                QString msgText = QString::fromStdString(message.from + ": " + message.text);
-                safeMessageList->addItem(msgText);
+            for (auto it = messages.rbegin(); it != messages.rend(); ++it) {
+                const std::string &text = it->text;
+                // ignores the invitations
+                if (text.rfind("/invite ", 0) != 0) {
+                    QString msgText = QString::fromStdString(it->from + ": " + it->text);
+                    safeMessageList->addItem(msgText);
+                }
             }
         }
     });
@@ -295,8 +301,12 @@ void FriendsList::addFriendWidget(const QString &friendName) {
 
     //invite button
     connect(friendWidget, &FriendWidget::thirdButtonClicked, this, [this, friendName]() {
-        // if in lobby etc
-
+        std::string userID = session.getAccountIDFromUsername(friendName.toStdString());
+        if (session.getOwnStatus() == ClientStatus::IN_LOBBY){
+            sendInvite(userID);
+        } else {
+            QMessageBox::warning(this, "Error", "You must be in a lobby to send an invite.");
+        }
     });
 
     //spectate button
@@ -339,6 +349,58 @@ void FriendsList::clearBottomLayout() {
     }
 }
 
+void FriendsList::sendInvite(const std::string &friendID) {
+    //hardcoded for now
+    std::string lobbyID = "1234";
+    std::string message = "/invite " + lobbyID;
+    (void) session.sendMessage(friendID, message);
+}
+
+void FriendsList::checkInvites() {
+    std::vector<std::string> &friends = session.getFriendList();
+
+    for (const std::string &friendID : friends) {
+        std::vector<ChatMessage> messages = session.getPlayerMessages(friendID);
+        for (const ChatMessage &msg : messages) {
+            const std::string &text = msg.text;
+            if (text.rfind("/invite ", 0) == 0) {
+                std::string invitedLobbyID = text.substr(8);
+                if (!alreadyDisplayedInvite(friendID, invitedLobbyID)) {
+                    displayLobbyInvite(friendID, invitedLobbyID);
+                    markInviteAsDisplayed(friendID, invitedLobbyID);
+                }
+            }
+        }
+    }
+}
+
+void FriendsList::displayLobbyInvite(const std::string &fromID, const std::string &lobbyID) {
+    QString friendName = QString::fromStdString(session.getFriendUsername(fromID));
+
+    FriendWidget *inviteWidget = new FriendWidget(friendName, FriendWidget::LobbyInvites, FriendWidget::Offline, this);
+    //Accept invitation
+    connect(inviteWidget, &FriendWidget::firstButtonClicked, this, [this, inviteWidget, lobbyID]() {
+        // (void) session.joinLobby(lobbyID); Trouver comment switch menu principal 
+        lobbyInvitesLayout->removeWidget(inviteWidget);
+        inviteWidget->deleteLater(); 
+    });
+    //Decline invitation
+    connect(inviteWidget, &FriendWidget::secondButtonClicked, this, [this, inviteWidget]() {
+        lobbyInvitesLayout->removeWidget(inviteWidget);
+        inviteWidget->deleteLater(); 
+    });
+
+    lobbyInvitesLayout->addWidget(inviteWidget);
+}
+
+bool FriendsList::alreadyDisplayedInvite(const std::string &fromID, const std::string &lobbyID) {
+    return displayedInvites.find({fromID, lobbyID}) != displayedInvites.end();
+}
+
+void FriendsList::markInviteAsDisplayed(const std::string &fromID, const std::string &lobbyID) {
+    displayedInvites.insert({fromID, lobbyID}); 
+}
+
 void FriendsList::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
 
@@ -347,3 +409,4 @@ void FriendsList::paintEvent(QPaintEvent *event) {
 
     QMainWindow::paintEvent(event);
 }
+

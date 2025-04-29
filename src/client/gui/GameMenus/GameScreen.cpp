@@ -109,7 +109,7 @@ void GameScreen::setupUi()
     auto makeShortcut = [&](const QKeySequence &seq, Action act) {
         auto *sc = new QShortcut(seq, this);
         connect(sc, &QShortcut::activated, [this, act]() {
-            session.sendKeyStroke(act);
+            (void) session.sendKeyStroke(act);
         });
     };
 

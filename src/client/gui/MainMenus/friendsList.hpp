@@ -17,6 +17,8 @@
 #include <QFontDatabase>
 #include <QTimer>
 #include <QPointer>
+#include <set>
+#include <QMessageBox>
 
 #include "friendWidget.hpp"
 #include "ClientSession.hpp"
@@ -120,6 +122,7 @@ private:
     QWidget *chatWidget;
     QTimer *messageTimer;
 
+    std::set<std::pair<std::string, std::string>> displayedInvites;
 
     ClientSession &session;
 
@@ -131,6 +134,11 @@ private slots:
     void createSearchBar();
     void createBottomLayout();
     void clearBottomLayout();
+    void sendInvite(const std::string &friendID);
+    void checkInvites();
+    void displayLobbyInvite(const std::string &fromID, const std::string &lobbyID);
+    bool alreadyDisplayedInvite(const std::string &fromID, const std::string &lobbyID);
+    void markInviteAsDisplayed(const std::string &fromID, const std::string &lobbyID);
 };
 
 #endif // FRIENDSLIST_HPP

@@ -7,7 +7,7 @@
 #include <QObject>
 
 template<typename LayoutType, typename ParentType, typename ReceiverType>
-QPushButton* createButton(const QString& name, LayoutType* layout, ParentType* parent, void (ReceiverType::*slot)(), int x=50, int y=50, int lenght=150, int width=45) {
+QPushButton* createButton(const QString& name, LayoutType* layout, ParentType* parent, void (ReceiverType::*slot)()) {
     QPushButton *btn = new QPushButton(name, parent);
 
     layout->addWidget(btn);

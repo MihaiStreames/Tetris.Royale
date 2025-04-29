@@ -62,7 +62,6 @@ void WaitingLobby::setupUi() {
     // Initialize lobby state and handle errors
     lobbyState = LobbyState::generateEmptyState();
     std::string errorMessage;
-    bool gameStarting = false;
 
     try {
         // Fetch the current lobby state
