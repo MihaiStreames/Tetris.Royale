@@ -191,7 +191,6 @@ void FriendsList::showChat(const QString &friendName) {
     mainLayout->addWidget(chatWidget);
 }
 
-
 void FriendsList::createBottomLayout(){
     if (!bottomWidget) {
         bottomWidget = new QWidget(this);
@@ -241,21 +240,26 @@ void FriendsList::createBottomLayout(){
 }
 
 void FriendsList::addFriendWidget(const QString &friendName) {
+    ClientStatus status = session.getClientStatus(friendName.toStdString());
     FriendWidget::State state;
 
-    //Pas sur mais faire cette appel à ClientSession pour pouvoir récupérer le state du joueur(problème la methode getplayerstate ne prend pas de paramètre)
-    //FriendWidget::State state = session.getPlayerState(friendName);
-
-    //Hardcode de test 
-    if (friendName == "Alice") {
-        state = FriendWidget::Online;
-    } else if (friendName == "Bob") {
-        state = FriendWidget::InLobby;
-    } else if (friendName == "Charlie") {
-        state = FriendWidget::InGame;
-    } else {
-        state = FriendWidget::Offline;
-    }
+    switch (status) {
+        case ClientStatus::IN_LOBBY:
+            state = FriendWidget::InLobby;
+            break;
+        case ClientStatus::IN_GAME:
+            state = FriendWidget::InGame;
+            break;
+        case ClientStatus::IN_MENU:
+            state = FriendWidget::Online;
+            break;
+        case ClientStatus::OFFLINE:
+            state = FriendWidget::Offline;
+            break;
+        default:
+            state = FriendWidget::Offline; 
+            break;
+    } 
 
     QString fullName = friendName;
     switch (state) {

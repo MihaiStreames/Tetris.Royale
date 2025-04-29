@@ -106,7 +106,7 @@ void FriendWidget::updateState(State state) {
             color = "gray"; 
             break;
         default:
-            color = "gray"; 
+            color = "white"; 
             break;
     }
     
