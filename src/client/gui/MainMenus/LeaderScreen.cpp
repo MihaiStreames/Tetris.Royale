@@ -33,6 +33,8 @@ LeaderScreen::LeaderScreen(ClientSession &session, QWidget *parent) : QWidget(pa
 
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
+    table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
     table->setStyleSheet(
         "QTableWidget { "
         "   background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, stop:0 rgba(19, 26, 64, 90), stop:1 rgba(189, 248, 255, 90));"
