@@ -263,7 +263,8 @@ void FriendsList::addFriendWidget(const QString &friendName) {
     });
 
     connect(friendWidget, &FriendWidget::secondButtonClicked, this, [this, friendWidget,friendName]() {
-        (void) session.removeFriend(friendName.toStdString());
+        std::string userID = session.getAccountIDFromUsername(friendName.toStdString());
+        (void) session.removeFriend(userID);
         (void) session.fetchPlayerData();
         // Supprimer l'ami
         friendsListLayout->removeWidget(friendWidget); 
@@ -277,6 +278,11 @@ void FriendsList::addFriendWidget(const QString &friendName) {
 }
 
 void FriendsList::populateFriends() {
+    QLayoutItem *item;
+    while ((item = friendsListLayout->takeAt(0)) != nullptr) {
+        delete item->widget();
+        delete item;
+    }
 
     std::vector<std::string> &Friendslist = session.getFriendList();
 
