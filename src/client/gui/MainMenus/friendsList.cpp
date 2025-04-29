@@ -120,7 +120,7 @@ void FriendsList::createSearchBar() {
 }
 
 void FriendsList::showChat(const QString &friendName) {
-    // Effacer le contenu existant de chatWidget
+    // Nettoyer le layout actuel du chatWidget
     QLayout *existingLayout = chatWidget->layout();
     if (existingLayout) {
         QLayoutItem *item;
@@ -131,20 +131,19 @@ void FriendsList::showChat(const QString &friendName) {
         delete existingLayout;
     }
 
-    // Créer un nouveau layout pour le chat
+    std::string friendID = session.getAccountIDFromUsername(friendName.toStdString());
+
+    // Créer un nouveau layout
     QVBoxLayout *chatLayout = new QVBoxLayout(chatWidget);
 
-    // Ajouter un titre avec le nom de l'ami
     QLabel *chatTitle = new QLabel("Chatting with " + friendName, chatWidget);
     chatTitle->setStyleSheet(titleStyle);
     chatLayout->addWidget(chatTitle);
 
-    // Zone pour afficher les messages
     QListWidget *messageList = new QListWidget(chatWidget);
     messageList->setStyleSheet(messageStyle);
     chatLayout->addWidget(messageList);
 
-    // Zone de saisie pour envoyer des messages
     QHBoxLayout *inputLayout = new QHBoxLayout();
     QLineEdit *messageInput = new QLineEdit(chatWidget);
     messageInput->setPlaceholderText("Write a message ...");
@@ -157,20 +156,41 @@ void FriendsList::showChat(const QString &friendName) {
     inputLayout->addWidget(sendButton);
     chatLayout->addLayout(inputLayout);
 
-    // Connecter le bouton "Envoyer" pour ajouter un message
-    connect(sendButton, &QPushButton::clicked, this, [messageInput, messageList, friendName]() {
+    connect(sendButton, &QPushButton::clicked, this, [this, messageInput, friendID]() {
         QString message = messageInput->text();
         if (!message.isEmpty()) {
-            messageList->addItem("You : " + message);
+            session.sendMessage(friendID, message.toStdString());
             messageInput->clear();
-            // TODO: Envoyer le message au serveur ou à l'ami
         }
     });
 
-    // Ajouter le widget de chat à la section droite
+    // Créer un QPointer pour éviter les pointeurs morts
+    QPointer<QListWidget> safeMessageList = messageList;
+
+    messageTimer = new QTimer(this);
+    connect(messageTimer, &QTimer::timeout, this, [this, friendID, safeMessageList]() {
+        if (!safeMessageList) return;
+
+        std::vector<ChatMessage> messages = session.getPlayerMessages(friendID);
+        if (messages.empty()) {
+            if (safeMessageList->count() == 0) {
+                safeMessageList->addItem("No messages yet.");
+            }
+        } else {
+            safeMessageList->clear();
+            // Plus ancien en haut
+            for (const auto &message : messages) {
+                QString msgText = QString::fromStdString(message.from + ": " + message.text);
+                safeMessageList->addItem(msgText);
+            }
+        }
+    });
+    messageTimer->start(100);
+
     chatWidget->show();
     mainLayout->addWidget(chatWidget);
 }
+
 
 void FriendsList::createBottomLayout(){
     if (!bottomWidget) {
@@ -201,7 +221,7 @@ void FriendsList::createBottomLayout(){
         std::string userID = pendingRequests.back();
         pendingRequests.pop_back();
         QString friendName = QString::fromStdString(session.getRequestUsername(userID));
-        FriendWidget *recentFriendRequest = new FriendWidget(friendName, FriendWidget::FriendRequest,FriendWidget::Offline, this);
+        FriendWidget *recentFriendRequest = new FriendWidget(friendName, FriendWidget::FriendRequest, FriendWidget::Offline, this);
 
         // boucle a faire
         connect(recentFriendRequest, &FriendWidget::firstButtonClicked, this, [this, userID, recentFriendRequest]() {
@@ -251,24 +271,34 @@ void FriendsList::addFriendWidget(const QString &friendName) {
         case FriendWidget::Offline:
             fullName += " [Offline]";
             break;
+        default:
+            break;
     }
     
-    FriendWidget *friendWidget = new FriendWidget(fullName, FriendWidget::FriendsList,state, this);
+    FriendWidget *friendWidget = new FriendWidget(fullName, FriendWidget::FriendsList, state, this);
 
     connect(friendWidget, &FriendWidget::firstButtonClicked, this, [this, friendName]() {
         showChat(friendName);
     });
 
-    connect(friendWidget, &FriendWidget::secondButtonClicked, this, [this, friendWidget,friendName]() {
+    connect(friendWidget, &FriendWidget::secondButtonClicked, this, [this, friendWidget, friendName]() {
         std::string userID = session.getAccountIDFromUsername(friendName.toStdString());
         (void) session.removeFriend(userID);
         (void) session.fetchPlayerData();
-        // Supprimer l'ami
         friendsListLayout->removeWidget(friendWidget); 
         friendWidget->deleteLater(); 
     });
 
-    // Connecter boutton 3 et 4
+    //invite button
+    connect(friendWidget, &FriendWidget::thirdButtonClicked, this, [this, friendName]() {
+        // if in lobby etc
+
+    });
+
+    //spectate button
+    connect(friendWidget, &FriendWidget::fourthButtonClicked, this, [this, friendName]() {
+        // if in lobby aussi bref
+    });
 
     friendsListLayout->addWidget(friendWidget);
     friendsListLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
@@ -296,6 +326,7 @@ void FriendsList::addTitle(const QString &title, QVBoxLayout *targetLayout, QWid
 
     targetLayout->addWidget(boxTitle);
 }
+
 void FriendsList::clearBottomLayout() {
     if (bottomWidget) {
         friendsSectionLayout->removeWidget(bottomWidget);
@@ -303,7 +334,6 @@ void FriendsList::clearBottomLayout() {
         bottomWidget = nullptr;
     }
 }
-
 
 void FriendsList::paintEvent(QPaintEvent *event) {
     QPainter painter(this);

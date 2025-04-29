@@ -16,6 +16,7 @@
 #include <QListWidget>
 #include <QFontDatabase>
 #include <QTimer>
+#include <QPointer>
 
 #include "friendWidget.hpp"
 #include "ClientSession.hpp"
@@ -107,6 +108,8 @@ private:
     QWidget *friendsList;
     QVBoxLayout *friendsListLayout;
     QScrollArea *scrollArea;
+
+    QTimer *refreshTimer; 
     
     // LOBBY INVITES SECTION
     QWidget *lobbySection;
@@ -115,7 +118,8 @@ private:
     QVBoxLayout *lobbyInvitesLayout;
 
     QWidget *chatWidget;
-    QTimer *refreshTimer; 
+    QTimer *messageTimer;
+
 
     ClientSession &session;
 

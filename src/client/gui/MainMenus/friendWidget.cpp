@@ -29,20 +29,22 @@ void FriendWidget::setupLayout(Context context) {
 
     // Définir les textes des boutons en fonction du contexte
     switch (context) {
-    case FriendsList:
-        firstOptionButton->setText("Chat");
-        secondOptionButton->setText("Remove");
-        thirdOptionButton->setText("Invite");
-        fourthOptionButton->setText("Spectate");
-        break;
-    case LobbyInvites:
-        firstOptionButton->setText("Join");
-        secondOptionButton->setText("Decline");
-        break;
-    case FriendRequest:
-        firstOptionButton->setText("Accept");
-        secondOptionButton->setText("Decline");
-        break;
+        case FriendsList:
+            firstOptionButton->setText("Chat");
+            secondOptionButton->setText("Remove");
+            thirdOptionButton->setText("Invite");
+            fourthOptionButton->setText("Spectate");
+            break;
+        case LobbyInvites:
+            firstOptionButton->setText("Join");
+            secondOptionButton->setText("Decline");
+            break;
+        case FriendRequest:
+            firstOptionButton->setText("Accept");
+            secondOptionButton->setText("Decline");
+            break;
+        default:
+            break;
     }
     
     stateCircle = new QLabel(this);
@@ -101,6 +103,9 @@ void FriendWidget::updateState(State state) {
             color = "red"; 
             break;
         case Offline: 
+            color = "gray"; 
+            break;
+        default:
             color = "gray"; 
             break;
     }

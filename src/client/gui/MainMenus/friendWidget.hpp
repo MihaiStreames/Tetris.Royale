@@ -16,7 +16,7 @@ public:
     enum State{
         Online,
         InLobby,
-        InGame,
+        InGame, 
         Offline
     };
 
