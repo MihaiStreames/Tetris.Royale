@@ -350,8 +350,8 @@ void FriendsList::clearBottomLayout() {
 }
 
 void FriendsList::sendInvite(const std::string &friendID) {
-    //hardcoded for now
-    std::string lobbyID = "1234";
+    LobbyState state = session.getCurrentLobbyState();
+    std::string lobbyID = state.lobbyID;
     std::string message = "/invite " + lobbyID;
     (void) session.sendMessage(friendID, message);
 }
@@ -380,7 +380,7 @@ void FriendsList::displayLobbyInvite(const std::string &fromID, const std::strin
     FriendWidget *inviteWidget = new FriendWidget(friendName, FriendWidget::LobbyInvites, FriendWidget::Offline, this);
     //Accept invitation
     connect(inviteWidget, &FriendWidget::firstButtonClicked, this, [this, inviteWidget, lobbyID]() {
-        // (void) session.joinLobby(lobbyID); Trouver comment switch menu principal 
+        //(void) session.joinLobby(lobbyID);
         lobbyInvitesLayout->removeWidget(inviteWidget);
         inviteWidget->deleteLater(); 
     });
