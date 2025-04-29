@@ -63,7 +63,8 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
     chatWidget->setFixedWidth(300); // Largeur du chat
     chatWidget->hide(); // Masquer le chat au départ
     mainLayout->addWidget(chatWidget, 1); // Le chat occupe 1/3 de l'espace
-
+    
+    (void) session.fetchPlayerData();
     populateFriends();
     // Refresh la page
     refreshTimer = new QTimer(this);
@@ -75,7 +76,6 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
         }
         (void) session.fetchPlayerData();
         populateFriends();
-        clearBottomLayout();
         createBottomLayout();
     });
     refreshTimer->start(5000); 
@@ -199,28 +199,25 @@ void FriendsList::createBottomLayout(){
     std::vector<std::string> &pendingRequests = session.getPendingFriendRequests();
     if(!pendingRequests.empty()){
         std::string userID = pendingRequests.back();
-        std::string friendName =session.getFriendUsername(userID);
         pendingRequests.pop_back();
-        QString QfriendName = QString::fromStdString(friendName);
-        //QString friendName = "Joseph";
-        FriendWidget *recentFriendRequest = new FriendWidget(QfriendName, FriendWidget::FriendRequest,FriendWidget::Offline, this);
+        QString friendName = QString::fromStdString(session.getRequestUsername(userID));
+        FriendWidget *recentFriendRequest = new FriendWidget(friendName, FriendWidget::FriendRequest,FriendWidget::Offline, this);
 
         // boucle a faire
-        connect(recentFriendRequest, &FriendWidget::firstButtonClicked, this, [this,friendName,recentFriendRequest]() {
-            (void) session.acceptFriendRequest(friendName);
+        connect(recentFriendRequest, &FriendWidget::firstButtonClicked, this, [this, userID, recentFriendRequest]() {
+            (void) session.acceptFriendRequest(userID);
             (void) session.fetchPlayerData();
             createBottomLayout();
         });
 
-        connect(recentFriendRequest, &FriendWidget::secondButtonClicked, this, [this,friendName,recentFriendRequest](){
-            (void) session.declineFriendRequest(friendName);
+        connect(recentFriendRequest, &FriendWidget::secondButtonClicked, this, [this, userID, recentFriendRequest](){
+            (void) session.declineFriendRequest(userID);
             (void) session.fetchPlayerData();
             createBottomLayout();
         });
 
         bottomLayout->addWidget(recentFriendRequest, 1);
     }
-    //friendsSectionLayout->addWidget(bottomWidget);
 }
 
 void FriendsList::addFriendWidget(const QString &friendName) {
