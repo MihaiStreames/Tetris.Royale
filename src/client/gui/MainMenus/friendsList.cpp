@@ -198,7 +198,8 @@ void FriendsList::createBottomLayout(){
     // Demande d'ami la plus récente
     std::vector<std::string> &pendingRequests = session.getPendingFriendRequests();
     if(!pendingRequests.empty()){
-        std::string friendName = pendingRequests.back();
+        std::string userID = pendingRequests.back();
+        std::string friendName =session.getFriendUsername(userID);
         pendingRequests.pop_back();
         QString QfriendName = QString::fromStdString(friendName);
         //QString friendName = "Joseph";
