@@ -65,6 +65,20 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
     mainLayout->addWidget(chatWidget, 1); // Le chat occupe 1/3 de l'espace
 
     populateFriends();
+    // Refresh la page
+    refreshTimer = new QTimer(this);
+    connect(refreshTimer, &QTimer::timeout, this, [this, &session]() {
+        QLayoutItem *item;
+        while ((item = friendsListLayout->takeAt(0)) != nullptr) {
+            delete item->widget();
+            delete item;
+        }
+        (void) session.fetchPlayerData();
+        populateFriends();
+        clearBottomLayout();
+        createBottomLayout();
+    });
+    refreshTimer->start(5000); 
 }
 
 void FriendsList::createSearchBar() {
@@ -92,6 +106,13 @@ void FriendsList::createSearchBar() {
     // Connecter le bouton de recherche
     connect(searchButton, &QPushButton::clicked, this, [this, searchInput]() {
         QString searchText = searchInput->text().trimmed();
+        if(!searchText.isEmpty()){
+            (void) session.sendFriendRequest(searchText.toStdString());
+            searchInput->clear();
+            //Refresh the data
+            (void) session.fetchPlayerData();
+     
+        }
     });
 
     // Ajouter la barre de recherche au layout cible
@@ -152,11 +173,22 @@ void FriendsList::showChat(const QString &friendName) {
 }
 
 void FriendsList::createBottomLayout(){
-    QWidget *bottomWidget = new QWidget(this);
-    bottomWidget->setStyleSheet("border: transparent;");
-    bottomWidget->setFixedHeight(90);
-    QHBoxLayout *bottomLayout = new QHBoxLayout(bottomWidget);
-
+    if (!bottomWidget) {
+        bottomWidget = new QWidget(this);
+        bottomWidget->setStyleSheet("border: transparent;");
+        bottomWidget->setFixedHeight(90);
+        friendsSectionLayout->addWidget(bottomWidget);
+        bottomLayout = new QHBoxLayout(bottomWidget);
+    } else {
+        // Nettoyer les anciens widgets du layout
+        QLayoutItem *child;
+        while ((child = bottomLayout->takeAt(0)) != nullptr) {
+            if (child->widget()) {
+                child->widget()->deleteLater();
+            }
+            delete child;
+        }
+    }
     QPushButton *exitButton = new QPushButton("Exit");
     exitButton->setStyleSheet(buttonStyle);
 
@@ -164,29 +196,30 @@ void FriendsList::createBottomLayout(){
     bottomLayout->addWidget(exitButton, 0, Qt::AlignLeft);
 
     // Demande d'ami la plus récente
-    //const std::vector<std::string> &pendingRequests = session.getPendingFriendRequests();
+    std::vector<std::string> &pendingRequests = session.getPendingFriendRequests();
+    if(!pendingRequests.empty()){
+        std::string friendName = pendingRequests.back();
+        pendingRequests.pop_back();
+        QString QfriendName = QString::fromStdString(friendName);
+        //QString friendName = "Joseph";
+        FriendWidget *recentFriendRequest = new FriendWidget(QfriendName, FriendWidget::FriendRequest,FriendWidget::Offline, this);
 
-    //std::string friendName = pendingRequests.pop_back();
-    QString friendName = "Joseph";
-    FriendWidget *recentFriendRequest = new FriendWidget(friendName, FriendWidget::FriendRequest,FriendWidget::Offline, this);
+        // boucle a faire
+        connect(recentFriendRequest, &FriendWidget::firstButtonClicked, this, [this,friendName,recentFriendRequest]() {
+            (void) session.acceptFriendRequest(friendName);
+            (void) session.fetchPlayerData();
+            createBottomLayout();
+        });
 
-    // boucle a faire
-    /*connect(recentFriendRequest, &FriendWidget::firstButtonClicked, this, [this] {
-        (void) session.acceptFriendRequest(friendName);
-        (void) session.fetchPlayerData();
-        bottomLayout->removeWidget(recentFriendRequest); // Retirer le widget de la liste
-        friendWidget->deleteLater();
-    });
+        connect(recentFriendRequest, &FriendWidget::secondButtonClicked, this, [this,friendName,recentFriendRequest](){
+            (void) session.declineFriendRequest(friendName);
+            (void) session.fetchPlayerData();
+            createBottomLayout();
+        });
 
-    connect(recentFriendRequest, &FriendWidget::secondButtonClicked, this, [this]{
-        (void) session.declineFriendRequest(friendName);
-        (void) session.fetchPlayerData();
-        bottomLayout->removeWidget(recentFriendRequest); 
-        friendWidget->deleteLater();
-    });*/
-
-    bottomLayout->addWidget(recentFriendRequest, 1);
-    friendsSectionLayout->addWidget(bottomWidget);
+        bottomLayout->addWidget(recentFriendRequest, 1);
+    }
+    //friendsSectionLayout->addWidget(bottomWidget);
 }
 
 void FriendsList::addFriendWidget(const QString &friendName) {
@@ -221,14 +254,16 @@ void FriendsList::addFriendWidget(const QString &friendName) {
             fullName += " [Offline]";
             break;
     }
-
+    
     FriendWidget *friendWidget = new FriendWidget(fullName, FriendWidget::FriendsList,state, this);
 
     connect(friendWidget, &FriendWidget::firstButtonClicked, this, [this, friendName]() {
         showChat(friendName);
     });
 
-    connect(friendWidget, &FriendWidget::secondButtonClicked, this, [this, friendWidget]() {
+    connect(friendWidget, &FriendWidget::secondButtonClicked, this, [this, friendWidget,friendName]() {
+        (void) session.removeFriend(friendName.toStdString());
+        (void) session.fetchPlayerData();
         // Supprimer l'ami
         friendsListLayout->removeWidget(friendWidget); 
         friendWidget->deleteLater(); 
@@ -241,12 +276,11 @@ void FriendsList::addFriendWidget(const QString &friendName) {
 }
 
 void FriendsList::populateFriends() {
-    // Liste fictive d'amis
-    QStringList friendsList = {"Alice", "Bob", "Charlie","TEST"};
-    
 
-    for (const QString &friendName : friendsList) {
-        addFriendWidget(friendName);
+    std::vector<std::string> &Friendslist = session.getFriendList();
+
+    for (const auto &id : Friendslist) {
+        addFriendWidget(QString::fromStdString(session.getFriendUsername(id)));
     }
 }
 
@@ -258,11 +292,19 @@ void FriendsList::addTitle(const QString &title, QVBoxLayout *targetLayout, QWid
 
     targetLayout->addWidget(boxTitle);
 }
+void FriendsList::clearBottomLayout() {
+    if (bottomWidget) {
+        friendsSectionLayout->removeWidget(bottomWidget);
+        delete bottomWidget;
+        bottomWidget = nullptr;
+    }
+}
+
 
 void FriendsList::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
 
-    QPixmap backgroundPixmap("/resources/tetris_main.png");
+    QPixmap backgroundPixmap("src/client/gui/resources/tetris_main.png");
     painter.drawPixmap(this->rect(), backgroundPixmap);
 
     QMainWindow::paintEvent(event);

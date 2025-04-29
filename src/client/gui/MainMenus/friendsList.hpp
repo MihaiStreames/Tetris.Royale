@@ -15,6 +15,7 @@
 #include <QFrame>
 #include <QListWidget>
 #include <QFontDatabase>
+#include <QTimer>
 
 #include "friendWidget.hpp"
 #include "ClientSession.hpp"
@@ -93,6 +94,9 @@ private:
     //widgets and layouts
     QWidget *centralWidget;
     QHBoxLayout *mainLayout;
+    QWidget *bottomWidget = nullptr;
+    QHBoxLayout *bottomLayout = nullptr;
+
     
     QVBoxLayout *leftSectionLayout;
     QWidget *rightSection;
@@ -111,6 +115,8 @@ private:
     QVBoxLayout *lobbyInvitesLayout;
 
     QWidget *chatWidget;
+    QTimer *refreshTimer; 
+
     ClientSession &session;
 
 private slots:
@@ -120,6 +126,7 @@ private slots:
     void populateFriends();
     void createSearchBar();
     void createBottomLayout();
+    void clearBottomLayout();
 };
 
 #endif // FRIENDSLIST_HPP
