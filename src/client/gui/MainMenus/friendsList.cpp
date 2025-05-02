@@ -173,11 +173,6 @@ void FriendsList::showChat(const QString &friendName) {
             // Plus ancien en haut
             for (auto it = messages.rbegin(); it != messages.rend(); ++it) {
                 const std::string &text = it->text;
-                // ignores the invitations
-                if (text.rfind("/invite ", 0) != 0) {
-                    QString msgText = QString::fromStdString(it->from + ": " + it->text);
-                    safeMessageList->addItem(msgText);
-                }
             }
         }
     });
@@ -277,10 +272,12 @@ void FriendsList::addFriendWidget(const QString &friendName) {
     
     FriendWidget *friendWidget = new FriendWidget(fullName, FriendWidget::FriendsList, state, this);
 
+    //show chat button
     connect(friendWidget, &FriendWidget::firstButtonClicked, this, [this, friendName]() {
         showChat(friendName);
     });
 
+    //remove friend button
     connect(friendWidget, &FriendWidget::secondButtonClicked, this, [this, friendWidget, friendName]() {
         std::string userID = session.getAccountIDFromUsername(friendName.toStdString());
         (void) session.removeFriend(userID);

@@ -115,7 +115,6 @@ private:
 
     QTimer *refreshTimer; 
     
-
     QWidget *chatWidget;
     QTimer *messageTimer;
 
