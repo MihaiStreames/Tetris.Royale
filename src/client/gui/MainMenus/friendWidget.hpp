@@ -23,7 +23,6 @@ public:
 
     enum Context {
         FriendsList,
-        LobbyInvites,
         FriendRequest
     };
 
@@ -50,7 +49,6 @@ signals:
     void firstButtonClicked(const QString &friendName); 
     void secondButtonClicked(const QString &friendName); 
     void thirdButtonClicked(const QString &friendName); 
-    void fourthButtonClicked(const QString &friendName); 
 
 private:
     Context context;
@@ -59,10 +57,8 @@ private:
     QPushButton *firstOptionButton;
     QPushButton *secondOptionButton;
     QPushButton *thirdOptionButton;
-    QPushButton *fourthOptionButton;
 
     QLabel *stateCircle;
-
 
     void setupLayout(Context context);
     void updateState(State state);

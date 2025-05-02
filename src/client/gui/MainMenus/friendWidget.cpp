@@ -24,8 +24,6 @@ void FriendWidget::setupLayout(Context context) {
     thirdOptionButton = new QPushButton(this);
     thirdOptionButton->setStyleSheet(buttonStyle);
 
-    fourthOptionButton = new QPushButton(this);
-    fourthOptionButton->setStyleSheet(buttonStyle);
 
     // Définir les textes des boutons en fonction du contexte
     switch (context) {
@@ -33,11 +31,6 @@ void FriendWidget::setupLayout(Context context) {
             firstOptionButton->setText("Chat");
             secondOptionButton->setText("Remove");
             thirdOptionButton->setText("Invite");
-            fourthOptionButton->setText("Spectate");
-            break;
-        case LobbyInvites:
-            firstOptionButton->setText("Join");
-            secondOptionButton->setText("Decline");
             break;
         case FriendRequest:
             firstOptionButton->setText("Accept");
@@ -59,12 +52,10 @@ void FriendWidget::setupLayout(Context context) {
     firstOptionButton->setVisible(false);
     secondOptionButton->setVisible(false);
     thirdOptionButton->setVisible(false);
-    fourthOptionButton->setVisible(false);
-    
+ 
     layout->addWidget(firstOptionButton);
     layout->addWidget(secondOptionButton);
     layout->addWidget(thirdOptionButton);
-    layout->addWidget(fourthOptionButton);
 
     connect(mainButton, &QPushButton::clicked, this, [this, context](){
         bool areOptionsVisible = firstOptionButton->isVisible();
@@ -72,7 +63,6 @@ void FriendWidget::setupLayout(Context context) {
         secondOptionButton->setVisible(!areOptionsVisible);
         if (context == FriendsList){
             thirdOptionButton->setVisible(!areOptionsVisible);
-            fourthOptionButton->setVisible(!areOptionsVisible);
         }
     });
     // Connecter les signaux des boutons 
@@ -84,9 +74,6 @@ void FriendWidget::setupLayout(Context context) {
     });
     connect(thirdOptionButton, &QPushButton::clicked, this, [this]() {
         emit thirdButtonClicked(friendName);
-    });
-    connect(fourthOptionButton, &QPushButton::clicked, this, [this]() {
-        emit fourthButtonClicked(friendName);
     });
 }
 

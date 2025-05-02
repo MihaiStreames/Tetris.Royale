@@ -18,7 +18,9 @@
 #include <QTimer>
 #include <QPointer>
 #include <set>
+#include <sstream>
 #include <QMessageBox>
+#include <random>
 
 #include "friendWidget.hpp"
 #include "ClientSession.hpp"
@@ -113,32 +115,20 @@ private:
 
     QTimer *refreshTimer; 
     
-    // LOBBY INVITES SECTION
-    QWidget *lobbySection;
-    QVBoxLayout *lobbySectionLayout;
-    QWidget *lobbyInvitesList;
-    QVBoxLayout *lobbyInvitesLayout;
 
     QWidget *chatWidget;
     QTimer *messageTimer;
 
-    std::set<std::pair<std::string, std::string>> displayedInvites;
 
     ClientSession &session;
 
 private slots:
     void showChat(const QString &friendName);
-    void addTitle(const QString &title, QVBoxLayout *targetLayout, QWidget *targetWidget);
     void addFriendWidget(const QString &friendName);
     void populateFriends();
     void createSearchBar();
     void createBottomLayout();
-    void clearBottomLayout();
     void sendInvite(const std::string &friendID);
-    void checkInvites();
-    void displayLobbyInvite(const std::string &fromID, const std::string &lobbyID);
-    bool alreadyDisplayedInvite(const std::string &fromID, const std::string &lobbyID);
-    void markInviteAsDisplayed(const std::string &fromID, const std::string &lobbyID);
 };
 
 #endif // FRIENDSLIST_HPP

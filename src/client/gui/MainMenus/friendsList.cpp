@@ -26,7 +26,12 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
     leftSectionLayout->addWidget(friendsSection, 3);
 
     friendsSectionLayout = new QVBoxLayout(friendsSection);
-    addTitle("Friends List", friendsSectionLayout, friendsSection);
+    QLabel *boxTitle = new QLabel("Friends List", friendsSection);
+    boxTitle->setStyleSheet(titleStyle);
+    boxTitle->setFixedHeight(30); 
+    boxTitle->setAlignment(Qt::AlignLeft | Qt::AlignTop); 
+
+    friendsSectionLayout->addWidget(boxTitle);
 
     // Créer une zone scrollable
     scrollArea = new QScrollArea(this);
@@ -44,19 +49,6 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
     createSearchBar();
     createBottomLayout();
 
-    //-----LOBBY INVITES SECTION-----//
-    lobbySection = new QWidget(this);
-    lobbySection->setStyleSheet("border: 2px solid white; background-color: transparent;");
-    leftSectionLayout->addWidget(lobbySection, 1); 
-
-    lobbySectionLayout = new QVBoxLayout(lobbySection);
-    addTitle("Lobby Invites", lobbySectionLayout, lobbySection);
-
-    lobbyInvitesList = new QWidget(this);
-    lobbyInvitesList->setStyleSheet("border: 2px solid white; background-color: transparent;");
-    lobbyInvitesLayout = new QVBoxLayout(lobbyInvitesList);
-    lobbySectionLayout->addWidget(lobbyInvitesList);
-
     // Conteneur pour le chat (initialement masqué)
     chatWidget = new QWidget(this);
     chatWidget->setStyleSheet("background-color: rgb(30, 30, 30); color: white;");
@@ -65,8 +57,7 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
     mainLayout->addWidget(chatWidget, 1); // Le chat occupe 1/3 de l'espace
     
     (void) session.fetchPlayerData();
-    populateFriends();
-    checkInvites();    
+    populateFriends();  
     // Refresh la page
     refreshTimer = new QTimer(this);
     connect(refreshTimer, &QTimer::timeout, this, [this, &session]() {
@@ -78,7 +69,6 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
         (void) session.fetchPlayerData();
         populateFriends();
         createBottomLayout();
-        checkInvites();
     });
     refreshTimer->start(5000); 
 }
@@ -302,16 +292,11 @@ void FriendsList::addFriendWidget(const QString &friendName) {
     //invite button
     connect(friendWidget, &FriendWidget::thirdButtonClicked, this, [this, friendName]() {
         std::string userID = session.getAccountIDFromUsername(friendName.toStdString());
-        if (session.getOwnStatus() == ClientStatus::IN_LOBBY){
-            sendInvite(userID);
+        if (session.getClientStatus(friendName.toStdString()) == ClientStatus::IN_LOBBY) {
+            (void) session.sendMessage(userID, "Join my lobby: " + session.getCurrentLobbyState().lobbyID);
         } else {
-            QMessageBox::warning(this, "Error", "You must be in a lobby to send an invite.");
+            QMessageBox::warning(this, "Invite Error", "The player is not in a lobby.");
         }
-    });
-
-    //spectate button
-    connect(friendWidget, &FriendWidget::fourthButtonClicked, this, [this, friendName]() {
-        // if in lobby aussi bref
     });
 
     friendsListLayout->addWidget(friendWidget);
@@ -332,73 +317,10 @@ void FriendsList::populateFriends() {
     }
 }
 
-void FriendsList::addTitle(const QString &title, QVBoxLayout *targetLayout, QWidget *targetWidget) {
-    QLabel *boxTitle = new QLabel(title, targetWidget);
-    boxTitle->setStyleSheet(titleStyle);
-    boxTitle->setFixedHeight(30); 
-    boxTitle->setAlignment(Qt::AlignLeft | Qt::AlignTop); 
-
-    targetLayout->addWidget(boxTitle);
-}
-
-void FriendsList::clearBottomLayout() {
-    if (bottomWidget) {
-        friendsSectionLayout->removeWidget(bottomWidget);
-        delete bottomWidget;
-        bottomWidget = nullptr;
-    }
-}
-
 void FriendsList::sendInvite(const std::string &friendID) {
     LobbyState state = session.getCurrentLobbyState();
     std::string lobbyID = state.lobbyID;
-    std::string message = "/invite " + lobbyID;
-    (void) session.sendMessage(friendID, message);
-}
-
-void FriendsList::checkInvites() {
-    std::vector<std::string> &friends = session.getFriendList();
-
-    for (const std::string &friendID : friends) {
-        std::vector<ChatMessage> messages = session.getPlayerMessages(friendID);
-        for (const ChatMessage &msg : messages) {
-            const std::string &text = msg.text;
-            if (text.rfind("/invite ", 0) == 0) {
-                std::string invitedLobbyID = text.substr(8);
-                if (!alreadyDisplayedInvite(friendID, invitedLobbyID)) {
-                    displayLobbyInvite(friendID, invitedLobbyID);
-                    markInviteAsDisplayed(friendID, invitedLobbyID);
-                }
-            }
-        }
-    }
-}
-
-void FriendsList::displayLobbyInvite(const std::string &fromID, const std::string &lobbyID) {
-    QString friendName = QString::fromStdString(session.getFriendUsername(fromID));
-
-    FriendWidget *inviteWidget = new FriendWidget(friendName, FriendWidget::LobbyInvites, FriendWidget::Offline, this);
-    //Accept invitation
-    connect(inviteWidget, &FriendWidget::firstButtonClicked, this, [this, inviteWidget, lobbyID]() {
-        //(void) session.joinLobby(lobbyID);
-        lobbyInvitesLayout->removeWidget(inviteWidget);
-        inviteWidget->deleteLater(); 
-    });
-    //Decline invitation
-    connect(inviteWidget, &FriendWidget::secondButtonClicked, this, [this, inviteWidget]() {
-        lobbyInvitesLayout->removeWidget(inviteWidget);
-        inviteWidget->deleteLater(); 
-    });
-
-    lobbyInvitesLayout->addWidget(inviteWidget);
-}
-
-bool FriendsList::alreadyDisplayedInvite(const std::string &fromID, const std::string &lobbyID) {
-    return displayedInvites.find({fromID, lobbyID}) != displayedInvites.end();
-}
-
-void FriendsList::markInviteAsDisplayed(const std::string &fromID, const std::string &lobbyID) {
-    displayedInvites.insert({fromID, lobbyID}); 
+    (void) session.sendMessage(friendID, "Join my lobby: " + lobbyID);
 }
 
 void FriendsList::paintEvent(QPaintEvent *event) {
