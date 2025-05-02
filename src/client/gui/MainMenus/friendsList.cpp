@@ -9,18 +9,14 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
     QFontDatabase::addApplicationFont("/resources/orbitron.ttf");
     setStyleSheet(windowStyle);
 
-    // window widget 
     centralWidget = new QWidget(this);
     setCentralWidget(centralWidget);
-
 
     mainLayout = new QHBoxLayout(centralWidget);
 
     leftSectionLayout = new QVBoxLayout();
     mainLayout->addLayout(leftSectionLayout, 2); 
 
-
-    //-----FRIENDS LIST SECTION-----//
     friendsSection = new QWidget(this);
     friendsSection->setStyleSheet("border: 2px solid white; background-color: transparent;");
     leftSectionLayout->addWidget(friendsSection, 3);
@@ -33,7 +29,6 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
 
     friendsSectionLayout->addWidget(boxTitle);
 
-    // Créer une zone scrollable
     scrollArea = new QScrollArea(this);
     scrollArea->setWidgetResizable(true); 
     scrollArea->setStyleSheet("border: none;");
@@ -45,20 +40,17 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
     scrollArea->setWidget(friendsList);
     friendsSectionLayout->addWidget(scrollArea);
 
-    // Ajouter la barre de recherche et le layout inférieur
     createSearchBar();
     createBottomLayout();
 
-    // Conteneur pour le chat (initialement masqué)
     chatWidget = new QWidget(this);
     chatWidget->setStyleSheet("background-color: rgb(30, 30, 30); color: white;");
-    chatWidget->setFixedWidth(300); // Largeur du chat
-    chatWidget->hide(); // Masquer le chat au départ
-    mainLayout->addWidget(chatWidget, 1); // Le chat occupe 1/3 de l'espace
+    chatWidget->setFixedWidth(300); 
+    chatWidget->hide(); 
+    mainLayout->addWidget(chatWidget, 1); 
     
     (void) session.fetchPlayerData();
     populateFriends();  
-    // Refresh la page
     refreshTimer = new QTimer(this);
     connect(refreshTimer, &QTimer::timeout, this, [this, &session]() {
         QLayoutItem *item;
@@ -74,45 +66,38 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
 }
 
 void FriendsList::createSearchBar() {
-    // Conteneur pour la barre de recherche
     QWidget *searchBarWidget = new QWidget(this);
     searchBarWidget->setStyleSheet("border: none; background-color: transparent;");
     searchBarWidget->setFixedHeight(50);
 
-    // Layout horizontal pour la barre de recherche
     QHBoxLayout *searchBarLayout = new QHBoxLayout(searchBarWidget);
     searchBarLayout->setContentsMargins(0, 0, 0, 0);
     searchBarLayout->setSpacing(10);
 
-    // Champ de recherche
     QLineEdit *searchInput = new QLineEdit(searchBarWidget);
     searchInput->setPlaceholderText("Add a friend...");
     searchInput->setStyleSheet(searchBarStyle);
     searchBarLayout->addWidget(searchInput);
 
-    // Bouton de recherche
     QPushButton *searchButton = new QPushButton("Search", searchBarWidget);
     searchButton->setStyleSheet(buttonStyle);
     searchBarLayout->addWidget(searchButton);
 
-    // Connecter le bouton de recherche
     connect(searchButton, &QPushButton::clicked, this, [this, searchInput]() {
         QString searchText = searchInput->text().trimmed();
         if(!searchText.isEmpty()){
             (void) session.sendFriendRequest(searchText.toStdString());
             searchInput->clear();
-            //Refresh the data
             (void) session.fetchPlayerData();
      
         }
     });
 
-    // Ajouter la barre de recherche au layout cible
     friendsSectionLayout->addWidget(searchBarWidget);
 }
 
 void FriendsList::showChat(const QString &friendName) {
-    // Nettoyer le layout actuel du chatWidget
+    // clear the previous chat widget
     QLayout *existingLayout = chatWidget->layout();
     if (existingLayout) {
         QLayoutItem *item;
@@ -125,7 +110,7 @@ void FriendsList::showChat(const QString &friendName) {
 
     std::string friendID = session.getAccountIDFromUsername(friendName.toStdString());
 
-    // Créer un nouveau layout
+    // create the chat part
     QVBoxLayout *chatLayout = new QVBoxLayout(chatWidget);
 
     QLabel *chatTitle = new QLabel("Chatting with " + friendName, chatWidget);
@@ -156,7 +141,7 @@ void FriendsList::showChat(const QString &friendName) {
         }
     });
 
-    // Créer un QPointer pour éviter les pointeurs morts
+    // Safe pointer to avoid dangling pointer issues
     QPointer<QListWidget> safeMessageList = messageList;
 
     messageTimer = new QTimer(this);
@@ -170,7 +155,7 @@ void FriendsList::showChat(const QString &friendName) {
             }
         } else {
             safeMessageList->clear();
-            // Plus ancien en haut
+            // oldest message on top
             for (auto it = messages.rbegin(); it != messages.rend(); ++it) {
                 const std::string &text = it->text;
             }
@@ -205,7 +190,7 @@ void FriendsList::createBottomLayout(){
     connect(exitButton, &QPushButton::clicked, this, &QMainWindow::close);
     bottomLayout->addWidget(exitButton, 0, Qt::AlignLeft);
 
-    // Demande d'ami la plus récente
+    //fifo queue for friend requests
     std::vector<std::string> &pendingRequests = session.getPendingFriendRequests();
     if(!pendingRequests.empty()){
         std::string userID = pendingRequests.back();
@@ -213,7 +198,6 @@ void FriendsList::createBottomLayout(){
         QString friendName = QString::fromStdString(session.getRequestUsername(userID));
         FriendWidget *recentFriendRequest = new FriendWidget(friendName, FriendWidget::FriendRequest, FriendWidget::Offline, this);
 
-        // boucle a faire
         connect(recentFriendRequest, &FriendWidget::firstButtonClicked, this, [this, userID, recentFriendRequest]() {
             (void) session.acceptFriendRequest(userID);
             (void) session.fetchPlayerData();
