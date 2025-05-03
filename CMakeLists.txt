@@ -1,3 +1,6 @@
+# This is a heavily revised version of mihai's CMake template,
+# rewritten by antoine to be more modular and easier to maintain <3
+
 # Project name and standard
 cmake_minimum_required(VERSION 3.22...4.0)
 project(TetrisRoyale VERSION 1.0.0 LANGUAGES CXX)
@@ -163,16 +166,6 @@ file(GLOB TETRIS_SERVER_SRC_FILES "${TETRIS_SRC_DIR}/server/tetris-server/*.cpp"
 file(GLOB CLIENT_CONNECTIVITY_SRC_FILES "${TETRIS_SRC_DIR}/client/connectivity/*.cpp")
 file(GLOB CLIENT_TUI_SRC_FILES "${TETRIS_SRC_DIR}/client/tui/*.cpp" "${TETRIS_SRC_DIR}/client/tui/menus/*.cpp")
 
-# GUI sources
-file(GLOB GUI_SRC
-    "${TETRIS_SRC_DIR}/client/gui/*.cpp"
-    "${TETRIS_SRC_DIR}/client/gui/GameMenus/*.cpp"
-    "${TETRIS_SRC_DIR}/client/gui/LobbyMenus/*.cpp"
-    "${TETRIS_SRC_DIR}/client/gui/LoginMenus/*.cpp"
-    "${TETRIS_SRC_DIR}/client/gui/MainMenus/*.cpp"
-)
-
-
 # Libraries
 add_tetris_library(TetrisRoyaleCommon "" "${COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common")
 add_tetris_library(TetrisRoyaleCommonServer "" "${SERVER_COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common/server-common" libs TetrisRoyaleCommon Boost::boost OpenSSL::Crypto nlohmann_json::nlohmann_json)
@@ -182,13 +175,11 @@ add_tetris_library(TetrisRoyaleDBServer STATIC "${DB_SERVER_SRC_FILES}" "${TETRI
 add_tetris_library(TetrisRoyaleTetrisServer "" "${TETRIS_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/tetris-server" libs TetrisRoyaleGameLogic TetrisRoyaleCommonServer TetrisRoyaleCommon)
 add_tetris_library(TetrisRoyaleClientConnectivity "" "${CLIENT_CONNECTIVITY_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/connectivity" libs nlohmann_json::nlohmann_json TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost)
 add_tetris_library(TetrisRoyaleClientTUILib "" "${CLIENT_TUI_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/tui;${TETRIS_INCLUDE_DIR}/client/tui/menus" libs TetrisRoyaleClientConnectivity ftxui::screen ftxui::dom ftxui::component)
-add_tetris_library(TetrisRoyaleClientGUILib "" "${GUI_SRC}" "${TETRIS_INCLUDE_DIR}/client/gui" libs TetrisRoyaleClientConnectivity Qt5::Widgets Qt5::Gui Qt5::Core TetrisRoyaleCommon)
-
 
 # Executables
 add_tetris_executable(TetrisRoyaleMasterServer "${TETRIS_SRC_DIR}/server/MasterServer.cpp" "${TETRIS_INCLUDE_DIR}/server" libs TetrisRoyaleTetrisServer TetrisRoyaleDBServer TetrisRoyaleCommon)
-add_tetris_executable(TetrisRoyaleClientTUI "${TETRIS_SRC_DIR}/client/Client.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientTUILib TetrisRoyaleClientConnectivity)
-add_tetris_executable(TetrisRoyaleClientGUI "${TETRIS_SRC_DIR}/client/gui/main.cpp" "" libs TetrisRoyaleClientGUILib)
+add_tetris_executable(TetrisRoyaleClientTUI "${TETRIS_SRC_DIR}/client/ClientTUI.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientTUILib TetrisRoyaleClientConnectivity)
+add_tetris_executable(TetrisRoyaleClientGUI "${TETRIS_SRC_DIR}/client/ClientGUI.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientConnectivity Qt5::Widgets Qt5::Gui Qt5::Core)
 
 
 # ==================================================== #
@@ -201,8 +192,8 @@ function(add_tetris_test TEST_FILE)
   add_test(NAME ${TEST_NAME} COMMAND ${TEST_NAME})
 endfunction()
 
-# Create a test executable for each test file in /tests directory
-file(GLOB TEST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.cpp")
+# Create a test executable for each test file in /test directory
+file(GLOB TEST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp")
 foreach(TEST_FILE ${TEST_FILES})
   add_tetris_test(${TEST_FILE})
 endforeach()
@@ -216,5 +207,4 @@ message(STATUS "CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 message(STATUS "CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 message(STATUS "Testing enabled: ${TETRIS_ENABLE_TESTS}")
 message(STATUS "Sanitizers enabled: ${TETRIS_USE_SANITIZERS}")
-
 

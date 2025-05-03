@@ -1,7 +1,7 @@
-#include "Client.hpp"
+#include "ClientTUI.hpp"
 
 
-// This is the Client entry point
+// This is the Client TUI entry point
 // It reads the configuration file, creates a ClientSession object and runs it
 
 int main(int argc, char *argv[]) {
