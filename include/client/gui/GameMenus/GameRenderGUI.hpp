@@ -1,5 +1,5 @@
-#ifndef GAMERENDER_HPP
-#define GAMERENDER_HPP
+#ifndef GAMERENDERGUI_HPP
+#define GAMERENDERGUI_HPP
 
 #include <QWidget>
 #include <QColor>
@@ -28,4 +28,4 @@ QWidget* renderBox(const QString &title, QWidget *content, QWidget *parent = nul
 void placePieceInBoard(PieceType type, int x, int y, tetroMat &board);
 
 
-#endif // GAMERENDER_HPP
+#endif // GAMERENDERGUI_HPP

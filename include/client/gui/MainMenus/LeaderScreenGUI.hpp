@@ -1,5 +1,5 @@
-#ifndef LEADERSCREEN_HPP
-#define LEADERSCREEN_HPP
+#ifndef LEADERSCREENGUI_HPP
+#define LEADERSCREENGUI_HPP
 
 #include <QtWidgets>
 #include <QLabel>
@@ -15,6 +15,7 @@
 
 
 class LeaderScreen : public QWidget {
+    Q_OBJECT 
 public:
     explicit LeaderScreen(ClientSession &session, QWidget *parent = nullptr);
 protected:

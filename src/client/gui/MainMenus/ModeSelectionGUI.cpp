@@ -1,5 +1,5 @@
 
-#include "ModeSelection.hpp"
+#include "ModeSelectionGUI.hpp"
 
 
 ModeSelection::ModeSelection(ClientSession &session, MainMenu* mainMenuView, QWidget *parent) : QWidget(parent), mainMenu(mainMenuView), session(session){

@@ -20,4 +20,4 @@ public:
 };
 
 
-#endif // MENUSWITCHER_H
+#endif // MENUSWITCHER_HPP

@@ -1,18 +1,17 @@
-#ifndef SETTINGS_HPP
-#define SETTINGS_HPP
+#ifndef MODESELECTIONGUI_HPP
+#define MODESELECTIONGUI_HPP
 
-#include <QTableWidget>
-#include <QHeaderView>
-
-#include "MainMenu.hpp"
+#include "MainMenuGUI.hpp"
+#include "LobbyGUI.hpp"
+#include "GameScreenGUI.hpp"
 
 
 class MainMenu;
 
-class SettingsScreen : public QWidget{
-
+class ModeSelection : public QWidget {
+    Q_OBJECT
 public:
-    explicit SettingsScreen(MainMenu* mainMenu, QWidget *parent = nullptr);
+    explicit ModeSelection(ClientSession &session, MainMenu* mainMenu, QWidget *parent = nullptr);
 
     QString buttonStyle = R"(
         QPushButton {
@@ -28,20 +27,19 @@ public:
             background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 64, 182, 150), stop:1 rgba(0, 155, 226, 150));
         }
     )";
-
-
-
 protected:
     void paintEvent(QPaintEvent *event) override;
 
 private:
+    QPushButton *soloButton;
+    QPushButton *multiplayerButton;
     QPushButton *backToMainButton;
+
     MainMenu* mainMenu;
+    ClientSession &session;
 
 private slots:
     void backToMainMenu();
 };
-
-
 
 #endif

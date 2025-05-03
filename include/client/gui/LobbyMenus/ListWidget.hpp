@@ -1,5 +1,5 @@
-#ifndef LIST_HPP
-#define LIST_HPP
+#ifndef LISTWIDGET_HPP
+#define LISTWIDGET_HPP
 
 #include <QListWidget>
 #include <QString>

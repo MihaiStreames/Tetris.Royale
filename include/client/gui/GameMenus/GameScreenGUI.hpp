@@ -1,5 +1,5 @@
-#ifndef GAMESCREEN_HPP
-#define GAMESCREEN_HPP
+#ifndef GAMESCREENGUI_HPP
+#define GAMESCREENGUI_HPP
 
 #include <QWidget>
 #include <QMainWindow>
@@ -23,8 +23,8 @@
 #include "Common.hpp"
 #include "Config.hpp"
 #include "ClientSession.hpp"
-#include "GameRender.hpp"
-#include "../MainMenus/MainMenu.hpp"           
+#include "GameRenderGUI.hpp"
+#include "MainMenuGUI.hpp"           
 
 
 class GameScreen : public QWidget {

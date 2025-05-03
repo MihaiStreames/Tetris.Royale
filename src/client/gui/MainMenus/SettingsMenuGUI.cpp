@@ -1,5 +1,5 @@
 
-#include "SettingsMenu.hpp"
+#include "SettingsMenuGUI.hpp"
 
 
 SettingsScreen::SettingsScreen(MainMenu* mainMenuView, QWidget *parent): QWidget(parent), mainMenu(mainMenuView){

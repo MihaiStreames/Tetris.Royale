@@ -1,5 +1,5 @@
-#ifndef MAINMENU_HPP
-#define MAINMENU_HPP
+#ifndef MAINMENUGUI_HPP
+#define MAINMENUGUI_HPP
 
 #include <QWidget>
 #include <QPushButton>
@@ -14,11 +14,11 @@
 #include "Common.hpp"
 #include "ClientSession.hpp"
 
-#include "../LoginMenus/LoginScreen.hpp"
-#include "ModeSelection.hpp"
-#include "FriendsList.hpp"
-#include "SettingsMenu.hpp"
-#include "LeaderScreen.hpp"
+#include "LoginScreenGUI.hpp"
+#include "ModeSelectionGUI.hpp"
+#include "FriendsListWidget.hpp"
+#include "SettingsMenuGUI.hpp"
+#include "LeaderScreenGUI.hpp"
 
 class MainMenu : public QWidget {
     Q_OBJECT

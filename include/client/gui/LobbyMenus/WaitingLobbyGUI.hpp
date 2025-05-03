@@ -1,5 +1,5 @@
-#ifndef WAITINGLOBBY_HPP
-#define WAITINGLOBBY_HPP
+#ifndef WAITINGLOBBYGUI_HPP
+#define WAITINGLOBBYGUI_HPP
 
 #include <QMainWindow>
 #include <QPushButton>
@@ -20,9 +20,9 @@
 
 #include "MenuSwitcher.hpp" 
 #include "ClientSession.hpp" 
-#include "Label.hpp"
-#include "List.hpp"
-#include "Button.hpp"
+#include "LabelWidget.hpp"
+#include "ListWidget.hpp"
+#include "ButtonWidget.hpp"
 
 
 class Lobby;
@@ -52,4 +52,4 @@ private:
     void setupUi();
 };
 
-#endif // WAITINGLOBBY_H
+#endif // WAITINGLOBBYGUI_HPP

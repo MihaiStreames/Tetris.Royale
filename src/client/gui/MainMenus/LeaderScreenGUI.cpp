@@ -1,5 +1,5 @@
 
-#include "LeaderScreen.hpp"
+#include "LeaderScreenGUI.hpp"
 
 
 LeaderScreen::LeaderScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){

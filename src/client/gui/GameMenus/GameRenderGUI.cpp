@@ -1,5 +1,5 @@
 
-#include "GameRender.hpp"
+#include "GameRenderGUI.hpp"
 
 
 QColor colorForValue(int value) {

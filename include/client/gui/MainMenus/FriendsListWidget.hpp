@@ -1,5 +1,5 @@
-#ifndef FRIENDSLIST_HPP
-#define FRIENDSLIST_HPP
+#ifndef FRIENDSLISTWIDGET_HPP
+#define FRIENDSLISTWIDGET_HPP
 
 #include <QMainWindow>
 #include <QVBoxLayout>

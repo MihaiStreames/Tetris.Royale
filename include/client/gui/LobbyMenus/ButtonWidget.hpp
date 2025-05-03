@@ -1,5 +1,5 @@
-#ifndef BUTTON_HPP
-#define BUTTON_HPP
+#ifndef BUTTONWIDGET_HPP
+#define BUTTONWIDGET_HPP
 
 #include <QPushButton>
 #include <QString>

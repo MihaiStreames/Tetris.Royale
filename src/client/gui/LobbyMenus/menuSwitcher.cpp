@@ -1,7 +1,8 @@
 
 #include "MenuSwitcher.hpp"
-#include "Lobby.hpp" 
-#include "WaitingLobby.hpp" 
+
+#include "LobbyGUI.hpp" 
+#include "WaitingLobbyGUI.hpp" 
 
 
 template<typename MenuType, typename ArgType>

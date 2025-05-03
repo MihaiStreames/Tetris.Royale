@@ -1,5 +1,7 @@
-#ifndef REGISTERSCREEN_HPP
-#define REGISTERSCREEN_HPP
+#ifndef LOGINSCREENGUI_HPP
+#define LOGINSCREENGUI_HPP
+
+#pragma once
 
 #include <QtWidgets>
 #include <QLabel>
@@ -11,29 +13,30 @@
 #include <QString>
 #include <QPainter>
 #include <QFontDatabase>
-#include <QMessageBox>
 
-#include "LoginScreen.hpp"
 #include "ClientSession.hpp"
-#include "Common.hpp"
+#include "MainMenuGUI.hpp"
+#include "RegisterScreenGUI.hpp"
 
 
-class RegisterScreen : public QWidget {
+
+class LoginScreen : public QWidget {
     Q_OBJECT
 public:
-    explicit RegisterScreen(ClientSession &session, QWidget *parent = nullptr);
+    explicit LoginScreen(ClientSession &session, QWidget *parent = nullptr);
 protected:
     void paintEvent(QPaintEvent *event) override;
 private:
     ClientSession &session;
     QLineEdit *username;
     QLineEdit *password;
-    QLineEdit *confirmedPassword;
+    QPushButton *loginButton;
     QPushButton *registerButton;
-    QPushButton *backToLoginButton;
+    QPushButton *exitButton;
 private slots:
-    void openLoginScreen();
-    void registerUser();
+    void openRegisterScreen();
+    void loginUser();
+    void exitScreen();
 };
 
 #endif

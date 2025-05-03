@@ -1,5 +1,5 @@
 
-#include "GameScreen.hpp"
+#include "GameScreenGUI.hpp"
 
 
 GameScreen::GameScreen(Config &config, ClientSession &session, QWidget *parent) : QWidget(parent),

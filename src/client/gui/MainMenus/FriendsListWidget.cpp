@@ -1,4 +1,5 @@
-#include "FriendsList.hpp"
+
+#include "FriendsListWidget.hpp"
 
 
 FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(parent),session(session)

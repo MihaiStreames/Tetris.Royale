@@ -1,5 +1,5 @@
 
-#include "WaitingLobby.hpp" 
+#include "WaitingLobbyGUI.hpp" 
 
 
 std::string getGameModeName(GameMode mode) {

@@ -1,5 +1,5 @@
 
-#include "MainMenu.hpp"
+#include "MainMenuGUI.hpp"
 
 
 MainMenu::MainMenu(ClientSession &session, QWidget *parent) : QWidget(parent), session(session) {

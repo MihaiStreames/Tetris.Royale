@@ -1,6 +1,7 @@
-#include "Lobby.hpp"
 
-// Function to get the name of the game mode as a string
+#include "LobbyGUI.hpp"
+
+
 std::string getGameModeString(GameMode mode) {
     switch (mode) {
         case GameMode::CLASSIC: return "Classic";
@@ -11,7 +12,6 @@ std::string getGameModeString(GameMode mode) {
     }
 }
 
-// Constructor for the Lobby class
 Lobby::Lobby(ClientSession& session, QWidget *parent)
     : QMainWindow(parent), session(session) {
 
@@ -29,10 +29,8 @@ Lobby::Lobby(ClientSession& session, QWidget *parent)
 
 }
 
-// Destructor for the Lobby class
 Lobby::~Lobby() {}
 
-// Function to handle custom painting of the window
 void Lobby::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
 
@@ -43,7 +41,6 @@ void Lobby::paintEvent(QPaintEvent *event) {
     QMainWindow::paintEvent(event);
 }
 
-// Function to set up the UI components
 void Lobby::setupUi() {
     // Define fonts for titles and interactions
     QFont fontTitle("Orbitron", 40);
@@ -198,7 +195,6 @@ void Lobby::setupUi() {
     backBtn->setStyleSheet(buttonStyle);
 }
 
-// Helper function to parse lobby info from server response
 std::pair<std::vector<std::string>, std::vector<LobbyState> >
 parseLobbies(const std::unordered_map<std::string, std::string> &lobbyData) {
     std::vector<std::string> lobbyIds;
@@ -217,7 +213,6 @@ parseLobbies(const std::unordered_map<std::string, std::string> &lobbyData) {
     return {lobbyIds, lobbyStates};
 }
 
-// Function to refresh the lobby list
 void Lobby::onRefreshBtnCliked() {
     listLobbies->clear(); 
     
@@ -254,7 +249,6 @@ void Lobby::onRefreshBtnCliked() {
     }
 }
 
-// Function to join a lobby by code
 void Lobby::onJoinByCodeClicked() {
     QString lobbyCodeInput = codeInput->text(); 
 
@@ -270,7 +264,6 @@ void Lobby::onJoinByCodeClicked() {
     }
 }
 
-// Function to spectate a lobby by code
 void Lobby::onSpectateByCodeCliked() { 
     QString lobbyCodeInput = codeInput->text(); 
 
@@ -286,7 +279,6 @@ void Lobby::onSpectateByCodeCliked() {
     }
  }
 
-// Function to create a new lobby
 void Lobby::onCreateLobbyClicked() {
     if (session.getToken().empty()) {
         QMessageBox::critical(this, "Error", "Error: Not logged in or session token missing");
@@ -321,13 +313,11 @@ void Lobby::onCreateLobbyClicked() {
     }
 }
 
-// Function to handle changes in the game mode selection
 void Lobby::onModeChanged() {
     bool enabled = classicBtn->isChecked() || royalBtn->isChecked();
     maxPlayerBox->setEnabled(enabled);
 }
 
-// Function to handle spectating a selected lobby
 void Lobby::onSpectateClicked() {
     auto lobbiesData = session.getPublicLobbiesList();
     auto [lobbyIds, lobbyStates] = parseLobbies(lobbiesData);
@@ -351,7 +341,6 @@ void Lobby::onSpectateClicked() {
     }
 }
 
-// Function to handle the back button click
 void Lobby::onBackBtnCliked() {
     MainMenu* mainMenu = new MainMenu(session);
     mainMenu->showMaximized();
@@ -359,7 +348,6 @@ void Lobby::onBackBtnCliked() {
     this->hide();
 }
 
-// Function to handle changes in the lobby list selection
 void Lobby::onListLobbyItemSelectionChanged() {
     if (listLobbies->selectedItems().isEmpty()) {
         joinBtn->setEnabled(false);
@@ -370,7 +358,6 @@ void Lobby::onListLobbyItemSelectionChanged() {
     }
 }
 
-// Function to join a selected lobby
 void Lobby::onJoinBtnClicked() {
     auto lobbiesData = session.getPublicLobbiesList();
     auto [lobbyIds, lobbyStates] = parseLobbies(lobbiesData);
@@ -388,3 +375,4 @@ void Lobby::onJoinBtnClicked() {
         }
     }
 }
+

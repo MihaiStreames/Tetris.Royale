@@ -1,5 +1,5 @@
-#ifndef LOBBY_HPP
-#define LOBBY_HPP
+#ifndef LOBBYGUI_HPP
+#define LOBBYGUI_HPP
 
 #include <QMainWindow>
 #include <QListWidget>
@@ -20,13 +20,13 @@
 #include <QFontDatabase>
 #include <QPixmap>
 
-#include "Label.hpp"
-#include "Button.hpp"
-#include "List.hpp"
+#include "LabelWidget.hpp"
+#include "ButtonWidget.hpp"
+#include "ListWidget.hpp"
 #include "ClientSession.hpp"
 #include "MenuSwitcher.hpp"
-#include "WaitingLobby.hpp"
-#include "../MainMenus/MainMenu.hpp"
+#include "WaitingLobbyGUI.hpp"
+#include "MainMenuGUI.hpp"
 
 
 class Lobby : public QMainWindow {
@@ -68,4 +68,4 @@ private:
 };
 
 
-#endif // LOBBY_H
+#endif // LOBBYGUI_HPP

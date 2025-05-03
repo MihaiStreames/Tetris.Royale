@@ -1,8 +1,8 @@
 
-#include "LoginScreen.hpp"
+#include "RegisterScreenGUI.hpp"
 
 
-LoginScreen::LoginScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){
+RegisterScreen::RegisterScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){
 
     // Create main layout
     QFontDatabase::addApplicationFont("src/client/gui/resources/orbitron.ttf");
@@ -28,7 +28,7 @@ LoginScreen::LoginScreen(ClientSession &session, QWidget *parent) : QWidget(pare
     title->setStyleSheet("border: 2px solid rgb(0, 225, 255); border-radius: 7px; padding: 7px;");
     titleInputLayout->addWidget(title);
     
-    // Username and password input boxes
+    // Username, password and password confirmation input boxes
     QFont fontInteractions("Andale Mono", 26);
     username = new QLineEdit(this);
     username->setPlaceholderText("Username");
@@ -39,8 +39,14 @@ LoginScreen::LoginScreen(ClientSession &session, QWidget *parent) : QWidget(pare
     password->setEchoMode(QLineEdit::Password);
     password->setFont(fontInteractions);
 
+    confirmedPassword = new QLineEdit(this);
+    confirmedPassword->setPlaceholderText("Confirm Password");
+    confirmedPassword->setEchoMode(QLineEdit::Password);
+    confirmedPassword->setFont(fontInteractions);
+
     titleInputLayout->addWidget(username);
     titleInputLayout->addWidget(password);
+    titleInputLayout->addWidget(confirmedPassword);
     
     titleContainer->setStyleSheet("border: 2px solid rgb(0,255,255); padding: 10px; border-radius: 7px;");
 
@@ -50,9 +56,8 @@ LoginScreen::LoginScreen(ClientSession &session, QWidget *parent) : QWidget(pare
     QHBoxLayout *buttonsLayout = new QHBoxLayout(this);
     buttonsLayout->setSpacing(10);
 
-    loginButton = new QPushButton("Login", this);
     registerButton = new QPushButton("Register", this);
-    exitButton = new QPushButton("Exit", this);
+    backToLoginButton = new QPushButton("Back to Login", this);
 
     QString buttonStyle = R"(
         QPushButton {
@@ -70,26 +75,23 @@ LoginScreen::LoginScreen(ClientSession &session, QWidget *parent) : QWidget(pare
         }
     )";
 
-    loginButton->setStyleSheet(buttonStyle);
     registerButton->setStyleSheet(buttonStyle);
-    exitButton->setStyleSheet(buttonStyle);
+    backToLoginButton->setStyleSheet(buttonStyle);
 
-    buttonsLayout->addWidget(loginButton);
     buttonsLayout->addWidget(registerButton);
-    buttonsLayout->addWidget(exitButton);
+    buttonsLayout->addWidget(backToLoginButton);
 
-    connect(loginButton, &QPushButton::clicked, this, &LoginScreen::loginUser);
-    connect(registerButton, &QPushButton::clicked, this, &LoginScreen::openRegisterScreen);
-    connect(exitButton, &QPushButton::clicked, this, &LoginScreen::exitScreen);
+    connect(backToLoginButton, &QPushButton::clicked, this, &RegisterScreen::openLoginScreen);
+    connect(registerButton, &QPushButton::clicked, this, &RegisterScreen::registerUser);
 
     mainLayout->addLayout(buttonsLayout);
 
     setLayout(mainLayout);
 
-    setWindowTitle("Login Screen");
+    setWindowTitle("Register Screen");
 }
 
-void LoginScreen::paintEvent(QPaintEvent *event) {
+void RegisterScreen::paintEvent(QPaintEvent *event) {
     // Paints the background
 
     QPainter painter(this);
@@ -100,59 +102,51 @@ void LoginScreen::paintEvent(QPaintEvent *event) {
     QWidget::paintEvent(event);
 }
 
-void LoginScreen::openRegisterScreen(){
-    // Opens the register screen and closes the login screen when clicked
+void RegisterScreen::openLoginScreen(){
+    // Opens the login screen and closes the register screen when clicked
 
-    RegisterScreen *registerScreen = new RegisterScreen(session);
-    registerScreen->showMaximized();
+    LoginScreen *loginScreen = new LoginScreen(session);
+    loginScreen->showMaximized();
 
-    this->hide();
+    this->close();
 
 }
 
-void LoginScreen::loginUser(){
-    // Logs user in when "Login" button clicked
+void RegisterScreen::registerUser(){
+    // Registers a user when "Register" button clicked
 
     // Get user input
     auto usernameInput = username->text().toStdString();
     auto passwordInput = password->text().toStdString();
+    auto confirmedPasswordInput = confirmedPassword->text().toStdString();
 
     // Check possible errors
-    if (usernameInput.empty() || passwordInput.empty()) {
-        QMessageBox::warning(this, "Error", "Please enter both username and password");
+    if (usernameInput.empty() || passwordInput.empty() || confirmedPasswordInput.empty()) {
+        QMessageBox::warning(this, "Error", "All fields are required.");
         return;
     }
 
-    // try to login and fetch the status code
-    StatusCode result = session.loginPlayer(usernameInput, passwordInput);
+    if (passwordInput != confirmedPasswordInput) {
+        QMessageBox::warning(this, "Error", "Passwords do not match.");
+        return;
+    }
+
+    // Try to register the player
+    StatusCode result = session.registerPlayer(usernameInput, passwordInput);
 
     if (result == StatusCode::SUCCESS) {
+        openLoginScreen();
+    
+    // if the username is already taken, show an error message
+    } else if (result == StatusCode::ERROR_USERNAME_TAKEN) {
+        QMessageBox::warning(this, "Error", "Username already taken.");
+        return;
 
-        StatusCode sessionResult = session.startSession();
-
-        // if login was successful, we will try to start a new session
-        if (sessionResult == StatusCode::SUCCESS) {
-
-            // if session started successfully, we will open the main menu
-            MainMenu *mainMenu = new MainMenu(session);
-            mainMenu->showMaximized();
-
-            this->hide();
-        
-        // if starting a session failed, we will display an error message
-        } else {
-            QMessageBox::warning(this, "Error", "Failed to start session.");
-        }
-
-    // if login failed, we will display an error message
+    // if there was an error, show a generic error message
     } else {
-        QMessageBox::warning(this, "Error", "Login failed. Please check your credentials.");
+        QMessageBox::warning(this, "Error", "Registration failed. Please try again.");
+        return;
     }
-}
 
-void LoginScreen::exitScreen(){
-    // Closes the app
-
-    this->close();
 }
 
