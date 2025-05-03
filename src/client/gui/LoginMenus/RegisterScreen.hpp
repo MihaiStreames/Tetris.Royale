@@ -1,10 +1,6 @@
 #ifndef REGISTERSCREEN_HPP
 #define REGISTERSCREEN_HPP
 
-#include "LoginScreen.hpp"
-#include "ClientSession.hpp"
-#include "Common.hpp"
-
 #include <QtWidgets>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -16,6 +12,11 @@
 #include <QPainter>
 #include <QFontDatabase>
 #include <QMessageBox>
+
+#include "LoginScreen.hpp"
+#include "ClientSession.hpp"
+#include "Common.hpp"
+
 
 class RegisterScreen : public QWidget {
     Q_OBJECT

@@ -1,8 +1,7 @@
-#include "waitingLobby.hpp" 
 
-using namespace std;
+#include "WaitingLobby.hpp" 
 
-// Function to get the name of the game mode as a string
+
 std::string getGameModeName(GameMode mode) {
     switch (mode) {
         case GameMode::CLASSIC: return "Classic";
@@ -13,7 +12,6 @@ std::string getGameModeName(GameMode mode) {
     }
 }
 
-// Constructor for the WaitingLobby class
 WaitingLobby::WaitingLobby(ClientSession &session, QWidget *parent)
     : QMainWindow(parent), session(session), playerList(nullptr), spectatorList(nullptr)
 {
@@ -24,10 +22,8 @@ WaitingLobby::WaitingLobby(ClientSession &session, QWidget *parent)
     setupUi();
 }
 
-// Destructor for the WaitingLobby class
 WaitingLobby::~WaitingLobby() {}
 
-// Function to set up the UI components
 void WaitingLobby::setupUi() {
     // Load custom font for the UI
     QFontDatabase::addApplicationFont("src/client/gui/resources/orbitron.ttf");
@@ -135,7 +131,6 @@ void WaitingLobby::setupUi() {
     mainLayout->addLayout(hozizontalLayout);
 }
 
-// Function to handle custom painting of the window
 void WaitingLobby::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     
@@ -146,7 +141,6 @@ void WaitingLobby::paintEvent(QPaintEvent *event) {
     QMainWindow::paintEvent(event); 
 }
 
-// Function to handle the leave lobby button click
 void WaitingLobby::onLeaveBtnClicked() {
     StatusCode result = session.leaveLobby();
     if (result == StatusCode::SUCCESS) {
@@ -157,7 +151,6 @@ void WaitingLobby::onLeaveBtnClicked() {
     }
 }
 
-// Function to toggle the player's ready state
 void WaitingLobby::changePlayerState() {
     isReady = !isReady;
 
@@ -185,7 +178,6 @@ void WaitingLobby::changePlayerState() {
     fillPlayerListAndSpectatorList();
 }
 
-// Function to populate the player and spectator lists
 void WaitingLobby::fillPlayerListAndSpectatorList() {
     if (!playerList || !spectatorList) {
         QMessageBox::critical(this, "Error", "playerList or spectatorList is not initialized.");
@@ -220,3 +212,4 @@ void WaitingLobby::fillPlayerListAndSpectatorList() {
         }
     }
 }
+

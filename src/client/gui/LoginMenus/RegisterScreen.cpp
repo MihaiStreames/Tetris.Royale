@@ -1,4 +1,6 @@
+
 #include "RegisterScreen.hpp"
+
 
 RegisterScreen::RegisterScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){
 
@@ -147,3 +149,4 @@ void RegisterScreen::registerUser(){
     }
 
 }
+

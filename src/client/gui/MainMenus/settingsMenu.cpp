@@ -1,4 +1,6 @@
-#include "settingsMenu.hpp"
+
+#include "SettingsMenu.hpp"
+
 
 SettingsScreen::SettingsScreen(MainMenu* mainMenuView, QWidget *parent): QWidget(parent), mainMenu(mainMenuView){
 
@@ -112,3 +114,4 @@ void SettingsScreen::backToMainMenu() {
     mainMenu->showMaximized();
     this->close();
 }
+

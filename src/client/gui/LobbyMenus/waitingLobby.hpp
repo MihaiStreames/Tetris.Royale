@@ -7,26 +7,22 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QListWidget>
-#include <vector>
-#include <QString>
 #include <QMessageBox>
 #include <QtWidgets>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QLineEdit>
-#include <QPushButton>
 #include <QFont>
 #include <QString>
 #include <QPainter>
 #include <QFontDatabase>
 #include <QPixmap>
 
-#include "menuSwitcher.hpp" 
+#include <vector>
+
+#include "MenuSwitcher.hpp" 
 #include "ClientSession.hpp" 
-#include "label.hpp"
-#include "list.hpp"
-#include "button.hpp"
+#include "Label.hpp"
+#include "List.hpp"
+#include "Button.hpp"
 
 
 class Lobby;

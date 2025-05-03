@@ -3,10 +3,6 @@
 
 #pragma once
 
-#include "ClientSession.hpp"
-#include "../MainMenus/mainMenu.hpp"
-#include "RegisterScreen.hpp"
-
 #include <QtWidgets>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -17,6 +13,12 @@
 #include <QString>
 #include <QPainter>
 #include <QFontDatabase>
+
+#include "ClientSession.hpp"
+#include "../MainMenus/MainMenu.hpp"
+#include "RegisterScreen.hpp"
+
+
 
 class LoginScreen : public QWidget {
     Q_OBJECT

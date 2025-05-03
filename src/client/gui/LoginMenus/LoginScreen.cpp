@@ -1,4 +1,6 @@
+
 #include "LoginScreen.hpp"
+
 
 LoginScreen::LoginScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){
 
@@ -153,3 +155,4 @@ void LoginScreen::exitScreen(){
 
     this->close();
 }
+

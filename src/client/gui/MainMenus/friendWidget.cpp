@@ -1,4 +1,6 @@
-#include "friendWidget.hpp"
+
+#include "FriendWidget.hpp"
+
 
 FriendWidget::FriendWidget(const QString &friendName, Context context,State state, QWidget *parent)
     : QWidget(parent), friendName(friendName),context(context) {
@@ -100,3 +102,4 @@ void FriendWidget::updateState(State state) {
     stateCircle->setStyleSheet(QString("background-color: %1; border-radius: 6px; border-color : black").arg(color));
     
 }
+

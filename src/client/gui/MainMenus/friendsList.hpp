@@ -17,13 +17,15 @@
 #include <QFontDatabase>
 #include <QTimer>
 #include <QPointer>
+#include <QMessageBox>
+
 #include <set>
 #include <sstream>
-#include <QMessageBox>
 #include <random>
 
-#include "friendWidget.hpp"
+#include "FriendWidget.hpp"
 #include "ClientSession.hpp"
+
 
 class FriendsList : public QMainWindow {
     Q_OBJECT

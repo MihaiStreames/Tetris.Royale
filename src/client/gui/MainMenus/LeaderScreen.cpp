@@ -1,4 +1,6 @@
+
 #include "LeaderScreen.hpp"
+
 
 LeaderScreen::LeaderScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){
 
@@ -93,3 +95,4 @@ void LeaderScreen::paintEvent(QPaintEvent *event) {
 
     QWidget::paintEvent(event);
 }
+

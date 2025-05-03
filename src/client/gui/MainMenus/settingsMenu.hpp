@@ -1,9 +1,11 @@
 #ifndef SETTINGS_HPP
 #define SETTINGS_HPP
 
-#include "mainMenu.hpp"
 #include <QTableWidget>
 #include <QHeaderView>
+
+#include "MainMenu.hpp"
+
 
 class MainMenu;
 

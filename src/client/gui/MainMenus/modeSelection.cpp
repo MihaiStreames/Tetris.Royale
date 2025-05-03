@@ -1,4 +1,6 @@
-#include "modeSelection.hpp"
+
+#include "ModeSelection.hpp"
+
 
 ModeSelection::ModeSelection(ClientSession &session, MainMenu* mainMenuView, QWidget *parent) : QWidget(parent), mainMenu(mainMenuView), session(session){
     QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
@@ -75,7 +77,4 @@ void ModeSelection::backToMainMenu() {
     mainMenu->showMaximized();
     this->close();
 }
-
-
-
 

@@ -1,9 +1,6 @@
 #ifndef LEADERSCREEN_HPP
 #define LEADERSCREEN_HPP
 
-#include "Common.hpp"
-#include "ClientSession.hpp"
-
 #include <QtWidgets>
 #include <QLabel>
 #include <QVBoxLayout>
@@ -12,6 +9,10 @@
 #include <QFontDatabase>
 #include <QTableWidget>
 #include <QTableWidgetItem>
+
+#include "Common.hpp"
+#include "ClientSession.hpp"
+
 
 class LeaderScreen : public QWidget {
 public:

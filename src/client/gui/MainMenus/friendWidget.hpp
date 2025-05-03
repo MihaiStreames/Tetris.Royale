@@ -8,7 +8,6 @@
 #include <QLabel>
 
 
-
 class FriendWidget : public QWidget {
     Q_OBJECT
 

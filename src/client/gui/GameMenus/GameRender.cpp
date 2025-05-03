@@ -1,12 +1,6 @@
+
 #include "GameRender.hpp"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QGridLayout>
-#include <QLabel>
-#include <QFont>
-#include <QGroupBox>
-#include <QProgressBar>
-#include <QString>
+
 
 QColor colorForValue(int value) {
     switch (static_cast<PieceType>(value)) {
@@ -22,10 +16,7 @@ QColor colorForValue(int value) {
     }
 }
 
-QWidget* renderBoard(const tetroMat &board,
-                     bool isOpponentBoard,
-                     bool isGameOver,
-                     QWidget *parent) {
+QWidget* renderBoard(const tetroMat &board, bool isOpponentBoard, bool isGameOver, QWidget *parent) {
     // 1) Conteneur avec mise en page verticale
     QWidget    *container  = new QWidget(parent);
     QVBoxLayout *mainLayout = new QVBoxLayout(container);
@@ -189,27 +180,6 @@ QWidget* renderEnergyBar(int energy, int maxEnergy, QWidget *parent) {
     return container;
 }
 
-void placePieceInBoard(PieceType type, int x, int y, tetroMat &board) {
-    static const std::unordered_map<PieceType, std::vector<std::pair<int,int>>> offsetsMap = {
-        {PieceType::I, {{0,0},{0,1},{0,2},{0,3}}},
-        {PieceType::O, {{0,0},{0,1},{1,0},{1,1}}},
-        {PieceType::T, {{0,0},{0,1},{0,2},{1,1}}},
-        {PieceType::J, {{0,0},{1,0},{1,1},{1,2}}},
-        {PieceType::L, {{0,2},{1,0},{1,1},{1,2}}},
-        {PieceType::S, {{1,0},{1,1},{0,1},{0,2}}},
-        {PieceType::Z, {{0,0},{0,1},{1,1},{1,2}}}
-    };
-    auto it = offsetsMap.find(type);
-    if (it == offsetsMap.end()) return;
-    for (auto [dy, dx] : it->second) {
-        int newY = y + dy;
-        int newX = x + dx;
-        if (newY >= 0 && newY < static_cast<int>(board.size()) && newX >= 0 && newX < static_cast<int>(board[0].size()))
-
-            board[newY][newX] = static_cast<int>(type);
-    }
-}
-
 QWidget* renderPiece(PieceType type, int gridHeight, int gridWidth, QWidget *parent) {
     QWidget *container = new QWidget(parent);
     QGridLayout *grid = new QGridLayout(container);
@@ -335,5 +305,26 @@ QWidget* renderBox(const QString &title, QWidget *content, QWidget *parent) {
     QVBoxLayout *layout = new QVBoxLayout(box);
     layout->addWidget(content);
     return box;
+}
+
+void placePieceInBoard(PieceType type, int x, int y, tetroMat &board) {
+    static const std::unordered_map<PieceType, std::vector<std::pair<int,int>>> offsetsMap = {
+        {PieceType::I, {{0,0},{0,1},{0,2},{0,3}}},
+        {PieceType::O, {{0,0},{0,1},{1,0},{1,1}}},
+        {PieceType::T, {{0,0},{0,1},{0,2},{1,1}}},
+        {PieceType::J, {{0,0},{1,0},{1,1},{1,2}}},
+        {PieceType::L, {{0,2},{1,0},{1,1},{1,2}}},
+        {PieceType::S, {{1,0},{1,1},{0,1},{0,2}}},
+        {PieceType::Z, {{0,0},{0,1},{1,1},{1,2}}}
+    };
+    auto it = offsetsMap.find(type);
+    if (it == offsetsMap.end()) return;
+    for (auto [dy, dx] : it->second) {
+        int newY = y + dy;
+        int newX = x + dx;
+        if (newY >= 0 && newY < static_cast<int>(board.size()) && newX >= 0 && newX < static_cast<int>(board[0].size()))
+
+            board[newY][newX] = static_cast<int>(type);
+    }
 }
 

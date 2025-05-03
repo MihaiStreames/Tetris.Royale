@@ -3,17 +3,10 @@
 
 #include <QMainWindow>
 #include <QListWidget>
-#include <QSpinBox>
-
 #include <QMessageBox>
 #include <QTimer>
-#include <QLabel>
-#include <QPushButton>
-#include <QLineEdit>
 #include <QCheckBox>
 #include <QSpinBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QButtonGroup>
 #include <QtWidgets>
 #include <QLabel>
@@ -27,45 +20,37 @@
 #include <QFontDatabase>
 #include <QPixmap>
 
-#include "menuSwitcher.hpp"
+#include "Label.hpp"
+#include "Button.hpp"
+#include "List.hpp"
 #include "ClientSession.hpp"
-#include "waitingLobby.hpp"
-#include "label.hpp"
-#include "button.hpp"
-#include "list.hpp"
-#include "../MainMenus/mainMenu.hpp"
+#include "MenuSwitcher.hpp"
+#include "WaitingLobby.hpp"
+#include "../MainMenus/MainMenu.hpp"
 
-class Lobby : public QMainWindow
-{
+
+class Lobby : public QMainWindow {
+    
     Q_OBJECT
 
 public:
     Lobby(ClientSession& session, QWidget *parent = nullptr);
     ~Lobby();
-
     void setupUi();
 
-    
-    private slots:
+private slots:
     void onJoinBtnClicked();
-    
     void onSpectateClicked();
-        
     void onBackBtnCliked();
-    
     void onListLobbyItemSelectionChanged();
-    
     void onRefreshBtnCliked();
-    
     void onJoinByCodeClicked();
-    
     void onSpectateByCodeCliked();
-    
-    void onCreateLobbyClicked();
-        
+    void onCreateLobbyClicked(); 
     void onModeChanged();
     
-    private:
+private:
+
     MenuSwitcher buttonSwitch;
     QPushButton* joinBtn;
     QPushButton* spectateBtn;
@@ -79,5 +64,8 @@ public:
     QCheckBox* publicCheck;
 
     void paintEvent(QPaintEvent *event) override;
+
 };
+
+
 #endif // LOBBY_H

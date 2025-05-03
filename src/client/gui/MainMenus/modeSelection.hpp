@@ -1,9 +1,10 @@
 #ifndef MODESELECTION_HPP
 #define MODESELECTION_HPP
 
-#include "mainMenu.hpp"
-#include "../LobbyMenus/lobby.hpp"
+#include "MainMenu.hpp"
+#include "../LobbyMenus/Lobby.hpp"
 #include "../GameMenus/GameScreen.hpp"
+
 
 class MainMenu;
 

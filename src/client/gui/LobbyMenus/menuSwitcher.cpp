@@ -1,12 +1,8 @@
-#include "menuSwitcher.hpp"
-#include "lobby.hpp" 
-#include "waitingLobby.hpp" 
 
-#include <QPushButton>
-#include <QMessageBox>
-#include <QApplication>
+#include "MenuSwitcher.hpp"
+#include "Lobby.hpp" 
+#include "WaitingLobby.hpp" 
 
-using namespace std;
 
 template<typename MenuType, typename ArgType>
 void MenuSwitcher::changeMenu(ArgType arg, ClientSession& session) {

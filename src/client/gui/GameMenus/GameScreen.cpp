@@ -1,37 +1,20 @@
+
 #include "GameScreen.hpp"
 
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QShortcut>
-#include <QKeySequence>
-#include <QPainter>
-#include <QPaintEvent>
-#include <QTimer>
-#include <QSpacerItem>
-#include <QLabel>
-#include <QDebug>
-#include <QMessageBox>
-#include <QGraphicsDropShadowEffect>
-#include <QPropertyAnimation>
-#include <iostream>
 
-GameScreen::GameScreen(Config &config, ClientSession &session, QWidget *parent)
-    : QWidget(parent)
-    , configRef(config)
-    , session(session)
-    , playerBoard(20, std::vector<int>(10, 0))
-    , opponentBoard(20, std::vector<int>(10, 0))
-{
-    // Initial game boards for demo
-    placePieceInBoard(PieceType::J, 0, 0, playerBoard);
-    placePieceInBoard(PieceType::L, 5, 3, opponentBoard);
+GameScreen::GameScreen(Config &config, ClientSession &session, QWidget *parent) : QWidget(parent),
+    configRef(config), session(session), playerBoard(20, std::vector<int>(10, 0)), opponentBoard(20, std::vector<int>(10, 0)) {
+    
+        // Initial game boards for demo
+        placePieceInBoard(PieceType::J, 0, 0, playerBoard);
+        placePieceInBoard(PieceType::L, 5, 3, opponentBoard);
 
-    setupUi();
+        setupUi();
 
-    // Automatic update timer
-    updateTimer = new QTimer(this);
-    connect(updateTimer, &QTimer::timeout, this, &GameScreen::onUpdateTimer);
-    updateTimer->start(50);  // 50 ms refresh
+        // Automatic update timer
+        updateTimer = new QTimer(this);
+        connect(updateTimer, &QTimer::timeout, this, &GameScreen::onUpdateTimer);
+        updateTimer->start(50);  // 50 ms refresh
 }
 
 GameScreen::~GameScreen() {

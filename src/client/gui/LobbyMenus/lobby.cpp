@@ -1,6 +1,4 @@
-#include "lobby.hpp"
-
-using namespace std;
+#include "Lobby.hpp"
 
 // Function to get the name of the game mode as a string
 std::string getGameModeString(GameMode mode) {

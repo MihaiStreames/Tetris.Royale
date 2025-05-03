@@ -11,12 +11,13 @@
 #include <QLineEdit>
 #include <QMessageBox>
 
-#include "ClientSession.hpp"
-#include "../LoginMenus/LoginScreen.hpp"
 #include "Common.hpp"
-#include "modeSelection.hpp"
-#include "friendsList.hpp"
-#include "settingsMenu.hpp"
+#include "ClientSession.hpp"
+
+#include "../LoginMenus/LoginScreen.hpp"
+#include "ModeSelection.hpp"
+#include "FriendsList.hpp"
+#include "SettingsMenu.hpp"
 #include "LeaderScreen.hpp"
 
 class MainMenu : public QWidget {

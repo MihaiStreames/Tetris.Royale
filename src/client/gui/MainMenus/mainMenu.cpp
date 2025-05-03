@@ -1,4 +1,6 @@
-#include "mainMenu.hpp"
+
+#include "MainMenu.hpp"
+
 
 MainMenu::MainMenu(ClientSession &session, QWidget *parent) : QWidget(parent), session(session) {
     QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
@@ -51,6 +53,8 @@ MainMenu::MainMenu(ClientSession &session, QWidget *parent) : QWidget(parent), s
     setWindowTitle("Main Menu");
 }
 
+MainMenu::~MainMenu() {}
+
 void MainMenu::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     QPixmap screenPixmap("src/client/gui/resources/tetris_main.png"); 
@@ -60,13 +64,12 @@ void MainMenu::paintEvent(QPaintEvent *event) {
     QWidget::paintEvent(event);
 }
 
-//------------------LANCER LISTE D'AMIS-------------------//
 void MainMenu::showFriendsList() {
     FriendsList *friendsList = new FriendsList(session);
     friendsList->setAttribute(Qt::WA_DeleteOnClose);  // Supprime la fenêtre à la fermeture
     friendsList->show();
 }
-//--------------GAME MODE-----------------//
+
 void MainMenu::openModeSelection() {
     ModeSelection *modeSelection = new ModeSelection(session, this);
     modeSelection->setAttribute(Qt::WA_DeleteOnClose);
@@ -74,14 +77,13 @@ void MainMenu::openModeSelection() {
     this->hide();
 }
 
-//--------------SETTINGS-----------------//
 void MainMenu::openSettings() {
     SettingsScreen *settingsScreen = new SettingsScreen(this);
     settingsScreen->setAttribute(Qt::WA_DeleteOnClose);
     settingsScreen->showMaximized(); 
     this->hide();
 }
-//-------------LEADERBOARD----------------//
+
 void MainMenu::openLeaderboard(){
     LeaderScreen *leaderscreen = new LeaderScreen(session);
     leaderscreen->setAttribute(Qt::WA_DeleteOnClose);
@@ -89,7 +91,6 @@ void MainMenu::openLeaderboard(){
     this->hide();
 }
 
-//------------------DECONNEXION-----------------------//
 void MainMenu::logout() {
     if(session.endSession() == StatusCode::SUCCESS){
         // Ouvrir ici le menu LOGIN
@@ -99,7 +100,4 @@ void MainMenu::logout() {
         this->close();
     }
 }
-
-
-MainMenu::~MainMenu() {}
 
