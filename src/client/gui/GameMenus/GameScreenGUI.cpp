@@ -241,7 +241,8 @@ void GameScreen::onEscapePressed()
 void GameScreen::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
-    QPixmap bg("src/client/gui/resources/tetris_main.png");
+    QString bgPath = QString(TETRIS_ASSETS_DIR) + "/tetris_main.png";
+    QPixmap bg(bgPath);
     QPixmap scaled = bg.scaled(size(), Qt::KeepAspectRatioByExpanding);
     painter.drawPixmap((width()-scaled.width())/2,
                        (height()-scaled.height())/2,

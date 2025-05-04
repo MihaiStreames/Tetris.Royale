@@ -2,10 +2,12 @@
 #include "FriendWidget.hpp"
 
 
-FriendWidget::FriendWidget(const QString &friendName, Context context,State state, QWidget *parent)
+FriendWidget::FriendWidget(const QString &friendName, Context context, State state, QWidget *parent)
     : QWidget(parent), friendName(friendName),context(context) {
+
     setupLayout(context);
     updateState(state);
+    
 }
 
 void FriendWidget::setupLayout(Context context) {

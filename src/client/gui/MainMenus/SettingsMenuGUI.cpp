@@ -4,7 +4,8 @@
 
 SettingsScreen::SettingsScreen(MainMenu* mainMenuView, QWidget *parent): QWidget(parent), mainMenu(mainMenuView){
 
-    QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
+    QString fontPath = QString(TETRIS_FONTS_DIR) + "/orbitron.ttf";
+    QFontDatabase::addApplicationFont(fontPath);
     setStyleSheet("background-color: transparent; color:rgb(202, 237, 241);");
 
     // Layout principal
@@ -102,7 +103,8 @@ SettingsScreen::SettingsScreen(MainMenu* mainMenuView, QWidget *parent): QWidget
 
 void SettingsScreen::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    QPixmap screenPixmap("src/client/gui/resources/tetris_main.png");
+    QString bgPath = QString(TETRIS_ASSETS_DIR) + "/tetris_main.png";
+    QPixmap screenPixmap(bgPath);
 
     painter.drawPixmap(this->rect(), screenPixmap);
 

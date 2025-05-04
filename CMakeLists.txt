@@ -87,7 +87,6 @@ endfunction()
 setup_json()
 
 
-
 # Build components
 # ----------------------------------------------------------
 
@@ -96,7 +95,7 @@ function(set_target_compile_options target)
     target_compile_options(${target} PRIVATE
             -pedantic -Wall -Wextra -Wformat=2 -Wfloat-equal -Wconversion
             -Wlogical-op -Wshift-overflow=2 -Wduplicated-cond -Wcast-qual -Wcast-align
-            -Wnull-dereference -Wold-style-cast -Wuseless-cast -Wdouble-promotion
+            -Wnull-dereference -Wold-style-cast -Wdouble-promotion
             -Wzero-as-null-pointer-constant -Wstrict-null-sentinel
             -Wswitch-default -Wunreachable-code -Wundef
             -Wno-null-dereference
@@ -151,9 +150,17 @@ function(add_tetris_executable name sources includes)
     set_target_compile_options(${name})
 endfunction()
 
-# Include & Source directories
+# Include, Source and some res directories
 set(TETRIS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(TETRIS_SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(TETRIS_RES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/res)
+set(TETRIS_ASSETS_DIR ${TETRIS_RES_DIR}/assets)
+set(TETRIS_FONTS_DIR ${TETRIS_RES_DIR}/fonts)
+
+
+add_definitions(-DTETRIS_ASSETS_DIR="${TETRIS_ASSETS_DIR}")
+add_definitions(-DTETRIS_FONTS_DIR="${TETRIS_FONTS_DIR}")
+
 
 # Files
 file(GLOB COMMON_SRC_FILES "${TETRIS_SRC_DIR}/common/*.cpp")
@@ -164,19 +171,18 @@ file(GLOB DB_SERVER_SRC_FILES "${TETRIS_SRC_DIR}/server/db-server/*.cpp")
 file(GLOB TETRIS_SERVER_SRC_FILES "${TETRIS_SRC_DIR}/server/tetris-server/*.cpp")
 file(GLOB CLIENT_CONNECTIVITY_SRC_FILES "${TETRIS_SRC_DIR}/client/connectivity/*.cpp")
 file(GLOB CLIENT_TUI_SRC_FILES "${TETRIS_SRC_DIR}/client/tui/*.cpp" "${TETRIS_SRC_DIR}/client/tui/menus/*.cpp")
-file(GLOB CLIENT_GUI_SRC_FILES "${TETRIS_SRC_DIR}/client/gui/GameMenus/*.cpp" "${TETRIS_SRC_DIR}/client/gui/LobbyMenus/*.cpp" "${TETRIS_SRC_DIR}/client/gui/LoginMenus/*.cpp" "${TETRIS_SRC_DIR}/client/gui/MainMenus/*.cpp")
 
-# Add header files as sources so AUTOMOC can process them
-file(GLOB CLIENT_GUI_HEADER_FILES
+# Add src files AND header files as sources so AUTOMOC can process them
+file(GLOB CLIENT_GUI_FILES
     "${TETRIS_INCLUDE_DIR}/client/gui/GameMenus/*.hpp"
+    "${TETRIS_SRC_DIR}/client/gui/GameMenus/*.cpp"
     "${TETRIS_INCLUDE_DIR}/client/gui/LobbyMenus/*.hpp"
+    "${TETRIS_SRC_DIR}/client/gui/LobbyMenus/*.cpp"
     "${TETRIS_INCLUDE_DIR}/client/gui/LoginMenus/*.hpp"
+    "${TETRIS_SRC_DIR}/client/gui/LoginMenus/*.cpp"
     "${TETRIS_INCLUDE_DIR}/client/gui/MainMenus/*.hpp"
+    "${TETRIS_SRC_DIR}/client/gui/MainMenus/*.cpp"
 )
-
-# combine source and header files for GUI
-set(CLIENT_GUI_FILES ${CLIENT_GUI_SRC_FILES} ${CLIENT_GUI_HEADER_FILES})
-
 
 # Libraries
 add_tetris_library(TetrisRoyaleCommon "" "${COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common")

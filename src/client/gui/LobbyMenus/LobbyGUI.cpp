@@ -16,7 +16,8 @@ Lobby::Lobby(ClientSession& session, QWidget *parent)
     : QMainWindow(parent), session(session) {
 
     // Load custom font for the UI
-    QFontDatabase::addApplicationFont("src/client/gui/resources/orbitron.ttf");
+    QString fontPath = QString(TETRIS_FONTS_DIR) + "/orbitron.ttf";
+    QFontDatabase::addApplicationFont(fontPath);
 
     // Set the background and text color
     setStyleSheet("background-color: transparent; color:rgb(202, 237, 241);");
@@ -35,7 +36,8 @@ void Lobby::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
 
     // Draw the background image
-    QPixmap screenPixmap("src/client/gui/resources/tetris_main.png");
+    QString bgPath = QString(TETRIS_ASSETS_DIR) + "/tetris_main.png";
+    QPixmap screenPixmap(bgPath);
     painter.drawPixmap(this->rect(), screenPixmap);
 
     QMainWindow::paintEvent(event);

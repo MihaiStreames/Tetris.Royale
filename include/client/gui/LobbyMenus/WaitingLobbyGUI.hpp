@@ -42,10 +42,10 @@ private slots:
     void fillPlayerListAndSpectatorList();
 
 private:
+    ClientSession &session;
     MenuSwitcher buttonSwitch;
     QListWidget *playerList;
     QListWidget *spectatorList;
-    ClientSession &session; 
     LobbyState lobbyState;
     bool isReady = false;
 

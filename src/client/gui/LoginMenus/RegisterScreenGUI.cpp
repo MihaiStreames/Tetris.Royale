@@ -5,7 +5,8 @@
 RegisterScreen::RegisterScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){
 
     // Create main layout
-    QFontDatabase::addApplicationFont("src/client/gui/resources/orbitron.ttf");
+    QString fontPath = QString(TETRIS_FONTS_DIR) + "/orbitron.ttf";
+    QFontDatabase::addApplicationFont(fontPath);
     setStyleSheet("background-color: transparent; color:rgb(202, 237, 241);");
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -95,7 +96,8 @@ void RegisterScreen::paintEvent(QPaintEvent *event) {
     // Paints the background
 
     QPainter painter(this);
-    QPixmap screenPixmap("src/client/gui/resources/tetris_main.png");
+    QString bgPath = QString(TETRIS_ASSETS_DIR) + "/tetris_main.png";
+    QPixmap screenPixmap(bgPath);
 
     painter.drawPixmap(this->rect(), screenPixmap);
 

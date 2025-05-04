@@ -7,7 +7,8 @@ FriendsList::FriendsList(ClientSession &session,QWidget *parent) : QMainWindow(p
     setWindowTitle("Friends List");
     setFixedSize(windowWidth, windowHeight);
 
-    QFontDatabase::addApplicationFont("/resources/orbitron.ttf");
+    QString fontPath = QString(TETRIS_FONTS_DIR) + "/orbitron.ttf";
+    QFontDatabase::addApplicationFont(fontPath);
     setStyleSheet(windowStyle);
 
     centralWidget = new QWidget(this);
@@ -307,8 +308,8 @@ void FriendsList::sendInvite(const std::string &friendID) {
 
 void FriendsList::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-
-    QPixmap backgroundPixmap("src/client/gui/resources/tetris_main.png");
+    QString bgPath = QString(TETRIS_ASSETS_DIR) + "/tetris_main.png";
+    QPixmap backgroundPixmap(bgPath);
     painter.drawPixmap(this->rect(), backgroundPixmap);
 
     QMainWindow::paintEvent(event);

@@ -3,7 +3,9 @@
 
 
 ModeSelection::ModeSelection(ClientSession &session, MainMenu* mainMenuView, QWidget *parent) : QWidget(parent), mainMenu(mainMenuView), session(session){
-    QFontDatabase::addApplicationFont(":/fonts/orbitron.ttf");
+    
+    QString fontPath = QString(TETRIS_FONTS_DIR) + "/orbitron.ttf";
+    QFontDatabase::addApplicationFont(fontPath);
     setStyleSheet("background-color: transparent; color:rgb(202, 237, 241);");
 
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
@@ -65,7 +67,8 @@ ModeSelection::ModeSelection(ClientSession &session, MainMenu* mainMenuView, QWi
 
 void ModeSelection::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    QPixmap screenPixmap("src/client/gui/resources/tetris_main.png"); 
+    QString bgPath = QString(TETRIS_ASSETS_DIR) + "/tetris_main.png";
+    QPixmap screenPixmap(bgPath);
 
     painter.drawPixmap(this->rect(), screenPixmap);
 

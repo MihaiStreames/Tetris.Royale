@@ -40,7 +40,7 @@ public:
         }
     )";
 
-    explicit FriendWidget(const QString &friendName, Context context,State state, QWidget *parent = nullptr);
+    explicit FriendWidget(const QString &friendName, Context context, State state, QWidget *parent = nullptr);
 
     QString getFriendName() const { return friendName; }
 
@@ -50,8 +50,9 @@ signals:
     void thirdButtonClicked(const QString &friendName); 
 
 private:
-    Context context;
+
     QString friendName;
+    Context context;
     QPushButton *mainButton;
     QPushButton *firstOptionButton;
     QPushButton *secondOptionButton;
