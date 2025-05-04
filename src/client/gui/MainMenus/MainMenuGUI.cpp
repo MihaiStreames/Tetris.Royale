@@ -87,7 +87,7 @@ void MainMenu::openSettings() {
 }
 
 void MainMenu::openLeaderboard(){
-    LeaderScreen *leaderscreen = new LeaderScreen(session);
+    LeaderScreen *leaderscreen = new LeaderScreen(this,session);
     leaderscreen->setAttribute(Qt::WA_DeleteOnClose);
     leaderscreen->showMaximized();
     this->hide();

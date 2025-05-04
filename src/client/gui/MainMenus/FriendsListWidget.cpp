@@ -160,6 +160,9 @@ void FriendsList::showChat(const QString &friendName) {
             // oldest message on top
             for (auto it = messages.rbegin(); it != messages.rend(); ++it) {
                 const std::string &text = it->text;
+                QString msgText = QString::fromStdString(it->from + ":" + it->text);
+                safeMessageList->addItem(msgText);
+
             }
         }
     });

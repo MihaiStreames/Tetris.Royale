@@ -2,7 +2,7 @@
 #include "LeaderScreenGUI.hpp"
 
 
-LeaderScreen::LeaderScreen(ClientSession &session, QWidget *parent) : QWidget(parent), session(session){
+LeaderScreen::LeaderScreen(MainMenu *mainMenuView, ClientSession &session, QWidget *parent) : QWidget(parent), mainMenu(mainMenuView),session(session){
 
     // Create main layout
     QString fontPath = QString(TETRIS_FONTS_DIR) + "/orbitron.ttf";
@@ -35,7 +35,7 @@ LeaderScreen::LeaderScreen(ClientSession &session, QWidget *parent) : QWidget(pa
     table->setHorizontalHeaderItem(1, new QTableWidgetItem("High Score"));
 
     table->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
-
+    
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     table->setStyleSheet(
@@ -76,10 +76,15 @@ LeaderScreen::LeaderScreen(ClientSession &session, QWidget *parent) : QWidget(pa
         table->setItem(i, 1, new QTableWidgetItem(QString::number(player.score)));
     }
     
+    backToMainButton = new QPushButton("Back to main menu", this);
+    backToMainButton->setStyleSheet(buttonStyle);
+    backToMainButton->setFixedSize(350, 60);
+    connect(backToMainButton, &QPushButton::clicked, this, &LeaderScreen::backToMainMenu);
 
 
     mainLayout->addWidget(titleContainer);
     mainLayout->addWidget(table);
+    mainLayout->addWidget(backToMainButton);
 
     setLayout(mainLayout);
 
@@ -92,9 +97,13 @@ void LeaderScreen::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     QString bgPath = QString(TETRIS_ASSETS_DIR) + "/tetris_main.png";
     QPixmap screenPixmap(bgPath);
-
     painter.drawPixmap(this->rect(), screenPixmap);
 
     QWidget::paintEvent(event);
 }
 
+void LeaderScreen::backToMainMenu() {
+    mainMenu->setVisible(true);
+    mainMenu->showMaximized();
+    this->close();
+}

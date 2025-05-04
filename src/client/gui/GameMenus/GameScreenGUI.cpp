@@ -2,19 +2,18 @@
 #include "GameScreenGUI.hpp"
 
 
-GameScreen::GameScreen(Config &config, ClientSession &session, QWidget *parent) : QWidget(parent),
+GameScreen::GameScreen(Config &config, ClientSession &session, QWidget *parent) : QWidget(parent), 
     configRef(config), session(session), playerBoard(20, std::vector<int>(10, 0)), opponentBoard(20, std::vector<int>(10, 0)) {
-    
-        // Initial game boards for demo
-        placePieceInBoard(PieceType::J, 0, 0, playerBoard);
-        placePieceInBoard(PieceType::L, 5, 3, opponentBoard);
+    // Initial game boards for demo
+    placePieceInBoard(PieceType::J, 0, 0, playerBoard);
+    placePieceInBoard(PieceType::L, 5, 3, opponentBoard);
 
-        setupUi();
+    setupUi();
 
-        // Automatic update timer
-        updateTimer = new QTimer(this);
-        connect(updateTimer, &QTimer::timeout, this, &GameScreen::onUpdateTimer);
-        updateTimer->start(50);  // 50 ms refresh
+    // Automatic update timer
+    updateTimer = new QTimer(this);
+    connect(updateTimer, &QTimer::timeout, this, &GameScreen::onUpdateTimer);
+    updateTimer->start(50);  // 50 ms refresh
 }
 
 GameScreen::~GameScreen() {
@@ -105,6 +104,13 @@ void GameScreen::setupUi()
     makeShortcut(QKeySequence(configRef.get("UseBag").c_str()),      Action::UseBag);
     makeShortcut(QKeySequence(configRef.get("UseBonus").c_str()),    Action::UseBonus);
     makeShortcut(QKeySequence(configRef.get("UseMalus").c_str()),    Action::UseMalus);
+    makeShortcut(QKeySequence(configRef.get("SeePreviousOpponent").c_str()), Action::SeePreviousOpponent);
+    makeShortcut(QKeySequence(configRef.get("SeeNextOpponent").c_str()), Action::SeeNextOpponent);
+    makeShortcut(QKeySequence(Qt::Key_Left), Action::MoveLeft);
+    makeShortcut(QKeySequence(Qt::Key_Right), Action::MoveRight);
+    makeShortcut(QKeySequence(Qt::Key_Down), Action::MoveDown);
+    makeShortcut(QKeySequence(Qt::Key_Space), Action::InstantFall);
+
 
     // Escape to close window
     auto *esc = new QShortcut(QKeySequence(Qt::Key_Escape), this);
@@ -205,6 +211,14 @@ void GameScreen::clearLayout(QLayout *layout)
 
 void GameScreen::onEscapePressed()
 {
+    
+    StatusCode fetchRc = session.fetchPlayerData();
+    if (fetchRc != StatusCode::SUCCESS) {
+        QMessageBox::warning(this,
+                             "Erreur réseau",
+                             "Impossible de charger les données du joueur avant de quitter.");
+    }
+
     ClientStatus currentStatus = session.getOwnStatus();
     if (currentStatus == ClientStatus::IN_GAME) {
         PlayerState state = session.getPlayerState();

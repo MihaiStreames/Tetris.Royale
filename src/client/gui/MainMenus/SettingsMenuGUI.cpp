@@ -70,12 +70,12 @@ SettingsScreen::SettingsScreen(MainMenu* mainMenuView, QWidget *parent): QWidget
     table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     table->setSelectionMode(QAbstractItemView::NoSelection);
     table->setFocusPolicy(Qt::NoFocus);
-    table->setAttribute(Qt::WA_TransparentForMouseEvents);
+
 
 
     // Ajout des données
-    QStringList controls = {"Left", "Right", "Rotate", "Drop", "Switch Player","Power-up"};
-    QStringList keys = {"←", "→", "↑","Space","S","Q" };
+    QStringList controls = {"Left", "Right", "Rotate", "Drop", "Down","Bag","Bonus","Malus","SeeNextOpponent","SeePreviousOpponent","Exit"};
+    QStringList keys = {"← or A", "→ or D", "Q or E","Space or V","S or ↓","C", "B", "M", "P", "O", "Esc"};
 
     for (int i = 0; i < controls.size(); ++i) {
         table->insertRow(i);
@@ -105,7 +105,7 @@ void SettingsScreen::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     QString bgPath = QString(TETRIS_ASSETS_DIR) + "/tetris_main.png";
     QPixmap screenPixmap(bgPath);
-
+    
     painter.drawPixmap(this->rect(), screenPixmap);
 
     QWidget::paintEvent(event);
@@ -116,4 +116,3 @@ void SettingsScreen::backToMainMenu() {
     mainMenu->showMaximized();
     this->close();
 }
-

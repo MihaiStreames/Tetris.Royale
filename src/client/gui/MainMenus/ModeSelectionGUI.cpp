@@ -25,7 +25,7 @@ ModeSelection::ModeSelection(ClientSession &session, MainMenu* mainMenuView, QWi
     //----------------BOUTONS------------------//
 
     soloButton = new QPushButton("Solo", this);
-    multiplayerButton = new QPushButton("Mutiplayer", this);
+    multiplayerButton = new QPushButton("Multiplayer", this);
     backToMainButton = new QPushButton("Back to main menu", this);
 
 

@@ -268,13 +268,15 @@ QWidget* renderControls(Config &config, QWidget *parent) {
         lbl->setStyleSheet(lineStyle);
         return lbl;
     };
-    layout->addWidget(makeLabel(QString::fromStdString(config.get("MoveLeft")) + "/" + QString::fromStdString(config.get("MoveRight")) + ": Move"));
+    layout->addWidget(makeLabel(QString::fromStdString(config.get("MoveLeft")) + "/" + QString::fromStdString(config.get("MoveRight")) + " : Move"));
     layout->addWidget(makeLabel(QString::fromStdString(config.get("MoveDown")) + "/↓ : Down"));
-    layout->addWidget(makeLabel(QString::fromStdString(config.get("RotateLeft")) + "/" + QString::fromStdString(config.get("RotateRight")) + ": Rotate"));
+    layout->addWidget(makeLabel(QString::fromStdString(config.get("RotateLeft")) + "/" + QString::fromStdString(config.get("RotateRight")) + " : Rotate"));
     layout->addWidget(makeLabel(QString::fromStdString(config.get("InstantFall")) + "/Space : Drop"));
-    layout->addWidget(makeLabel(QString::fromStdString(config.get("UseBag")) + ": Bag"));
-    layout->addWidget(makeLabel(QString::fromStdString(config.get("UseBonus")) + ": Bonus"));
-    layout->addWidget(makeLabel(QString::fromStdString(config.get("UseMalus")) + ": Malus"));
+    layout->addWidget(makeLabel(QString::fromStdString(config.get("UseBag")) + " : Bag"));
+    layout->addWidget(makeLabel(QString::fromStdString(config.get("UseBonus")) + " : Bonus"));
+    layout->addWidget(makeLabel(QString::fromStdString(config.get("UseMalus")) + " : Malus"));
+    layout->addWidget(makeLabel(QString::fromStdString(config.get("SeeNextOpponent")) + " : SeeNextOpponent"));
+    layout->addWidget(makeLabel(QString::fromStdString(config.get("SeePreviousOpponent")) + " : SeePreviousOpponent"));
     layout->addWidget(makeLabel("Esc: Exit"));
 
     if (auto *last = container->findChildren<QLabel*>().last()) {
