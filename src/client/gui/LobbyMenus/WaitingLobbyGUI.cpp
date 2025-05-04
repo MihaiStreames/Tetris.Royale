@@ -18,7 +18,10 @@ WaitingLobby::WaitingLobby(ClientSession &session, QWidget *parent)
     // Set the window to fullscreen mode
     this->showFullScreen();
 
-    // Initialize the UI components
+    lobbyPollingTimer = new QTimer(this);
+    connect(lobbyPollingTimer, &QTimer::timeout, this, &WaitingLobby::pollLobbyState);
+    lobbyPollingTimer->start(100);  
+
     setupUi();
 }
 
@@ -215,3 +218,21 @@ void WaitingLobby::fillPlayerListAndSpectatorList() {
     }
 }
 
+void WaitingLobby::pollLobbyState() {
+    try {
+        lobbyState = session.getCurrentLobbyState();
+        fillPlayerListAndSpectatorList();
+
+        if (session.getOwnStatus() == ClientStatus::IN_GAME) {
+            lobbyPollingTimer->stop();  
+            Config config(CONFIG_FILE_NAME);
+            config.load();
+            GameScreen *gameScreen = new GameScreen(config, session);
+            gameScreen->showMaximized();
+            this->close();
+        }
+
+    } catch (const std::exception &e) {
+        qDebug() << "Polling error: " << e.what();
+    }
+}

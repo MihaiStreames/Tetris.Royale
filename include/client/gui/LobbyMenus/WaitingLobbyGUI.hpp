@@ -16,6 +16,7 @@
 #include <QPainter>
 #include <QFontDatabase>
 #include <QPixmap>
+#include <QTimer>
 
 #include <vector>
 
@@ -24,6 +25,7 @@
 #include "LabelWidget.hpp"
 #include "ListWidget.hpp"
 #include "ButtonWidget.hpp"
+#include "GameScreen.hpp"
 
 
 class Lobby;
@@ -40,6 +42,7 @@ private slots:
     void onLeaveBtnClicked();
     void changePlayerState();
     void fillPlayerListAndSpectatorList();
+    void pollLobbyState();
 
 private:
     ClientSession &session;
@@ -48,6 +51,7 @@ private:
     QListWidget *spectatorList;
     LobbyState lobbyState;
     bool isReady = false;
+    QTimer *lobbyPollingTimer;
 
     void paintEvent(QPaintEvent *event);
     void setupUi();
