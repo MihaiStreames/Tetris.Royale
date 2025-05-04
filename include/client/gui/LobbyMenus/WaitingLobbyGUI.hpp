@@ -25,7 +25,7 @@
 #include "LabelWidget.hpp"
 #include "ListWidget.hpp"
 #include "ButtonWidget.hpp"
-#include "GameScreen.hpp"
+#include "GameScreenGUI.hpp"
 
 
 class Lobby;
