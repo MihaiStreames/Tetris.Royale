@@ -166,6 +166,18 @@ file(GLOB CLIENT_CONNECTIVITY_SRC_FILES "${TETRIS_SRC_DIR}/client/connectivity/*
 file(GLOB CLIENT_TUI_SRC_FILES "${TETRIS_SRC_DIR}/client/tui/*.cpp" "${TETRIS_SRC_DIR}/client/tui/menus/*.cpp")
 file(GLOB CLIENT_GUI_SRC_FILES "${TETRIS_SRC_DIR}/client/gui/GameMenus/*.cpp" "${TETRIS_SRC_DIR}/client/gui/LobbyMenus/*.cpp" "${TETRIS_SRC_DIR}/client/gui/LoginMenus/*.cpp" "${TETRIS_SRC_DIR}/client/gui/MainMenus/*.cpp")
 
+# Add header files as sources so AUTOMOC can process them
+file(GLOB CLIENT_GUI_HEADER_FILES
+    "${TETRIS_INCLUDE_DIR}/client/gui/GameMenus/*.hpp"
+    "${TETRIS_INCLUDE_DIR}/client/gui/LobbyMenus/*.hpp"
+    "${TETRIS_INCLUDE_DIR}/client/gui/LoginMenus/*.hpp"
+    "${TETRIS_INCLUDE_DIR}/client/gui/MainMenus/*.hpp"
+)
+
+# combine source and header files for GUI
+set(CLIENT_GUI_FILES ${CLIENT_GUI_SRC_FILES} ${CLIENT_GUI_HEADER_FILES})
+
+
 # Libraries
 add_tetris_library(TetrisRoyaleCommon "" "${COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common")
 add_tetris_library(TetrisRoyaleCommonServer "" "${SERVER_COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common/server-common" libs TetrisRoyaleCommon Boost::boost OpenSSL::Crypto nlohmann_json::nlohmann_json)
@@ -175,7 +187,7 @@ add_tetris_library(TetrisRoyaleDBServer STATIC "${DB_SERVER_SRC_FILES}" "${TETRI
 add_tetris_library(TetrisRoyaleTetrisServer "" "${TETRIS_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/tetris-server" libs TetrisRoyaleGameLogic TetrisRoyaleCommonServer TetrisRoyaleCommon)
 add_tetris_library(TetrisRoyaleClientConnectivity "" "${CLIENT_CONNECTIVITY_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/connectivity" libs nlohmann_json::nlohmann_json TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost)
 add_tetris_library(TetrisRoyaleClientTUILib "" "${CLIENT_TUI_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/tui;${TETRIS_INCLUDE_DIR}/client/tui/menus" libs TetrisRoyaleClientConnectivity ftxui::screen ftxui::dom ftxui::component)
-add_tetris_library(TetrisRoyaleClientGUILib "" "${CLIENT_GUI_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/gui/GameMenus;${TETRIS_INCLUDE_DIR}/client/gui/LobbyMenus;${TETRIS_INCLUDE_DIR}/client/gui/LoginMenus;${TETRIS_INCLUDE_DIR}/client/gui/MainMenus" libs TetrisRoyaleClientConnectivity Qt5::Widgets Qt5::Gui Qt5::Core TetrisRoyaleCommon)
+add_tetris_library(TetrisRoyaleClientGUILib "" "${CLIENT_GUI_FILES}" "${TETRIS_INCLUDE_DIR}/client/gui/GameMenus;${TETRIS_INCLUDE_DIR}/client/gui/LobbyMenus;${TETRIS_INCLUDE_DIR}/client/gui/LoginMenus;${TETRIS_INCLUDE_DIR}/client/gui/MainMenus" libs TetrisRoyaleClientConnectivity Qt5::Widgets Qt5::Gui Qt5::Core TetrisRoyaleCommon)
 
 
 # Executables
