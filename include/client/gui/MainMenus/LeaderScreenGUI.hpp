@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QFont>
+#include <QWidget>
 #include <QPainter>
 #include <QFontDatabase>
 #include <QTableWidget>

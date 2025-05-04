@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QWidget>
 #include <QListWidget>
 #include <QMessageBox>
 #include <QtWidgets>

@@ -11,9 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
+
 
 # Set output directories
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -182,7 +181,7 @@ add_tetris_library(TetrisRoyaleClientGUILib "" "${CLIENT_GUI_SRC_FILES}" "${TETR
 # Executables
 add_tetris_executable(TetrisRoyaleMasterServer "${TETRIS_SRC_DIR}/server/MasterServer.cpp" "${TETRIS_INCLUDE_DIR}/server" libs TetrisRoyaleTetrisServer TetrisRoyaleDBServer TetrisRoyaleCommon)
 add_tetris_executable(TetrisRoyaleClientTUI "${TETRIS_SRC_DIR}/client/ClientTUI.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientTUILib TetrisRoyaleClientConnectivity)
-# add_tetris_executable(TetrisRoyaleClientGUI "${TETRIS_SRC_DIR}/client/ClientGUI.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientGUILib)
+add_tetris_executable(TetrisRoyaleClientGUI "${TETRIS_SRC_DIR}/client/ClientGUI.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientGUILib TetrisRoyaleClientConnectivity)
 
 # ==================================================== #
 #                      Testing                         #

@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QtWidgets>
+#include <QWidget>
 #include <QLabel>
 #include <QVBoxLayout>
 #include <QHBoxLayout>

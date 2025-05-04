@@ -3,6 +3,7 @@
 
 #include <QtWidgets>
 #include <QLabel>
+#include <QWidget>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QLineEdit>

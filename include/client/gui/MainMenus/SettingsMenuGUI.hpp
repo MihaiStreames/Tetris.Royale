@@ -3,6 +3,7 @@
 
 #include <QTableWidget>
 #include <QHeaderView>
+#include <QWidget>
 
 #include "MainMenuGUI.hpp"
 

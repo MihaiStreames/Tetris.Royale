@@ -1,6 +1,8 @@
 #ifndef MODESELECTIONGUI_HPP
 #define MODESELECTIONGUI_HPP
 
+#include <QWidget>
+
 #include "MainMenuGUI.hpp"
 #include "LobbyGUI.hpp"
 #include "GameScreenGUI.hpp"

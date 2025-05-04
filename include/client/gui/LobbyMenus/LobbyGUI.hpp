@@ -19,6 +19,7 @@
 #include <QPainter>
 #include <QFontDatabase>
 #include <QPixmap>
+#include <QWidget>
 
 #include "LabelWidget.hpp"
 #include "ButtonWidget.hpp"
