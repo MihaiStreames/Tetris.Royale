@@ -1,4 +1,4 @@
-#include "InLobbyScreen.hpp"
+#include "InLobbyScreenTUI.hpp"
 
 
 using namespace ftxui;

@@ -4,7 +4,7 @@
 
 #include "Config.hpp"
 #include "ClientSession.hpp"
-#include "MenuHandler.hpp"
+#include "MenuHandlerTUI.hpp"
 
 
 // This is the Client TUI entry point

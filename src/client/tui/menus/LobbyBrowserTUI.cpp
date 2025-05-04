@@ -1,4 +1,4 @@
-#include "LobbyBrowser.hpp"
+#include "LobbyBrowserTUI.hpp"
 
 
 using namespace ftxui;

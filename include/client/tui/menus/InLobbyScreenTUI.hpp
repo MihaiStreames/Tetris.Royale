@@ -5,7 +5,7 @@
 #include <ftxui/dom/elements.hpp>
 #include <string>
 
-#include "MenuHandler.hpp"
+#include "MenuHandlerTUI.hpp"
 #include "ClientSession.hpp"
 #include "Common.hpp"
 

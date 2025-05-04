@@ -3,6 +3,7 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
+
 #include <chrono>
 #include <thread>
 #include <sstream>
@@ -11,7 +12,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "MenuHandler.hpp"
+#include "MenuHandlerTUI.hpp"
 #include "ClientSession.hpp"
 #include "Common.hpp"
 

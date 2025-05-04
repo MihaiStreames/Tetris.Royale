@@ -176,16 +176,13 @@ add_tetris_library(TetrisRoyaleDBServer STATIC "${DB_SERVER_SRC_FILES}" "${TETRI
 add_tetris_library(TetrisRoyaleTetrisServer "" "${TETRIS_SERVER_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/server/tetris-server" libs TetrisRoyaleGameLogic TetrisRoyaleCommonServer TetrisRoyaleCommon)
 add_tetris_library(TetrisRoyaleClientConnectivity "" "${CLIENT_CONNECTIVITY_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/connectivity" libs nlohmann_json::nlohmann_json TetrisRoyaleCommonServer TetrisRoyaleCommon Boost::boost)
 add_tetris_library(TetrisRoyaleClientTUILib "" "${CLIENT_TUI_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/tui;${TETRIS_INCLUDE_DIR}/client/tui/menus" libs TetrisRoyaleClientConnectivity ftxui::screen ftxui::dom ftxui::component)
-add_tetris_library(TetrisRoyaleClientGUILib "" "${CLIENT_GUI_SRC_FILES}"
-"${TETRIS_INCLUDE_DIR}/client/gui/GameMenus;${TETRIS_INCLUDE_DIR}/client/gui/LobbyMenus;${TETRIS_INCLUDE_DIR}/client/gui/LoginMenus;${TETRIS_INCLUDE_DIR}/client/gui/MainMenus"
-libs TetrisRoyaleClientConnectivity Qt5::Widgets Qt5::Gui Qt5::Core TetrisRoyaleCommon)
+add_tetris_library(TetrisRoyaleClientGUILib "" "${CLIENT_GUI_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/client/gui/GameMenus;${TETRIS_INCLUDE_DIR}/client/gui/LobbyMenus;${TETRIS_INCLUDE_DIR}/client/gui/LoginMenus;${TETRIS_INCLUDE_DIR}/client/gui/MainMenus" libs TetrisRoyaleClientConnectivity Qt5::Widgets Qt5::Gui Qt5::Core TetrisRoyaleCommon)
 
-message(STATUS "${CLIENT_GUI_SRC_FILES}")
 
 # Executables
 add_tetris_executable(TetrisRoyaleMasterServer "${TETRIS_SRC_DIR}/server/MasterServer.cpp" "${TETRIS_INCLUDE_DIR}/server" libs TetrisRoyaleTetrisServer TetrisRoyaleDBServer TetrisRoyaleCommon)
 add_tetris_executable(TetrisRoyaleClientTUI "${TETRIS_SRC_DIR}/client/ClientTUI.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientTUILib TetrisRoyaleClientConnectivity)
-add_tetris_executable(TetrisRoyaleClientGUI "${TETRIS_SRC_DIR}/client/ClientGUI.cpp" "" libs TetrisRoyaleClientGUILib)
+# add_tetris_executable(TetrisRoyaleClientGUI "${TETRIS_SRC_DIR}/client/ClientGUI.cpp" "${TETRIS_INCLUDE_DIR}/client" libs TetrisRoyaleClientGUILib)
 
 # ==================================================== #
 #                      Testing                         #

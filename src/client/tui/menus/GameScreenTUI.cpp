@@ -1,4 +1,4 @@
-#include "GameScreen.hpp"
+#include "GameScreenTUI.hpp"
 
 
 using namespace ftxui;

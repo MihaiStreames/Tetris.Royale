@@ -1,4 +1,4 @@
-#include "RegisterScreen.hpp"
+#include "RegisterScreenTUI.hpp"
 
 using namespace ftxui;
 
