@@ -278,6 +278,10 @@ void FriendsList::addFriendWidget(const QString &friendName) {
     connect(friendWidget, &FriendWidget::thirdButtonClicked, this, [this, friendName]() {
         std::string userID = session.getAccountIDFromUsername(friendName.toStdString());
         if (session.getOwnStatus() == ClientStatus::IN_LOBBY) {
+            if (session.getClientStatus(userID) == ClientStatus::OFFLINE) {
+                QMessageBox::warning(this, "Invite Error", "This user is offline.");
+                return;
+            }
             sendInvite(userID);
         } else {
             QMessageBox::warning(this, "Invite Error", "You must be in a lobby to send an invite.");

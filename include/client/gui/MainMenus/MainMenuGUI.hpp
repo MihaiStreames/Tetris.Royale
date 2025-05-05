@@ -19,6 +19,7 @@
 #include "FriendsListWidget.hpp"
 #include "SettingsMenuGUI.hpp"
 #include "LeaderScreenGUI.hpp"
+#include "FriendsListManager.hpp"
 
 class MainMenu : public QWidget {
     Q_OBJECT

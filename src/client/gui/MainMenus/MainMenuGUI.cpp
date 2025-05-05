@@ -67,9 +67,18 @@ void MainMenu::paintEvent(QPaintEvent *event) {
 }
 
 void MainMenu::showFriendsList() {
-    FriendsList *friendsList = new FriendsList(session);
-    friendsList->setAttribute(Qt::WA_DeleteOnClose);  // Supprime la fenêtre à la fermeture
-    friendsList->show();
+    auto &friendsListManager = FriendsListManager::instance();
+    if (friendsListManager.friendsListWindow) {
+        return;
+    }
+
+    friendsListManager.friendsListWindow = new FriendsList(session);
+    friendsListManager.friendsListWindow->setAttribute(Qt::WA_DeleteOnClose);
+    friendsListManager.friendsListWindow->show();
+
+    connect(FriendsListManager::instance().friendsListWindow, &QObject::destroyed, this, []() {
+        FriendsListManager::instance().friendsListWindow = nullptr;
+    });
 }
 
 void MainMenu::openModeSelection() {
@@ -95,6 +104,9 @@ void MainMenu::openLeaderboard(){
 
 void MainMenu::logout() {
     if(session.endSession() == StatusCode::SUCCESS){
+        if (FriendsListManager::instance().friendsListWindow) {
+            FriendsListManager::instance().friendsListWindow->close();
+        }
         // Ouvrir ici le menu LOGIN
         LoginScreen *loginScreen = new LoginScreen(session);
         loginScreen->showMaximized();

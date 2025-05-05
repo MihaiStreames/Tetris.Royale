@@ -29,6 +29,7 @@
 #include "WaitingLobbyGUI.hpp"
 #include "MainMenuGUI.hpp"
 #include "FriendsListWidget.hpp"
+#include "FriendsListManager.hpp"
 
 
 class Lobby : public QMainWindow {

@@ -26,7 +26,8 @@
 #include "ListWidget.hpp"
 #include "ButtonWidget.hpp"
 #include "GameScreenGUI.hpp"
-#include "FriendsListWidget.hpp"
+#include "FriendsListManager.hpp"
+
 
 class Lobby;
 
