@@ -174,30 +174,76 @@ void GameScreen::setupPlayerUI(const PlayerState &ps)
     replaceWidgetInLayout(rightColLayout, energyWidget,  nenergy);
 }
 
+
 void GameScreen::setupSpectatorUI(const SpectatorState &ss)
 {
-    qWarning() << "Entering spectator mode";
+    //qWarning() << "Entering spectator mode";
     clearLayout(leftColLayout);
     clearLayout(middleColLayout);
     clearLayout(rightColLayout);
 
-    QLabel *title = new QLabel("SPECTATING: " + QString::fromStdString(ss.playerUsername), this);
+    // Titre principal en haut (milieu)
+    QLabel *title = new QLabel("SPECTATING : " + QString::fromStdString(ss.playerUsername), this);
     title->setStyleSheet("color: rgb(0,225,255); font-size:24px; font-weight:bold;");
-    title->setAlignment(Qt::AlignCenter);
+    title->setAlignment(Qt::AlignHCenter | Qt::AlignTop);
+    title->setFixedHeight(50);
+    title->setMaximumWidth(500);
+    applyDropShadow(title);
 
-    auto *board  = renderBoard(ss.playerGrid, false, ss.isGameOver, this);
-    auto *hold   = renderBox("HOLD", renderPiece(ss.holdTetro,4,4, this), this);
-    auto *next   = renderBox("NEXT", renderPiece(ss.nextTetro,4,4, this), this);
+    // Board
+    auto *nbrd = renderBoard(ss.playerGrid, false, ss.isGameOver, this);
 
+    // Hold / Next
+    auto *hold   = renderBox("HOLD", renderPiece(ss.holdTetro, 4, 4, this), this);
+    auto *next   = renderBox("NEXT", renderPiece(ss.nextTetro, 4, 4, this), this);
+
+    // Noms des joueurs et flèches
+    QLabel *prevLabel = new QLabel(" ← Previous Opponent", this);
+    QLabel *nextLabel = new QLabel("Next Opponent → ", this);
+
+    prevLabel->setStyleSheet("color: rgb(0,225,255); font-size:24px; font-weight:bold;");
+    nextLabel->setStyleSheet("color: rgb(0,225,255); font-size:24px; font-weight:bold;");
+    prevLabel->setAlignment(Qt::AlignCenter);
+    nextLabel->setAlignment(Qt::AlignCenter);
+    applyDropShadow(prevLabel);
+    applyDropShadow(nextLabel);
+
+    // Exemple : remplacez ceci par les vrais noms si disponibles dans SpectatorState
+    QLabel *prevUsername = new QLabel("O", this);
+    QLabel *nextUsername = new QLabel("P", this);
+    prevUsername->setAlignment(Qt::AlignCenter);
+    nextUsername->setAlignment(Qt::AlignCenter);
+    prevUsername->setStyleSheet("color: lightgray;");
+    nextUsername->setStyleSheet("color: lightgray;");
+
+    // LEFT: Previous player + arrow + next piece
+    leftColLayout->addWidget(prevLabel);
+    leftColLayout->addWidget(prevUsername);
+    leftColLayout->addSpacerItem(new QSpacerItem(0, 20));
+    leftColLayout->addWidget(hold);
+    leftColLayout->setContentsMargins(170, 0, 90, 170);
+
+    // MIDDLE: Title + board
     middleColLayout->addWidget(title);
-    middleColLayout->addWidget(board);
-    rightColLayout->addWidget(hold);
-    rightColLayout->addWidget(next);
+    middleColLayout->addSpacerItem(new QSpacerItem(0, 20));
+    middleColLayout->addWidget(nbrd);
 
+    // RIGHT: Hold + arrow + next player
+    rightColLayout->addWidget(nextLabel);
+    rightColLayout->addWidget(nextUsername);
+    rightColLayout->addSpacerItem(new QSpacerItem(0, 20));
+    rightColLayout->addWidget(next);
+    rightColLayout->setContentsMargins(0, 0, 290, 90);
+
+    // Exit hint
     QLabel *exitHint = new QLabel("Press ESC to exit spectator mode", this);
     exitHint->setStyleSheet("color: gray; font-style: italic;");
+    exitHint->setAlignment(Qt::AlignCenter);
+    exitHint->setFixedHeight(50);
+    rightColLayout->addSpacerItem(new QSpacerItem(0, 20));
     rightColLayout->addWidget(exitHint);
 }
+
 
 void GameScreen::clearLayout(QLayout *layout)
 {

@@ -11,6 +11,7 @@
 #include <QGroupBox>
 #include <QProgressBar>
 #include <QString>
+#include <QGraphicsDropShadowEffect>
 
 #include <vector>
 
@@ -26,6 +27,6 @@ QWidget* renderStats(int score, int level, int linesCleared, QWidget *parent = n
 QWidget* renderControls(Config &config, QWidget *parent = nullptr);
 QWidget* renderBox(const QString &title, QWidget *content, QWidget *parent = nullptr);
 void placePieceInBoard(PieceType type, int x, int y, tetroMat &board);
-
+void applyDropShadow(QWidget *widget, int blurRadius = 15, QColor color = QColor(0, 225, 255, 180));
 
 #endif // GAMERENDERGUI_HPP

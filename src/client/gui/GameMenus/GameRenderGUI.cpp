@@ -330,3 +330,14 @@ void placePieceInBoard(PieceType type, int x, int y, tetroMat &board) {
     }
 }
 
+void applyDropShadow(QWidget *widget,
+                     int blurRadius,
+                     QColor color) {
+    auto *shadow = new QGraphicsDropShadowEffect(widget);
+    shadow->setBlurRadius(blurRadius);
+    shadow->setColor(color);
+    shadow->setOffset(0, 0);
+    widget->setGraphicsEffect(shadow);
+}
+
+
