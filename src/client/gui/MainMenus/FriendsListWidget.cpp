@@ -159,7 +159,6 @@ void FriendsList::showChat(const QString &friendName) {
             safeMessageList->clear();
             // oldest message on top
             for (auto it = messages.rbegin(); it != messages.rend(); ++it) {
-                const std::string &text = it->text;
                 QString msgText = QString::fromStdString(it->from + ":" + it->text);
                 safeMessageList->addItem(msgText);
 
@@ -278,10 +277,10 @@ void FriendsList::addFriendWidget(const QString &friendName) {
     //invite button
     connect(friendWidget, &FriendWidget::thirdButtonClicked, this, [this, friendName]() {
         std::string userID = session.getAccountIDFromUsername(friendName.toStdString());
-        if (session.getClientStatus(friendName.toStdString()) == ClientStatus::IN_LOBBY) {
-            (void) session.sendMessage(userID, "Join my lobby: " + session.getCurrentLobbyState().lobbyID);
+        if (session.getOwnStatus() == ClientStatus::IN_LOBBY) {
+            sendInvite(userID);
         } else {
-            QMessageBox::warning(this, "Invite Error", "The player is not in a lobby.");
+            QMessageBox::warning(this, "Invite Error", "You must be in a lobby to send an invite.");
         }
     });
 
