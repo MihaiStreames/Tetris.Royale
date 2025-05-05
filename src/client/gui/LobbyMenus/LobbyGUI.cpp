@@ -193,6 +193,9 @@ void Lobby::setupUi() {
     QPushButton* createBtn = createButton("Create", mainLayout, this, &Lobby::onCreateLobbyClicked);
     createBtn->setStyleSheet(buttonStyle);
 
+    QPushButton *friendListBtn = createButton("Open Friends List", mainLayout, this, &Lobby::onFriendListBtnClicked);
+    friendListBtn->setStyleSheet(buttonStyle);
+
     QPushButton* backBtn = createButton("Back", mainLayout, this, &Lobby::onBackBtnCliked);
     backBtn->setStyleSheet(buttonStyle);
 }
@@ -249,6 +252,12 @@ void Lobby::onRefreshBtnCliked() {
             listLobbies->addItem(QString::fromStdString(ss.str()));
         }
     }
+}
+
+void Lobby::onFriendListBtnClicked() {
+    FriendsList *friendsList = new FriendsList(session);
+    friendsList->setAttribute(Qt::WA_DeleteOnClose); // Supprime la fenêtre à la fermeture
+    friendsList->show();
 }
 
 void Lobby::onJoinByCodeClicked() {

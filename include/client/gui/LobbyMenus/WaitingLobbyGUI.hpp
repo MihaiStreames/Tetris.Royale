@@ -26,7 +26,7 @@
 #include "ListWidget.hpp"
 #include "ButtonWidget.hpp"
 #include "GameScreenGUI.hpp"
-
+#include "FriendsListWidget.hpp"
 
 class Lobby;
 
@@ -43,6 +43,7 @@ private slots:
     void changePlayerState();
     void fillPlayerListAndSpectatorList();
     void pollLobbyState();
+    void onFriendListBtnClicked();
 
 private:
     ClientSession &session;

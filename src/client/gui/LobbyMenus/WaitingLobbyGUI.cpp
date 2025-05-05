@@ -128,6 +128,9 @@ void WaitingLobby::setupUi() {
     QPushButton *readyBtn = createButton("Ready/Unready", hozizontalLayout, this, &WaitingLobby::changePlayerState);
     readyBtn->setFont(fontInteractions);
     readyBtn->setStyleSheet(buttonStyle);
+    QPushButton *friendListBtn = createButton("Open Friends List", hozizontalLayout, this, &WaitingLobby::onFriendListBtnClicked);
+    friendListBtn->setFont(fontInteractions);
+    friendListBtn->setStyleSheet(buttonStyle);
     QPushButton *leaveBtn = createButton("Leave Lobby", hozizontalLayout, this, &WaitingLobby::onLeaveBtnClicked);
     leaveBtn->setFont(fontInteractions);
     leaveBtn ->setStyleSheet(buttonStyle);
@@ -216,6 +219,12 @@ void WaitingLobby::fillPlayerListAndSpectatorList() {
             spectatorList->addItem(QString::fromStdString(username));
         }
     }
+}
+
+void WaitingLobby::onFriendListBtnClicked() {
+    FriendsList *friendsList = new FriendsList(session);
+    friendsList->setAttribute(Qt::WA_DeleteOnClose); // Supprime la fenêtre à la fermeture
+    friendsList->show();
 }
 
 void WaitingLobby::pollLobbyState() {

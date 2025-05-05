@@ -28,6 +28,7 @@
 #include "MenuSwitcher.hpp"
 #include "WaitingLobbyGUI.hpp"
 #include "MainMenuGUI.hpp"
+#include "FriendsListWidget.hpp"
 
 
 class Lobby : public QMainWindow {
@@ -49,6 +50,7 @@ private slots:
     void onSpectateByCodeCliked();
     void onCreateLobbyClicked(); 
     void onModeChanged();
+    void onFriendListBtnClicked();
     
 private:
 
