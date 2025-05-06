@@ -255,9 +255,18 @@ void Lobby::onRefreshBtnCliked() {
 }
 
 void Lobby::onFriendListBtnClicked() {
-    FriendsList *friendsList = new FriendsList(session);
-    friendsList->setAttribute(Qt::WA_DeleteOnClose); // Supprime la fenêtre à la fermeture
-    friendsList->show();
+    auto &friendsListManager = FriendsListManager::instance();
+    if (friendsListManager.friendsListWindow) {
+        return;
+    }
+
+    friendsListManager.friendsListWindow = new FriendsList(session);
+    friendsListManager.friendsListWindow->setAttribute(Qt::WA_DeleteOnClose);
+    friendsListManager.friendsListWindow->show();
+
+    connect(FriendsListManager::instance().friendsListWindow, &QObject::destroyed, this, []() {
+        FriendsListManager::instance().friendsListWindow = nullptr;
+    });
 }
 
 void Lobby::onJoinByCodeClicked() {
