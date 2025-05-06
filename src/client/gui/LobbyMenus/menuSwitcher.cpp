@@ -9,7 +9,7 @@ template<typename MenuType, typename ArgType>
 void MenuSwitcher::changeMenu(ArgType arg, ClientSession& session) {
     MenuType* nextMenu = new MenuType(session);
     arg->close();
-    nextMenu->show();
+    nextMenu->showMaximized();
 }
 
 // Explicit template instantiations for known types

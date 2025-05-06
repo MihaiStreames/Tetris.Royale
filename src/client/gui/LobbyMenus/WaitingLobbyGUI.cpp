@@ -15,9 +15,6 @@ std::string getGameModeName(GameMode mode) {
 WaitingLobby::WaitingLobby(ClientSession &session, QWidget *parent)
     : QMainWindow(parent), session(session), playerList(nullptr), spectatorList(nullptr)
 {
-    // Set the window to fullscreen mode
-    this->showFullScreen();
-
     lobbyPollingTimer = new QTimer(this);
     connect(lobbyPollingTimer, &QTimer::timeout, this, &WaitingLobby::pollLobbyState);
     lobbyPollingTimer->start(100);  
