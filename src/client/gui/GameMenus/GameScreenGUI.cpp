@@ -84,8 +84,8 @@ void GameScreen::setupUi()
 
     // Column margins
     leftColLayout->setContentsMargins(170, 0, 90, 90);
-    middleColLayout->setContentsMargins(150, 15,   0, 15);
-    rightColLayout->setContentsMargins(0, 100, 290, 0);
+    middleColLayout->setContentsMargins(120, 15,   0, 15);
+    rightColLayout->setContentsMargins(0, 10, 290, 0);
 
     // Keyboard shortcuts
     auto makeShortcut = [&](const QKeySequence &seq, Action act) {
