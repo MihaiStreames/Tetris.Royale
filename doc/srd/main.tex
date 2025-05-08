@@ -68,7 +68,6 @@ Ce document de spécifications des besoins logiciels (\textit{Software Requireme
 \subsection{Fonctionnalités hors partie}
 \noindent En dehors des parties, le joueur dispose des fonctionnalités suivantes :
 \begin{itemize}
-    \item Gérer son compte ;
     \item Consulter une liste d'amis pour discuter ou inviter des joueurs en tant que participants ou observateurs ;
     \item Créer ou rejoindre une partie ;
     \item Consulter le classement des meilleurs joueurs du mode \emph{Endless}.
@@ -113,6 +112,7 @@ Ce document de spécifications des besoins logiciels (\textit{Software Requireme
 1.1 & Oleksandra Omelyanyuk & Début adaptation aux changements & 10/03/2025 \\ \hline
 1.2 & Oleksandra Omelyanyuk & Modification/rajout diagrammes & 12/03/2025 \\ \hline
 2 & Oleksandra Omelyanyuk & Modifications diagrammes & 14/03/2025 \\ \hline
+2.1 & Oleksandra Omelyanyuk & Adaptation texte & 08/05/2025 \\ \hline
 \end{longtable}
 
 
@@ -177,13 +177,6 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 \noindent L'utilisateur peut également choisir de rejoindre une partie existante. Il peut accéder à un menu contenant les parties en cours, ou qui n'ont pas encore atteint leur nombre souhaité de joueurs, et peut alors choisir de les rejoindre ou de les observer.
 
-\subsubsection{Gestion du Profil Utilisateur}
-
-\noindent Chaque utilisateur possède un profil qui lui est associé. Il peut y accéder à tout moment pour effectuer certaines actions de gestion personnelle :
-\begin{itemize}
-    \item \textbf{Modifier son mot de passe} : L'utilisateur peut changer son mot de passe à tout moment pour renforcer la sécurité de son compte.
-    \item \textbf{Modifier son pseudo} : L'utilisateur peut également changer son pseudo. Cependant, le nouveau pseudo sera accepté uniquement s'il est disponible, c'est-à-dire s'il n'est pas déjà pris par un autre joueur.
-\end{itemize}
 
 \subsubsection{Liste d'Amis et Discussions}
 
@@ -292,7 +285,7 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 \begin{itemize}
     \item \textbf{Endless :} Ce mode solo affiche la grille de jeu avec le nombre de points accumulés durant la partie.
-    \item \textbf{Classique :} L'affichage est similaire au mode \emph{Endless}, avec, en plus, une grille d'un joueur adverse visible à droite, permettant ainsi de choisir à qui envoyer les malus.
+    \item \textbf{Classique :} L'affichage est similaire au mode \emph{Endless}, avec, en plus, une grille d'un joueur adverse visible à côté, permettant ainsi de choisir à qui envoyer les malus.
     \item \textbf{Duel :} Le même affichage que le mode \emph{Classique}, mais sans possibilité de changer d'adversaire visé (car il y en a qu'un).
     \item \textbf{Royal Competition :} L'affichage du mode \emph{Classique} est utilisé, mais cette fois, l'utilisateur peut choisir d'utiliser des bonus ou d'envoyer des malus plus avancés, sans pouvoir envoyer le malus de base.
 \end{itemize}
@@ -305,11 +298,10 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 \section*{Design du système}
 
-\noindent Le système est divisé en sept entités principales, chacune ayant un rôle précis dans le fonctionnement global du jeu. Ces entités sont :  
+\noindent Le système est divisé en six entités principales, chacune ayant un rôle précis dans le fonctionnement global du jeu. Ces entités sont :  
 \begin{itemize}
     \item Connexion et Inscription
     \item Gestion des comptes
-    \item Profil
     \item Menu principal
     \item Matchmaking
     \item Chat
@@ -342,18 +334,6 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
 
 % diagramme gestion compte
 
-\section{Gestion du profil}
-
-\noindent Cette interface permet aux joueurs de modifier des informations personnelles, telles que leur mot de passe et leur pseudo. Les modifications apportées sont immédiatement enregistrées dans la base de données.
-
-\vspace{-1em}
-
-\begin{figure}[H]
-    \centering
-     \includegraphics[width=0.4\textwidth, keepaspectratio]{src/design/user.png}
-    \caption{Use-Case : Gestion du Profil}
-    \label{fig:use_case_profil_managing_design}
-\end{figure}
 
 \section{Menu principal}
 
@@ -429,6 +409,5 @@ Dans cette section du SRD, il s'agira de décrire les besoins spécifiques à l'
     \caption{Diagramme entité-relation : Base de données}
     \label{fig:entity_relation_database}
 \end{figure}
-+
 
 \end{document}
