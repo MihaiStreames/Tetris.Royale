@@ -1,5 +1,5 @@
 # This is a heavily revised version of mihai's CMake template,
-# rewritten by antoine to be more modular and easier to maintain <3
+# rewritten entierly by antoine to be more modular and easier to maintain <3
 
 # Project name and standard
 cmake_minimum_required(VERSION 3.22...4.0)
@@ -157,7 +157,7 @@ set(TETRIS_RES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/res)
 set(TETRIS_ASSETS_DIR ${TETRIS_RES_DIR}/assets)
 set(TETRIS_FONTS_DIR ${TETRIS_RES_DIR}/fonts)
 
-
+# Define assets and fonts directories
 add_definitions(-DTETRIS_ASSETS_DIR="${TETRIS_ASSETS_DIR}")
 add_definitions(-DTETRIS_FONTS_DIR="${TETRIS_FONTS_DIR}")
 
@@ -171,18 +171,9 @@ file(GLOB DB_SERVER_SRC_FILES "${TETRIS_SRC_DIR}/server/db-server/*.cpp")
 file(GLOB TETRIS_SERVER_SRC_FILES "${TETRIS_SRC_DIR}/server/tetris-server/*.cpp")
 file(GLOB CLIENT_CONNECTIVITY_SRC_FILES "${TETRIS_SRC_DIR}/client/connectivity/*.cpp")
 file(GLOB CLIENT_TUI_SRC_FILES "${TETRIS_SRC_DIR}/client/tui/*.cpp" "${TETRIS_SRC_DIR}/client/tui/menus/*.cpp")
+file(GLOB CLIENT_GUI_FILES "${TETRIS_INCLUDE_DIR}/client/gui/GameMenus/*.hpp" "${TETRIS_SRC_DIR}/client/gui/GameMenus/*.cpp" "${TETRIS_INCLUDE_DIR}/client/gui/LobbyMenus/*.hpp" "${TETRIS_SRC_DIR}/client/gui/LobbyMenus/*.cpp" "${TETRIS_INCLUDE_DIR}/client/gui/LoginMenus/*.hpp" "${TETRIS_SRC_DIR}/client/gui/LoginMenus/*.cpp" "${TETRIS_INCLUDE_DIR}/client/gui/MainMenus/*.hpp" "${TETRIS_SRC_DIR}/client/gui/MainMenus/*.cpp")
+# For the GUI, we add src files AND header files as sources so AUTOMOC can process them
 
-# Add src files AND header files as sources so AUTOMOC can process them
-file(GLOB CLIENT_GUI_FILES
-    "${TETRIS_INCLUDE_DIR}/client/gui/GameMenus/*.hpp"
-    "${TETRIS_SRC_DIR}/client/gui/GameMenus/*.cpp"
-    "${TETRIS_INCLUDE_DIR}/client/gui/LobbyMenus/*.hpp"
-    "${TETRIS_SRC_DIR}/client/gui/LobbyMenus/*.cpp"
-    "${TETRIS_INCLUDE_DIR}/client/gui/LoginMenus/*.hpp"
-    "${TETRIS_SRC_DIR}/client/gui/LoginMenus/*.cpp"
-    "${TETRIS_INCLUDE_DIR}/client/gui/MainMenus/*.hpp"
-    "${TETRIS_SRC_DIR}/client/gui/MainMenus/*.cpp"
-)
 
 # Libraries
 add_tetris_library(TetrisRoyaleCommon "" "${COMMON_SRC_FILES}" "${TETRIS_INCLUDE_DIR}/common")
