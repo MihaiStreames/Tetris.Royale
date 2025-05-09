@@ -48,7 +48,7 @@ ModeSelection::ModeSelection(ClientSession &session, MainMenu* mainMenuView, QWi
             config.load();
             // Forcer ready state
             (void) session.readyUp();
-            GameScreen *soloGameScreen = new GameScreen(config, session);
+            GameScreen *soloGameScreen = new GameScreen(config, session,"PLAYER");
             soloGameScreen->showMaximized();
             this->close();
         }
