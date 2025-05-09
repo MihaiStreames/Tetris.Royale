@@ -152,11 +152,11 @@ This project was developed for the **`Projet d'informatique 2`** course **`INFO-
 
 ## 👥 Team Members
 
-- **`Antoine Berthion (566199)`** (<antoine.berthion@ulb.be>)
-- **`Ali Umar Babar (587669)`** (<ali.babar@ulb.be>)
-- **`Ayman Benaim (540166)`** (<ayman.benaim@ulb.be>)
-- **`Mamadou Barry (570893)`** (<mamadou.barry5@ulb.be>)
-- **`Roberto Rabei (593814)`** (<roberto.rabei@ulb.be>)
-- **`Rares Bors (567744)`** (<rares.bors@ulb.be>)
-- **`Oleksandra Omelyanyuk (589880)`** (<oleksandra.omelyanyuk@ulb.be>)
-- **`Taha Es-saâdouni (573602)`** (<taha.essaadouni@ulb.be>)
+- **`Antoine Berthion — 566199`** (<antoine.berthion@ulb.be>)
+- **`Ali Umar Babar — 587669`** (<ali.babar@ulb.be>)
+- **`Ayman Benaim — 540166`** (<ayman.benaim@ulb.be>)
+- **`Mamadou Barry — 570893`** (<mamadou.barry5@ulb.be>)
+- **`Roberto Rabei — 593814`** (<roberto.rabei@ulb.be>)
+- **`Rares Bors — 567744`** (<rares.bors@ulb.be>)
+- **`Oleksandra Omelyanyuk — 589880`** (<oleksandra.omelyanyuk@ulb.be>)
+- **`Taha Es-saâdouni — 573602`** (<taha.essaadouni@ulb.be>)
