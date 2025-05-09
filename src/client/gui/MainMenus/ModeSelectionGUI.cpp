@@ -27,18 +27,26 @@ ModeSelection::ModeSelection(ClientSession &session, MainMenu* mainMenuView, QWi
     soloButton = new QPushButton("Solo", this);
     multiplayerButton = new QPushButton("Multiplayer", this);
     backToMainButton = new QPushButton("Back to main menu", this);
+    openFriendListButton = new QPushButton("Open Friends List", this);
 
 
     soloButton->setStyleSheet(buttonStyle);
     multiplayerButton->setStyleSheet(buttonStyle);
     backToMainButton->setStyleSheet(buttonStyle);
+    openFriendListButton->setStyleSheet(buttonStyle);
+
+    openFriendListButton->setFixedSize(350, 60);
     
 
     mainLayout->addWidget(soloButton);
     mainLayout->addWidget(multiplayerButton);
     mainLayout->addWidget(backToMainButton);
+    mainLayout->addWidget(openFriendListButton, 0, Qt::AlignRight);
+
+
 
     connect(backToMainButton, &QPushButton::clicked, this, &ModeSelection::backToMainMenu);
+    connect(openFriendListButton, &QPushButton::clicked, this, &ModeSelection::openFriendList);
     
     connect(soloButton, &QPushButton::clicked, this, [this, &session]() {
         // create and join a solo endless lobby (not public by default)
@@ -79,5 +87,21 @@ void ModeSelection::backToMainMenu() {
     mainMenu->setVisible(true);
     mainMenu->showMaximized();
     this->close();
+}
+
+void ModeSelection::openFriendList() {
+    auto &friendsListManager = FriendsListManager::instance();
+    if (!friendsListManager.friendsListWindow) {
+        friendsListManager.friendsListWindow = new FriendsList(session);
+        friendsListManager.friendsListWindow->setAttribute(Qt::WA_DeleteOnClose);
+        friendsListManager.friendsListWindow->show();
+        connect(friendsListManager.friendsListWindow, &QObject::destroyed, this, []() {
+            FriendsListManager::instance().friendsListWindow = nullptr;
+        });
+    } else {
+        friendsListManager.friendsListWindow->raise();
+        friendsListManager.friendsListWindow->activateWindow();
+    }
+
 }
 

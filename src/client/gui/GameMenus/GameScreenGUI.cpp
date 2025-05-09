@@ -1,9 +1,9 @@
 
 #include "GameScreenGUI.hpp"
 
-
-GameScreen::GameScreen(Config &config, ClientSession &session, const QString &role, QWidget *parent) : QWidget(parent),
-    configRef(config), session(session), userRole(role), playerBoard(20, std::vector<int>(10, 0)), opponentBoard(20, std::vector<int>(10, 0)) {
+GameScreen::GameScreen(Config &config, ClientSession &session,const QString &role, QWidget *parent) : QWidget(parent),
+    configRef(config), session(session),userRole(role), playerBoard(20, std::vector<int>(10, 0)), opponentBoard(20, std::vector<int>(10, 0)) {
+>>>>>>> f014bcbdca7715a489ee905f25d4b2f55600973b
     // Initial game boards for demo
     placePieceInBoard(PieceType::J, 0, 0, playerBoard);
     placePieceInBoard(PieceType::L, 5, 3, opponentBoard);

@@ -36,12 +36,14 @@ private:
     QPushButton *soloButton;
     QPushButton *multiplayerButton;
     QPushButton *backToMainButton;
+    QPushButton *openFriendListButton;
 
     MainMenu* mainMenu;
     ClientSession &session;
 
 private slots:
     void backToMainMenu();
+    void openFriendList();
 };
 
 #endif

@@ -39,12 +39,14 @@ protected:
     void paintEvent(QPaintEvent *event) override;
 private:
     QPushButton *backToMainButton;
+    QPushButton *openFriendListButton;
     MainMenu *mainMenu;
 
     ClientSession &session;
 
 private slots:
     void backToMainMenu();
+    void openFriendList();
 };
     
 #endif

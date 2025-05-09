@@ -15,7 +15,7 @@ class SettingsScreen : public QWidget{
     Q_OBJECT 
 
 public:
-    explicit SettingsScreen(MainMenu* mainMenu, QWidget *parent = nullptr);
+    explicit SettingsScreen(MainMenu* mainMenu,ClientSession &session, QWidget *parent = nullptr);
 
     QString buttonStyle = R"(
         QPushButton {
@@ -39,10 +39,13 @@ protected:
 
 private:
     QPushButton *backToMainButton;
+    QPushButton *openFriendListButton;
     MainMenu* mainMenu;
+    ClientSession &session;
 
 private slots:
     void backToMainMenu();
+    void openFriendList();
 };
 
 
