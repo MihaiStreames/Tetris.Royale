@@ -238,16 +238,41 @@ void WaitingLobby::pollLobbyState() {
         lobbyState = session.getCurrentLobbyState();
         fillPlayerListAndSpectatorList();
 
+        const std::string me = session.getUsername();
+        bool isPlayer = false;
+        bool isSpectatorLocal = false;
+
+        if (!lobbyState.players.empty()) {
+            for (const auto& [token, name] : lobbyState.players) {
+                bool thisOneIsMe = (name == me);
+                isPlayer = isPlayer || thisOneIsMe;
+                if (thisOneIsMe) pendingRole = "PLAYER";
+            }
+        }
+
+        if (!lobbyState.spectators.empty()) {
+            for (const auto& [token, name] : lobbyState.spectators) {
+                bool thisOneIsMe = (name == me);
+                isSpectatorLocal = isSpectatorLocal || thisOneIsMe;
+                if (thisOneIsMe) pendingRole = "SPECTATOR";
+            }
+        }
+
+        std::string role = pendingRole.empty() ? "UNKNOWN" : pendingRole;
+
+
         if (session.getOwnStatus() == ClientStatus::IN_GAME) {
-            lobbyPollingTimer->stop();  
+            lobbyPollingTimer->stop();
             Config config(CONFIG_FILE_NAME);
             config.load();
-            GameScreen *gameScreen = new GameScreen(config, session);
+            GameScreen *gameScreen =
+                new GameScreen(config, session, QString::fromStdString(role));
             gameScreen->showMaximized();
             this->close();
         }
 
     } catch (const std::exception &e) {
-        qDebug() << "Polling error: " << e.what();
+        qDebug() << "Polling error:" << e.what();
     }
 }
+

@@ -77,14 +77,26 @@ LeaderScreen::LeaderScreen(MainMenu *mainMenuView, ClientSession &session, QWidg
     }
     
     backToMainButton = new QPushButton("Back to main menu", this);
-    backToMainButton->setStyleSheet(buttonStyle);
-    backToMainButton->setFixedSize(350, 60);
-    connect(backToMainButton, &QPushButton::clicked, this, &LeaderScreen::backToMainMenu);
+    openFriendListButton = new QPushButton("Open Friends List", this);
 
+    openFriendListButton->setStyleSheet(buttonStyle);
+    backToMainButton->setStyleSheet(buttonStyle);
+
+    openFriendListButton->setFixedSize(350, 60);
+    backToMainButton->setFixedSize(350, 60);
+
+    connect(backToMainButton, &QPushButton::clicked, this, &LeaderScreen::backToMainMenu);
+    connect(openFriendListButton, &QPushButton::clicked, this, &LeaderScreen::openFriendList);
+
+    QHBoxLayout *bottomLayout = new QHBoxLayout();
+    bottomLayout->addWidget(backToMainButton, 0, Qt::AlignLeft);
+    bottomLayout->addStretch();
+    bottomLayout->addWidget(openFriendListButton, 0, Qt::AlignRight);
+    
 
     mainLayout->addWidget(titleContainer);
     mainLayout->addWidget(table);
-    mainLayout->addWidget(backToMainButton);
+    mainLayout->addLayout(bottomLayout);
 
     setLayout(mainLayout);
 
@@ -106,4 +118,21 @@ void LeaderScreen::backToMainMenu() {
     mainMenu->setVisible(true);
     mainMenu->showMaximized();
     this->close();
+}
+
+
+void LeaderScreen::openFriendList() {
+    auto &friendsListManager = FriendsListManager::instance();
+    if (!friendsListManager.friendsListWindow) {
+        friendsListManager.friendsListWindow = new FriendsList(session);
+        friendsListManager.friendsListWindow->setAttribute(Qt::WA_DeleteOnClose);
+        friendsListManager.friendsListWindow->show();
+        connect(friendsListManager.friendsListWindow, &QObject::destroyed, this, []() {
+            FriendsListManager::instance().friendsListWindow = nullptr;
+        });
+    } else {
+        friendsListManager.friendsListWindow->raise();
+        friendsListManager.friendsListWindow->activateWindow();
+    }
+
 }

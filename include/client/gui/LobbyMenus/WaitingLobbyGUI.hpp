@@ -55,6 +55,9 @@ private:
     bool isReady = false;
     QTimer *lobbyPollingTimer;
 
+    std::string pendingRole = "UNKNOWN";
+
+
     void paintEvent(QPaintEvent *event);
     void setupUi();
 };

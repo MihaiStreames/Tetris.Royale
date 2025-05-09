@@ -68,17 +68,17 @@ void MainMenu::paintEvent(QPaintEvent *event) {
 
 void MainMenu::showFriendsList() {
     auto &friendsListManager = FriendsListManager::instance();
-    if (friendsListManager.friendsListWindow) {
-        return;
+    if (!friendsListManager.friendsListWindow) {
+        friendsListManager.friendsListWindow = new FriendsList(session);
+        friendsListManager.friendsListWindow->setAttribute(Qt::WA_DeleteOnClose);
+        friendsListManager.friendsListWindow->show();
+        connect(friendsListManager.friendsListWindow, &QObject::destroyed, this, []() {
+            FriendsListManager::instance().friendsListWindow = nullptr;
+        });
+    } else {
+        friendsListManager.friendsListWindow->raise();
+        friendsListManager.friendsListWindow->activateWindow();
     }
-
-    friendsListManager.friendsListWindow = new FriendsList(session);
-    friendsListManager.friendsListWindow->setAttribute(Qt::WA_DeleteOnClose);
-    friendsListManager.friendsListWindow->show();
-
-    connect(FriendsListManager::instance().friendsListWindow, &QObject::destroyed, this, []() {
-        FriendsListManager::instance().friendsListWindow = nullptr;
-    });
 }
 
 void MainMenu::openModeSelection() {
@@ -89,7 +89,7 @@ void MainMenu::openModeSelection() {
 }
 
 void MainMenu::openSettings() {
-    SettingsScreen *settingsScreen = new SettingsScreen(this);
+    SettingsScreen *settingsScreen = new SettingsScreen(this, session);
     settingsScreen->setAttribute(Qt::WA_DeleteOnClose);
     settingsScreen->showMaximized(); 
     this->hide();

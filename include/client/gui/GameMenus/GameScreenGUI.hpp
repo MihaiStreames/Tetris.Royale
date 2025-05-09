@@ -32,7 +32,7 @@ class GameScreen : public QWidget {
     Q_OBJECT
 
 public:
-    explicit GameScreen(Config &config, ClientSession &session, QWidget *parent = nullptr);
+    explicit GameScreen(Config &config, ClientSession &session,const QString &role, QWidget *parent = nullptr);
     ~GameScreen() override;
 
 protected:
@@ -70,6 +70,8 @@ private:
     QVBoxLayout *leftColLayout   = nullptr;
     QVBoxLayout *middleColLayout = nullptr;
     QVBoxLayout *rightColLayout  = nullptr;
+
+    QString userRole;
 
 };
 

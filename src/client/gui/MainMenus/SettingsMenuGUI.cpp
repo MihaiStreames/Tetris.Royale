@@ -2,7 +2,7 @@
 #include "SettingsMenuGUI.hpp"
 
 
-SettingsScreen::SettingsScreen(MainMenu* mainMenuView, QWidget *parent): QWidget(parent), mainMenu(mainMenuView){
+SettingsScreen::SettingsScreen(MainMenu* mainMenuView,ClientSession &session, QWidget *parent): QWidget(parent), mainMenu(mainMenuView), session(session){
 
     QString fontPath = QString(TETRIS_FONTS_DIR) + "/orbitron.ttf";
     QFontDatabase::addApplicationFont(fontPath);
@@ -82,20 +82,29 @@ SettingsScreen::SettingsScreen(MainMenu* mainMenuView, QWidget *parent): QWidget
         table->setItem(i, 0, new QTableWidgetItem(controls[i]));
         table->setItem(i, 1, new QTableWidgetItem(keys[i]));
     }
-    
-    // Back to main menu
-    QHBoxLayout *bottomLayout = new QHBoxLayout();
-    bottomLayout->setAlignment(Qt::AlignLeft);
+
+   
 
 
     backToMainButton = new QPushButton("Back to main menu", this);
     backToMainButton->setStyleSheet(buttonStyle);
     backToMainButton->setFixedSize(350, 60);
     connect(backToMainButton, &QPushButton::clicked, this, &SettingsScreen::backToMainMenu);
-    
+
+    // Ajouter un bouton pour ouvrir la friend list
+    QPushButton *openFriendListButton = new QPushButton("Open Friends List", this);
+    openFriendListButton->setStyleSheet(buttonStyle);
+    openFriendListButton->setFixedSize(350, 60);
+    connect(openFriendListButton, &QPushButton::clicked, this, &SettingsScreen::openFriendList);;
+      
+    QHBoxLayout *bottomLayout = new QHBoxLayout();
+
+    bottomLayout->addWidget(backToMainButton, 0, Qt::AlignLeft);
+    bottomLayout->addWidget(openFriendListButton, 0, Qt::AlignRight);
+
     mainLayout->addWidget(titleContainer);
     mainLayout->addWidget(table);
-    mainLayout->addWidget(backToMainButton);
+    mainLayout->addLayout(bottomLayout);
 
     setLayout(mainLayout);
 
@@ -115,4 +124,20 @@ void SettingsScreen::backToMainMenu() {
     mainMenu->setVisible(true);
     mainMenu->showMaximized();
     this->close();
+}
+
+void SettingsScreen::openFriendList() {
+    auto &friendsListManager = FriendsListManager::instance();
+    if (!friendsListManager.friendsListWindow) {
+        friendsListManager.friendsListWindow = new FriendsList(session);
+        friendsListManager.friendsListWindow->setAttribute(Qt::WA_DeleteOnClose);
+        friendsListManager.friendsListWindow->show();
+        connect(friendsListManager.friendsListWindow, &QObject::destroyed, this, []() {
+            FriendsListManager::instance().friendsListWindow = nullptr;
+        });
+    } else {
+        friendsListManager.friendsListWindow->raise();
+        friendsListManager.friendsListWindow->activateWindow();
+    }
+
 }

@@ -2,8 +2,8 @@
 #include "GameScreenGUI.hpp"
 
 
-GameScreen::GameScreen(Config &config, ClientSession &session, QWidget *parent) : QWidget(parent), 
-    configRef(config), session(session), playerBoard(20, std::vector<int>(10, 0)), opponentBoard(20, std::vector<int>(10, 0)) {
+GameScreen::GameScreen(Config &config, ClientSession &session,const QString &role, QWidget *parent) : QWidget(parent),
+    configRef(config), session(session),userRole(role), playerBoard(20, std::vector<int>(10, 0)), opponentBoard(20, std::vector<int>(10, 0)) {
     // Initial game boards for demo
     placePieceInBoard(PieceType::J, 0, 0, playerBoard);
     placePieceInBoard(PieceType::L, 5, 3, opponentBoard);
@@ -134,18 +134,16 @@ void GameScreen::onUpdateTimer()
     if (session.getOwnStatus() != ClientStatus::IN_GAME)
         return;
 
-    try {
+    if (userRole == "PLAYER") {
         auto ps = session.getPlayerState();
         isSpectator = false;
         setupPlayerUI(ps);
-    } catch (...) {
-        try {
-            auto ss = session.getSpectatorState();
-            isSpectator = true;
-            setupSpectatorUI(ss);
-        } catch (...) {
-            qWarning() << "Unable to get game state";
-        }
+    } else if (userRole == "SPECTATOR") {
+        auto ss = session.getSpectatorState();
+        isSpectator = true;
+        setupSpectatorUI(ss);
+    } else {
+        qWarning() << "Unknown role: " << userRole;
     }
 }
 
