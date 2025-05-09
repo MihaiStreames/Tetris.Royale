@@ -192,7 +192,7 @@ main(int argc, char *argv[]) {
     (void) argc;
     (void) argv;
 
-    constexpr bool DEBUG = true;
+    constexpr bool DEBUG = false;
     MasterServer masterServer(MASTER_SERVER_IP, LOBBY_SERVER_PORT,
                               DB_SERVER_PORT, DEBUG);
     if (masterServer.startMasterServer() != StatusCode::SUCCESS) {

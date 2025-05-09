@@ -25,6 +25,12 @@ RoyalEngine::handleAction(TetrisGame &game, const Action action) {
         case Action::RotateRight:
             return gm.tryRotateRight();
 
+        // see opponent moves
+        case Action::SeePreviousOpponent:
+            return viewPreviousOpponent(royalGame);
+        case Action::SeeNextOpponent:
+            return viewNextOpponent(royalGame);
+
         // special moves
         case Action::InstantFall:
             return gm.tryInstantFall();
@@ -44,6 +50,41 @@ RoyalEngine::handleAction(TetrisGame &game, const Action action) {
         default:
             return false;
     }
+}
+
+bool
+RoyalEngine::viewPreviousOpponent(TetrisGame &game) {
+
+    // okay so this oop is disgusting but whatever
+    // i need to fix this quick cuz else the project will have crashes
+    // when trying to do whatever with the opponents in a royal game
+
+    RoyalGame &royalGame = static_cast<RoyalGame &>(game);
+
+    // get the index of the previous opponent
+    int idx = royalGame.getTargetIndex() - 1;
+
+    // change the player view to the previous opponent
+    royalGame.changePlayerView(idx);
+
+    return true;
+}
+
+bool
+RoyalEngine::viewNextOpponent(TetrisGame &game) {
+
+    // this should handle the view of the next opponent
+    // the view should be changed to the next opponent in the list of opponents
+
+    RoyalGame &royalGame = static_cast<RoyalGame &>(game);
+
+    // get the index of the next opponent
+    int idx = royalGame.getTargetIndex() + 1;
+
+    // change the player view to the next opponent
+    royalGame.changePlayerView(idx);
+
+    return true;
 }
 
 void

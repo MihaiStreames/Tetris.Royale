@@ -1,5 +1,50 @@
 #include "ClassicEngine.hpp"
 
+
+
+bool ClassicEngine::handleAction(TetrisGame& game, Action action) {
+    // this method is responsible for handling the game logic
+    // based on the action that the player has taken
+
+    // will throw an exception if the action is invalid
+    // handled actions include : classic moves, special moves, malus, bonus and
+    // none
+
+    ClassicGame &royalGame = static_cast<ClassicGame&>(game);
+    GameMatrix &gm = royalGame.getGameMatrix();
+
+    switch (action) {
+        // classic moves
+        case Action::MoveLeft:
+            return gm.tryMoveLeft();
+        case Action::MoveRight:
+            return gm.tryMoveRight();
+        case Action::MoveDown:
+            return gm.tryMoveDown();
+        case Action::RotateLeft:
+            return gm.tryRotateLeft();
+        case Action::RotateRight:
+            return gm.tryRotateRight();
+
+        // see opponent moves
+        case Action::SeePreviousOpponent:
+            return viewPreviousOpponent(royalGame);
+        case Action::SeeNextOpponent:
+            return viewNextOpponent(royalGame);
+
+        // special moves
+        case Action::InstantFall:
+            return gm.tryInstantFall();
+        case Action::UseBag:
+            return handleBag(royalGame);
+
+        case Action::None:
+            return false;
+        default:
+            return false;
+    }
+}
+
 void
 ClassicEngine::handleBasicPenalty(ClassicGame &game, const int linesCleared) {
     // this should handle the line penalty for the opponents
