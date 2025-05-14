@@ -1,0 +1,34 @@
+# This is a Github CI/CD configuration file for building and testing TetrisRoyale.
+
+name: Build and Test TetrisRoyale
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y curl build-essential cmake unzip
+          sudo apt-get install -y qtbase5-dev qtbase5-dev-tools qtchooser qt5-qmake
+
+      - name: Run install script
+        run: |
+          chmod +x ./install.sh
+          ./install.sh --enable-tests
+
+      - name: Cache lib/ folder
+        uses: actions/cache@v3
+        with:
+          path: lib
+          key: ${{ runner.os }}-lib-${{ github.ref_name }}
